@@ -1,11 +1,16 @@
 <!doctype html>
-<!-- Türk Göklerinde V1.11 · 2026-10-10 -->
+<!-- Ay Yıldız: Hedef Kızıl Elma V1.20 · 2026-10-10 -->
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.11">
+<meta name="game-version" content="V1.20">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Türk Göklerinde — Uçuş Simülatörü</title>
+<title>Ay Yıldız: Hedef Kızıl Elma</title>
+<meta name="theme-color" content="#0a1220">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
@@ -67,6 +72,24 @@ button{ font:inherit; color:var(--ink); cursor:pointer; }
 .chip small{ font-weight:400; font-size:12px; color:var(--dim); white-space:nowrap; }
 .chip[aria-checked="true"]{ border-color:var(--red); background:rgba(227,10,23,.22); }
 .hint{ margin:0; font-size:12px; color:var(--dim); }
+
+/* brand */
+.brand{ display:flex; align-items:center; gap:clamp(12px,2vw,22px); }
+.brand .logo{ width:clamp(64px,10vw,124px); height:auto; flex:none; filter:drop-shadow(0 6px 18px rgba(227,10,23,.35)); }
+#title .brand h1{ font-size:clamp(42px,7.4vw,100px); line-height:.95; }
+#title .brand .tag{ margin:8px 0 0; font-size:clamp(16px,2.2vw,24px); color:#ffd7d9; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
+#title .grp{ margin:18px 0 30px; font-size:14px; color:var(--dim); } #title .grp b{ color:var(--ink); }
+.grptabs{ position:absolute; top:max(18px,env(safe-area-inset-top)); left:50%; transform:translateX(-50%); display:flex; gap:6px; background:rgba(8,15,28,.6); border:1px solid var(--line); border-radius:999px; padding:4px; }
+.grptabs button{ border:0; background:none; border-radius:999px; padding:8px 14px; font-size:13px; font-weight:700; white-space:nowrap; display:flex; flex-direction:column; align-items:center; line-height:1.1; }
+.grptabs button small{ font-size:10px; font-weight:500; color:var(--dim); }
+.grptabs button[aria-selected="true"]{ background:var(--red); } .grptabs button[aria-selected="true"] small{ color:#ffe0e2; }
+.grptabs button:disabled{ opacity:.45; cursor:default; }
+.clsrow{ display:flex; align-items:center; gap:10px; margin:0 0 8px; }
+.seg.sm button{ flex:0 0 auto; padding:5px 12px; font-size:12px; }
+.clsrow .cnt{ font-size:12px; color:var(--dim); }
+.fps{ position:fixed; left:50%; bottom:2px; transform:translateX(-50%); font:600 11px "Chakra Petch",monospace; color:#7dffb0; background:rgba(0,0,0,.45); padding:1px 6px; border-radius:4px; z-index:9; pointer-events:none; }
+@media (max-height:560px){ .grptabs button{ padding:5px 10px; font-size:12px; } .grptabs button small{ display:none; } .clsrow{ margin-bottom:4px; } .seg.sm button{ padding:3px 10px; } #title .grp{ margin:10px 0 16px; } }
+@media (max-width:700px){ .grptabs{ top:auto; bottom:auto; left:auto; right:max(14px,env(safe-area-inset-right)); transform:none; } }
 
 /* selection screen extras */
 .navb{ position:absolute; top:38%; transform:translateY(-50%); width:52px; height:52px; border-radius:50%; border:1px solid var(--line); background:rgba(8,15,28,.55); font-size:30px; line-height:1; color:#fff; display:flex; align-items:center; justify-content:center; padding:0 0 4px; }
@@ -255,9 +278,8 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 
 <div id="title" class="screen">
   <div class="box ui">
-    <div class="mark"></div>
-    <h1>TÜRK<br>GÖKLERİ</h1>
-    <p class="tag">Uçuş simülatörü</p>
+    <div class="brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p class="tag">Hedef Kızıl Elma</p></div></div>
+    <p class="grp"><b>Hilal Kanatlar</b> · Türk hava sistemleri</p>
     <div class="row">
       <button class="btn primary" id="btnStart">Başla</button>
       <button class="btn" id="btnNet">Çok oyunculu</button>
@@ -273,6 +295,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 
 <div id="hangarUI" class="screen hidden">
   <button class="btn ui back" id="btnBack">← Ana menü</button>
+  <div class="grptabs ui" id="grpTabs" role="tablist" aria-label="Sistem grupları"></div>
   <button class="navb ui prev" id="acPrev" type="button" aria-label="Önceki uçak">‹</button>
   <button class="navb ui next" id="acNext" type="button" aria-label="Sonraki uçak">›</button>
   <div class="dock ui">
@@ -288,6 +311,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
         <button class="btn primary" id="btnPlay" type="button">Oyuna başla</button>
       </div>
     </div>
+    <div class="clsrow"><div class="seg sm" id="clsSeg" aria-label="Sınıf filtresi"></div><span class="cnt" id="acCount"></span></div>
     <div class="chips" id="acChips" role="radiogroup" aria-label="Uçak seçimi"></div>
     <p class="hint">Sürükle: etrafında dön · Tekerlek: yakınlaş · ← → uçak değiştir · Y: silah yükü · Enter: oyuna başla</p>
   </div>
@@ -419,6 +443,8 @@ input[type=range]{ width:100%; accent-color:var(--red); }
     <label class="check"><input type="checkbox" id="setLock"> Otomatik hedef kilidi ve uyarı panosu (K)</label>
     <label class="check"><input type="checkbox" id="setInv"> Yukarı-aşağı kumandayı ters çevir</label>
     <label class="check"><input type="checkbox" id="setRumble"> Kumanda titreşimi</label>
+    <label class="check"><input type="checkbox" id="setAuto"> Otomatik performans (telefon yavaşlarsa çözünürlüğü düşür)</label>
+    <label class="check"><input type="checkbox" id="setFps"> FPS göstergesi</label>
     <div class="btnrow"><button class="btn primary" id="btnSetClose">Kapat</button><button class="btn" id="btnFull">Tam ekran</button></div>
   </div>
 </div>
@@ -504,6 +530,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   <div class="tthr" id="tThr"><div class="tabz" id="tABZ">ART<br>YAKICI</div><div class="tthrfill" id="tThrFill"></div><div class="tthrlbl" id="tThrLbl">GAZ<br>0%</div></div>
   <div class="twpn" id="tWpn"></div>
 </div>
+<div id="fps" class="fps hidden"></div>
 <div id="rotate" class="hidden">Daha rahat oynamak için telefonu yatay çevir</div>
 
 <div id="prep" class="prep hidden">
@@ -517,7 +544,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.11', GAME_DATE='2026-10-10';
+const GAME_VERSION='V1.20', GAME_DATE='2026-10-10';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -531,7 +558,7 @@ try{
   if(!window.THREE) throw new Error('three');
   renderer = new THREE.WebGLRenderer({canvas:$('gl'), antialias:true, powerPreference:'high-performance'});
 }catch(e){
-  $('title').innerHTML = '<div class="box ui"><div class="mark"></div><h1>TÜRK<br>GÖKLERİ</h1><p class="tag">Bu tarayıcıda 3B grafik başlatılamadı. Donanım hızlandırmayı açıp sayfayı yenile.</p></div>';
+  $('title').innerHTML = '<div class="box ui"><h1>AY YILDIZ</h1><p class="tag">Bu tarayıcıda 3B grafik başlatılamadı. Donanım hızlandırmayı açıp sayfayı yenile.</p></div>';
   return;
 }
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
@@ -1138,6 +1165,15 @@ const AIRCRAFT={
     vr:36,landV:55,sinkMax:3.5,gearV:65,brake:4,rollFric:0.4,airV:60,fireInt:0.3,bulletV:380,blife:3,weapon:'MAM',snd:SND_PROP}
 };
 const AC_ORDER=['kaan','anka3','hurjet','hurkus','anka','aksungur','kizilelma','tb2','tb3','akinci'];
+/* system registry: groups (hava / deniz / kara), classes and makers; new vehicles only need an AIRCRAFT entry + a REG line */
+const GROUPS=[{id:'hava',name:'Hilal Kanatlar',sub:'Hava sistemleri',on:true},{id:'deniz',name:'Mavi Kanatlar',sub:'Deniz · yakında',on:false},{id:'kara',name:'Kara Sistemleri',sub:'Kara · yakında',on:false}];
+const CLASSES={savas:'Savaş uçağı',iha:'İHA / SİHA',egitim:'Eğitim / hafif taarruz'};
+const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ'},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},
+  anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ'},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar'},
+  tb3:{grp:'hava',cls:'iha',maker:'Baykar'},akinci:{grp:'hava',cls:'iha',maker:'Baykar'}};
+let pickGrp='hava', pickCls='all';
+function regOf(id){ return REG[id]||{grp:'hava',cls:'iha',maker:''}; }
+function pickList(){ return AC_ORDER.filter(function(id){ const r=regOf(id); return r.grp===pickGrp&&(pickCls==='all'||r.cls===pickCls); }); }
 const modelCache={};
 let CUR=AIRCRAFT.kaan, activeId='kaan', model=null, planeGroup=null, selectedId='kaan';
 try{ const sv0=localStorage.getItem('kaan-sim-aircraft'); if(sv0&&AIRCRAFT[sv0]) selectedId=sv0; }catch(e){}
@@ -1412,7 +1448,7 @@ function renderService(){
   $('svcSub').textContent=CUR.name+' · '+(n>0?('silah yeri: '+n):'bu uçak silah taşımıyor');
   $('svcHpRow').classList.toggle('hidden',svcMode==='loadout'); $('svcTitle').textContent=svcMode==='loadout'?'Silah yükü':'Bakım hangarı'; $('btnSvcOk').textContent=svcMode==='loadout'?'Yükü kaydet':'Bakımı yap ve yükle';
   $('svcHpTxt').textContent='CAN %'+Math.round(S.hp)+' → %100'; $('svcHpBar').style.width=Math.round(S.hp)+'%';
-  $('svcBody').innerHTML=n>0?WORDER.map(function(k){
+  $('svcBody').innerHTML=n>0?wpnOf(activeId).map(function(k){
     const W=WEAPONS[k];
     return '<tr><td><b>'+W.name+'</b><small>'+W.tip+'</small></td><td class="cnt"><button type="button" data-k="'+k+'" data-d="-1"'+(svcTmp[k]<=0?' disabled':'')+'>−</button><span>'+svcTmp[k]+'</span><button type="button" data-k="'+k+'" data-d="1"'+(used>=n?' disabled':'')+'>+</button></td></tr>';
   }).join(''):'<tr><td>Bakım ve flare yenilemesi yapılacak.</td></tr>';
@@ -1657,6 +1693,7 @@ const WORDER=['gp','bnk','m1','m2','m3'];
 const SLOTS={kaan:8,anka3:4,hurjet:6,hurkus:6,anka:0,aksungur:6,kizilelma:8,tb2:4,tb3:6,akinci:8};
 const PYLON_Y={kaan:-0.6,anka3:-0.2,hurjet:-0.4,hurkus:-0.8,anka:-0.3,aksungur:0.25,kizilelma:-0.45,tb2:-0.05,tb3:-0.05,akinci:-0.05};
 const INV={gp:0,bnk:0,m1:0,m2:0,m3:0}; let selW='gp'; const LOADOUTS={};
+function wpnOf(id){ const r=regOf(id); return r.wpn?WORDER.filter(function(k){ return r.wpn.indexOf(k)>=0; }):WORDER; }
 function defaultLoadout(id){ const n=SLOTS[id]||0, gp=Math.ceil(n/2); return {gp:gp,bnk:0,m1:n-gp,m2:0,m3:0}; }
 function loadoutOf(id){ return LOADOUTS[id]||(LOADOUTS[id]=defaultLoadout(id)); }
 function stockTotal(){ return WORDER.reduce(function(a,k){ return a+INV[k]; },0); }
@@ -2104,7 +2141,7 @@ function updateThreats(dt){
 }
 
 /* ------------------------------------------------------------------ settings + records (saved in this browser) */
-const SETTINGS={volume:0.8,quality:2,sens:1,rumble:true,invert:false,touch:'auto',bombAssist:'guided',lockOn:true};
+const SETTINGS={volume:0.8,quality:2,sens:1,rumble:true,invert:false,touch:'auto',bombAssist:'guided',lockOn:true,autoPerf:true,fps:false};
 let RECORDS={};
 function loadStore(){
   try{ if(!localStorage.getItem('kaan-sim-settings') && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) SETTINGS.quality=1; }catch(e){}
@@ -2118,9 +2155,20 @@ function saveRecords(){ try{ localStorage.setItem('kaan-sim-records',JSON.string
 function rec(id){ return RECORDS[id]||(RECORDS[id]={best:null,score:0}); }
 function noteScore(){ const r=rec(activeId); if(score>r.score){ r.score=score; saveRecords(); } }
 function applyVolume(){ if(master) master.gain.value=SETTINGS.volume; }
+const PERF={base:1,scale:1,acc:0,n:0,t:0,low:0,high:0,fps:60,told:false};
+function perfStep(dt){
+  PERF.acc+=dt; PERF.n++;
+  if(PERF.acc<1) return;
+  PERF.fps=PERF.n/PERF.acc; PERF.acc=0; PERF.n=0;
+  if(SETTINGS.fps){ $('fps').textContent=Math.round(PERF.fps)+' FPS · '+Math.round(PERF.base*PERF.scale*100)/100+'x'; }
+  if(!SETTINGS.autoPerf||state!=='play') { PERF.low=PERF.high=0; return; }
+  if(PERF.fps<38){ PERF.low++; PERF.high=0; } else if(PERF.fps>56){ PERF.high++; PERF.low=0; } else { PERF.low=PERF.high=0; }
+  if(PERF.low>=3&&PERF.scale>0.6){ PERF.scale=Math.max(0.6,PERF.scale-0.15); PERF.low=0; renderer.setPixelRatio(PERF.base*PERF.scale); resize(); if(!PERF.told){ PERF.told=true; toast('Akıcılık için görüntü çözünürlüğü düşürüldü','#b8ecff'); } }
+  else if(PERF.high>=6&&PERF.scale<1){ PERF.scale=Math.min(1,PERF.scale+0.1); PERF.high=0; renderer.setPixelRatio(PERF.base*PERF.scale); resize(); }
+}
 function applyQuality(){
   const q=SETTINGS.quality, dpr=window.devicePixelRatio||1;
-  renderer.setPixelRatio([1,Math.min(1.5,dpr),Math.min(2,dpr)][q]);
+  PERF.base=[1,Math.min(1.5,dpr),Math.min(2,dpr)][q]; renderer.setPixelRatio(PERF.base*PERF.scale);
   if(GFX.trees) GFX.trees.count=Math.floor(GFX.treeN*[0.35,0.7,1][q]);
   if(GFX.clouds) GFX.clouds.count=Math.floor(GFX.cloudN*[0.5,0.75,1][q]);
   resize();
@@ -2688,7 +2736,7 @@ function refreshSetup(){
   const a=AIRCRAFT[selectedId], n=SLOTS[selectedId]||0, l=loadoutOf(selectedId), used=WORDER.reduce(function(s,k){ return s+(l[k]||0); },0);
   $('suName').textContent=a.name; $('suKind').textContent=a.kind;
   $('suSlots').textContent=n>0?('yer '+used+' / '+n+' · flare '+(FLARES[selectedId]||0)):'';
-  $('suLoad').innerHTML=n>0?WORDER.map(function(k){
+  $('suLoad').innerHTML=n>0?wpnOf(selectedId).map(function(k){
     const W=WEAPONS[k], c=l[k]||0;
     return '<tr><td><b>'+W.name+'</b><small>'+W.tip+'</small></td><td class="cnt"><button type="button" aria-label="'+W.short+' azalt" data-k="'+k+'" data-d="-1"'+(c<=0?' disabled':'')+'>−</button><span>'+c+'</span><button type="button" aria-label="'+W.short+' artır" data-k="'+k+'" data-d="1"'+(used>=n?' disabled':'')+'>+</button></td></tr>';
   }).join(''):'<tr><td>Bu uçak silah taşımıyor.</td></tr>';
@@ -2716,7 +2764,7 @@ function resumeGame(){ if(state!=='paused') return; padFireLock=true; state='pla
 function toHangarFromPause(){ if(state!=='paused') return; if(NET.on){ netLeave(); return; } enterHangar(); }
 function refreshHangarUI(){
   const a=AIRCRAFT[selectedId];
-  $('hName').textContent=a.name; $('hKind').textContent=a.kind; $('hDesc').textContent=a.desc;
+  $('hName').textContent=a.name; $('hKind').textContent=regOf(selectedId).maker+' · '+a.kind; $('hDesc').textContent=a.desc;
   const st=[a.len+' uzunluk',a.span+' kanat açıklığı',a.uav?'İnsansız':'Pilotlu']; if(a.hasAB) st.push('Art yakıcı');
   st.push(SLOTS[selectedId]>0?(SLOTS[selectedId]+' silah yeri'):'Silahsız'); if(FLARES[selectedId]) st.push(FLARES[selectedId]+' flare');
   $('loadSum').textContent=loadSummary(selectedId); $('btnLoad').disabled=!(SLOTS[selectedId]>0);
@@ -2726,12 +2774,22 @@ function refreshHangarUI(){
     if(on&&b.scrollIntoView) b.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
   });
 }
+function buildGroups(){
+  $('grpTabs').innerHTML=GROUPS.map(function(g){ return '<button type="button" role="tab" data-g="'+g.id+'" aria-selected="'+(g.id===pickGrp)+'"'+(g.on?'':' disabled')+'>'+g.name+'<small>'+g.sub+'</small></button>'; }).join('');
+  const used=Object.keys(CLASSES).filter(function(c){ return AC_ORDER.some(function(id){ const r=regOf(id); return r.grp===pickGrp&&r.cls===c; }); });
+  $('clsSeg').innerHTML='<button type="button" data-c="all" aria-pressed="'+(pickCls==='all')+'">Tümü</button>'+used.map(function(c){ return '<button type="button" data-c="'+c+'" aria-pressed="'+(pickCls===c)+'">'+CLASSES[c]+'</button>'; }).join('');
+}
+function setCls(c){ pickCls=c; buildPicker(); const L=pickList(); if(L.length&&L.indexOf(selectedId)<0) selectAircraft(L[0]); }
+$('clsSeg').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b) setCls(b.dataset.c); });
+$('grpTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled){ pickGrp=b.dataset.g; pickCls='all'; buildPicker(); } });
 function buildPicker(){
+  buildGroups();
   const box=$('acChips'); box.innerHTML='';
-  AC_ORDER.forEach(function(id){
+  const L=pickList(); $('acCount').textContent=L.length+' araç';
+  L.forEach(function(id){
     const a=AIRCRAFT[id], b=document.createElement('button');
     b.type='button'; b.className='chip'; b.dataset.id=id; b.setAttribute('role','radio');
-    b.innerHTML='<span>'+a.short+'</span><small>'+a.kind+'</small>';
+    b.innerHTML='<span>'+a.short+'</span><small>'+regOf(id).maker+' · '+a.kind+'</small>';
     b.addEventListener('click',function(){ selectAircraft(id); });
     box.appendChild(b);
   });
@@ -2742,7 +2800,7 @@ function selectAircraft(id){
   if(state==='menu'){ setAircraft(id); resetFlight('runway'); }
   refreshHangarUI();
 }
-function cycleAircraft(d){ const i=AC_ORDER.indexOf(selectedId); selectAircraft(AC_ORDER[(i+d+AC_ORDER.length)%AC_ORDER.length]); }
+function cycleAircraft(d){ const L=pickList().length?pickList():AC_ORDER; const i=Math.max(0,L.indexOf(selectedId)); selectAircraft(L[(i+d+L.length)%L.length]); }
 $('btnStart').addEventListener('click',enterHangar);
 $('btnControls').addEventListener('click',openControls);
 $('btnPauseControls').addEventListener('click',openControls);
@@ -2762,7 +2820,7 @@ function syncSettingsUI(){
   $('setVol').value=Math.round(SETTINGS.volume*100); $('setVolV').textContent=Math.round(SETTINGS.volume*100)+'%';
   $('setSens').value=Math.round(SETTINGS.sens*100); $('setSensV').textContent=Math.round(SETTINGS.sens*100)+'%';
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
-  $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble;
+  $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
   Array.prototype.forEach.call($('setTouch').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===SETTINGS.touch)); });
 }
@@ -2786,6 +2844,8 @@ $('btnFull').addEventListener('click',function(){ try{ const el=document.documen
 $('setLock').addEventListener('change',function(e){ SETTINGS.lockOn=e.target.checked; saveSettings(); lockTgt=null; lockT=0; });
 $('setInv').addEventListener('change',function(e){ invertY=e.target.checked; SETTINGS.invert=invertY; saveSettings(); });
 $('setRumble').addEventListener('change',function(e){ SETTINGS.rumble=e.target.checked; saveSettings(); });
+$('setAuto').addEventListener('change',function(e){ SETTINGS.autoPerf=e.target.checked; if(!SETTINGS.autoPerf){ PERF.scale=1; applyQuality(); } saveSettings(); });
+$('setFps').addEventListener('change',function(e){ SETTINGS.fps=e.target.checked; $('fps').classList.toggle('hidden',!SETTINGS.fps); saveSettings(); });
 $('btnRecords').addEventListener('click',function(){ renderRecords(); openModal('records'); });
 $('btnRecClose').addEventListener('click',closeModals);
 $('btnRecReset').addEventListener('click',function(){
@@ -3606,10 +3666,11 @@ function netSpawnRed(r){ if(actById(r.id)) return; const a=makeActor({id:r.id,na
 
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI();
+try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
   requestAnimationFrame(frame);
-  let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; dt=Math.min(dt,0.05);
+  let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; perfStep(Math.min(dt,0.5)); dt=Math.min(dt,0.05);
   T+=dt; pollPad();
   if(state==='play') update(dt);
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }

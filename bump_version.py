@@ -12,7 +12,7 @@ h, n2 = re.subn(r'(<meta name="game-version" content=")V[\d.]+(")', rf'\g<1>{v}\
 assert n1 == 1 and n2 == 1, 'index.html içinde sürüm satırı bulunamadı'
 (p/'index.html').write_text(h, encoding='utf-8')
 (p/'VERSION').write_text(v + '\n')
-(p/'version.json').write_text(json.dumps({'name': 'Türk Göklerinde', 'version': v, 'date': d}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+(p/'version.json').write_text(json.dumps({'name': 'Ay Yıldız: Hedef Kızıl Elma', 'version': v, 'date': d}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 c = (p/'CHANGELOG.md').read_text(encoding='utf-8')
 entry = f'## {v} — {d}\n- {note}\n\n'
 c = c.replace('\n## ', '\n' + entry + '## ', 1) if '\n## ' in c else c + entry

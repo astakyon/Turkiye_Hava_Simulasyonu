@@ -1,8 +1,12 @@
-# Türk Göklerinde — Uçuş Simülatörü
+# Ay Yıldız: Hedef Kızıl Elma
 
-Tarayıcıda çalışan, tek dosyalık (`index.html`) Türk havacılığı uçuş simülatörü. Kurulum yok: dosyayı aç ve uç.
+**Hilal Kanatlar** — Türk hava sistemleriyle uçuş ve hava muharebesi oyunu. Telefon (yatay) ve bilgisayarda tarayıcıdan oynanır; ileride Android uygulaması olarak da çıkacak.
 
-**Güncel sürüm:** V1.11 (bkz. [CHANGELOG.md](CHANGELOG.md))
+Gruplar: **Hilal Kanatlar** (hava sistemleri) · **Mavi Kanatlar** (deniz, yakında) · **Kara sistemleri** (yakında)
+
+Tek dosyalık (`index.html`) oyun; kurulum yok. Ana ekrana eklenebilir (PWA) ve ilk açılıştan sonra çevrimdışı da çalışır.
+
+**Güncel sürüm:** V1.20 (bkz. [CHANGELOG.md](CHANGELOG.md))
 
 ## Özellikler
 - 10 uçak: KAAN, ANKA-3, Hürjet, Hürkuş, ANKA, Aksungur, Kızılelma, Bayraktar TB2, TB3, Akıncı

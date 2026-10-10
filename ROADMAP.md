@@ -5,6 +5,20 @@
 - ✅ P2P çevrimiçi: lobi, oda kodu, 4 oyuncu, İşbirliği / Takım / Herkes herkese, bot doldurma, skor
 - ⏳ Sonraki: gerçek ağ koşullarında test (gecikme/kopma), yeniden bağlanma, sohbet, kendi sunucu seçeneği (8+ oyuncu), mobil veri optimizasyonu
 
+## Grafik ve içerik planı (karar: cilalı stilize, telefon öncelikli, ileride Android)
+| Aşama | Sürüm | İçerik | Durum |
+|---|---|---|---|
+| 0 | V1.20 | İsim/marka, gruplar (Hilal Kanatlar / Mavi Kanatlar / Kara), sınıf filtresi, araç kayıt sistemi, silah uyumu altyapısı, otomatik performans + FPS, PWA | ✅ |
+| 1 | V1.21 | Işık ve atmosfer: PBR malzeme, güneş gölgeleri, ton eşleme, gökyüzü/güneş, mesafe pusu, kanopi yansıması | ⏳ sıradaki |
+| 2 | V1.22 | Havalimanı: pist işaretleri, kenar/yaklaşma ışıkları, PAPI, kule, terminal, radar, itfaiye, yakıt, yer araçları, tabelalar | |
+| 3 | V1.23 | Hangar iç tasarımı: bölmeli hangarlar (kategori başına), iç aydınlatma, vitrin görünümü, silah sergisi | |
+| 4 | V1.24 | Ada/çevre: arazi dokuları, köy/yol/sahil, deniz yansıması, ağaç çeşitliliği, mesafeye göre detay | |
+| 5 | V1.25 | Uçak detayları: fotoğraflara yüksek benzerlik, panel çizgileri, çıkartmalar, ışıklar, takım ve kumanda yüzeyi animasyonu | |
+| 6 | V1.3x | Gerçek silah envanteri, yeni hava araçları; sonra Mavi Kanatlar (deniz) ve kara sistemleri | |
+
+### Android yolu
+1. PWA (V1.20 ✅) → 2. Play Store için TWA paketi (Bubblewrap) veya Capacitor → 3. imzalama, mağaza görselleri, gizlilik politikası.
+
 ## A. Online çok oyunculu (lobi, LAN / internet, arkadaşlarla)
 
 ### Hedef

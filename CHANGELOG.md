@@ -1,5 +1,15 @@
-# Değişiklik Günlüğü
+# Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
+
+## V1.20 — 2026-10-10
+Aşama 0: yeni isim, büyüyebilir araç sistemi, telefon performansı, Android hazırlığı.
+### Yeni
+- Oyunun yeni adı **Ay Yıldız: Hedef Kızıl Elma**; ay-yıldız logosu, yeni başlık ekranı.
+- Sistem grupları: **Hilal Kanatlar** (hava), **Mavi Kanatlar** (deniz, yakında), **Kara sistemleri** (yakında). Uçak seçiminde grup sekmeleri.
+- Sınıf filtresi: Tümü / Savaş uçağı / İHA-SİHA / Eğitim-hafif taarruz; araç kartlarında üretici (TUSAŞ, Baykar).
+- Araç kayıt sistemi (grup, sınıf, üretici, silah uyumu): yeni araç eklemek tek satır.
+- Telefon performansı: **Otomatik performans** (FPS 38'in altına düşerse çözünürlük kademeli düşer, düzelince geri çıkar) ve **FPS göstergesi** (Ayarlar).
+- Android/PWA hazırlığı: `manifest.webmanifest`, uygulama simgeleri, çevrimdışı önbellek (`sw.js`, sadece GitHub Pages'te). Telefonda "Ana ekrana ekle" ile tam ekran uygulama gibi açılır.
 
 ## V1.11 — 2026-10-10
 ### Düzeltme — bakım hangarı (özellikle telefonda)

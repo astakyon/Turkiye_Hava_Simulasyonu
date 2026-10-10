@@ -23,4 +23,4 @@ jobs:
           awk -v v="$V" 'index($0,"## "v" ")==1{f=1;next} /^## V/{if(f) exit} f' CHANGELOG.md > notes.md
           [ -s notes.md ] || echo "$V" > notes.md
           printf '\n\nOyna: https://%s.github.io/%s/\n' "${GITHUB_REPOSITORY_OWNER}" "${GITHUB_REPOSITORY#*/}" >> notes.md
-          gh release create "$V" --target "$GITHUB_SHA" --title "$V — Türk Göklerinde" --notes-file notes.md --latest
+          gh release create "$V" --target "$GITHUB_SHA" --title "$V — Ay Yıldız: Hedef Kızıl Elma" --notes-file notes.md --latest
