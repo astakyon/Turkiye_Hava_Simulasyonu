@@ -11,9 +11,9 @@ menuCam(0.05); T('camera near plane',camera.position.distanceTo(planeGroup.posit
 titleAct('missions'); T('missions open',menuMode==='missions'); T('cine in missions',cineOn());
 key('ArrowDown'); T('mis sel moved',misSel===1||misSel===0);
 misSel=MORDER.indexOf('dogfight'); renderMissions(); T('dogfight chips',/3<\/b> dalga/.test(els.misChips.innerHTML));
-misGo(); T('start modal from missions',menuMode==='start'&&missionId==='dogfight');
+misGo(); T('loadout before start (missions)',menuMode==='loadout'&&missionId==='dogfight'); loadDone(); T('start modal from missions',menuMode==='start');
 closeStart(); T('back to missions',menuMode==='missions');
 key('Escape'); T('esc -> title',menuMode==='title');
-titleAct('load'); T('load -> loadout panel',menuMode==='loadout');
+titleAct('settings'); T('settings item',true); closeModals(); enterHangar(); selectAircraft('anka'); preFlight('hangar'); T('unarmed skips loadout',menuMode==='start'); closeStart(); selectAircraft('kaan'); enterTitle(); titleAct('missions'); misGo(); T('missions -> loadout',menuMode==='loadout'); loadDone(); T('-> start from missions',menuMode==='start'&&startFrom==='missions'); closeStart(); T('back missions',menuMode==='missions'); enterTitle();
 enterTitle(); selectStart('air'); titleAct('fly'); T('quick fly',state==='play'&&!S.onGround);
 console.log('pass',ok,'fail',bad);

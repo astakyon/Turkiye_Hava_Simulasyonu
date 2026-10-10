@@ -1,9 +1,9 @@
 <!doctype html>
-<!-- Ay Yıldız: Hedef Kızıl Elma V1.21 · 2026-10-10 -->
+<!-- Ay Yıldız: Hedef Kızıl Elma V1.22 · 2026-10-10 -->
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.21">
+<meta name="game-version" content="V1.22">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -136,6 +136,8 @@ button{ font:inherit; color:var(--ink); cursor:pointer; }
 .clsrow{ display:flex; align-items:center; gap:10px; margin:0 0 8px; }
 .seg.sm button{ flex:0 0 auto; padding:5px 12px; font-size:12px; }
 .clsrow .cnt{ font-size:12px; color:var(--dim); }
+.cinefade{ position:fixed; inset:0; background:#050a14; opacity:0; pointer-events:none; z-index:1; transition:opacity .35s ease; }
+.cinefade.on{ opacity:1; transition:none; }
 .fps{ position:fixed; left:50%; bottom:2px; transform:translateX(-50%); font:600 11px "Chakra Petch",monospace; color:#7dffb0; background:rgba(0,0,0,.45); padding:1px 6px; border-radius:4px; z-index:9; pointer-events:none; }
 @media (max-height:560px){ .grptabs button{ padding:5px 10px; font-size:12px; } .grptabs button small{ display:none; } .clsrow{ margin-bottom:4px; } .seg.sm button{ padding:3px 10px; } #title .grp{ margin:10px 0 16px; } }
 @media (max-width:700px){ .grptabs{ top:auto; bottom:auto; left:auto; right:max(14px,env(safe-area-inset-right)); transform:none; } }
@@ -201,6 +203,9 @@ button{ font:inherit; color:var(--ink); cursor:pointer; }
 #startSeg small{ font-size:11px; font-weight:400; color:var(--dim); }
 .setup .mdesc{ margin:8px 0 0; }
 .setup .svc{ margin:0; } .setup .svc td{ padding:7px 4px; } .setup .svc td.cnt button{ width:38px; height:38px; }
+.lrow{ display:flex; gap:8px; position:sticky; bottom:0; margin-top:12px; z-index:1; } .lrow .btn{ padding:14px 16px; white-space:nowrap; min-width:96px; flex:none; } .lrow .go{ flex:1 1 auto !important; width:auto !important; margin-top:0 !important; position:static !important; box-shadow:none !important; }
+.lrow{ background:linear-gradient(0deg,rgba(10,18,32,.98) 70%,rgba(10,18,32,0)); padding-top:8px; }
+.setup .step{ color:#ff8a8a; }
 .setup .go{ margin-top:12px; padding:16px; font-size:18px; width:100%; position:sticky; bottom:0; z-index:1; box-shadow:0 -10px 18px rgba(10,18,32,.85); flex:none; }
 .setup .hint{ margin-top:8px; text-align:center; }
 @media (max-width:760px){ .setup{ top:auto; left:max(10px,env(safe-area-inset-left)); right:max(10px,env(safe-area-inset-right)); width:auto; max-height:64vh; padding:14px 14px 10px; }
@@ -333,7 +338,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <li><button class="mitem" type="button" data-act="hangar" id="btnStart"><span>01</span>UÇAK SEÇ<small id="mAac"></small></button></li>
       <li><button class="mitem" type="button" data-act="missions"><span>02</span>GÖREVLER<small id="mAmis"></small></button></li>
       <li><button class="mitem" type="button" data-act="net" id="btnNet"><span>03</span>ÇOK OYUNCULU<small>4 KİŞİ</small></button></li>
-      <li><button class="mitem" type="button" data-act="load"><span>04</span>SİLAH YÜKÜ<small id="mAload"></small></button></li>
+      <li><button class="mitem" type="button" data-act="settings"><span>04</span>AYARLAR<small id="mAload"></small></button></li>
     </ul>
   </div>
   <div class="tcap" id="tCap"><b></b><small></small></div>
@@ -344,7 +349,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <button class="tile p mitem" type="button" data-act="fly"><i>01</i><b>UÇ</b><small id="flySubB"></small></button>
       <button class="tile mitem" type="button" data-act="missions"><i>02</i><b>GÖREVLER</b><small>İt dalaşı, yer hedefleri…</small></button>
       <button class="tile mitem" type="button" data-act="net"><i>03</i><b>ÇOK OYUNCULU</b><small>Oda kur · koda katıl</small></button>
-      <button class="tile mitem" type="button" data-act="hangar"><i>04</i><b>HANGAR</b><small>Uçak seç · silah yükü</small></button>
+      <button class="tile mitem" type="button" data-act="hangar"><i>04</i><b>HANGAR</b><small>Uçağını seç</small></button>
     </div>
   </div>
   <div class="ticons ui"><button class="ic" type="button" id="btnSettings" aria-label="Ayarlar" title="Ayarlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button><button class="ic" type="button" id="btnControls" aria-label="Kontroller" title="Kontroller"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 13H9l-1.6 1.8A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16.5" cy="11" r=".6" fill="currentColor"/><circle cx="18" cy="12.8" r=".6" fill="currentColor"/></svg></button><button class="ic" type="button" id="btnRecords" aria-label="Rekorlar" title="Rekorlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/></svg></button></div>
@@ -377,25 +382,24 @@ input[type=range]{ width:100%; accent-color:var(--red); }
         <p class="desc" id="hDesc"></p>
       </div>
       <div class="selact">
-        <button class="btn load" id="btnLoad" type="button"><span>Silah yükü</span><small id="loadSum"></small></button>
         <button class="btn primary" id="btnPlay" type="button">Oyuna başla</button>
       </div>
     </div>
     <div class="clsrow"><div class="seg sm" id="clsSeg" aria-label="Sınıf filtresi"></div><span class="cnt" id="acCount"></span></div>
     <div class="chips" id="acChips" role="radiogroup" aria-label="Uçak seçimi"></div>
-    <p class="hint">Sürükle: etrafında dön · Tekerlek: yakınlaş · ← → uçak değiştir · Y: silah yükü · Enter: oyuna başla</p>
+    <p class="hint">Sürükle: etrafında dön · Tekerlek: yakınlaş · ← → uçak değiştir · Enter: oyuna başla</p>
   </div>
 </div>
 
 <div id="setupUI" class="screen hidden">
   <div class="setup ui">
-    <p class="kind" id="suKind"></p>
+    <p class="kind"><span class="step">Uçuş öncesi · silah yükü</span> · <span id="suKind"></span></p>
     <h2 id="suName">TUSAŞ KAAN</h2>
     <section>
       <h3>Silah yükü <span class="slots" id="suSlots"></span></h3>
       <table class="svc"><tbody id="suLoad"></tbody></table>
     </section>
-    <button class="btn primary go" id="btnLoadDone" type="button">Tamam</button>
+    <div class="lrow"><button class="btn" id="btnLoadBack" type="button">← Geri</button><button class="btn primary go" id="btnLoadDone" type="button">Devam →</button></div>
   </div>
 </div>
 
@@ -604,6 +608,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   <div class="twpn" id="tWpn"></div>
 </div>
 <div id="fps" class="fps hidden"></div>
+<div id="cineFade" class="cinefade"></div>
 <div id="rotate" class="hidden">Daha rahat oynamak için telefonu yatay çevir</div>
 
 <div id="prep" class="prep hidden">
@@ -617,7 +622,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.21', GAME_DATE='2026-10-10';
+const GAME_VERSION='V1.22', GAME_DATE='2026-10-10';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -2448,8 +2453,19 @@ function menuCam(dt){
   if(cineOn()&&activeId===selectedId){
     const st=uiStyle(), D=VIEW_D[selectedId]*(menuMode!=='title'?1.05:(st==='A'?0.85:1.0));
     cV1.crossVectors(CINE.fwd,cUP).normalize();
-    const sideA=(st==='A'||menuMode!=='title'); cV2.copy(CINE.pos).addScaledVector(CINE.fwd,-D*0.8).addScaledVector(cV1,sideA?-D*0.75:D*0.45); cV2.y+=D*(sideA?0.1:0.16);
-    cV2.sub(CINE.pos); if(!CINE.init){ CINE.off.copy(cV2); CINE.init=true; } else CINE.off.lerp(cV2,1-Math.exp(-3*dt)); camera.position.copy(CINE.pos).add(CINE.off);
+    const sideA=(st==='A'||menuMode!=='title');
+    CINE.shotT+=dt;
+    const SH=CINE_SHOTS[CINE.shot%CINE_SHOTS.length];
+    if(CINE.shotT>SH.dur){ CINE.shotT=0; CINE.shot=(CINE.shot+1)%CINE_SHOTS.length; CINE.init=false; const fd=$('cineFade'); fd.classList.add('on'); requestAnimationFrame(function(){ fd.classList.remove('on'); }); }
+    const S2=CINE_SHOTS[CINE.shot%CINE_SHOTS.length], sd=sideA?-1:1;
+    if(S2.fly){
+      if(!CINE.init){ CINE.fix.copy(CINE.pos).addScaledVector(CINE.fwd,Math.max(D*2,(CINE.spd||100)*1.3)).addScaledVector(cV1,sd*D*S2.r); CINE.fix.y+=D*S2.u; CINE.init=true; }
+      camera.position.copy(CINE.fix);
+    } else {
+      cV2.copy(CINE.pos).addScaledVector(CINE.fwd,D*S2.f).addScaledVector(cV1,sd*D*S2.r); cV2.y+=D*S2.u;
+      cV2.sub(CINE.pos); if(!CINE.init){ CINE.off.copy(cV2); CINE.init=true; } else CINE.off.lerp(cV2,1-Math.exp(-3*dt)); camera.position.copy(CINE.pos).add(CINE.off);
+    }
+    const gmin=Math.max(0,terrainH(camera.position.x,camera.position.z))+20; if(camera.position.y<gmin) camera.position.y=gmin;
     camera.lookAt(CINE.pos);
     const wide=window.innerWidth>760;
     if(menuMode!=='title'){ camera.rotateY(wide?0.3:0.26); camera.rotateX(0.2); } else if(st==='A') camera.rotateY(wide?0.3:0.26); else camera.rotateX(-0.03);
@@ -2800,7 +2816,7 @@ function refreshTitle(){
   $('title').classList.toggle('ui-a',st==='A'); $('title').classList.toggle('ui-b',st==='B');
   const sub=a.short+' · '+MISSIONS[missionId==='net'?'free':missionId].name+' · '+START_TXT[startPick];
   $('flySubA').textContent=sub; $('flySubB').textContent=sub;
-  $('mAac').textContent=AC_ORDER.length+' ARAÇ'; $('mAmis').textContent=MORDER.length+' GÖREV'; $('mAload').textContent=loadSummary(selectedId).toUpperCase();
+  $('mAac').textContent=AC_ORDER.length+' ARAÇ'; $('mAmis').textContent=MORDER.length+' GÖREV'; $('mAload').textContent=(uiStyle()==='A'?'ARAYÜZ · KOMUTA':'');
   $('tCap').querySelector('b').textContent=a.name; $('tCap').querySelector('small').textContent='Hilal Kanatlar · '+(CLASSES[r.cls]||'').toUpperCase();
   const sb='<b>'+a.name+'</b> · '+loadSummary(selectedId); $('sbAc').innerHTML=sb; $('sbAc2').innerHTML=sb;
   const on=(typeof navigator.onLine==='boolean')?navigator.onLine:true; $('sbNet').textContent=on?'İnternet var · çok oyunculu hazır':'Çevrimdışı'; $('sbNet').className=on?'on':'';
@@ -2812,7 +2828,7 @@ function titleAct(act){
   if(act==='hangar'){ enterHangar(); return; }
   if(act==='missions'){ openMissions(); return; }
   if(act==='net'){ openNet(); return; }
-  if(act==='load'){ enterHangar(); if(SLOTS[selectedId]>0) openLoadPanel(); return; }
+  if(act==='settings'){ syncSettingsUI(); openModal('settings'); return; }
 }
 $('title').addEventListener('click',function(e){ const b=e.target.closest('.mitem'); if(b){ titleAct(b.dataset.act); } });
 window.addEventListener('online',function(){ if(menuMode==='title') refreshTitle(); }); window.addEventListener('offline',function(){ if(menuMode==='title') refreshTitle(); });
@@ -2833,17 +2849,19 @@ function renderMissions(){
   $('misChips').innerHTML=ch.join('');
   $('btnMisAc').textContent='Uçak: '+AIRCRAFT[selectedId].short;
 }
-function misGo(){ selectMission(MORDER[misSel]); openStart('missions'); }
+function misGo(){ selectMission(MORDER[misSel]); preFlight('missions'); }
 $('misList').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const i=+b.dataset.i; if(i===misSel) misGo(); else { misSel=i; renderMissions(); } });
 $('btnMisGo').addEventListener('click',misGo);
 $('btnMisAc').addEventListener('click',enterHangar);
 $('btnMisBack').addEventListener('click',enterTitle);
 /* cinematic flight behind the main menu */
-const CINE={off:new THREE.Vector3(),ang:0.6,pos:new THREE.Vector3(),fwd:new THREE.Vector3(),q:new THREE.Quaternion(),bank:0,init:false};
+const CINE={shot:0,shotT:0,fix:new THREE.Vector3(),off:new THREE.Vector3(),ang:0.6,pos:new THREE.Vector3(),fwd:new THREE.Vector3(),q:new THREE.Quaternion(),bank:0,init:false};
 const cV1=new THREE.Vector3(), cV2=new THREE.Vector3(), cV3=new THREE.Vector3(), cM=new THREE.Matrix4(), cUP=new THREE.Vector3(0,1,0);
+/* camera shots around the flying aircraft: f = along the nose, r = to the side, u = up (in aircraft lengths); fly = fixed camera the aircraft flies past */
+const CINE_SHOTS=[{f:-0.8,r:0.75,u:0.12,dur:8},{f:1.25,r:0.7,u:0.18,dur:6},{f:-0.25,r:0.35,u:1.15,dur:6},{f:0,r:0.9,u:0.2,dur:4,fly:true},{f:0.25,r:0.95,u:-0.35,dur:6},{f:-1.3,r:0.12,u:0.22,dur:6}];
 function cineOn(){ return state==='menu'&&(menuMode==='title'||menuMode==='missions'||(menuMode==='start'&&startFrom==='missions')); }
 function cineStep(dt){
-  const R=3300; CINE.ang+=dt*Math.max(40,AIRCRAFT[selectedId].airV*0.55)/R;
+  const R=3300; CINE.spd=Math.max(40,AIRCRAFT[selectedId].airV*0.55); CINE.ang+=dt*CINE.spd/R;
   const a=CINE.ang; CINE.pos.set(700+Math.cos(a)*R,1350+Math.sin(a*2.3)*60,-1600+Math.sin(a)*R);
   CINE.fwd.set(-Math.sin(a),Math.cos(a*2.3)*60*2.3/R,Math.cos(a)).normalize(); CINE.bank=-0.42;
   cV1.crossVectors(CINE.fwd,cUP).normalize(); cV2.crossVectors(cV1,CINE.fwd).normalize();
@@ -2860,12 +2878,18 @@ function enterHangar(){
 let startPick='hangar'; try{ const sp=localStorage.getItem('kaan-sim-start'); if(sp==='hangar'||sp==='runway'||sp==='air') startPick=sp; }catch(e){}
 const START_ORDER=['hangar','runway','air'];
 function loadSummary(id){ const n=SLOTS[id]||0; if(n<=0) return 'silah taşımaz'; const l=loadoutOf(id), parts=WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }); return parts.join(' · ')||'boş'; }
-function openLoadPanel(){
-  if(state!=='menu'||!(SLOTS[selectedId]>0)) return;
+let loadFrom='hangar';
+function preFlight(from){            // after picking the aircraft: weapons first (if it carries any), then the start dialog
+  if(state!=='menu') return; loadFrom=(from==='missions')?'missions':'hangar';
+  if(SLOTS[selectedId]>0) openLoadPanel(loadFrom); else openStart(loadFrom);
+}
+function loadDone(){ const f=loadFrom; if(f==='missions'){ menuMode='missions'; showScreen('missionsUI'); renderMissions(); } else { menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2; showScreen('hangarUI'); refreshHangarUI(); } openStart(f); }
+function openLoadPanel(from){
+  if(state!=='menu'||!(SLOTS[selectedId]>0)) return; if(from) loadFrom=from;
   menuMode='loadout'; MENUV.idle=99; MENUV.zoom=1.05; MENUV.pitch=0.16;
   if(activeId!==selectedId) setAircraft(selectedId); showScreen('setupUI'); refreshSetup();
 }
-function closeLoadPanel(){ menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2; showScreen('hangarUI'); refreshHangarUI(); }
+function closeLoadPanel(){ if(loadFrom==='missions'){ openMissions(); return; } menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2; showScreen('hangarUI'); refreshHangarUI(); }
 function openStart(from){ if(state!=='menu') return; startFrom=(from==='missions')?'missions':'hangar'; menuMode='start'; $('startUI').classList.remove('hidden'); refreshStart(); }
 function closeStart(){ $('startUI').classList.add('hidden'); menuMode=startFrom==='missions'?'missions':'hangar'; }
 function refreshStart(){
@@ -2894,9 +2918,9 @@ $('suLoad').addEventListener('click',function(e){ const b=e.target.closest('butt
 function aiSave(){ SETTINGS.ai={enemies:+$('aiEnemy').value,wing:$('aiWing').value==='1',skill:+$('aiSkill').value}; saveSettings(); }
 ['aiEnemy','aiWing','aiSkill'].forEach(function(id){ $(id).addEventListener('change',aiSave); });
 $('startSeg').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b) launchFrom(b.dataset.s); });
-$('btnLoadDone').addEventListener('click',closeLoadPanel);
-$('btnLoad').addEventListener('click',openLoadPanel);
-$('btnPlay').addEventListener('click',function(){ openStart('hangar'); });
+$('btnLoadDone').addEventListener('click',loadDone);
+$('btnLoadBack').addEventListener('click',closeLoadPanel);
+$('btnPlay').addEventListener('click',function(){ preFlight('hangar'); });
 $('btnStartX').addEventListener('click',closeStart);
 $('startUI').addEventListener('click',function(e){ if(e.target===$('startUI')) closeStart(); });
 $('acPrev').addEventListener('click',function(){ cycleAircraft(-1); });
@@ -2916,7 +2940,6 @@ function refreshHangarUI(){
   $('hName').textContent=a.name; $('hKind').textContent=regOf(selectedId).maker+' · '+a.kind; $('hDesc').textContent=a.desc;
   const st=[a.len+' uzunluk',a.span+' kanat açıklığı',a.uav?'İnsansız':'Pilotlu']; if(a.hasAB) st.push('Art yakıcı');
   st.push(SLOTS[selectedId]>0?(SLOTS[selectedId]+' silah yeri'):'Silahsız'); if(FLARES[selectedId]) st.push(FLARES[selectedId]+' flare');
-  $('loadSum').textContent=loadSummary(selectedId); $('btnLoad').disabled=!(SLOTS[selectedId]>0);
   $('hStats').innerHTML=st.map(function(t){ return '<li>'+t+'</li>'; }).join('');
   Array.prototype.forEach.call($('acChips').children,function(b){
     const on=b.dataset.id===selectedId; b.setAttribute('aria-checked',on?'true':'false');
@@ -3055,9 +3078,9 @@ function pollPad(){
   if(state==='menu'){
     if(menuMode==='title'){ const eU=press(12), eD=press(13); if(eD||eR) titleFocus(tFocus+1); else if(eU||eL) titleFocus(tFocus-1); else if(eA){ const L=titleItems(); if(L[tFocus]) titleAct(L[tFocus].dataset.act); } }
     else if(menuMode==='missions'){ const eU=press(12), eD=press(13); if(eD||eU){ misSel=(misSel+(eD?1:-1)+MORDER.length)%MORDER.length; renderMissions(); } else if(eA) misGo(); else if(eB) enterTitle(); }
-    else if(menuMode==='loadout'){ if(eA||eB) closeLoadPanel(); }
+    else if(menuMode==='loadout'){ if(eA) loadDone(); else if(eB) closeLoadPanel(); }
     else if(menuMode==='start'){ if(eA) launchFrom(startPick); else if(eB) closeStart(); else if(eLB) cycleMission(-1); else if(eRB) cycleMission(1); else if(eL||eX) cycleStart(-1); else if(eR||eY) cycleStart(1); }
-    else{ if(eL) cycleAircraft(-1); else if(eR) cycleAircraft(1); else if(eA) openStart(); else if(eX) openLoadPanel(); else if(eB) enterTitle(); }
+    else{ if(eL) cycleAircraft(-1); else if(eR) cycleAircraft(1); else if(eA) preFlight('hangar'); else if(eB) enterTitle(); }
   }
   else if(state==='paused'){ if(eA||eStart) resumeGame(); else if(eB) toHangarFromPause(); }
   else if(state==='mend'){ if(eA) restartMission(); else if(eB) endToHangar(); }
@@ -3207,7 +3230,7 @@ window.addEventListener('keydown',e=>{
       if((e.code==='Enter'||e.code==='Space')&&!onBtn){ e.preventDefault(); misGo(); return; }
       if(e.code==='Escape'){ enterTitle(); }
       return; }
-    if(menuMode==='loadout'){ if(e.code==='Escape'||e.code==='KeyY'||(e.code==='Enter'&&!onBtn)){ e.preventDefault(); closeLoadPanel(); } return; }
+    if(menuMode==='loadout'){ if(e.code==='Escape'){ e.preventDefault(); closeLoadPanel(); } else if(e.code==='Enter'&&!onBtn){ e.preventDefault(); loadDone(); } return; }
     if(menuMode==='start'){
       if(e.code==='Escape'){ closeStart(); return; }
       if(e.code==='ArrowLeft'||e.code==='ArrowRight'){ e.preventDefault(); cycleStart(e.code==='ArrowLeft'?-1:1); return; }
@@ -3217,8 +3240,7 @@ window.addEventListener('keydown',e=>{
       return;
     }
     if(e.code==='ArrowLeft'||e.code==='ArrowRight'){ e.preventDefault(); cycleAircraft(e.code==='ArrowLeft'?-1:1); return; }
-    if(e.code==='Enter'&&!onBtn){ e.preventDefault(); openStart(); return; }
-    if(e.code==='KeyY'){ openLoadPanel(); return; }
+    if(e.code==='Enter'&&!onBtn){ e.preventDefault(); preFlight('hangar'); return; }
     if(e.code==='Escape'){ enterTitle(); return; }
     if(e.code==='KeyV'){ MENUV.zoom=1; MENUV.pitch=0.2; MENUV.idle=0; return; }
     return;

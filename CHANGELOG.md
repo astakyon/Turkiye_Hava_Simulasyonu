@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.22 — 2026-10-10
+### Değişti
+- Uçak seçiminden **Silah yükü** düğmesi kaldırıldı. Silah yükü artık uçuş öncesi bir adım: uçağı seç → **Oyuna başla** → silah yükü (← Geri / Devam →) → başlangıç penceresi. Silah taşımayan uçaklarda (ANKA) bu adım atlanır. Görevler ekranındaki **Göreve başla** da aynı sırayı izler.
+- Komuta menüsünde "Silah yükü" yerine **Ayarlar**; Sinematik menüde Hangar kartı "Uçağını seç".
+- Ana menü arka planı: uçak artık **6 farklı kamera açısından** gösteriliyor (yan takip, önden 3/4, tepeden, yanından geçiş, alttan, arkadan), açılar kısa bir kararmayla değişiyor.
+
 ## V1.21 — 2026-10-10
 ### Yeni — ana menü
 - İki ana menü tasarımı: **Komuta** (solda numaralı liste, büyük UÇ kartı) ve **Sinematik** (ortada başlık, altta dört büyük kart).

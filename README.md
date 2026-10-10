@@ -6,7 +6,7 @@ Gruplar: **Hilal Kanatlar** (hava sistemleri) · **Mavi Kanatlar** (deniz, yakı
 
 Tek dosyalık (`index.html`) oyun; kurulum yok. Ana ekrana eklenebilir (PWA) ve ilk açılıştan sonra çevrimdışı da çalışır.
 
-**Güncel sürüm:** V1.21 (bkz. [CHANGELOG.md](CHANGELOG.md))
+**Güncel sürüm:** V1.22 (bkz. [CHANGELOG.md](CHANGELOG.md))
 
 ## Özellikler
 - 10 uçak: KAAN, ANKA-3, Hürjet, Hürkuş, ANKA, Aksungur, Kızılelma, Bayraktar TB2, TB3, Akıncı
