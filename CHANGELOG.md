@@ -1,6 +1,20 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.34 — 2026-10-10
+### Yeni — Üssü gez (yaya ve araç)
+- **Birinci şahıs yürüyüş:** başlangıç penceresinde yeni **Üssü gez** seçeneği var. Ayrıca uçuşta duraklatma menüsünde **Yürüyerek gez** düğmesi var. Seçtiğin uçağın yanında, hangarın içinde başlarsın.
+  - Bilgisayarda: WASD ile yürü, fareyle bak (ekrana tıklayınca imleç kilitlenir), Shift ile koş.
+  - Telefonda: sol çubukla yürü, ekranı sürükleyerek bak, KOŞ düğmesiyle koş.
+  - Duvarlar, binalar, tezgâhlar, araçlar ve uçak gövdeleri seni durdurur; kanatların altından geçebilirsin.
+- **Uçağa bin:** hangardaki herhangi bir uçağa yaklaşıp **E** tuşuna (telefonda UÇAĞA BİN) basınca o uçakla hangardan taksiye başlarsın.
+- **Araç:** hangarın içinde sarı "BENİ İZLE" aracı park halinde duruyor.
+  - Yaklaşıp **E** (telefonda BİN) ile binersin; W/S gaz-fren, A/D direksiyon, Space el freni.
+  - **C** ile arkadan ya da sürücü koltuğundan bakabilirsin; fareyle veya sürükleyerek kamerayı çevirebilirsin.
+  - Araç binalara ve duvarlara çarpınca durur. Hızı km/sa olarak ekranda görünür.
+  - Araç bıraktığın yerde kalır.
+- Kontroller ekranına "Üssü gez" bölümü eklendi.
+
 ## V1.33 — 2026-10-10
 ### Düzeltme
 - **Hangar köşesinde görünmez duvar:** hangardan çıkıp taksi yolunun virajını dönerken uçak hangarın doğu duvarına takılıyordu. Duvar 10 m içeri alındı. Çarpışma artık uçağın gerçek şekline (burun, kuyruk, kanat uçları) göre hesaplanıyor; eskiden çapraz giderken uçağın çevresine büyük bir kutu çiziliyordu.

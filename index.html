@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.33">
+<meta name="game-version" content="V1.34">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -214,7 +214,8 @@ button{ font:inherit; color:var(--ink); cursor:pointer; }
 .startcard .sub{ margin:0 0 4px; }
 .startcard .mdesc{ margin:8px 0 0; }
 .xbtn{ position:absolute; top:12px; right:12px; width:38px; height:38px; border-radius:50%; border:1px solid var(--line); background:rgba(255,255,255,.06); font-size:16px; }
-.startopts{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.startopts{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+@media (max-width:980px){ .startopts{ grid-template-columns:repeat(2,1fr); } }
 .startopts button{ text-align:left; padding:16px 14px; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.06); display:flex; flex-direction:column; gap:4px; min-height:84px; }
 .startopts button b{ font-size:18px; } .startopts button small{ font-size:12px; color:var(--dim); line-height:1.3; }
 .startopts button:hover{ background:rgba(227,10,23,.18); border-color:var(--red); }
@@ -348,6 +349,8 @@ kbd{ font:inherit; font-size:12px; font-weight:600; min-width:24px; padding:3px 
 .ttop{ position:absolute; left:max(10px,calc(env(safe-area-inset-left,0px) + 8px)); top:max(8px,env(safe-area-inset-top,0px)); display:flex; gap:8px; }
 .ttop button{ height:36px; min-width:44px; padding:0 12px; border-radius:18px; font-size:11px; }
 .ttop button.hidden{ display:none; }
+#wtouch .wright{ right:max(18px,calc(env(safe-area-inset-right,0px) + 14px)); bottom:max(18px,calc(env(safe-area-inset-bottom,0px) + 14px)); flex-direction:row; align-items:flex-end; gap:14px; }
+#wAct.off{ visibility:hidden; } #wRun.hidden{ display:none; } #wAct{ font-size:13px; }
 .touch-on .prep{ right:auto; left:14px; top:36%; width:min(250px,42vw); }
 #rotate{ position:fixed; left:50%; top:max(10px,env(safe-area-inset-top,0px)); transform:translateX(-50%); z-index:6; background:var(--glass); border:1px solid var(--line); border-radius:999px; padding:8px 16px; font-size:13px; pointer-events:none; }
 @media (max-height:560px){
@@ -473,6 +476,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <button type="button" data-s="hangar"><b>Hangardan</b><small>Taksi yolundan piste git</small></button>
       <button type="button" data-s="runway"><b>Pistten</b><small>Pist başında, kalkışa hazır</small></button>
       <button type="button" data-s="air"><b>Havada</b><small>Doğrudan uçuşla başla</small></button>
+      <button type="button" data-s="walk"><b>Üssü gez</b><small>Hangarda yürü, araca bin</small></button>
     </div>
   </div>
 </div>
@@ -484,6 +488,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
     <div class="stack">
       <button class="btn primary" id="btnResume">Devam et</button>
       <button class="btn" id="btnToHangar">Hangara dön</button>
+      <button class="btn" id="btnWalk">Yürüyerek gez</button>
       <button class="btn" id="btnPauseControls">Kontroller</button>
       <button class="btn" id="btnPauseSettings">Ayarlar</button>
     </div>
@@ -523,6 +528,15 @@ input[type=range]{ width:100%; accent-color:var(--red); }
           <li><span class="k"><kbd>Y</kbd></span>Yukarı-aşağı ters çevir</li>
           <li><span class="k"><kbd>M</kbd></span>Sesi aç / kapat</li>
           <li><span class="k"><kbd>P</kbd><kbd>Esc</kbd></span>Duraklat</li>
+        </ul>
+        <h3>Üssü gez (yaya / araç)</h3>
+        <ul class="keys">
+          <li><span class="k"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>Yürü / araçta gaz-fren ve direksiyon</li>
+          <li><span class="k"><kbd>Fare</kbd></span>Etrafa bak (ekrana tıkla, imleç kilitlenir; Esc bırakır)</li>
+          <li><span class="k"><kbd>Shift</kbd></span>Koş (Caps Lock: sürekli koş)</li>
+          <li><span class="k"><kbd>E</kbd></span>Araca bin / in · yakındaki uçağa bin ve uç</li>
+          <li><span class="k"><kbd>Space</kbd></span>El freni</li>
+          <li><span class="k"><kbd>C</kbd></span>Araç kamerası: arkadan / sürücü koltuğu</li>
         </ul>
       </div>
       <div>
@@ -678,6 +692,11 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   <div class="tthr" id="tThr"><div class="tabz" id="tABZ">ART<br>YAKICI</div><div class="tthrfill" id="tThrFill"></div><div class="tthrlbl" id="tThrLbl">GAZ<br>0%</div></div>
   <div class="twpn" id="tWpn"></div>
 </div>
+<div id="wtouch" class="touch hidden">
+  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button></div>
+  <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
+  <div class="tright wright"><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
+</div>
 <div id="fps" class="fps hidden"></div>
 <div id="rotate" class="hidden">Daha rahat oynamak için telefonu yatay çevir</div>
 
@@ -692,7 +711,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.33', GAME_DATE='2026-10-10';
+const GAME_VERSION='V1.34', GAME_DATE='2026-10-10';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -783,7 +802,7 @@ function applyShadows(){
 const shFocus=new THREE.Vector3();
 function shadowFollow(){
   if(!renderer.shadowMap.enabled) return;
-  if(state==='menu'){ if(typeof cineOn==='function'&&cineOn()) shFocus.copy(CINE.pos); else shFocus.copy(MENUV.tgt); } else shFocus.copy(S.pos);
+  if(state==='menu'){ if(typeof cineOn==='function'&&cineOn()) shFocus.copy(CINE.pos); else shFocus.copy(MENUV.tgt); } else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) shFocus.copy(camera.position); else shFocus.copy(S.pos);
   const tx=Math.round(shFocus.x/2)*2, ty=Math.round(shFocus.y/2)*2, tz=Math.round(shFocus.z/2)*2;       /* snap to reduce shimmering */
   sunLight.target.position.set(tx,ty,tz); sunLight.position.set(tx,ty,tz).addScaledVector(SUN,1800); sunLight.target.updateMatrixWorld();
 }
@@ -940,11 +959,22 @@ function vehTruck(kind){
   return g;
 }
 function vehCar(kind){
-  const M=apMats(), g=new THREE.Group(), col=kind==='follow'?M.yel:M.olive;
-  apBox(g,col,0,0.35,0,1.9,0.85,4.6); apBox(g,col,0,1.2,kind==='pickup'?-0.7:0.1,1.75,0.75,kind==='pickup'?2.0:2.6);
-  apBox(g,M.win,0,1.25,kind==='pickup'?-0.7:0.1,1.8,0.55,kind==='pickup'?1.6:2.3);
-  if(kind==='follow'){ const s=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.5,0.12),new THREE.MeshLambertMaterial({map:signTex('BENİ İZLE','#111','#ffd21a',256,64)})); s.position.set(0,2.25,0.1); g.add(s); apBox(g,M.amber,0,1.95,0.1,1.2,0.16,0.3); }
-  [-1.5,1.5].forEach(function(z){ apWheel(g,M.tire,0.92,z,0.38,0.3); apWheel(g,M.tire,-0.92,z,0.38,0.3); });
+  const M=apMats(), g=new THREE.Group(), col=kind==='follow'?M.yel:M.olive, pick=kind==='pickup';
+  apBox(g,M.dark,0,0.28,0,1.92,0.22,4.7);                                   // chassis / sills
+  apBox(g,col,0,0.42,0.05,1.9,0.62,4.55);                                   // lower body
+  { const hood=new THREE.Mesh(new THREE.BoxGeometry(1.86,0.22,1.25),col); hood.position.set(0,1.08,-1.62); hood.rotation.x=0.1; g.add(hood); }
+  const cz=pick?-0.55:0.25, cl=pick?1.7:2.3;
+  { const cab=new THREE.Mesh(new THREE.CylinderGeometry(0.66,0.9,0.72,4,1),col); cab.rotation.y=Math.PI/4; cab.scale.set(1.36,1,cl/1.25); cab.position.set(0,1.38,cz); g.add(cab);
+    const gl=new THREE.Mesh(new THREE.CylinderGeometry(0.665,0.875,0.5,4,1),M.win); gl.rotation.y=Math.PI/4; gl.scale.set(1.37,1,cl/1.25+0.02); gl.position.set(0,1.36,cz); g.add(gl); }
+  if(pick){ apBox(g,M.dark,0,1.04,1.25,1.78,0.05,2.1); [-0.92,0.92].forEach(function(x){ apBox(g,col,x,1.04,1.25,0.07,0.38,2.1); }); apBox(g,col,0,1.04,2.28,1.86,0.38,0.07); }
+  apBox(g,M.dark,0,0.3,-2.42,1.96,0.3,0.18); apBox(g,M.dark,0,0.3,2.42,1.96,0.3,0.18);   // bumpers
+  apBox(g,M.dark,0,0.66,-2.35,1.1,0.26,0.05);                                         // grille
+  [-0.72,0.72].forEach(function(x){ apBox(g,M.lamp,x,0.68,-2.34,0.36,0.18,0.04); apBox(g,M.redL,x,0.72,2.34,0.3,0.16,0.04); apBox(g,M.dark,x*1.4,1.2,-0.6,0.18,0.14,0.08); });
+  [-0.96,0.96].forEach(function(x){ apBox(g,M.dark,x,0.5,-1.55,0.05,0.5,1.1); apBox(g,M.dark,x,0.5,1.55,0.05,0.5,1.1); });   // wheel arches
+  if(kind==='follow'){ const s=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.42,0.1),new THREE.MeshLambertMaterial({map:signTex('BENİ İZLE','#111','#ffd21a',256,64)})); s.position.set(0,2.05,cz); g.add(s);
+    apBox(g,M.amber,-0.55,1.76,cz,0.36,0.16,0.3); apBox(g,M.amber,0.55,1.76,cz,0.36,0.16,0.3); apBox(g,M.dark,0,1.74,cz,1.5,0.06,0.34);
+    for(let i=0;i<6;i++) apBox(g,i%2?M.white:M.dark,-0.85+i*0.34,0.6,0.05,0.34,0.16,4.4); }
+  [-1.5,1.5].forEach(function(z){ apWheel(g,M.tire,0.9,z,0.38,0.3); apWheel(g,M.tire,-0.9,z,0.38,0.3); apWheel(g,M.metal,0.92,z,0.2,0.32); apWheel(g,M.metal,-0.92,z,0.2,0.32); });
   return g;
 }
 function vehTug(){ const M=apMats(), g=new THREE.Group(); apBox(g,M.yel,0,0.3,0,2.2,0.9,4.2); apBox(g,M.dark,0,1.2,1.0,1.4,1.3,1.3); apBox(g,M.win,0,1.7,0.33,1.3,0.7,0.05);
@@ -953,7 +983,7 @@ function vehGPU(){ const M=apMats(), g=new THREE.Group(); apBox(g,M.yel,0,0.45,0
   [-0.9,0.9].forEach(function(z){ apWheel(g,M.tire,0.85,z,0.32,0.25); apWheel(g,M.tire,-0.85,z,0.32,0.25); }); return g; }
 function vehBus(){ const M=apMats(), g=new THREE.Group(); apBox(g,M.olive,0,0.45,0,2.5,2.7,10); apBox(g,M.win,0,1.9,0,2.54,0.9,8.6); apBox(g,M.win,0,1.5,-5.02,2.2,1.3,0.06);
   [-3.4,3.2].forEach(function(z){ apWheel(g,M.tire,1.1,z,0.5,0.4); apWheel(g,M.tire,-1.1,z,0.5,0.4); }); return g; }
-function apPlace(p,veh,x,z,head){ veh.position.set(x,AIRFIELD_Y+0.2,z); veh.rotation.y=head; p.add(veh); return veh; }
+function apPlace(p,veh,x,z,head){ veh.position.set(x,AIRFIELD_Y+0.2,z); veh.rotation.y=head; p.add(veh); wbAdd(veh); return veh; }
 function dotTexture(){ return apTex(32,32,function(x){ const g=x.createRadialGradient(16,16,1,16,16,15); g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.55,'rgba(255,255,255,1)'); g.addColorStop(0.8,'rgba(255,255,255,0.55)'); g.addColorStop(1,'rgba(255,255,255,0)'); x.fillStyle=g; x.fillRect(0,0,32,32); }); }
 function apPoints(list,size){ // list of [x,y,z,r,g,b]
   const P=new Float32Array(list.length*3), C=new Float32Array(list.length*3);
@@ -1710,7 +1740,7 @@ function indoorize(grp){
     mesh.geometry.setAttribute('color',new THREE.BufferAttribute(C,3)); mesh.material=indoorMat(m); mesh.userData.rs=false; });
   return grp;
 }
-function hgAt(p,obj,x,z,rot){ obj.position.set(x,AIRFIELD_Y+0.25,z); obj.rotation.y=rot||0; p.add(obj); return obj; }
+function hgAt(p,obj,x,z,rot){ obj.position.set(x,AIRFIELD_Y+0.25,z); obj.rotation.y=rot||0; p.add(obj); wbAdd(obj); return obj; }
 function hgSign(p,text,bg,fg,w,h,x,y,z,rot,tw,th){ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshLambertMaterial({map:signTex(text,bg,fg,tw||1024,th||128)})); m.position.set(x,y,z); m.rotation.y=rot||0; p.add(m); return m; }
 /* truss along z (from z0 to z1) at x, bottom chord at yb */
 function hgTruss(p,mat,x,z0,z1,yb,h){
@@ -1829,14 +1859,14 @@ function buildHangar(){
     const model=def.build(), g=upgradeModel(model.group);
     g.position.set(x,gy+def.gearOff,HANGAR.z); g.userData.id=id; scene.add(g);
     const label=makeLabel(def.short); label.position.set(x,gy+def.gearOff+def.cam[0]*1.1+1.5,HANGAR.z); scene.add(label);
-    const bb=new THREE.Box3().setFromObject(g); displays[id]={model:model,g:g,label:label,x:x,ox:(bb.min.x+bb.max.x)/2-x,oz:(bb.min.z+bb.max.z)/2-HANGAR.z};
+    const bb=new THREE.Box3().setFromObject(g); displays[id]={model:model,g:g,label:label,x:x,ox:(bb.min.x+bb.max.x)/2-x,oz:(bb.min.z+bb.max.z)/2-HANGAR.z,len:bb.max.z-bb.min.z};
     const bl=blobMesh(); bl.scale.set((bb.max.x-bb.min.x)*0.75,1,(bb.max.z-bb.min.z)*0.95); bl.position.set((bb.min.x+bb.max.x)/2-x,0.32-def.gearOff,(bb.min.z+bb.max.z)/2-HANGAR.z); g.add(bl);
   });
 }
 function updateHangar(dt){
   hangarCull();
   AC_ORDER.forEach(function(id){
-    const d=displays[id], sel=(id===selectedId), hide=(state!=='menu'&&id===activeId)||(state==='menu'&&menuMode!=='title'&&sel&&id===activeId);
+    const d=displays[id], sel=(id===selectedId), hide=(state!=='menu'&&state!=='walk'&&!(state==='paused'&&WALK.from==='walk')&&id===activeId)||(state==='menu'&&menuMode!=='title'&&sel&&id===activeId);
     d.g.visible=!hide; d.label.visible=!hide&&state==='menu'&&menuMode==='hangar'&&sel;
     if(hide) return;
     const m=d.model;
@@ -3151,6 +3181,7 @@ function svcPointerOn(){ return S.onGround&&S.clearance&&!S.taxi&&needsService()
 function drawHUD(){
   hx.setTransform(DPR,0,0,DPR,0,0); hx.clearRect(0,0,HW,HH);
   if(state==='menu'||state==='photo') return;
+  if(state==='walk'||(state==='paused'&&WALK.from==='walk')){ drawWalkHUD(); return; }
   const w=HW, h=HH; sc=clamp(Math.min(w,h)/760,0.7,1.5);
   const cx=w/2, cy=h/2, tch=TOUCH.vis;
   hx.lineWidth=1.6*sc; hx.strokeStyle=C; hx.fillStyle=C; hx.shadowColor='rgba(0,16,32,0.8)'; hx.shadowBlur=4; hx.textBaseline='middle';
@@ -3358,7 +3389,7 @@ function controlsOpen(){ return !$('controls').classList.contains('hidden'); }
 function enterTitle(){ if(!NET.on) aiClear(); state='menu'; menuMode='title'; if(activeId!==selectedId) setAircraft(selectedId); showScreen('title'); setPrep(false,[],''); refreshTitle(); }
 /* ---------- main menu (A: Komuta, B: Sinematik) */
 let tFocus=0, startFrom='hangar', misSel=0;
-const START_TXT={hangar:'hangardan',runway:'pistten',air:'havada'};
+const START_TXT={hangar:'hangardan',runway:'pistten',air:'havada',walk:'üssü gezerek'};
 function uiStyle(){ const s=SETTINGS.ui||'auto'; if(s==='A'||s==='B') return s; let coarse=false; try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){} return (coarse||Math.min(window.innerWidth,window.innerHeight)<500)?'B':'A'; }
 function titleItems(){ return Array.prototype.slice.call(document.querySelectorAll(uiStyle()==='A'?'#titleA .mitem':'#titleB .mitem')); }
 function titleFocus(i){ const L=titleItems(); if(!L.length) return; tFocus=(i+L.length)%L.length; L.forEach(function(b,j){ b.classList.toggle('kf',j===tFocus); }); }
@@ -3425,12 +3456,13 @@ $('setTabs').addEventListener('click',function(e){ const b=e.target.closest('but
 function setTab(t){ Array.prototype.forEach.call($('setTabs').children,function(x){ x.setAttribute('aria-selected',String(x.dataset.tab===t)); }); Array.prototype.forEach.call(document.querySelectorAll('#settings section'),function(s){ s.classList.toggle('hidden',s.dataset.tab!==t); }); }
 $('setUi').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.ui=b.dataset.u; saveSettings(); syncSettingsUI(); refreshTitle(); });
 function enterHangar(){
+  walkLeave(); WALK.from='play';
   if(!NET.on) aiClear();
   setPrep(false,[],''); state='menu'; menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2;
   setAircraft(selectedId); resetFlight('runway'); showScreen('hangarUI'); refreshHangarUI();
 }
 let startPick='hangar'; try{ const sp=localStorage.getItem('kaan-sim-start'); if(sp==='hangar'||sp==='runway'||sp==='air') startPick=sp; }catch(e){}
-const START_ORDER=['hangar','runway','air'];
+const START_ORDER=['hangar','runway','air','walk'];
 function loadSummary(id){ const n=SLOTS[id]||0; if(n<=0) return 'silah taşımaz'; const l=loadoutOf(id), parts=WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }); return parts.join(' · ')||'boş'; }
 let loadFrom='hangar';
 function preFlight(from){            // after picking the aircraft: weapons first (if it carries any), then the start dialog
@@ -3452,7 +3484,7 @@ function refreshStart(){
   refreshMission();
 }
 function selectStart(s){ startPick=s; try{ localStorage.setItem('kaan-sim-start',s); }catch(e){} refreshStart(); }
-function cycleStart(d){ selectStart(START_ORDER[(START_ORDER.indexOf(startPick)+d+3)%3]); }
+function cycleStart(d){ const n=START_ORDER.length; selectStart(START_ORDER[(START_ORDER.indexOf(startPick)+d+n)%n]); }
 function launchFrom(s){ selectStart(s); $('startUI').classList.add('hidden'); startGame(s); }
 function setupAdjust(k,d){
   const n=SLOTS[selectedId]||0, l=Object.assign({},loadoutOf(selectedId)), used=WORDER.reduce(function(a,x){ return a+(l[x]||0); },0);
@@ -3480,14 +3512,16 @@ $('startUI').addEventListener('click',function(e){ if(e.target===$('startUI')) c
 $('acPrev').addEventListener('click',function(){ cycleAircraft(-1); });
 $('acNext').addEventListener('click',function(){ cycleAircraft(1); });
 function startGame(mode){
+  if(mode==='walk'){ startWalk(); return; }
+  walkLeave(); WALK.from='play';
   initAudio(); padFireLock=true; startMode=mode; CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1;
   if(activeId!==selectedId) setAircraft(selectedId);
   resetFlight(mode); score=0; msgs.length=0; camMode=0; setupMission();
   state='play'; showScreen(''); $('gl').focus();
   toast(mode==='hangar'?'Yeşil ışıkları takip ederek taksi yolundan piste git. Pist girişine gelince uçak otomatik duracak ve hazırlıklar başlayacak (T: baştan otomatik taksi, L: taksiyi atla)':(mode==='runway'?'Gazı aç (R), hızlan ve '+Math.round(CUR.vr*3.6)+' km/sa üzerinde burnu kaldır':CUR.name+(MS.rings?' — halkalar seni bekliyor, ilk halka kuzeyde':' — havadasın, iyi uçuşlar')),'#b8ecff');
 }
-function pauseGame(){ if(state!=='play') return; state='paused'; showScreen('pause'); }
-function resumeGame(){ if(state!=='paused') return; padFireLock=true; state='play'; showScreen(''); $('gl').focus(); }
+function pauseGame(){ if(state!=='play'&&state!=='walk') return; WALK.from=state; state='paused'; showScreen('pause'); $('btnWalk').classList.toggle('hidden',WALK.from==='walk'||NET.on); }
+function resumeGame(){ if(state!=='paused') return; padFireLock=true; state=WALK.from==='walk'?'walk':'play'; showScreen(''); $('gl').focus(); }
 function toHangarFromPause(){ if(state!=='paused') return; if(NET.on){ netLeave(); return; } enterHangar(); }
 function refreshHangarUI(){
   const a=AIRCRAFT[selectedId];
@@ -3541,6 +3575,7 @@ $('btnCtlClose').addEventListener('click',closeControls);
 $('btnBack').addEventListener('click',enterTitle);
 $('btnResume').addEventListener('click',resumeGame);
 $('btnToHangar').addEventListener('click',toHangarFromPause);
+$('btnWalk').addEventListener('click',function(){ if(state==='paused') startWalk(); });
 $('gl').addEventListener('click',()=>$('gl').focus());
 
 /* ------------------------------------------------------------------ settings / records / photo UI */
@@ -3725,10 +3760,12 @@ let dragMoved=0, lastPinch=0, lastTap=0;
 function pinchDist(){ const v=Array.from(ptrs.values()); return v.length<2?0:Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y); }
 function orbitBy(dx,dy){
   dx*=SETTINGS.sens; dy*=SETTINGS.sens;
+  if(state==='walk'){ walkLook(dx,dy); return; }
   if(state==='menu'){ if(menuMode==='title') return; MENUV.yaw-=dx*0.006; MENUV.pitch=clamp(MENUV.pitch+dy*0.005,-0.1,1.35); MENUV.idle=0; }
   else{ CAMU.yaw-=dx*0.006; CAMU.pitch=clamp(CAMU.pitch-dy*0.005,-1.3,1.2); }
 }
 function zoomBy(f){
+  if(state==='walk'){ WALK.camD=clamp(WALK.camD*f,0.5,2.5); return; }
   if(state==='menu'){ if(menuMode==='title') return; MENUV.zoom=clamp(MENUV.zoom*f,0.3,2.4); MENUV.idle=0; }
   else if(camMode===0){ CAMU.zoom=clamp(CAMU.zoom*f,0.35,4); }
 }
@@ -3762,11 +3799,12 @@ window.addEventListener('wheel',function(e){
   e.preventDefault(); zoomBy(Math.exp(clamp(e.deltaY,-120,120)*0.0012));
 },{passive:false});
 window.addEventListener('keydown',e=>{
-  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Tab'].indexOf(e.code)>=0 && state==='play') e.preventDefault();
+  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Tab'].indexOf(e.code)>=0 && (state==='play'||state==='walk')) e.preventDefault();
   keys[e.code]=true;
   if(e.repeat) return;
   if(!$('service').classList.contains('hidden')&&state==='menu'){ if(e.code==='Escape') closeService(false); else if(e.code==='Enter'&&!(e.target&&e.target.tagName==='BUTTON')) closeService(true); return; }
   if(anyModalOpen()){ if(e.code==='Escape') closeModals(); return; }
+  if(state==='walk'){ walkKey(e); return; }
   const onBtn=!!(e.target&&e.target.tagName==='BUTTON');
   if(state==='service'){
     if(e.code==='Enter'&&!onBtn){ e.preventDefault(); closeService(true); } else if(e.code==='Escape') closeService(false);
@@ -3798,7 +3836,7 @@ window.addEventListener('keydown',e=>{
       if(e.code==='Escape'){ closeStart(); return; }
       if(e.code==='ArrowLeft'||e.code==='ArrowRight'){ e.preventDefault(); cycleStart(e.code==='ArrowLeft'?-1:1); return; }
       if(e.code==='ArrowUp'||e.code==='ArrowDown'){ e.preventDefault(); cycleMission(e.code==='ArrowUp'?-1:1); return; }
-      if(e.code==='Digit1'||e.code==='Digit2'||e.code==='Digit3'){ launchFrom(START_ORDER[+e.code[5]-1]); return; }
+      if(e.code==='Digit1'||e.code==='Digit2'||e.code==='Digit3'||e.code==='Digit4'){ launchFrom(START_ORDER[+e.code[5]-1]); return; }
       if(e.code==='Enter'&&!onBtn){ e.preventDefault(); launchFrom(startPick); }
       return;
     }
@@ -4411,6 +4449,154 @@ function netPick(ac,team){
 function netSpawnRed(r){ if(actById(r.id)) return; const a=makeActor({id:r.id,name:r.name,team:'red',ac:r.ac,ai:true,remote:true,human:false}); a.alive=false; a.g.visible=false; a.nT=-1; }
 
 /* ------------------------------------------------------------------ loop */
+/* ------------------------------------------------------------------ on foot (first person) and driving a car around the base */
+const WALK={mode:'foot', pos:new THREE.Vector3(), yaw:Math.PI, pitch:0, run:false, camD:1, cy:0, fp:false, boxes:null, near:null, nearId:null, sx:0, sy:0,
+  car:{x:0,z:0,h:0,v:0,steer:0,mesh:null}, from:'play', bob:0, hint:6};
+const WALKBOX=[];       // walk-blocking props (benches, carts, vehicles) collected while building
+function wbAdd(obj){ obj.updateMatrixWorld(true); const b=new THREE.Box3().setFromObject(obj); if(isFinite(b.min.x)) WALKBOX.push({x0:b.min.x,x1:b.max.x,z0:b.min.z,z1:b.max.z}); }
+function walkBoxes(){
+  const L=AP.obst.filter(function(b){ return !b.air; }).concat(svcWallBoxes(),WALKBOX);
+  AC_ORDER.forEach(function(id){ const d=displays[id]; if(!d) return; const cx=d.x+(d.ox||0), cz=HANGAR.z+(d.oz||0), hl=(d.len||10)*0.45;
+    L.push({x0:cx-1.2,x1:cx+1.2,z0:cz-hl,z1:cz+hl,ac:id}); });
+  /* service hangar roof/lintel are above head height; its side walls already in svcWallBoxes */
+  return L;
+}
+function pushCircle(p,r,boxes,skipAc){
+  let hit=false;
+  for(let k=0;k<boxes.length;k++){ const b=boxes[k]; if(skipAc&&b.ac) continue;
+    if(b.ac&&displays[b.ac]&&!displays[b.ac].g.visible) continue;
+    if(p.x>b.x0-r&&p.x<b.x1+r&&p.z>b.z0-r&&p.z<b.z1+r){
+      const c=[[p.x-(b.x0-r),-1,0],[(b.x1+r)-p.x,1,0],[p.z-(b.z0-r),0,-1],[(b.z1+r)-p.z,0,1]].reduce(function(a,v){ return v[0]<a[0]?v:a; });
+      p.x+=c[1]*c[0]; p.z+=c[2]*c[0]; hit=true; }
+  }
+  return hit;
+}
+function buildCar(){
+  if(WALK.car.mesh) return; const g=bakeGroup(vehCar('follow')); scene.add(g); WALK.car.mesh=g;
+  WALK.car.x=HG.X0+7; WALK.car.z=896; WALK.car.h=0; WALK.car.v=0; placeCar();
+}
+function placeCar(){ const c=WALK.car, gy=Math.max(AIRFIELD_Y,terrainH(c.x,c.z)); c.mesh.position.set(c.x,gy+0.22,c.z); c.mesh.rotation.set(0,c.h,0); c.mesh.rotateZ(clamp(-c.steer*c.v*0.012,-0.06,0.06)); }
+function startWalk(){
+  if(NET.on){ toast('Yürüyüş modu çok oyunculu oyunda kullanılamaz','#ffc24a'); return; }
+  initAudio(); aiClear(); clearThreats(); setPrep(false,[],'');
+  if(activeId!==selectedId) setAircraft(selectedId);
+  buildCar(); WALK.boxes=walkBoxes(); WALK.mode='foot'; WALK.run=false; WALK.camD=1; WALK.cy=0; WALK.fp=false; WALK.hint=8;
+  const d=displays[selectedId]; WALK.pos.set(d.x+(d.ox||0)+4,AIRFIELD_Y+1.7,HANGAR.z-22); WALK.yaw=Math.PI+0.25; WALK.pitch=-0.05;
+  state='walk'; showScreen(''); $('gl').focus(); planeGroup.visible=false;
+  if(Math.abs(lastFov-70)>0.05){ camera.fov=70; lastFov=70; camera.updateProjectionMatrix(); }
+  toast(touchWanted()?'Sol çubukla yürü, ekranı sürükleyerek bak. Uçağa ya da araca yaklaşıp düğmeye bas.':'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · E uçağa/araca bin · Esc menü','#b8ecff');
+}
+function walkLeave(){ try{ if(document.pointerLockElement) document.exitPointerLock(); }catch(e){} }
+function walkInput(){
+  const k=keys, f=((k.KeyW||k.ArrowUp)?1:0)-((k.KeyS||k.ArrowDown)?1:0)+(-WALK.sy), r=((k.KeyD||k.ArrowRight)?1:0)-((k.KeyA||k.ArrowLeft)?1:0)+WALK.sx;
+  return {f:clamp(f,-1,1), r:clamp(r,-1,1)};
+}
+function walkUpdate(dt){
+  planeGroup.visible=false; WALK.hint=Math.max(0,WALK.hint-dt);
+  const inp=walkInput(), gy=AIRFIELD_Y;
+  if(WALK.mode==='foot'){
+    const sp=(WALK.run||keys.ShiftLeft||keys.ShiftRight)?8.5:4.2, sy=Math.sin(WALK.yaw), cy=Math.cos(WALK.yaw);
+    let mx=(-sy*inp.f+cy*inp.r), mz=(-cy*inp.f-sy*inp.r); const m=Math.hypot(mx,mz); if(m>1){ mx/=m; mz/=m; }
+    WALK.pos.x+=mx*sp*dt; WALK.pos.z+=mz*sp*dt;
+    pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes());
+    const R=Math.hypot(WALK.pos.x,WALK.pos.z); if(R>1760){ WALK.pos.x*=1760/R; WALK.pos.z*=1760/R; }
+    WALK.bob+=m*sp*dt*1.7; WALK.pos.y=Math.max(gy,terrainH(WALK.pos.x,WALK.pos.z))+1.7+Math.sin(WALK.bob)*0.035*Math.min(1,m);
+    /* what can I interact with? */
+    WALK.near=null; WALK.nearId=null;
+    const c=WALK.car; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
+    else { let best=9; AC_ORDER.forEach(function(id){ const d=displays[id]; if(!d||!d.g.visible) return; const dd=Math.hypot(d.x+(d.ox||0)-WALK.pos.x,HANGAR.z+(d.oz||0)-WALK.pos.z); if(dd<best){ best=dd; WALK.nearId=id; } }); if(WALK.nearId) WALK.near='plane'; }
+  } else {
+    const c=WALK.car, brk=keys.Space;
+    let thr=Math.max(0,inp.f), rev=Math.max(0,-inp.f);
+    if(thr>0){ c.v+=(c.v<0?14:5.5)*thr*dt; }
+    else if(rev>0){ c.v-=(c.v>0.3?14:3.5)*rev*dt; c.v=Math.max(c.v,-7); }
+    else { const dec=1.6*dt; c.v=Math.abs(c.v)<dec?0:c.v-Math.sign(c.v)*dec; }
+    if(brk){ const dec=18*dt; c.v=Math.abs(c.v)<dec?0:c.v-Math.sign(c.v)*dec; }
+    c.v=clamp(c.v-c.v*0.04*dt,-7,30);
+    const tgt=inp.r*0.55*(1-Math.min(0.65,Math.abs(c.v)/38)); c.steer+=(tgt-c.steer)*Math.min(1,dt*6);
+    c.h-=(c.v/2.7)*Math.tan(c.steer)*dt;
+    c.x+=-Math.sin(c.h)*c.v*dt; c.z+=-Math.cos(c.h)*c.v*dt;
+    /* three circles along the car body */
+    let hit=false; for(const o of [1.5,0,-1.5]){ const p={x:c.x-Math.sin(c.h)*o, z:c.z-Math.cos(c.h)*o}, ox=p.x, oz=p.z; if(pushCircle(p,1.0,WALK.boxes)){ hit=true; c.x+=p.x-ox; c.z+=p.z-oz; } }
+    if(hit) c.v*=0.35;
+    const R=Math.hypot(c.x,c.z); if(R>1760){ c.x*=1760/R; c.z*=1760/R; c.v*=0.5; }
+    placeCar(); WALK.near='car';
+    WALK.cy*=Math.exp(-dt*(Math.abs(c.v)>2?1.2:0.15));
+  }
+}
+function carBoxes(){ const c=WALK.car, hw=1.0, hl=2.35, s=Math.abs(Math.sin(c.h)), co=Math.abs(Math.cos(c.h)), ex=hw*co+hl*s, ez=hl*co+hw*s; return [{x0:c.x-ex*0.8,x1:c.x+ex*0.8,z0:c.z-ez*0.8,z1:c.z+ez*0.8}]; }
+function walkInteract(){
+  if(state!=='walk') return;
+  if(WALK.mode==='car'){ const c=WALK.car; WALK.mode='foot'; c.v=0; WALK.pos.set(c.x-Math.cos(c.h)*2.3,0,c.z+Math.sin(c.h)*2.3); WALK.yaw=c.h; WALK.pitch=0;
+    WALK.pos.y=Math.max(AIRFIELD_Y,terrainH(WALK.pos.x,WALK.pos.z))+1.7; pushCircle(WALK.pos,0.35,WALK.boxes); return; }
+  if(WALK.near==='car'){ WALK.mode='car'; WALK.cy=0; toast('W/S gaz-fren · A/D direksiyon · Space el freni · C kamera · E in','#b8ecff'); return; }
+  if(WALK.near==='plane'&&WALK.nearId){ const id=WALK.nearId; walkLeave(); selectedId=id; if(activeId!==id) setAircraft(id); startGame('hangar'); }
+}
+const wE=new THREE.Euler(0,0,0,'YXZ'), wV=new THREE.Vector3(), wV2=new THREE.Vector3();
+function walkCam(dt){
+  if(Math.abs(lastFov-70)>0.05){ camera.fov=70; lastFov=70; camera.updateProjectionMatrix(); }
+  if(WALK.mode==='foot'){ camera.position.copy(WALK.pos); wE.set(WALK.pitch,WALK.yaw,0); camera.quaternion.setFromEuler(wE); camera.updateMatrixWorld(); return; }
+  const c=WALK.car, gy=Math.max(AIRFIELD_Y,terrainH(c.x,c.z));
+  if(WALK.fp){ wV.set(-0.4,1.35,0.25).applyAxisAngle(UP,c.h); camera.position.set(c.x+wV.x,gy+wV.y,c.z+wV.z); wE.set(WALK.pitch,c.h+WALK.cy,0); camera.quaternion.setFromEuler(wE); camera.updateMatrixWorld(); return; }
+  const a=c.h+WALK.cy, D=7.5*WALK.camD;
+  wV.set(c.x+Math.sin(a)*D, gy+2.4+D*0.22+WALK.pitch*-4, c.z+Math.cos(a)*D);
+  if(dt>0&&camera.position.distanceTo(wV)<40) camera.position.lerp(wV,1-Math.exp(-dt*8)); else camera.position.copy(wV);
+  if(camera.position.y<gy+0.8) camera.position.y=gy+0.8;
+  camera.lookAt(wV2.set(c.x,gy+1.2,c.z)); camera.updateMatrixWorld();
+}
+function drawWalkHUD(){
+  const w=HW, h=HH, s=clamp(Math.min(w,h)/760,0.7,1.5), foot=WALK.mode==='foot';
+  hx.save(); hx.textAlign='center'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,0.7)'; hx.shadowBlur=4;
+  if(foot){ hx.fillStyle='rgba(255,255,255,0.85)'; hx.beginPath(); hx.arc(w/2,h/2,2.2*s,0,Math.PI*2); hx.fill(); }
+  hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.textAlign='left'; hx.fillStyle='#b8ecff';
+  const top=Math.round(20*s); hx.textAlign=WALK.tvis?'center':'left';
+  hx.fillText(foot?(WALK.run||keys.ShiftLeft?'YAYA · KOŞU':'YAYA'):'ARAÇ · BENİ İZLE', WALK.tvis?w/2:Math.round(16*s), top);
+  if(!foot){ hx.font='700 '+Math.round(30*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff'; hx.fillText(Math.round(Math.abs(WALK.car.v)*3.6)+' km/sa', WALK.tvis?w/2:Math.round(16*s), top+Math.round(30*s)); }
+  let msg='';
+  if(foot&&WALK.near==='car') msg=(WALK.tvis?'BİN':'E')+' — araca bin';
+  else if(foot&&WALK.near==='plane'&&WALK.nearId) msg=(WALK.tvis?'UÇAĞA BİN':'E')+' — '+AIRCRAFT[WALK.nearId].name+' ile uç';
+  else if(!foot) msg=(WALK.tvis?'İN':'E')+' — araçtan in';
+  if(msg){ hx.textAlign='center'; hx.font='700 '+Math.round(16*s)+'px "Chakra Petch",system-ui,sans-serif'; const tw=hx.measureText(msg).width+28*s, y=h*0.72;
+    hx.fillStyle='rgba(8,15,28,0.6)'; hx.fillRect(w/2-tw/2,y-16*s,tw,32*s); hx.fillStyle='#fff'; hx.fillText(msg,w/2,y); }
+  if(WALK.hint>0&&!WALK.tvis){ hx.textAlign='center'; hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.globalAlpha=Math.min(1,WALK.hint); hx.fillStyle='#dfe9f1';
+    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · E etkileşim · Esc menü':'W/S gaz-fren · A/D direksiyon · Space el freni · C kamera · E in', w/2, h-24*s); hx.globalAlpha=1; }
+  hx.restore();
+}
+function walkLook(dx,dy){ const s=SETTINGS.sens||1;
+  if(WALK.mode==='foot'){ WALK.yaw-=dx*0.004*s; WALK.pitch=clamp(WALK.pitch-dy*0.004*s,-1.35,1.35); }
+  else { WALK.cy-=dx*0.005*s; WALK.pitch=clamp(WALK.pitch-dy*0.004*s,-0.6,0.9); } }
+function walkKey(e){
+  if(e.code==='Escape'||e.code==='KeyP'){ walkLeave(); pauseGame(); return; }
+  if(e.code==='KeyE'||e.code==='Enter'||e.code==='KeyF'){ walkInteract(); return; }
+  if(e.code==='KeyC'&&WALK.mode==='car'){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
+  if(e.code==='CapsLock') WALK.run=!WALK.run;
+  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.code)>=0) e.preventDefault();
+}
+function updateWalkTouch(){
+  const vis=touchWanted()&&state==='walk'; const el=$('wtouch');
+  if(vis!==!el.classList.contains('hidden')){ el.classList.toggle('hidden',!vis); }
+  WALK.tvis=vis;
+  if(!vis){ WALK.sx=WALK.sy=0; return; }
+  $('wKnob').style.transform='translate('+(WALK.sx*60)+'%,'+(WALK.sy*60)+'%)';
+  const foot=WALK.mode==='foot', a=$('wAct');
+  const lbl=!foot?'İN':(WALK.near==='car'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
+  a.innerHTML=lbl; a.classList.toggle('off',!lbl);
+  $('wRun').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot);
+}
+(function(){
+  const stick=$('wStick'); let sid=null;
+  function sMove(e){ const r=stick.getBoundingClientRect(); let x=(e.clientX-(r.left+r.width/2))/(r.width/2), y=(e.clientY-(r.top+r.height/2))/(r.height/2); const m=Math.hypot(x,y); if(m>1){ x/=m; y/=m; } WALK.sx=x; WALK.sy=y; }
+  stick.addEventListener('pointerdown',function(e){ e.preventDefault(); try{ stick.setPointerCapture(e.pointerId); }catch(err){} sid=e.pointerId; sMove(e); });
+  stick.addEventListener('pointermove',function(e){ if(e.pointerId===sid) sMove(e); });
+  function sEnd(e){ if(e.pointerId!==sid) return; sid=null; WALK.sx=WALK.sy=0; }
+  stick.addEventListener('pointerup',sEnd); stick.addEventListener('pointercancel',sEnd);
+  function tap(id,fn){ const el=$(id); el.addEventListener('pointerdown',function(e){ e.preventDefault(); fn(); el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); },130); }); }
+  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; });
+  const glc=$('gl');
+  glc.addEventListener('click',function(){ if(state==='walk'&&!touchWanted()&&glc.requestPointerLock){ try{ glc.requestPointerLock(); }catch(e){} } });
+  document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });
+})();
+
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
@@ -4419,15 +4605,16 @@ function frame(now){
   let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; perfStep(Math.min(dt,0.5)); dt=Math.min(dt,0.05);
   T+=dt; pollPad();
   if(state==='play') update(dt);
+  if(state==='walk') walkUpdate(dt);
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
   netStep(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
   placeModel(dt); updateHangar(dt); airportStep(dt); updateTaxiVisuals();
-  if(state==='menu') menuCam(dt); else cameraUpdate(dt);
+  if(state==='menu') menuCam(dt); else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow();
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
   renderer.render(scene,camera);
-  drawHUD(); audioUpdate(); updateTouchUI();
+  drawHUD(); audioUpdate(); updateTouchUI(); updateWalkTouch();
 }
 requestAnimationFrame(frame);
 })();
