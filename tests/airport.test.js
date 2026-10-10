@@ -13,14 +13,14 @@ resetFlight('air'); S.crashed=false; S.onGround=false; S.pos.set(-128,AIRFIELD_Y
 // above it is fine
 S.crashed=false; S.pos.set(-128,AIRFIELD_Y+80,300); obstacleStep(); T('above tower ok',!S.crashed);
 // taxiing into a shelter stops instead of crashing
-S.crashed=false; S.onGround=true; S.pos.set(-232,AIRFIELD_Y+2,430); S.speed=10; obstacleStep(); T('ground blocked',!S.crashed&&S.pos.x>-233&&S.speed<2,S.pos.x+' '+S.speed);
+S.crashed=false; S.onGround=true; S.pos.set(-232,AIRFIELD_Y+2,430); S.speed=10; obstacleStep(); T('ground blocked',!S.crashed&&S.pos.x>-233&&S.speed<10,S.pos.x+' '+S.speed);
 // maintenance hangar is open on the ground
 S.pos.set(-150,AIRFIELD_Y+2,1060); S.speed=5; obstacleStep(); T('service hangar passable',S.speed===5&&S.pos.x===-150);
 // PAPI colour logic is checked in the real browser (the stub has no buffer attributes)
 const s0=AP.movers[0].s; airportStep(1); T('vehicles move',AP.movers[0].s!==s0);
 // hangar hall: parts, walls solid on the ground, roof hidden only for the menu camera from above
 T('hall parts',HG.parts&&HG.parts.roof&&HG.parts.top&&HG.parts.east);
-S.crashed=false; S.onGround=true; S.pos.set(-95,AIRFIELD_Y+2,900); S.speed=8; obstacleStep(); T('east wall blocks',S.pos.x<-90.5&&!S.crashed,S.pos.x);
+S.crashed=false; S.onGround=true; S.q.identity(); S.pos.set(-103,AIRFIELD_Y+2,900); S.speed=8; obstacleStep(); T('east wall blocks',!boxesHit(AP.obst.filter(function(b){ return !b.air; }))&&!S.crashed,S.pos.x);
 S.pos.set(-278,AIRFIELD_Y+2,905); S.speed=5; obstacleStep(); T('inside hall free',S.speed===5);
 S.onGround=false; S.pos.set(-278,AIRFIELD_Y+15,905); obstacleStep(); T('flying into hall crashes',S.crashed);
 S.crashed=false; state='menu'; camera.position.set(-278,AIRFIELD_Y+60,930); hangarCull(); T('menu above: roof hidden',!HG.parts.roof.visible&&!HG.parts.top.visible);

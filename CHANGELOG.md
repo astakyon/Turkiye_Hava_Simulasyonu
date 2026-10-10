@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.33 — 2026-10-10
+### Düzeltme
+- **Hangar köşesinde görünmez duvar:** hangardan çıkıp taksi yolunun virajını dönerken uçak hangarın doğu duvarına takılıyordu. Duvar 10 m içeri alındı. Çarpışma artık uçağın gerçek şekline (burun, kuyruk, kanat uçları) göre hesaplanıyor; eskiden çapraz giderken uçağın çevresine büyük bir kutu çiziliyordu.
+- **Bakım hangarına girerken ışınlanma:** kalkış izni alınmadan bakım hangarına gitmeye çalışınca uçak hangar köşesine ışınlanıyordu. Eski "hangar arkasına geçme" sınırı kaldırıldı; artık duvarlar fiziksel olarak durduruyor.
+- **Hangar içi aydınlatma:** lambaların altındaki ışık öbekleri kaldırıldı. İç mekân tavandan gelen düzgün, homojen bir ışıkla aydınlanıyor. Güneş artık hangar içindeki zemine, duvarlara ve ekipmana düşmüyor. Uçakların altında yumuşak gölge var.
+- **Eksik tabela yazıları:** uzun yazılar artık tabelaya sığacak şekilde otomatik küçülüyor ("FOD KONTROLÜ · YERDE YABANCI MADDE BIRAKMA" vb.).
+### Test
+- Yeni test: her uçak hangardan elle çıkıp taksi yolunu izleyerek bakım hangarına ışınlanmadan ulaşıyor.
+
 ## V1.32 — 2026-10-10
 Aşama 3: hangar içleri.
 ### Yeni
