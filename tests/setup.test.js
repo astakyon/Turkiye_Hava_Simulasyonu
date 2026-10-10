@@ -1,7 +1,7 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
 function key(code){ (listeners.keydown||[]).forEach(f=>f({code,key:code,preventDefault(){},repeat:false,target:{tagName:'X'}})); }
 T('title',state==='menu'&&menuMode==='title');
-key('Enter'); T('-> hangar',menuMode==='hangar');
+titleAct('hangar'); T('-> hangar',menuMode==='hangar');
 T('stats no loadout',!/Yük:/.test(els.hStats.innerHTML));
 T('loadSum',/GP|F1|boş/.test(els.loadSum.textContent),els.loadSum.textContent);
 key('ArrowRight'); T('cycled',selectedId!=='kaan'); key('ArrowLeft'); T('back kaan',selectedId==='kaan');

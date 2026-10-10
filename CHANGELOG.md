@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.21 — 2026-10-10
+### Yeni — ana menü
+- İki ana menü tasarımı: **Komuta** (solda numaralı liste, büyük UÇ kartı) ve **Sinematik** (ortada başlık, altta dört büyük kart).
+- Varsayılan cihaza göre: telefonda Sinematik, bilgisayarda Komuta. **Ayarlar → Arayüz** ile değiştirilebilir (Otomatik / Komuta / Sinematik).
+- Ana menünün arka planında seçili uçak (yüklü silahlarıyla) adanın üzerinde uçuyor; kamera tasarıma göre konumlanıyor.
+- **UÇ**: son seçilen uçak, görev ve başlangıç noktasıyla tek dokunuşla kalkış.
+- Yeni **Görevler** ekranı: numaralı görev listesi, rekorlar, görev detayı ve **Göreve başla**.
+- Durum çubuğu (uçak, silah yükü, internet durumu, sürüm); Ayarlar / Kontroller / Rekorlar simgeleri.
+- Klavye (yön tuşları + Enter) ve kumanda (yön tuşları + A/B) ile menü gezinme.
+
 ## V1.20 — 2026-10-10
 Aşama 0: yeni isim, büyüyebilir araç sistemi, telefon performansı, Android hazırlığı.
 ### Yeni

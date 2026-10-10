@@ -9,5 +9,6 @@ node harness.js /tmp/sim.js setup.test.js
 node harness.js /tmp/sim.js ai.test.js
 node harness.js /tmp/sim.js service.test.js
 node harness.js /tmp/sim.js picker.test.js
+node harness.js /tmp/sim.js menu.test.js
 node net_harness.js /tmp/sim.js net.test.js
 node net_harness.js /tmp/sim.js net_ffa.test.js

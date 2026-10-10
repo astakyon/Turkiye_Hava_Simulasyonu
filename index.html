@@ -1,9 +1,9 @@
 <!doctype html>
-<!-- Ay Yıldız: Hedef Kızıl Elma V1.20 · 2026-10-10 -->
+<!-- Ay Yıldız: Hedef Kızıl Elma V1.21 · 2026-10-10 -->
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.20">
+<meta name="game-version" content="V1.21">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -44,10 +44,59 @@ button{ font:inherit; color:var(--ink); cursor:pointer; }
 .btn:focus-visible,.chip:focus-visible{ outline:2px solid var(--hud); outline-offset:3px; }
 
 /* title */
-#title{ display:flex; align-items:center;
-  padding:max(32px,env(safe-area-inset-top)) 32px max(32px,env(safe-area-inset-bottom)) clamp(28px,7vw,110px);
-  background:linear-gradient(90deg,rgba(4,9,18,.9) 0%,rgba(4,9,18,.55) 38%,rgba(4,9,18,0) 72%); }
-#title .box{ max-width:560px; }
+#title{ display:block; }
+/* ---------- main menu: A (Komuta) and B (Sinematik) share one look */
+#title .tt-a,#title .tcap{ display:none; } #title .tt-b{ display:none; }
+#title.ui-a .tt-a,#title.ui-a .tcap{ display:block; } #title.ui-b .tt-b{ display:block; }
+.tt-a{ position:absolute; left:0; top:0; bottom:24px; width:min(470px,50vw); padding:max(18px,env(safe-area-inset-top)) 0 0 max(clamp(16px,3vw,44px),env(safe-area-inset-left));
+  background:linear-gradient(90deg,rgba(4,9,18,.96) 0%,rgba(4,9,18,.86) 62%,rgba(4,9,18,0) 100%); }
+.tt-a .brand .logo{ width:clamp(40px,6vw,64px); } .tt-a .brand h1{ font-size:clamp(26px,3.5vw,50px); line-height:1; margin:0; letter-spacing:.04em; white-space:nowrap; }
+.tt-a .brand .tag{ margin:4px 0 0; font-size:clamp(10px,1.2vw,14px); letter-spacing:.3em; color:#ffb3b8; text-transform:uppercase; font-weight:600; }
+.mbig{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:min(340px,40vw); margin-top:clamp(12px,4vh,30px); padding:clamp(8px,2vh,14px) 16px; border-radius:10px;
+  background:linear-gradient(135deg,#e30a17,#a3060f); border:1px solid #ff5560; color:#fff; text-align:left; }
+.mbig b{ font-size:clamp(18px,2.4vw,26px); letter-spacing:.06em; } .mbig small{ font-size:clamp(10px,1.2vw,13px); color:#ffd6d9; font-weight:500; }
+.mlist{ list-style:none; margin:clamp(6px,2vh,14px) 0 0; padding:0; width:min(340px,40vw); }
+.mlist button{ width:100%; display:flex; align-items:center; gap:12px; height:clamp(32px,8.6vh,46px); padding:0 12px; border:0; border-left:3px solid transparent; background:none;
+  font-size:clamp(13px,1.5vw,17px); font-weight:700; letter-spacing:.06em; color:#c9d6e2; text-align:left; white-space:nowrap; }
+.mlist span{ font-size:10px; color:#6f8296; width:18px; } .mlist small{ margin-left:auto; font-size:10px; color:#7f93a6; font-weight:500; letter-spacing:.1em; }
+.mlist button:hover,.mlist button.kf,.mlist button:focus-visible{ border-left-color:#e30a17; background:linear-gradient(90deg,rgba(227,10,23,.32),rgba(227,10,23,0)); color:#fff; outline:none; }
+.mbig.kf,.mbig:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
+.tcap{ position:absolute; right:max(20px,env(safe-area-inset-right)); bottom:36px; text-align:right; text-shadow:0 2px 8px rgba(0,0,0,.6); pointer-events:none; }
+.tcap b{ display:block; font-size:clamp(13px,1.7vw,18px); letter-spacing:.12em; } .tcap small{ font-size:10px; letter-spacing:.2em; color:#d6e6f2; }
+.tt-b{ position:absolute; inset:0 0 24px 0; background:linear-gradient(0deg,rgba(4,9,18,.94) 0%,rgba(4,9,18,.3) 38%,rgba(4,9,18,0) 56%),linear-gradient(180deg,rgba(4,9,18,.55),rgba(4,9,18,0) 30%); }
+.tb-top{ position:absolute; left:max(16px,env(safe-area-inset-left)); top:max(12px,env(safe-area-inset-top)); display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; letter-spacing:.24em; }
+.tb-top .logo{ width:30px; height:30px; }
+.tb-title{ position:absolute; left:0; right:0; top:clamp(34px,10vh,90px); text-align:center; pointer-events:none; }
+.tb-title h1{ margin:0; font-size:clamp(38px,8vw,104px); letter-spacing:.09em; line-height:1; text-shadow:0 4px 24px rgba(0,0,0,.5); }
+.tb-title p{ margin:4px 0 0; font-size:clamp(11px,1.5vw,18px); letter-spacing:.45em; color:#ffc2c6; }
+.tb-tiles{ position:absolute; left:50%; transform:translateX(-50%); bottom:calc(12px + 2vh); display:flex; gap:8px; width:min(1040px,calc(100vw - 32px)); }
+.tile{ position:relative; flex:1; height:clamp(62px,17vh,104px); border-radius:10px; background:rgba(10,18,32,.78); border:1px solid rgba(255,255,255,.18); padding:0 14px;
+  display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:left; color:#fff; backdrop-filter:blur(6px); }
+.tile b{ font-size:clamp(14px,1.9vw,22px); letter-spacing:.05em; white-space:nowrap; } .tile small{ font-size:clamp(10px,1.1vw,13px); color:#a9bccd; margin-top:3px; font-weight:500; }
+.tile i{ position:absolute; right:10px; top:8px; font-style:normal; font-size:10px; color:#7f93a6; letter-spacing:.1em; }
+.tile.p{ background:linear-gradient(135deg,#e30a17,#a3060f); border-color:#ff5560; } .tile.p small,.tile.p i{ color:#ffd6d9; }
+.tile:hover,.tile.kf,.tile:focus-visible{ border-color:#fff; outline:none; }
+.ticons{ position:absolute; right:max(14px,env(safe-area-inset-right)); top:max(12px,env(safe-area-inset-top)); display:flex; gap:8px; }
+.ic{ width:38px; height:38px; border-radius:50%; background:rgba(8,15,28,.62); border:1px solid rgba(255,255,255,.22); color:#fff; display:grid; place-items:center; padding:0; }
+.ic:hover{ background:rgba(8,15,28,.9); }
+.sbar{ position:absolute; left:0; right:0; bottom:0; height:24px; background:rgba(5,10,20,.9); border-top:1px solid rgba(255,255,255,.1); display:flex; align-items:center; gap:20px;
+  padding:0 max(14px,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(14px,env(safe-area-inset-left)); font-size:10px; letter-spacing:.16em; color:#8ea4b8; text-transform:uppercase; pointer-events:none; white-space:nowrap; overflow:hidden; }
+.sbar b{ color:#fff; } .sbar .v{ margin-left:auto; } .sbar .on::before{ content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background:#7dffb0; margin-right:6px; }
+/* missions screen */
+#missionsUI{ background:linear-gradient(90deg,rgba(4,9,18,.96) 0%,rgba(4,9,18,.84) 46%,rgba(4,9,18,.25) 100%); }
+#missionsUI .back{ position:absolute; top:max(12px,env(safe-area-inset-top)); left:max(14px,env(safe-area-inset-left)); padding:8px 14px; font-size:13px; background:rgba(8,15,28,.6); }
+.shdr{ position:absolute; left:0; right:0; top:max(16px,env(safe-area-inset-top)); text-align:center; font-size:14px; font-weight:700; letter-spacing:.26em; pointer-events:none; } .shdr span{ color:#e30a17; }
+.mlist.mis{ position:absolute; left:max(clamp(16px,3vw,44px),env(safe-area-inset-left)); top:clamp(54px,14vh,90px); width:min(340px,38vw); }
+.misdet{ position:absolute; right:max(18px,env(safe-area-inset-right)); top:clamp(54px,14vh,90px); width:min(520px,52vw); background:rgba(6,12,22,.88); border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:14px 18px; backdrop-filter:blur(8px); }
+.misdet .k{ margin:0; font-size:10px; letter-spacing:.2em; color:#ff8a8a; } .misdet h2{ margin:4px 0 6px; font-size:clamp(20px,2.6vw,30px); }
+.misdet .d{ margin:0; font-size:13px; color:#b8c8d6; line-height:1.45; }
+.mchips{ display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 12px; } .mchips span{ font-size:11px; padding:4px 9px; border-radius:999px; border:1px solid rgba(255,255,255,.18); color:#d7e3ee; } .mchips b{ color:#ff8a8a; }
+.mrow2{ display:flex; gap:8px; } .mrow2 .primary{ flex:1; } .mrow2 .btn{ padding:12px 16px; }
+.mlist .rec{ color:#7dffb0; }
+.hint2{ display:block; margin-top:6px; font-size:11px; color:var(--dim); }
+@media (max-height:560px){ .misdet{ padding:10px 14px; } .misdet .d{ font-size:12px; } .mrow2 .btn{ padding:9px 12px; } }
+@media (max-width:640px){ .tt-a{ width:100%; } .mbig,.mlist{ width:calc(100vw - 32px); } .misdet{ left:16px; width:auto; top:auto; bottom:30px; } .mlist.mis{ width:calc(100vw - 32px); } }
+
 .mark{ width:56px; height:5px; background:var(--red); margin:0 0 22px; }
 #title h1{ margin:0; font-size:clamp(46px,8.4vw,112px); line-height:.94; letter-spacing:.02em; font-weight:700; }
 #title .tag{ margin:18px 0 34px; font-size:clamp(16px,2vw,20px); color:var(--dim); font-weight:500; }
@@ -277,20 +326,41 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <canvas id="hud"></canvas>
 
 <div id="title" class="screen">
-  <div class="box ui">
+  <div class="tt-a ui" id="titleA">
     <div class="brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p class="tag">Hedef Kızıl Elma</p></div></div>
-    <p class="grp"><b>Hilal Kanatlar</b> · Türk hava sistemleri</p>
-    <div class="row">
-      <button class="btn primary" id="btnStart">Başla</button>
-      <button class="btn" id="btnNet">Çok oyunculu</button>
-    </div>
-    <div class="row" style="margin-top:14px">
-      <button class="btn link" id="btnControls">Kontroller</button>
-      <button class="btn link" id="btnRecords">Rekorlar</button>
-      <button class="btn link" id="btnSettings">Ayarlar</button>
+    <button class="mbig mitem" type="button" data-act="fly"><b>▶ UÇ</b><small id="flySubA"></small></button>
+    <ul class="mlist">
+      <li><button class="mitem" type="button" data-act="hangar" id="btnStart"><span>01</span>UÇAK SEÇ<small id="mAac"></small></button></li>
+      <li><button class="mitem" type="button" data-act="missions"><span>02</span>GÖREVLER<small id="mAmis"></small></button></li>
+      <li><button class="mitem" type="button" data-act="net" id="btnNet"><span>03</span>ÇOK OYUNCULU<small>4 KİŞİ</small></button></li>
+      <li><button class="mitem" type="button" data-act="load"><span>04</span>SİLAH YÜKÜ<small id="mAload"></small></button></li>
+    </ul>
+  </div>
+  <div class="tcap" id="tCap"><b></b><small></small></div>
+  <div class="tt-b" id="titleB">
+    <div class="tb-top"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM2"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM2)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><span>HİLAL KANATLAR</span></div>
+    <div class="tb-title"><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div>
+    <div class="tb-tiles ui">
+      <button class="tile p mitem" type="button" data-act="fly"><i>01</i><b>UÇ</b><small id="flySubB"></small></button>
+      <button class="tile mitem" type="button" data-act="missions"><i>02</i><b>GÖREVLER</b><small>İt dalaşı, yer hedefleri…</small></button>
+      <button class="tile mitem" type="button" data-act="net"><i>03</i><b>ÇOK OYUNCULU</b><small>Oda kur · koda katıl</small></button>
+      <button class="tile mitem" type="button" data-act="hangar"><i>04</i><b>HANGAR</b><small>Uçak seç · silah yükü</small></button>
     </div>
   </div>
-  <p class="fine"><span id="verTag"></span> · Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır; gerçek verileri yansıtmaz.</p>
+  <div class="ticons ui"><button class="ic" type="button" id="btnSettings" aria-label="Ayarlar" title="Ayarlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button><button class="ic" type="button" id="btnControls" aria-label="Kontroller" title="Kontroller"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 13H9l-1.6 1.8A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16.5" cy="11" r=".6" fill="currentColor"/><circle cx="18" cy="12.8" r=".6" fill="currentColor"/></svg></button><button class="ic" type="button" id="btnRecords" aria-label="Rekorlar" title="Rekorlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/></svg></button></div>
+  <div class="sbar"><span id="sbAc"></span><span id="sbNet"></span><span class="v" id="verTag"></span></div>
+</div>
+
+<div id="missionsUI" class="screen hidden">
+  <button class="btn ui back" id="btnMisBack" type="button">← Ana menü</button>
+  <div class="shdr"><span>■</span> GÖREVLER</div>
+  <ul class="mlist mis ui" id="misList"></ul>
+  <div class="misdet ui">
+    <p class="k" id="misK"></p><h2 id="misName"></h2><p class="d" id="misDesc"></p>
+    <div class="mchips" id="misChips"></div>
+    <div class="mrow2"><button class="btn primary" id="btnMisGo" type="button">▶ Göreve başla</button><button class="btn" id="btnMisAc" type="button"></button></div>
+  </div>
+  <div class="sbar"><span id="sbAc2"></span><span class="v">↑ ↓ görev · Enter başla · Esc geri</span></div>
 </div>
 
 <div id="hangarUI" class="screen hidden">
@@ -432,6 +502,9 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   <div class="card wide">
     <h2>Ayarlar</h2>
     <p class="sub">Ayarlar bu tarayıcıda saklanır. · <span id="setVer"></span></p>
+    <div class="field"><span class="lbl">Arayüz (ana menü)</span>
+      <div class="seg" id="setUi"><button type="button" data-u="auto">Otomatik</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div>
+      <small class="hint2">Otomatik: telefonda Sinematik, bilgisayarda Komuta. Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır.</small></div>
     <div class="field"><label for="setVol">Ses seviyesi <output id="setVolV"></output></label><input type="range" id="setVol" min="0" max="100"></div>
     <div class="field"><span class="lbl">Grafik kalitesi</span>
       <div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
@@ -544,7 +617,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.20', GAME_DATE='2026-10-10';
+const GAME_VERSION='V1.21', GAME_DATE='2026-10-10';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -2343,14 +2416,15 @@ const MENUV={yaw:2.7,pitch:0.22,zoom:1,idle:99,dist:36,init:false,tgt:new THREE.
 const qU=new THREE.Quaternion(), eU=new THREE.Euler(), mcGoal=new THREE.Vector3();
 function placeModel(dt){
   planeGroup.position.copy(S.pos); planeGroup.quaternion.copy(S.q);
-  if(state==='menu'&&menuMode!=='title'&&activeId===selectedId&&displays[activeId]){ const dd=displays[activeId]; planeGroup.position.set(dd.x,AIRFIELD_Y+CUR.gearOff,HANGAR.z); planeGroup.quaternion.identity(); planeGroup.visible=true; }
-  const thr=state==='menu'?0.15:(S.ab?1:S.throttle), ab=state==='play'&&S.ab&&!S.crashed;
+  const cine=cineOn()&&activeId===selectedId; if(cine){ cineStep(dt); planeGroup.position.copy(CINE.pos); planeGroup.quaternion.copy(CINE.q); }
+  if(!cine&&state==='menu'&&menuMode!=='title'&&activeId===selectedId&&displays[activeId]){ const dd=displays[activeId]; planeGroup.position.set(dd.x,AIRFIELD_Y+CUR.gearOff,HANGAR.z); planeGroup.quaternion.identity(); planeGroup.visible=true; }
+  const thr=cine?0.65:(state==='menu'?0.15:(S.ab?1:S.throttle)), ab=state==='play'&&S.ab&&!S.crashed;
   const len=0.9+thr*2.4+(ab?5.5:0), fl=1+(Math.random()-.5)*0.2, wd=ab?1.15:1;
   model.flames.forEach(f=>{ f.outer.scale.set(wd,wd,len*fl); f.inner.scale.set(wd,wd,len*0.55*fl);
     if(f.ds) f.ds.forEach((m,i)=>{ m.visible=ab; if(ab){ m.position.set(f.base[0],f.base[1],f.base[2]+len*fl*(0.2+0.2*i)); const k2=1-0.22*i; m.scale.set(k2,k2,1.5); } }); });
   model.spinners.forEach(sp=>{ sp.obj.rotation.z+=dt*(8+thr*75)*(state==='menu'?0.4:1); sp.disc.material.opacity=0.04+0.2*thr; });
   model.strobe.visible=Math.sin(T*9)>0.8;
-  model.gear.visible=S.gear;
+  model.gear.visible=cine?false:S.gear;
 }
 function cameraUpdate(dt){
   const cockpit=camMode===1;
@@ -2371,6 +2445,18 @@ function cameraUpdate(dt){
   camera.updateMatrixWorld();
 }
 function menuCam(dt){
+  if(cineOn()&&activeId===selectedId){
+    const st=uiStyle(), D=VIEW_D[selectedId]*(menuMode!=='title'?1.05:(st==='A'?0.85:1.0));
+    cV1.crossVectors(CINE.fwd,cUP).normalize();
+    const sideA=(st==='A'||menuMode!=='title'); cV2.copy(CINE.pos).addScaledVector(CINE.fwd,-D*0.8).addScaledVector(cV1,sideA?-D*0.75:D*0.45); cV2.y+=D*(sideA?0.1:0.16);
+    cV2.sub(CINE.pos); if(!CINE.init){ CINE.off.copy(cV2); CINE.init=true; } else CINE.off.lerp(cV2,1-Math.exp(-3*dt)); camera.position.copy(CINE.pos).add(CINE.off);
+    camera.lookAt(CINE.pos);
+    const wide=window.innerWidth>760;
+    if(menuMode!=='title'){ camera.rotateY(wide?0.3:0.26); camera.rotateX(0.2); } else if(st==='A') camera.rotateY(wide?0.3:0.26); else camera.rotateX(-0.03);
+    if(Math.abs(50-lastFov)>0.05){ camera.fov=50; lastFov=50; camera.updateProjectionMatrix(); }
+    camera.updateMatrixWorld(); planeGroup.visible=true; MENUV.init=false; return;
+  }
+  CINE.init=false;
   const wide=(menuMode==='title'), d=displays[selectedId], def=AIRCRAFT[selectedId];
   if(wide) mcGoal.set(HANGAR.cx,AIRFIELD_Y+6,HANGAR.z-6); else mcGoal.set(d.x+(d.ox||0),AIRFIELD_Y+def.cam[0]*0.45,HANGAR.z+(d.oz||0));
   if(!MENUV.init){ MENUV.tgt.copy(mcGoal); MENUV.dist=wide?330:VIEW_D[selectedId]; MENUV.init=true; }
@@ -2401,7 +2487,7 @@ function resize(){
   hud.width=Math.round(HW*DPR); hud.height=Math.round(HH*DPR);
   renderer.setSize(HW,HH,false); camera.aspect=HW/HH; camera.updateProjectionMatrix();
 }
-window.addEventListener('resize',resize); resize();
+window.addEventListener('resize',function(){ resize(); if(typeof refreshTitle==='function'&&state==='menu'&&menuMode==='title') refreshTitle(); }); resize();
 
 function ln(x1,y1,x2,y2){ hx.beginPath(); hx.moveTo(x1,y1); hx.lineTo(x2,y2); hx.stroke(); }
 function tx(s,x,y,size,align,color){ hx.font='600 '+(size*sc)+'px '+FONT; hx.textAlign=align||'center'; hx.fillStyle=color||C; hx.fillText(s,x,y); }
@@ -2698,11 +2784,74 @@ function drawHUD(){
 
 /* ------------------------------------------------------------------ input + menu */
 let menuMode='title';
-function showScreen(name){ $('startUI').classList.add('hidden'); ['title','hangarUI','setupUI','pause'].forEach(function(id){ $(id).classList.toggle('hidden',id!==name); }); }
+function showScreen(name){ $('startUI').classList.add('hidden'); ['title','hangarUI','setupUI','pause','missionsUI'].forEach(function(id){ $(id).classList.toggle('hidden',id!==name); }); }
 function openControls(){ $('controls').classList.remove('hidden'); $('btnCtlClose').focus(); }
 function closeControls(){ $('controls').classList.add('hidden'); }
 function controlsOpen(){ return !$('controls').classList.contains('hidden'); }
-function enterTitle(){ if(!NET.on) aiClear(); state='menu'; menuMode='title'; showScreen('title'); setPrep(false,[],''); }
+function enterTitle(){ if(!NET.on) aiClear(); state='menu'; menuMode='title'; if(activeId!==selectedId) setAircraft(selectedId); showScreen('title'); setPrep(false,[],''); refreshTitle(); }
+/* ---------- main menu (A: Komuta, B: Sinematik) */
+let tFocus=0, startFrom='hangar', misSel=0;
+const START_TXT={hangar:'hangardan',runway:'pistten',air:'havada'};
+function uiStyle(){ const s=SETTINGS.ui||'auto'; if(s==='A'||s==='B') return s; let coarse=false; try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){} return (coarse||Math.min(window.innerWidth,window.innerHeight)<500)?'B':'A'; }
+function titleItems(){ return Array.prototype.slice.call(document.querySelectorAll(uiStyle()==='A'?'#titleA .mitem':'#titleB .mitem')); }
+function titleFocus(i){ const L=titleItems(); if(!L.length) return; tFocus=(i+L.length)%L.length; L.forEach(function(b,j){ b.classList.toggle('kf',j===tFocus); }); }
+function refreshTitle(){
+  const st=uiStyle(), a=AIRCRAFT[selectedId], r=regOf(selectedId);
+  $('title').classList.toggle('ui-a',st==='A'); $('title').classList.toggle('ui-b',st==='B');
+  const sub=a.short+' · '+MISSIONS[missionId==='net'?'free':missionId].name+' · '+START_TXT[startPick];
+  $('flySubA').textContent=sub; $('flySubB').textContent=sub;
+  $('mAac').textContent=AC_ORDER.length+' ARAÇ'; $('mAmis').textContent=MORDER.length+' GÖREV'; $('mAload').textContent=loadSummary(selectedId).toUpperCase();
+  $('tCap').querySelector('b').textContent=a.name; $('tCap').querySelector('small').textContent='Hilal Kanatlar · '+(CLASSES[r.cls]||'').toUpperCase();
+  const sb='<b>'+a.name+'</b> · '+loadSummary(selectedId); $('sbAc').innerHTML=sb; $('sbAc2').innerHTML=sb;
+  const on=(typeof navigator.onLine==='boolean')?navigator.onLine:true; $('sbNet').textContent=on?'İnternet var · çok oyunculu hazır':'Çevrimdışı'; $('sbNet').className=on?'on':'';
+  titleFocus(tFocus);
+}
+function titleAct(act){
+  if(state!=='menu') return;
+  if(act==='fly'){ startGame(startPick); return; }
+  if(act==='hangar'){ enterHangar(); return; }
+  if(act==='missions'){ openMissions(); return; }
+  if(act==='net'){ openNet(); return; }
+  if(act==='load'){ enterHangar(); if(SLOTS[selectedId]>0) openLoadPanel(); return; }
+}
+$('title').addEventListener('click',function(e){ const b=e.target.closest('.mitem'); if(b){ titleAct(b.dataset.act); } });
+window.addEventListener('online',function(){ if(menuMode==='title') refreshTitle(); }); window.addEventListener('offline',function(){ if(menuMode==='title') refreshTitle(); });
+/* missions screen */
+function openMissions(){ state='menu'; menuMode='missions'; showScreen('missionsUI'); misSel=Math.max(0,MORDER.indexOf(missionId)); renderMissions(); }
+function renderMissions(){
+  const r=rec(selectedId);
+  $('misList').innerHTML=MORDER.map(function(id,i){ const M0=MISSIONS[id], best=(id==='rings'||id==='free')?r.best:(r.mt||{})[id];
+    const right=best!=null?'<small class="rec">REKOR '+fmtT(best)+'</small>':'<small>'+(M0.limit?Math.round(M0.limit/60)+' DK':(id==='rings'?'13 HALKA':(id==='dogfight'?'3 DALGA':'SÜRESİZ')))+'</small>';
+    return '<li><button type="button" class="mitem'+(i===misSel?' kf':'')+'" data-i="'+i+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+M0.name.toUpperCase()+right+'</button></li>'; }).join('');
+  const id=MORDER[misSel], M0=MISSIONS[id], c=aiCfg();
+  $('misK').textContent='GÖREV '+String(misSel+1).padStart(2,'0')+(M0.limit?' · SÜRE '+Math.round(M0.limit/60)+' DK':'');
+  $('misName').textContent=M0.name; $('misDesc').textContent=M0.desc;
+  const ch=[];
+  if(id==='dogfight') ch.push('<span><b>3</b> dalga</span>','<span><b>2–4</b> düşman uçağı</span>');
+  else if(c.enemies) ch.push('<span><b>'+c.enemies+'</b> düşman uçağı</span>');
+  ch.push('<span>Kanat adamı: '+(c.wing?'açık':'kapalı')+'</span>','<span>Zorluk: '+SKILL[c.skill].name+'</span>');
+  $('misChips').innerHTML=ch.join('');
+  $('btnMisAc').textContent='Uçak: '+AIRCRAFT[selectedId].short;
+}
+function misGo(){ selectMission(MORDER[misSel]); openStart('missions'); }
+$('misList').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const i=+b.dataset.i; if(i===misSel) misGo(); else { misSel=i; renderMissions(); } });
+$('btnMisGo').addEventListener('click',misGo);
+$('btnMisAc').addEventListener('click',enterHangar);
+$('btnMisBack').addEventListener('click',enterTitle);
+/* cinematic flight behind the main menu */
+const CINE={off:new THREE.Vector3(),ang:0.6,pos:new THREE.Vector3(),fwd:new THREE.Vector3(),q:new THREE.Quaternion(),bank:0,init:false};
+const cV1=new THREE.Vector3(), cV2=new THREE.Vector3(), cV3=new THREE.Vector3(), cM=new THREE.Matrix4(), cUP=new THREE.Vector3(0,1,0);
+function cineOn(){ return state==='menu'&&(menuMode==='title'||menuMode==='missions'||(menuMode==='start'&&startFrom==='missions')); }
+function cineStep(dt){
+  const R=3300; CINE.ang+=dt*Math.max(40,AIRCRAFT[selectedId].airV*0.55)/R;
+  const a=CINE.ang; CINE.pos.set(700+Math.cos(a)*R,1350+Math.sin(a*2.3)*60,-1600+Math.sin(a)*R);
+  CINE.fwd.set(-Math.sin(a),Math.cos(a*2.3)*60*2.3/R,Math.cos(a)).normalize(); CINE.bank=-0.42;
+  cV1.crossVectors(CINE.fwd,cUP).normalize(); cV2.crossVectors(cV1,CINE.fwd).normalize();
+  const cb=Math.cos(CINE.bank), sb=Math.sin(CINE.bank);
+  cV3.copy(cV1).multiplyScalar(cb).addScaledVector(cV2,-sb); cV2.multiplyScalar(cb).addScaledVector(cV1,sb); cV1.copy(CINE.fwd).negate();
+  cM.makeBasis(cV3,cV2,cV1); CINE.q.setFromRotationMatrix(cM);
+}
+$('setUi').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.ui=b.dataset.u; saveSettings(); syncSettingsUI(); refreshTitle(); });
 function enterHangar(){
   if(!NET.on) aiClear();
   setPrep(false,[],''); state='menu'; menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2;
@@ -2717,8 +2866,8 @@ function openLoadPanel(){
   if(activeId!==selectedId) setAircraft(selectedId); showScreen('setupUI'); refreshSetup();
 }
 function closeLoadPanel(){ menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2; showScreen('hangarUI'); refreshHangarUI(); }
-function openStart(){ if(state!=='menu') return; menuMode='start'; $('startUI').classList.remove('hidden'); refreshStart(); }
-function closeStart(){ $('startUI').classList.add('hidden'); menuMode='hangar'; }
+function openStart(from){ if(state!=='menu') return; startFrom=(from==='missions')?'missions':'hangar'; menuMode='start'; $('startUI').classList.remove('hidden'); refreshStart(); }
+function closeStart(){ $('startUI').classList.add('hidden'); menuMode=startFrom==='missions'?'missions':'hangar'; }
 function refreshStart(){
   $('stSub').textContent=AIRCRAFT[selectedId].name+' · '+loadSummary(selectedId);
   Array.prototype.forEach.call($('startSeg').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.s===startPick)); });
@@ -2747,7 +2896,7 @@ function aiSave(){ SETTINGS.ai={enemies:+$('aiEnemy').value,wing:$('aiWing').val
 $('startSeg').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b) launchFrom(b.dataset.s); });
 $('btnLoadDone').addEventListener('click',closeLoadPanel);
 $('btnLoad').addEventListener('click',openLoadPanel);
-$('btnPlay').addEventListener('click',openStart);
+$('btnPlay').addEventListener('click',function(){ openStart('hangar'); });
 $('btnStartX').addEventListener('click',closeStart);
 $('startUI').addEventListener('click',function(e){ if(e.target===$('startUI')) closeStart(); });
 $('acPrev').addEventListener('click',function(){ cycleAircraft(-1); });
@@ -2801,7 +2950,6 @@ function selectAircraft(id){
   refreshHangarUI();
 }
 function cycleAircraft(d){ const L=pickList().length?pickList():AC_ORDER; const i=Math.max(0,L.indexOf(selectedId)); selectAircraft(L[(i+d+L.length)%L.length]); }
-$('btnStart').addEventListener('click',enterHangar);
 $('btnControls').addEventListener('click',openControls);
 $('btnPauseControls').addEventListener('click',openControls);
 $('btnCtlClose').addEventListener('click',closeControls);
@@ -2820,6 +2968,7 @@ function syncSettingsUI(){
   $('setVol').value=Math.round(SETTINGS.volume*100); $('setVolV').textContent=Math.round(SETTINGS.volume*100)+'%';
   $('setSens').value=Math.round(SETTINGS.sens*100); $('setSensV').textContent=Math.round(SETTINGS.sens*100)+'%';
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
+  Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
   $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
   Array.prototype.forEach.call($('setTouch').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===SETTINGS.touch)); });
@@ -2904,7 +3053,8 @@ function pollPad(){
   const eA=press(0), eB=press(1), eX=press(2), eY=press(3), eBack=press(8), eStart=press(9), eL=press(14), eR=press(15), eR3=press(11), eL3=press(10), eLB=press(4), eRB=press(5);
   if(!b(0)) padFireLock=false;
   if(state==='menu'){
-    if(menuMode==='title'){ if(eA) enterHangar(); }
+    if(menuMode==='title'){ const eU=press(12), eD=press(13); if(eD||eR) titleFocus(tFocus+1); else if(eU||eL) titleFocus(tFocus-1); else if(eA){ const L=titleItems(); if(L[tFocus]) titleAct(L[tFocus].dataset.act); } }
+    else if(menuMode==='missions'){ const eU=press(12), eD=press(13); if(eD||eU){ misSel=(misSel+(eD?1:-1)+MORDER.length)%MORDER.length; renderMissions(); } else if(eA) misGo(); else if(eB) enterTitle(); }
     else if(menuMode==='loadout'){ if(eA||eB) closeLoadPanel(); }
     else if(menuMode==='start'){ if(eA) launchFrom(startPick); else if(eB) closeStart(); else if(eLB) cycleMission(-1); else if(eRB) cycleMission(1); else if(eL||eX) cycleStart(-1); else if(eR||eY) cycleStart(1); }
     else{ if(eL) cycleAircraft(-1); else if(eR) cycleAircraft(1); else if(eA) openStart(); else if(eX) openLoadPanel(); else if(eB) enterTitle(); }
@@ -3047,7 +3197,16 @@ window.addEventListener('keydown',e=>{
     return;
   }
   if(state==='menu'){
-    if(menuMode==='title'){ if((e.code==='Enter'||e.code==='Space')&&!onBtn){ e.preventDefault(); enterHangar(); } return; }
+    if(menuMode==='title'){
+      if(e.code==='ArrowDown'||e.code==='ArrowRight'){ e.preventDefault(); titleFocus(tFocus+1); return; }
+      if(e.code==='ArrowUp'||e.code==='ArrowLeft'){ e.preventDefault(); titleFocus(tFocus-1); return; }
+      if((e.code==='Enter'||e.code==='Space')&&!onBtn){ e.preventDefault(); const L=titleItems(); if(L[tFocus]) titleAct(L[tFocus].dataset.act); }
+      return; }
+    if(menuMode==='missions'){
+      if(e.code==='ArrowDown'||e.code==='ArrowUp'){ e.preventDefault(); misSel=(misSel+(e.code==='ArrowDown'?1:-1)+MORDER.length)%MORDER.length; renderMissions(); return; }
+      if((e.code==='Enter'||e.code==='Space')&&!onBtn){ e.preventDefault(); misGo(); return; }
+      if(e.code==='Escape'){ enterTitle(); }
+      return; }
     if(menuMode==='loadout'){ if(e.code==='Escape'||e.code==='KeyY'||(e.code==='Enter'&&!onBtn)){ e.preventDefault(); closeLoadPanel(); } return; }
     if(menuMode==='start'){
       if(e.code==='Escape'){ closeStart(); return; }
@@ -3648,7 +3807,6 @@ function netPick(ac,team){
 (function(){
   try{ $('netName').value=localStorage.getItem('kaan-sim-name')||''; }catch(e){}
   $('netAc').innerHTML=AC_ORDER.map(function(id){ return '<option value="'+id+'">'+AIRCRAFT[id].short+'</option>'; }).join('');
-  $('btnNet').addEventListener('click',openNet);
   $('btnNetClose').addEventListener('click',function(){ if(NET.on&&!NET.started){ netLeave(); } closeNet(); });
   $('btnNetHost').addEventListener('click',netHost);
   $('btnNetJoin').addEventListener('click',netJoin);
