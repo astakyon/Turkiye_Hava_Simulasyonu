@@ -45,7 +45,7 @@ add(...o){for(const c of o){c.parent=this;this.children.push(c)}return this}remo
 rotateX(){return this}rotateY(){return this}rotateZ(){return this}traverse(f){f(this);this.children.forEach(c=>c.traverse&&c.traverse(f))}lookAt(){}updateMatrixWorld(){}getWorldPosition(v){return (v||new V3()).copy(this.position)}
 localToWorld(v){return v}worldToLocal(v){return v}clone(){const o=new Obj();o.position.copy(this.position);return o}}
 function mk(){return new Proxy(function(){},{get:(t,k)=>k===Symbol.toPrimitive?()=>0:k==='then'?undefined:(k==='length'?0:mk()),apply:()=>mk(),construct:()=>mk(),set:()=>true})}
-class M4{constructor(){this.elements=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}compose(){return this}multiply(){return this}makeRotationY(){return this}makeTranslation(){return this}setPosition(){return this}identity(){return this}copy(){return this}invert(){return this}makeBasis(x,y,z){this.elements=[x.x,x.y,x.z,0,y.x,y.y,y.z,0,z.x,z.y,z.z,0,0,0,0,1];return this}}
+class M4{constructor(){this.elements=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}compose(){return this}multiply(){return this}makeRotationY(){return this}makeRotationFromQuaternion(){return this}makeRotationX(){return this}makeRotationZ(){return this}makeTranslation(){return this}setPosition(){return this}identity(){return this}copy(){return this}invert(){return this}makeBasis(x,y,z){this.elements=[x.x,x.y,x.z,0,y.x,y.y,y.z,0,z.x,z.y,z.z,0,0,0,0,1];return this}}
 const THREE=new Proxy({Matrix4:M4,Vector3:V3,Quaternion:Q,Euler:E,Group:Obj,Scene:Obj,Object3D:Obj,
  Mesh:class extends Obj{constructor(g,m){super();this.geometry=g||mk();this.material=m||mk()}},
  Sprite:class extends Obj{constructor(m){super();this.material=m||mk()}},

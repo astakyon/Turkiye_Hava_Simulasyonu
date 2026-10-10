@@ -1,6 +1,21 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.37 — 2026-10-10
+### Yeni — KAAN detaylı model (1/22 model yenileme)
+- **Gövde:** keskin "chine" kenarlı gizli burun, yan kenarı kanat köküne kesintisiz birleşen gövde, motor çıkıntıları, burun konisi.
+- **Hava alıkları:** yanlarda trapez kesitli, ağzı eğik kesilmiş, içi koyu kanallar.
+- **Kanat:** gerçek profil kalınlığı, firar kenarı ileri açılı trapez kanat, hücum kenarında koyu radar emici şerit, sabit iç flap.
+- **Hareketli yüzeyler:** flaperonlar (yatış), tam hareketli yatay kuyruklar (yunuslama) ve dikey kuyruklarda dümenler (sapma) uçuşta kumandayla oynuyor. Kokpit görünümünden de görülebilir.
+- **Dikey kuyruk ve motor:** dışa yatık ikiz dikey kuyruk, bayrak, uç ışığı. Testereli lüleler, içte koyu kanal ve türbin.
+- **Kokpit:** daha büyük, hafif altın renkli tek parça kanopi, pilot (kask ve vizör), koltuk, gösterge siperi, burun önünde EOTS camı.
+- **Boya:** prototipteki koyu "kesik çizgi" deseni ile panel çizgileri, flap/flaperon menteşe çizgileri, KAAN yazısı. Altta silah yuvası, iniş takımı kapağı çizgileri.
+- **İniş takımı:** amortisör, krom piston, makas bağlantısı, jant; kapaklar ve burun takımı lambası.
+- Boyutlar resmî değerlere göre: 21 m boy, 14 m açıklık, ~6 m yükseklik.
+- **Model Kütüphanesi:** Test sekmesinde **Eski modelle karşılaştır** ile eski ve yeni model arasında geçiş yapılıyor.
+### Altyapı
+- Ortak modelleme araçları (`09-model-kit.js`): profil kanat, chine'lı gövde, menteşeli kumanda yüzeyi, iniş takımı ayağı, üstten boya dokusu. Sonraki modeller de bununla yapılacak.
+
 ## V1.36 — 2026-10-10
 ### Yeni — Model Kütüphanesi
 - Ana menüde yeni **Model Kütüphanesi** var (ayrıca Ayarlar → Grafik → Model kütüphanesi). Bütün modeller listede: 10 uçak, 7 yer aracı, 5 ekipman. Mavi Kanatlar ve kara sistemleri için yer hazır.

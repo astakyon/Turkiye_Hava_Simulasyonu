@@ -82,7 +82,7 @@ function applySkin(m,skin){
 }
 function removeSkin(m){
   if(!m.skin) return; m.group.remove(m.skin); m.skin=null;
-  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=null; if(m.strobeOff){ m.strobe=m.strobeOff; m.strobeOff=null; }
+  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=m.codeSurfaces||null; if(m.strobeOff){ m.strobe=m.strobeOff; m.strobeOff=null; }
   if(m.spinBack){ m.spinners=m.spinBack; m.spinBack=null; }
 }
 function setSkin(id,root,spec){

@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.36">
+<meta name="game-version" content="V1.37">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -800,7 +800,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.36', GAME_DATE='2026-10-10';
+const GAME_VERSION='V1.37', GAME_DATE='2026-10-10';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -1268,6 +1268,82 @@ function obstacleStep(){
   }
 }
 
+/* ------------------------------------------------------------------ model kit: shared tools for the detailed code-built models
+   Axes: −Z forward, +Y up, metres. Geometry is built directly in model space where possible, so paint/camouflage
+   (which uses model-space position) runs continuously across parts. */
+const MK={};
+/* grid of rows (each row: array of [x,y,z]) → indexed surface; uv from top-view planar mapping */
+MK.grid=function(rows,closeRow,uvFn){
+  const n=rows[0].length, v=[], uv=[], idx=[]; uvFn=uvFn||planarUV;
+  rows.forEach(function(r){ r.forEach(function(p){ v.push(p[0],p[1],p[2]); const t=uvFn(p[0],p[2],p[1]); uv.push(t[0],t[1]); }); });
+  const m=closeRow?n:n-1;
+  for(let i=0;i<rows.length-1;i++) for(let j=0;j<m;j++){ const a=i*n+j, b=i*n+(j+1)%n, c=(i+1)*n+j, d=(i+1)*n+(j+1)%n; idx.push(a,b,c, b,d,c); }
+  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(v,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.setIndex(idx);
+  g.computeVertexNormals(); return g;
+};
+/* make normals point away from the shape's centre (handles mirrored/left-side parts without negative scales) */
+MK.outward=function(g,center){
+  const p=g.attributes.position, n=g.attributes.normal, c=center||new THREE.Vector3(); if(!center){ for(let i=0;i<p.count;i++){ c.x+=p.getX(i); c.y+=p.getY(i); c.z+=p.getZ(i); } c.multiplyScalar(1/p.count); }
+  let s=0; for(let i=0;i<p.count;i++) s+=(p.getX(i)-c.x)*n.getX(i)+(p.getY(i)-c.y)*n.getY(i)+(p.getZ(i)-c.z)*n.getZ(i);
+  if(s<0){ const ix=g.index.array; for(let i=0;i<ix.length;i+=3){ const t=ix[i+1]; ix[i+1]=ix[i+2]; ix[i+2]=t; } g.index.needsUpdate=true; g.computeVertexNormals(); }
+  return g;
+};
+/* fan cap over a closed ring of points */
+MK.cap=function(ring){ const c=[0,0,0]; ring.forEach(function(p){ c[0]+=p[0]; c[1]+=p[1]; c[2]+=p[2]; }); c[0]/=ring.length; c[1]/=ring.length; c[2]/=ring.length;
+  const v=[c[0],c[1],c[2]], uv=[], idx=[]; const t0=planarUV(c[0],c[2]); uv.push(t0[0],t0[1]);
+  ring.forEach(function(p){ v.push(p[0],p[1],p[2]); const t=planarUV(p[0],p[2]); uv.push(t[0],t[1]); });
+  for(let i=0;i<ring.length;i++) idx.push(0,1+i,1+(i+1)%ring.length);
+  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(v,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); g.setIndex(idx); g.computeVertexNormals(); return g; };
+/* superellipse arc: a from a0 to a1 (radians), half-width w, half-height h, exponent e (2 = ellipse, higher = boxier) */
+MK.arc=function(cx,cy,z,w,h,e,a0,a1,n){ const out=[]; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, c=Math.cos(a), s=Math.sin(a);
+  out.push([cx+w*Math.sign(c)*Math.pow(Math.abs(c),2/e), cy+h*Math.sign(s)*Math.pow(Math.abs(s),2/e), z]); } return out; };
+/* chined fuselage: stations {z, w (chine half-width), y (chine height), t (top), b (bottom), et, eb}. Returns {top, bot, rings} */
+MK.fuselage=function(st,n){
+  const top=[], bot=[], rings=[];
+  st.forEach(function(s){ const T=MK.arc(0,s.y,s.z,s.w,s.t,s.et||2,0,Math.PI,n), B=MK.arc(0,s.y,s.z,s.w,s.b,s.eb||2.4,0,-Math.PI,n);
+    top.push(T); bot.push(B); rings.push(T.concat(B.slice(1,-1).reverse())); });
+  return {top:MK.grid(top), bot:MK.grid(bot), rings:rings};
+};
+/* NACA 4-digit thickness at chord fraction f (t = thickness ratio) */
+MK.thick=function(f,t){ f=Math.min(1,Math.max(0,f)); return 5*t*(0.2969*Math.sqrt(f)-0.126*f-0.3516*f*f+0.2843*f*f*f-0.1036*f*f*f*f); };
+/* airfoil surface between sections {s (span pos), le, te, t, c0, c1 (chord range)} ; map(s, z, thicknessOffset) → [x,y,z] */
+MK.foil=function(sec,map,nc,caps){
+  nc=nc||12; const rows=[];
+  sec.forEach(function(q){ const up=[], lo=[], c=q.te-q.le, c0=q.c0||0, c1=q.c1==null?1:q.c1;
+    for(let i=0;i<=nc;i++){ const u=(1-Math.cos(Math.PI*i/nc))/2, f=c0+(c1-c0)*u, z=q.le+c*f, th=MK.thick(f,q.t)*c; up.push(map(q.s,z,th)); lo.push(map(q.s,z,-th)); }
+    rows.push(up.concat(lo.slice().reverse())); });
+  const g=MK.grid(rows,true); const parts=[g];
+  if(caps){ if(caps.indexOf('a')>=0) parts.push(MK.cap(rows[0])); if(caps.indexOf('b')>=0) parts.push(MK.cap(rows[rows.length-1])); }
+  return parts.length>1?MK.merge(parts):g;
+};
+MK.merge=function(list){ const n=list.reduce(function(a,g){ return a+g.attributes.position.count; },0), P=new Float32Array(n*3), U=new Float32Array(n*2), I=[]; let o=0;
+  list.forEach(function(g){ P.set(g.attributes.position.array,o*3); U.set(g.attributes.uv.array,o*2); g.index.array.forEach(function(i){ I.push(i+o); }); o+=g.attributes.position.count; });
+  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(P,3)); g.setAttribute('uv',new THREE.BufferAttribute(U,2)); g.setIndex(I); g.computeVertexNormals(); return g; };
+/* hinged control surface: geometry given in model space → nested groups so the pivot turns about the hinge line.
+   Returns {outer, pivot}; put `pivot` in model.surfaces. axisLocal: 'x' (wing/tail hinge) or 'y' (rudder). */
+MK.hinge=function(geo,mat,h0,h1,axis){
+  const d=new THREE.Vector3(h1[0]-h0[0],h1[1]-h0[1],h1[2]-h0[2]), outer=new THREE.Group(), pivot=new THREE.Group(); outer.position.set(h0[0],h0[1],h0[2]);
+  const q=new THREE.Quaternion().setFromUnitVectors(axis==='y'?new THREE.Vector3(0,1,0):new THREE.Vector3(1,0,0), d.normalize()); outer.quaternion.copy(q);
+  const inv=new THREE.Matrix4().makeRotationFromQuaternion(q).invert(); geo.translate(-h0[0],-h0[1],-h0[2]); geo.applyMatrix4(inv);
+  const m=new THREE.Mesh(geo,mat); pivot.add(m); outer.add(pivot); return {outer:outer, pivot:pivot, mesh:m};
+};
+MK.cyl=function(r0,r1,len,seg,open){ const g=new THREE.CylinderGeometry(r1,r0,len,seg||16,1,!!open); g.rotateX(Math.PI/2); return g; };   /* along z, r0 at front (−z) */
+MK.at=function(g,mesh,x,y,z){ mesh.position.set(x,y,z); g.add(mesh); return mesh; };
+/* landing-gear leg: strut from (x,yTop,z) down to the wheel centre, wheel radius r, width w; optional twin wheels */
+MK.leg=function(gr,x,yTop,z,yWheel,r,w,mats,opt){ opt=opt||{};
+  const len=yTop-yWheel, st=new THREE.Mesh(new THREE.CylinderGeometry(0.075,0.085,len,10),mats.strut); st.position.set(x,yWheel+len/2,z); gr.add(st);
+  const pis=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.055,len*0.45,10),mats.chrome); pis.position.set(x,yWheel+len*0.3,z); gr.add(pis);
+  const tl=new THREE.Mesh(new THREE.BoxGeometry(0.05,len*0.32,0.22),mats.strut); tl.position.set(x,yWheel+len*0.35,z+0.12); tl.rotation.x=0.35; gr.add(tl);
+  const xs=opt.twin?[x-w*0.62,x+w*0.62]:[x+(opt.side||0)*w*0.5];
+  xs.forEach(function(wx){ const tire=new THREE.Mesh(new THREE.CylinderGeometry(r,r,w,20),mats.tire); tire.rotation.z=Math.PI/2; tire.position.set(wx,yWheel,z); gr.add(tire);
+    const hub=new THREE.Mesh(new THREE.CylinderGeometry(r*0.55,r*0.55,w*1.04,14),mats.hub); hub.rotation.z=Math.PI/2; hub.position.set(wx,yWheel,z); gr.add(hub); });
+  if(opt.axle){ const ax=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,Math.abs(xs[xs.length-1]-x)*2+0.1,8),mats.strut); ax.rotation.z=Math.PI/2; ax.position.set(x,yWheel,z); gr.add(ax); }
+};
+MK.mats=function(){ return {strut:phong(0xd9dde1,0x667080,40), chrome:phong(0xbfc6cc,0xffffff,90), tire:phong(0x15181b,0x111111,6), hub:phong(0x8f979e,0x555555,30)}; };
+/* canvas texture painted in the top-view planar space used by planarUV (64 px per metre over 16 × 24 m) */
+MK.planarTex=function(draw,px){ px=px||64; const W=16*px, H=24*px, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  x.fillStyle='#ffffff'; x.fillRect(0,0,W,H); const X=function(m){ return (m+8)*px; }, Z=function(m){ return (m+12)*px; };
+  draw(x,X,Z,px); const t=new THREE.CanvasTexture(c); t.anisotropy=8; return t; };
 /* ------------------------------------------------------------------ KAAN model */
 const planarUV=(x,z)=>[(x+8)/16, 1-(z+12)/24];
 function loft(stations, seg, upperOnly){
@@ -1326,7 +1402,7 @@ function paintTexture(){
   const t=new THREE.CanvasTexture(c); t.anisotropy=8; return t;
 }
 
-function buildKaan(){
+function buildKaanV1(){   /* first stylised KAAN (V1.00–V1.36), kept for comparison in the model library */
   const g=new THREE.Group();
   const hull=new THREE.MeshPhongMaterial({color:0xaebccb, specular:0x4a5866, shininess:28, side:THREE.DoubleSide});
   const wing=new THREE.MeshPhongMaterial({color:0xa6b5c4, specular:0x3d4a58, shininess:22});
@@ -1411,6 +1487,173 @@ function buildKaan(){
   g.add(gear);
 
   return {group:g, flames, strobe, gear};
+}
+/* ------------------------------------------------------------------ KAAN — detailed model (V1.37)
+   21 m long, 14 m span, ~6 m tall. Chined stealth forebody blending into the LERX, trapezoidal side intakes with raked lips,
+   trapezoidal wing with forward-swept trailing edge, flaperons, all-moving tailplanes, twin outward-canted fins with rudders,
+   twin F110-class nozzles with serrated petals, bubble canopy with pilot, internal bay doors, tricycle gear. */
+function kaanPaint(){
+  return MK.planarTex(function(x,X,Z,px){
+    const r=mulberry32(21);
+    /* the prototype's dark "dash" pattern: dense along the spine and inner wing, fading outwards and aft */
+    x.fillStyle='rgba(70,86,104,0.88)';
+    for(let z=-5.2; z<9.4; z+=0.3){
+      const t=(z+5.2)/14.6, hw=0.5+Math.pow(t,0.75)*5.4;
+      for(let xm=-hw; xm<=hw; xm+=0.28){
+        if(z<-3.4&&Math.abs(xm)<0.75) continue;                       /* canopy */
+        const f=1-Math.abs(xm)/hw; if(r()>Math.pow(f,0.65)*(1-0.5*smooth(0.75,1,t))+0.03) continue;
+        const len=0.16+r()*0.36, jx=(r()-.5)*0.1, jz=(r()-.5)*0.18; x.fillRect(X(xm+jx)-3,Z(z+jz),6,len*px);
+      }
+    }
+    /* panel lines */
+    x.strokeStyle='rgba(40,52,64,0.45)'; x.lineWidth=2;
+    const L=function(a){ x.beginPath(); x.moveTo(X(a[0]),Z(a[1])); for(let i=2;i<a.length;i+=2) x.lineTo(X(a[i]),Z(a[i+1])); x.stroke(); };
+    [1,-1].forEach(function(s){
+      L([s*2.0,-2.0, s*2.0,9.0]); L([s*0.95,-3.3, s*0.95,9.4]);                                      /* fuselage longitudinals */
+      L([s*2.05,4.25, s*4.25,4.15]); L([s*4.25,4.15, s*6.6,3.35]);                                   /* flap / flaperon hinge lines */
+      L([s*4.25,4.15, s*4.25,5.35]); L([s*6.6,3.35, s*6.6,4.15]);
+      L([s*3.2,-0.9, s*3.3,4.6]);                                                                    /* wing spar panel */
+      L([s*1.15,-6.6, s*1.15,-3.4]);                                                                 /* canopy sill */
+    });
+    for(let z=-2; z<=9; z+=2.2) L([-0.95,z, 0.95,z]);
+    x.fillStyle='rgba(52,66,82,0.95)'; x.font='bold 42px Arial, sans-serif'; x.textAlign='center'; x.textBaseline='middle';
+    [1,-1].forEach(function(s){ x.save(); x.translate(X(s*1.45),Z(-1.4)); x.rotate(s>0?Math.PI/2:-Math.PI/2); x.fillText('KAAN',0,0); x.restore(); });
+    /* walkway / no-step outline behind the canopy */
+    x.strokeStyle='rgba(40,52,64,0.35)'; x.setLineDash([6,6]); L([-0.6,-3.2, 0.6,-3.2, 0.6,-1.6, -0.6,-1.6, -0.6,-3.2]); x.setLineDash([]);
+  });
+}
+function kaanBelly(){
+  return MK.planarTex(function(x,X,Z){
+    x.strokeStyle='rgba(40,52,64,0.5)'; x.lineWidth=2;
+    const R=function(x0,z0,x1,z1){ x.strokeRect(X(x0),Z(z0),X(x1)-X(x0),Z(z1)-Z(z0)); };
+    R(-1.05,-3.0,-0.12,3.6); R(0.12,-3.0,1.05,3.6);            /* weapon bay doors */
+    R(-0.3,-8.4,0.3,-6.9);                                    /* nose gear doors */
+    R(-2.15,0.6,-1.25,3.0); R(1.25,0.6,2.15,3.0);              /* main gear doors */
+    x.beginPath(); x.moveTo(X(0),Z(-3)); x.lineTo(X(0),Z(3.6)); x.stroke();
+    for(let z=-3.0; z<3.6; z+=0.8){ x.beginPath(); x.moveTo(X(-1.0),Z(z)); x.lineTo(X(-0.9),Z(z)); x.moveTo(X(0.9),Z(z)); x.lineTo(X(1.0),Z(z)); x.stroke(); }
+  },32);
+}
+function buildKaan(){
+  const g=new THREE.Group(), PAINT=0xb6c2cd;
+  const top=phong(PAINT,0x4a5866,28,{map:kaanPaint()}), belly=phong(PAINT,0x3d4a58,24,{map:kaanBelly()}), plain=phong(PAINT,0x4a5866,26);
+  const radome=phong(0xc9d1d8,0x667788,40), dark=DARK, edge=phong(0x6d7a87,0x333a44,20);
+  const glass=new THREE.MeshPhongMaterial({color:0x2c2a1c, specular:0xffffff, shininess:140, transparent:true, opacity:0.78});
+  const surfaces=[];
+  /* ---- fuselage: upper and lower shells meet at a sharp chine line */
+  const st=[
+    {z:-10.5,w:0.02,y:-0.05,t:0.02,b:0.02},
+    {z:-10.1,w:0.20,y:-0.05,t:0.17,b:0.13},
+    {z:-9.4, w:0.42,y:-0.04,t:0.32,b:0.24},
+    {z:-8.5, w:0.66,y:-0.03,t:0.50,b:0.36,et:2.1},
+    {z:-7.4, w:0.90,y:-0.02,t:0.66,b:0.46,et:2.2},
+    {z:-6.0, w:1.12,y:0.00, t:0.74,b:0.56,et:2.4},
+    {z:-4.6, w:1.42,y:0.00, t:0.76,b:0.64,et:2.6,eb:2.8},
+    {z:-3.0, w:1.86,y:0.00, t:0.74,b:0.72,et:2.9,eb:3.2},
+    {z:-1.2, w:2.06,y:0.00, t:0.70,b:0.76,et:3.0,eb:3.4},
+    {z:1.2,  w:2.08,y:0.00, t:0.68,b:0.76,et:3.0,eb:3.4},
+    {z:3.8,  w:2.02,y:0.00, t:0.62,b:0.72,et:3.0,eb:3.2},
+    {z:6.2,  w:1.88,y:0.00, t:0.55,b:0.66,et:2.9,eb:3.0},
+    {z:8.2,  w:1.68,y:0.00, t:0.46,b:0.58,et:2.8,eb:2.8},
+    {z:9.4,  w:1.50,y:0.00, t:0.40,b:0.52,et:2.7,eb:2.6}];
+  const F=MK.fuselage(st,18);
+  g.add(new THREE.Mesh(MK.outward(F.top,new THREE.Vector3(0,-1,0)),top));
+  g.add(new THREE.Mesh(MK.outward(F.bot,new THREE.Vector3(0,1,0)),belly));
+  g.add(new THREE.Mesh(MK.outward(MK.cap(F.rings[F.rings.length-1]),new THREE.Vector3(0,0,0)),plain));
+  /* radome: slightly lighter nose cone over the first stations */
+  const rs=st.slice(0,4).map(function(s){ return Object.assign({},s,{w:s.w*1.02+0.004,t:s.t*1.02+0.004,b:s.b*1.02+0.004}); }); const RF=MK.fuselage(rs,18);
+  g.add(new THREE.Mesh(MK.outward(RF.top,new THREE.Vector3(0,-1,0)),radome)); g.add(new THREE.Mesh(MK.outward(RF.bot,new THREE.Vector3(0,1,0)),radome));
+  /* ---- engine housings + nozzles with serrated petals */
+  const flamesAt=[];
+  [-1,1].forEach(function(s){
+    const ex=s*0.78;
+    g.add(MK.at(g,new THREE.Mesh(MK.cyl(0.74,0.66,3.6,20),plain),ex,-0.05,8.0));
+    const rows=[]; const N=24;
+    [[9.4,0.66],[10.0,0.62],[10.55,0.58]].forEach(function(q,k){ const row=[]; for(let i=0;i<=N;i++){ const a=i/N*Math.PI*2, rr=q[1]*(k===2?(i%2?1.06:0.94):1); row.push([ex+Math.cos(a)*rr,-0.05+Math.sin(a)*rr,q[0]]); } rows.push(row); });
+    const noz=new THREE.Mesh(MK.outward(MK.grid(rows),new THREE.Vector3(ex,-0.05,10)),edge); g.add(noz);
+    const inner=new THREE.Mesh(MK.cyl(0.6,0.5,1.4,20,true),dark); inner.material=dark; MK.at(g,inner,ex,-0.05,9.9); inner.scale.set(0.95,0.95,1);
+    const disc=new THREE.Mesh(new THREE.CircleGeometry(0.5,20),phong(0x3a2c22,0x221a14,10)); disc.position.set(ex,-0.05,9.3); disc.rotation.y=Math.PI; g.add(disc);
+    flamesAt.push([ex,-0.05,10.6]);
+  });
+  /* ---- side intakes: trapezoidal ducts with raked lips */
+  [-1,1].forEach(function(s){
+    const rows=[], ring=function(z,w,h,yc,xo){ const pts=[]; const c=[[xo-w*0.5,yc+h*0.5],[xo+w*0.5,yc+h*0.42],[xo+w*0.62,yc-h*0.5],[xo-w*0.45,yc-h*0.5]]; for(let i=0;i<4;i++){ const a=c[i], b=c[(i+1)%4]; for(let k=0;k<3;k++){ const u=k/3; pts.push([s*(a[0]+(b[0]-a[0])*u), a[1]+(b[1]-a[1])*u, z]); } } return pts; };
+    const secs=[[-4.9,1.0,1.02,-0.42,1.62],[-4.2,1.0,1.0,-0.42,1.66],[-2.6,0.95,0.92,-0.44,1.62],[-0.8,0.8,0.8,-0.46,1.5],[0.8,0.6,0.62,-0.48,1.36]];
+    secs.forEach(function(q,k){ const R=ring(q[0],q[1],q[2],q[3],q[4]); if(k===0) R.forEach(function(p){ p[2]+= (p[1]-q[3])*-0.55+0.05; }); rows.push(R); });
+    g.add(new THREE.Mesh(MK.outward(MK.grid(rows,true),new THREE.Vector3(s*1.55,-0.45,-2)),plain));
+    const lip=rows[0], innerR=lip.map(function(p){ return [s*(Math.abs(p[0])+(1.62-Math.abs(p[0]))*0.16), p[1]+(-0.42-p[1])*0.16, p[2]+0.05]; });
+    const lipGeo=MK.grid([lip,innerR],true); g.add(new THREE.Mesh(lipGeo,edge));
+    const duct=innerR.map(function(p){ return [p[0]*0.98,p[1],p[2]+1.4]; });
+    const dg=MK.grid([innerR,duct],true); const dm=new THREE.Mesh(dg,new THREE.MeshPhongMaterial({color:0x0e1114,side:THREE.DoubleSide})); g.add(dm);
+    g.add(new THREE.Mesh(MK.cap(duct),dark));
+  });
+  /* ---- wings (airfoil), flaperons as hinged parts */
+  const wingSec=function(sp){ const t=(sp-1.9)/(7.0-1.9); return {le:-2.4+t*5.0, te:5.6-t*1.45, y:-0.06-t*0.12, t:0.046-t*0.012}; };
+  [-1,1].forEach(function(s){
+    const sec=function(sp,c0,c1){ const q=wingSec(sp); return {s:sp,le:q.le,te:q.te,t:q.t,c0:c0,c1:c1,y:q.y}; };
+    const map=function(sp,z,th){ return [s*sp, wingSec(sp).y+th, z]; };
+    const parts=[MK.foil([sec(1.7,0,1),sec(2.05,0,1),sec(2.05,0,0.80),sec(4.24,0,0.80),sec(4.26,0,0.80),sec(6.6,0,0.80),sec(6.62,0,1),sec(7.0,0,1)],map,14,'b')];
+    g.add(new THREE.Mesh(MK.outward(parts[0],new THREE.Vector3(s*4.3,-0.1,1.4)),top));
+    /* inner flap (fixed) and flaperon (moving) */
+    const flap=MK.outward(MK.foil([sec(2.05,0.8,1),sec(4.24,0.8,1)],map,6,'ab'),new THREE.Vector3(s*3.1,-0.1,4.9)); g.add(new THREE.Mesh(flap,top));
+    const fq=MK.outward(MK.foil([sec(4.26,0.8,1),sec(6.6,0.8,1)],map,6,'ab'),new THREE.Vector3(s*5.4,-0.15,4.3));
+    const a0=wingSec(4.26), a1=wingSec(6.6), h0=[s*4.26,a0.y,a0.le+(a0.te-a0.le)*0.8], h1=[s*6.6,a1.y,a1.le+(a1.te-a1.le)*0.8];
+    const H=MK.hinge(fq,top,s>0?h0:h1,s>0?h1:h0,'x'); g.add(H.outer); surfaces.push({n:H.pivot,axis:'x',input:'roll',max:18*D2R,sign:s>0?-1:1,base:0});
+    /* leading-edge tint (radar absorbing edge) */
+    const le=[]; for(let i=0;i<=8;i++){ const sp=2.05+(6.98-2.05)*i/8, q=wingSec(sp); le.push([s*sp,q.y+0.012,q.le+0.02]); }
+    const le2=le.map(function(p){ const sp=Math.abs(p[0]), q=wingSec(sp); return [p[0],q.y+MK.thick(0.06,q.t)*(q.te-q.le)+0.006,q.le+(q.te-q.le)*0.06]; });
+    g.add(new THREE.Mesh(MK.outward(MK.grid([le,le2]),new THREE.Vector3(s*4,-5,0)),edge));
+  });
+  /* ---- all-moving tailplanes */
+  [-1,1].forEach(function(s){
+    const ts=function(sp){ const t=(sp-1.55)/(5.1-1.55); return {le:7.1+t*2.7, te:10.8+t*0.35, y:-0.08-t*0.2, t:0.04}; };
+    const map=function(sp,z,th){ return [s*sp, ts(sp).y+th, z]; };
+    const sec=function(sp){ const q=ts(sp); return {s:sp,le:q.le,te:q.te,t:q.t}; };
+    const geo=MK.outward(MK.foil([sec(1.55),sec(5.1)],map,12,'ab'),new THREE.Vector3(s*3.3,-0.18,9.4));
+    const pz=8.6, H=MK.hinge(geo,top,[s>0?s*1.55:s*5.1,-0.1,pz],[s>0?s*5.1:s*1.55,-0.1,pz],'x'); g.add(H.outer);
+    surfaces.push({n:H.pivot,axis:'x',input:'pitch',max:16*D2R,sign:-1,base:0});
+  });
+  /* ---- twin fins canted outward, rudders, flags */
+  const flagMat=new THREE.MeshBasicMaterial({map:flagTexture(), side:THREE.DoubleSide});
+  [-1,1].forEach(function(s){
+    const holder=new THREE.Group(); holder.position.set(s*1.42,0.42,0); holder.rotation.z=-s*0.44; g.add(holder);
+    const fs=function(u){ const t=u/3.15; return {le:5.0+t*2.5, te:9.2-t*0.25, t:0.05-t*0.012}; };
+    const map=function(u,z,th){ return [th,u,z]; };
+    const sec=function(u,c0,c1){ const q=fs(u); return {s:u,le:q.le,te:q.te,t:q.t,c0:c0,c1:c1}; };
+    const fin=MK.outward(MK.foil([sec(0,0,1),sec(0.5,0,1),sec(0.5,0,0.72),sec(2.6,0,0.72),sec(2.6,0,1),sec(3.15,0,1)],map,12,'b'),new THREE.Vector3(0,1.6,7));
+    holder.add(new THREE.Mesh(fin,plain));
+    const rud=MK.outward(MK.foil([sec(0.5,0.72,1),sec(2.6,0.72,1)],map,6,'ab'),new THREE.Vector3(0,1.5,8.8));
+    const r0=fs(0.5), r1=fs(2.6), H=MK.hinge(rud,plain,[0,0.5,r0.le+(r0.te-r0.le)*0.72],[0,2.6,r1.le+(r1.te-r1.le)*0.72],'y'); holder.add(H.outer);
+    surfaces.push({n:H.pivot,axis:'y',input:'yaw',max:20*D2R,sign:1,base:0});
+    const fl=new THREE.Mesh(new THREE.PlaneGeometry(1.25,0.84),flagMat); fl.position.set(s*0.06,1.85,7.25); fl.rotation.y=s>0?Math.PI/2:-Math.PI/2; holder.add(fl);
+    const tip=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.05,1.0),edge); tip.position.set(0,3.16,fs(3.15).le+0.55); holder.add(tip);
+  });
+  /* ---- canopy, pilot, cockpit */
+  const cRows=[]; for(let i=0;i<=10;i++){ const z=-7.05+i*0.36, t=i/10, w=0.08+0.56*Math.sin(Math.min(1,t*1.35)*Math.PI*0.5)*(1-0.2*smooth(0.6,1,t)), h=0.05+0.7*Math.sin(Math.min(1,t*1.15)*Math.PI*0.5)*(1-0.42*smooth(0.55,1,t)), yb=0.62+0.12*smooth(0,0.5,t);
+    cRows.push(MK.arc(0,yb,z,w,h,2.2,0.02,Math.PI-0.02,12)); }
+  g.add(new THREE.Mesh(MK.outward(MK.grid(cRows),new THREE.Vector3(0,0.4,-5.3)),glass));
+  const sill=[]; [-1,1].forEach(function(s){ sill.push(MK.at(g,new THREE.Mesh(new THREE.BoxGeometry(0.06,0.06,3.5),dark),s*0.52,0.72,-5.25)); sill[sill.length-1].rotation.y=s*0.04; });
+  MK.at(g,new THREE.Mesh(new THREE.TorusGeometry(0.48,0.04,6,20,Math.PI),dark),0,0.74,-3.5);
+  MK.at(g,new THREE.Mesh(new THREE.BoxGeometry(0.62,0.6,0.45),phong(0x2a2f36,0x222222,10)),0,0.86,-4.3);            /* seat */
+  MK.at(g,new THREE.Mesh(new THREE.SphereGeometry(0.15,14,10),phong(0x6b7178,0x444444,40)),0,1.17,-4.62);            /* helmet */
+  const visor=MK.at(g,new THREE.Mesh(new THREE.SphereGeometry(0.145,14,8,0,Math.PI*2,0,Math.PI*0.42),phong(0x111418,0xffffff,120)),0,1.15,-4.68); visor.rotation.x=-1.25;
+  MK.at(g,new THREE.Mesh(new THREE.BoxGeometry(0.8,0.16,0.5),dark),0,0.86,-6.05);                                 /* glare shield */
+  MK.at(g,new THREE.Mesh(new THREE.SphereGeometry(0.17,12,8,0,Math.PI*2,0,Math.PI/2),glass),0,0.47,-7.85);        /* EOTS window */
+  /* ---- small details: antennas, gun port, bay/door seams (texture), air data probes */
+  [[0,0.72,0.6,0.32],[0,-0.78,2.2,0.28],[0,-0.7,-5.2,0.22]].forEach(function(a){ const b=new THREE.Mesh(new THREE.BoxGeometry(0.03,a[3],0.4),edge); b.position.set(a[0],a[1]+(a[1]>0?a[3]/2:-a[3]/2),a[2]); b.rotation.x=a[1]>0?-0.3:0.3; g.add(b); });
+  MK.at(g,new THREE.Mesh(new THREE.BoxGeometry(0.05,0.12,0.5),dark),1.05,0.18,-5.6);
+  [-1,1].forEach(function(s){ const pr=MK.at(g,new THREE.Mesh(MK.cyl(0.012,0.025,0.42,6),edge),s*0.42,-0.08,-9.3); pr.rotation.y=s*0.2; });
+  /* ---- lights, flames */
+  const strobe=addLights(g,[7.0,-0.2,3.3],[0,0.62,9.2]);
+  const flames=addFlames(g,flamesAt,1.05);
+  /* ---- landing gear (retracts as one group) */
+  const gear=new THREE.Group(), GM=MK.mats(); const gy=-2.4;
+  MK.leg(gear,0,-0.62,-7.5,gy+0.34,0.34,0.24,GM,{twin:false});
+  [-1,1].forEach(function(s){ MK.leg(gear,s*1.72,-0.45,2.0,gy+0.43,0.43,0.32,GM,{side:s*0.4});
+    const door=new THREE.Mesh(new THREE.BoxGeometry(0.03,0.78,1.55),plain); door.position.set(s*2.16,-1.02,1.95); door.rotation.z=s*0.32; gear.add(door); });
+  [-1,1].forEach(function(s){ const d=new THREE.Mesh(new THREE.BoxGeometry(0.03,0.5,1.1),plain); d.position.set(s*0.36,-0.78,-7.6); d.rotation.z=s*0.2; gear.add(d); });
+  const nl=new THREE.Mesh(new THREE.SphereGeometry(0.06,8,6),new THREE.MeshBasicMaterial({color:0xfff6dc})); nl.position.set(0,-1.5,-7.75); nl.material.userData.glow=2.5; gear.add(nl);
+  g.add(gear);
+  return {group:g, flames:flames, strobe:strobe, gear:gear, spinners:[], surfaces:surfaces, codeSurfaces:surfaces};
 }
 /* ------------------------------------------------------------------ shared model helpers */
 function phong(c,sp,sh,extra){ return new THREE.MeshPhongMaterial(Object.assign({color:c,specular:sp,shininess:sh},extra||{})); }
@@ -1678,8 +1921,8 @@ const SND_PROP={n:0.4,lp0:160,lpK:300,f0:58,f1:118,o:4,type:'sawtooth'};
 const AIRCRAFT={
   kaan:{name:'TUSAŞ KAAN',short:'KAAN',kind:'Savaş uçağı',len:'21 m',span:'14 m',uav:false,hasAB:true,
     desc:'Çift motorlu beşinci nesil savaş uçağı. Art yakıcı, yüksek manevra ve top ateşi.',
-    build:function(){ const m=buildKaan(); m.spinners=[]; return m; },
-    gearOff:2.4,belly:1.2,cam:[5.4,23],eye:[0,1.02,-4.2],muzzle:[0.9,-0.1,-7],
+    build:function(){ return buildKaan(); }, buildOld:function(){ const m=buildKaanV1(); m.spinners=[]; return m; },
+    gearOff:2.4,belly:1.2,cam:[5.4,23],eye:[0,1.22,-4.98],muzzle:[0.9,-0.1,-7],
     idle:0.4,thrust:10.5,abT:14,kD:0.000125,stall:[52,84],authV:110,gLim:14,pitchMax:1.25,roll:3.3,yaw:0.45,stallNose:0.9,minV:60,vTop:300,
     vr:78,landV:150,sinkMax:8,gearV:150,brake:8,rollFric:1.1,airV:210,fireInt:0.05,bulletV:850,blife:1.5,weapon:'TOP',snd:SND_JET},
   anka3:{name:'TUSAŞ ANKA-3',short:'ANKA-3',kind:'Muharip İHA · uçan kanat',len:'~9 m',span:'~13 m',uav:true,hasAB:false,
@@ -1835,7 +2078,7 @@ function applySkin(m,skin){
 }
 function removeSkin(m){
   if(!m.skin) return; m.group.remove(m.skin); m.skin=null;
-  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=null; if(m.strobeOff){ m.strobe=m.strobeOff; m.strobeOff=null; }
+  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=m.codeSurfaces||null; if(m.strobeOff){ m.strobe=m.strobeOff; m.strobeOff=null; }
   if(m.spinBack){ m.spinners=m.spinBack; m.spinBack=null; }
 }
 function setSkin(id,root,spec){
@@ -4946,9 +5189,9 @@ function libClear(){
 }
 function libSelect(key){
   const it=libItems().find(function(i){ return i.key===key; }); if(!it) return;
-  libWire(false); libClear(); LIB.item=it; LIB.tests.wpn=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
+  libWire(false); libClear(); if(!LIB.item||LIB.item.key!==key) LIB.tests.old=false; LIB.item=it; LIB.tests.wpn=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
   let obj;
-  if(it.kind==='ac'){ const m=buildModel(it.id); LIB.inst=m; obj=m.group; obj.position.set(0,AIRFIELD_Y*0+AIRCRAFT[it.id].gearOff,0); m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); }); }
+  if(it.kind==='ac'){ const def=AIRCRAFT[it.id], old=LIB.tests.old&&def.buildOld; let m; if(old){ m=def.buildOld(); upgradeModel(m.group); m.acId=it.id; } else m=buildModel(it.id); LIB.inst=m; obj=m.group; obj.position.set(0,AIRFIELD_Y*0+AIRCRAFT[it.id].gearOff,0); m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); }); }
   else { obj=it.build(); obj.traverse(function(o){ if(o.isMesh&&o.material&&o.material.isMeshPhongMaterial) o.material=stdOf(o.material); }); }
   LIB.obj=obj; LIB.holder.add(obj);
   libFrame(); libRenderList(); libRefreshPanel();
@@ -4993,14 +5236,14 @@ function libRefreshPanel(){
 function libTab(t){ LIB.tab=t; Array.prototype.forEach.call($('libTabs').children,function(b){ b.setAttribute('aria-selected',String(b.dataset.t===t)); });
   Array.prototype.forEach.call(document.querySelectorAll('#libUI .lpanel section'),function(s){ s.hidden=s.dataset.t!==t; }); }
 /* ---- test tab */
-const LIB_TESTS=[['gear','İniş takımı'],['ab','Motor / art yakıcı'],['wpn','Silahlar'],['spin','Pervane'],['lights','Seyir ışıkları'],['surf','Kumanda yüzeyleri'],['wire','Tel kafes']];
+const LIB_TESTS=[['old','Eski modelle karşılaştır'],['gear','İniş takımı'],['ab','Motor / art yakıcı'],['wpn','Silahlar'],['spin','Pervane'],['lights','Seyir ışıkları'],['surf','Kumanda yüzeyleri'],['wire','Tel kafes']];
 function libRefreshTests(){
   const it=LIB.item, m=LIB.inst, ac=it.kind==='ac';
-  const can={gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), wire:true};
+  const can={old:ac&&!!AIRCRAFT[it.id].buildOld, gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), wire:true};
   $('libTests').innerHTML=LIB_TESTS.map(function(t){ return '<button type="button" data-x="'+t[0]+'" aria-pressed="'+(!!LIB.tests[t[0]]&&can[t[0]])+'"'+(can[t[0]]?'':' disabled')+'>'+t[1]+'</button>'; }).join('');
   $('libTestNote').textContent=ac?(can.surf?'Kumanda yüzeyleri modeldeki işaretli parçalarla oynar.':'Kumanda yüzeyi testi için içe aktarılmış modelde parçaları işaretle (Model sekmesi).'):'Yer araçları ve ekipman için yalnızca tel kafes görünümü.';
 }
-function libToggle(k){ LIB.tests[k]=!LIB.tests[k]; if(k==='wire') libWire(LIB.tests.wire); if(k==='wpn') libStores(); if(k==='gear') libApplyTests(); libRefreshTests(); if(k==='gear'||k==='wpn') libFrame(); }
+function libToggle(k){ LIB.tests[k]=!LIB.tests[k]; if(k==='old'){ libSelectKeep(); return; } if(k==='wire') libWire(LIB.tests.wire); if(k==='wpn') libStores(); if(k==='gear') libApplyTests(); libRefreshTests(); if(k==='gear'||k==='wpn') libFrame(); }
 function libApplyTests(){ const m=LIB.inst; if(!m) return; if(m.gear) m.gear.visible=!!LIB.tests.gear; }
 function libStores(){
   const m=LIB.inst; if(!m) return;
@@ -5034,7 +5277,7 @@ function libStep(dt){
   if(m){
     if(m.gear) m.gear.visible=!!LIB.tests.gear;
     const ab=LIB.tests.ab, len=ab?(0.9+2.4+5.5):0.05, wd=ab?1.15:1;
-    m.flames.forEach(function(f){ const fl=1+(ab?(Math.random()-.5)*0.2:0); f.outer.scale.set(wd,wd,len*fl); f.inner.scale.set(wd,wd,len*0.55*fl); });
+    m.flames.forEach(function(f){ const fl=1+(ab?(Math.random()-.5)*0.2:0); f.outer.visible=f.inner.visible=ab; f.outer.scale.set(wd,wd,len*fl); f.inner.scale.set(wd,wd,len*0.55*fl); });
     (m.spinners||[]).forEach(function(sp){ if(LIB.tests.spin){ sp.obj.rotation.z+=dt*(ab?40:14); if(sp.disc&&sp.disc.material) sp.disc.material.opacity=ab?0.18:0.08; } });
     if(m.strobe) m.strobe.visible=LIB.tests.lights&&Math.sin(T*9)>0.6;
     if(m.surfaces&&m.surfaces.length) m.surfaces.forEach(function(s,i){ const v=LIB.tests.surf?Math.sin(T*2.2+i*0.7):0; s.n.rotation[s.axis]=s.base+v*s.max*s.sign; });

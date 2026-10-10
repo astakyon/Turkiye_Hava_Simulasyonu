@@ -56,7 +56,7 @@ function paintTexture(){
   const t=new THREE.CanvasTexture(c); t.anisotropy=8; return t;
 }
 
-function buildKaan(){
+function buildKaanV1(){   /* first stylised KAAN (V1.00–V1.36), kept for comparison in the model library */
   const g=new THREE.Group();
   const hull=new THREE.MeshPhongMaterial({color:0xaebccb, specular:0x4a5866, shininess:28, side:THREE.DoubleSide});
   const wing=new THREE.MeshPhongMaterial({color:0xa6b5c4, specular:0x3d4a58, shininess:22});
