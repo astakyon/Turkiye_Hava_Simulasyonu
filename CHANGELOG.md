@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.31 — 2026-10-10
+Aşama 2: havalimanı.
+### Yeni
+- **Pist:** asfalt doku, kenar omuzları, iki uçta sarı oklu emniyet alanı; kenar ve orta çizgi, eşik şeritleri (piyano tuşları), 36/18 numaraları, konma bölgesi ve nişan noktası işaretleri, konma bölgesinde lastik izleri.
+- **Işıklar:** pist kenar ışıkları, yeşil eşik ışıkları, iki uçta 360 m yaklaşma ışık dizisi ve piste doğru koşan flaş ("tavşan"). Işıklar uzaktan da görünür.
+- **PAPI:** iki pist ucunda 4'lü süzülüş göstergesi; doğru açıda 2 kırmızı 2 beyaz, yüksekte hepsi beyaz, alçakta hepsi kırmızı.
+- **Binalar:** yeni kontrol kulesi (cam kabin, anten, engel ışığı), Hilal Kanatlar harekât merkezi, 3 korunaklı uçak sığınağı, itfaiye binası, radar sahası (dönen anten + radom), akaryakıt tankları, apron aydınlatma direkleri, dalgalanan Türk bayrağı, rüzgâr tulumları.
+- **Yollar ve araçlar:** apron, apron–pist ve apron–taksi yolu bağlantıları (bekleme çizgileriyle), çevre yolu; itfaiye araçları, yakıt tankerleri, çekici, güç ünitesi, otobüs; çevre yolunda dolaşan "BENİ İZLE" aracı, kamyonet ve tanker.
+- **Tabelalar:** pist kenarında kalan mesafe levhaları (bin fit), "AY YILDIZ HAVA ÜSSÜ", "İTFAİYE", "AKARYAKIT".
+- **Çarpışma:** binalar artık katı. Havada çarparsan uçuş biter ("Binaya çarptın"), yerde taksi yaparken uçak durur.
+### Teknik
+- Sabit binalar malzemeye göre tek parçada birleştiriliyor (telefonda az çizim çağrısı).
+
 ## V1.30 — 2026-10-10
 Aşama 1: ışık ve atmosfer.
 ### Yeni
