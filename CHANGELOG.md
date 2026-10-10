@@ -1,6 +1,26 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.32 — 2026-10-10
+Aşama 3: hangar içleri.
+### Yeni
+- **Bekleme hangarı artık kapalı bir yapı:** uçaklar açık apronda değil, büyük hangarın içinde duruyor. Ön cephe açık; üstünde "HANGAR 1 · HİLAL KANATLAR" yazısı var.
+- Hangarın içinde:
+  - çelik tavan makasları ve tavan lambaları, lambaların altında zeminde ışık halkaları;
+  - parlak epoksi zemin, kapı eşiğinde sarı-siyah tehlike şeridi, kırmızı yaya yolu çizgileri;
+  - arka duvarda büyük Türk bayrağı, "HİLAL KANATLAR" ve "HEDEF KIZIL ELMA" pankartları; yan duvarlarda üst pencere bandı;
+  - her uçağın arkasında iş tezgâhı, takım dolabı, raf ya da varil, yangın söndürücü;
+  - silah taşıyan uçakların arkasında bomba veya füze arabası; yer güç ünitesi, çekici, bakım merdivenleri, trafik konileri;
+  - "FOD KONTROLÜ" ve "SİGARA İÇMEK YASAKTIR" uyarı levhaları.
+- **Bakım hangarının içi donatıldı:**
+  - tavan makasları ve lambalar, epoksi zemin, bayrak;
+  - "BAKIM · ONARIM · SİLAH YÜKLEME" yazısı ve silah yükleme alanı uyarısı;
+  - silah arabaları, bakım merdivenleri, tezgâh, dolap, raf, varil, söndürücü.
+### Değişti
+- Menüde kamera hangarın dışına ya da çatının üstüne çıkınca o duvar ve çatı otomatik gizleniyor, uçak her açıdan görünüyor.
+- Hangar duvarları katı: yerde uçak duvarda durur, havadan hangara girmek uçuşu bitirir.
+- Otomatik taksi önce hangar kapısından düz çıkıyor, sonra taksi yoluna dönüyor (kanat duvara takılmıyor).
+
 ## V1.31 — 2026-10-10
 Aşama 2: havalimanı.
 ### Yeni

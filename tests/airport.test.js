@@ -7,7 +7,7 @@ const e0=acExtent(); T('start not in obstacle',!AP.obst.some(function(b){ return
 // hangar line displays clear
 T('hangar displays clear',Object.keys(displays).every(function(id){ const d=displays[id]; return !AP.obst.some(function(b){ return !b.air&&d.x>b.x0-8&&d.x<b.x1+8&&HANGAR.z>b.z0-8&&HANGAR.z<b.z1+8; }); }));
 // taxi path clear
-T('taxi path clear',TAXI.pts.every(function(p){ return !AP.obst.some(function(b){ return !b.air&&p.x>b.x0-10&&p.x<b.x1+10&&p.z>b.z0-10&&p.z<b.z1+10; }); }));
+T('taxi path clear',TAXI.pts.every(function(p){ return !AP.obst.some(function(b){ return !b.air&&p.x>b.x0-4&&p.x<b.x1+4&&p.z>b.z0-4&&p.z<b.z1+4; }); }));
 // flying into the tower crashes
 resetFlight('air'); S.crashed=false; S.onGround=false; S.pos.set(-128,AIRFIELD_Y+20,300); obstacleStep(); T('tower crash in air',S.crashed&&S.crashReason==='Binaya çarptın',S.crashReason);
 // above it is fine
@@ -18,4 +18,11 @@ S.crashed=false; S.onGround=true; S.pos.set(-232,AIRFIELD_Y+2,430); S.speed=10; 
 S.pos.set(-150,AIRFIELD_Y+2,1060); S.speed=5; obstacleStep(); T('service hangar passable',S.speed===5&&S.pos.x===-150);
 // PAPI colour logic is checked in the real browser (the stub has no buffer attributes)
 const s0=AP.movers[0].s; airportStep(1); T('vehicles move',AP.movers[0].s!==s0);
+// hangar hall: parts, walls solid on the ground, roof hidden only for the menu camera from above
+T('hall parts',HG.parts&&HG.parts.roof&&HG.parts.top&&HG.parts.east);
+S.crashed=false; S.onGround=true; S.pos.set(-95,AIRFIELD_Y+2,900); S.speed=8; obstacleStep(); T('east wall blocks',S.pos.x<-90.5&&!S.crashed,S.pos.x);
+S.pos.set(-278,AIRFIELD_Y+2,905); S.speed=5; obstacleStep(); T('inside hall free',S.speed===5);
+S.onGround=false; S.pos.set(-278,AIRFIELD_Y+15,905); obstacleStep(); T('flying into hall crashes',S.crashed);
+S.crashed=false; state='menu'; camera.position.set(-278,AIRFIELD_Y+60,930); hangarCull(); T('menu above: roof hidden',!HG.parts.roof.visible&&!HG.parts.top.visible);
+state='play'; hangarCull(); T('play: roof visible',HG.parts.roof.visible);
 console.log('pass',ok,'fail',bad);

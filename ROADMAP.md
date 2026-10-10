@@ -11,7 +11,7 @@
 | 0 | V1.20–V1.24 | İsim/marka, yeni menüler, gruplar (Hilal Kanatlar / Mavi Kanatlar / Kara), sınıf filtresi, araç kayıt sistemi, silah uyumu altyapısı, otomatik performans + FPS, PWA | ✅ |
 | 1 | V1.30 | Işık ve atmosfer: PBR malzeme, güneş gölgeleri, gökyüzü/güneş, mesafe pusu, kanopi yansıması | ✅ |
 | 2 | V1.31 | Havalimanı: pist işaretleri, kenar/yaklaşma ışıkları, PAPI, kule, terminal, radar, itfaiye, yakıt, yer araçları, tabelalar | ✅ |
-| 3 | V1.23 | Hangar iç tasarımı: bölmeli hangarlar (kategori başına), iç aydınlatma, vitrin görünümü, silah sergisi | |
+| 3 | V1.32 | Hangar iç tasarımı: kapalı bekleme hangarı (çelik makaslar, tavan lambaları, epoksi zemin, bayrak ve pankartlar, tezgâh, takım dolabı, raf, silah arabaları), bakım hangarı iç donanımı | ✅ |
 | 4 | V1.24 | Ada/çevre: arazi dokuları, köy/yol/sahil, deniz yansıması, ağaç çeşitliliği, mesafeye göre detay | |
 | 5 | V1.25 | Uçak detayları: fotoğraflara yüksek benzerlik, panel çizgileri, çıkartmalar, ışıklar, takım ve kumanda yüzeyi animasyonu | |
 | 6 | V1.3x | Gerçek silah envanteri, yeni hava araçları; sonra Mavi Kanatlar (deniz) ve kara sistemleri | |
