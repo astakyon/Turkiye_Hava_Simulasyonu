@@ -1,0 +1,26 @@
+name: Sürüm yayınla
+# VERSION dosyası değişince (ör. V1.12) o sürümün GitHub Release kaydını otomatik oluşturur.
+# Notlar CHANGELOG.md içindeki ilgili "## Vx.xx" bölümünden alınır.
+on:
+  push:
+    branches: [main]
+    paths: [VERSION, .github/workflows/release.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sürümü oku ve yayınla
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V=$(tr -d ' \r\n' < VERSION)
+          echo "Sürüm: $V"
+          if gh release view "$V" >/dev/null 2>&1; then echo "$V zaten var, atlanıyor"; exit 0; fi
+          awk -v v="$V" 'index($0,"## "v" ")==1{f=1;next} /^## V/{if(f) exit} f' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "$V" > notes.md
+          printf '\n\nOyna: https://%s.github.io/%s/\n' "${GITHUB_REPOSITORY_OWNER}" "${GITHUB_REPOSITORY#*/}" >> notes.md
+          gh release create "$V" --target "$GITHUB_SHA" --title "$V — Türk Göklerinde" --notes-file notes.md --latest

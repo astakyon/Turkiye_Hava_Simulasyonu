@@ -38,7 +38,7 @@ Her güncellemede: `python3 bump_version.py V1.01 "Ne değişti"` → sonra CHAN
 ```
 git add -A && git commit -m "V1.01: ..." && git tag V1.01 && git push && git push --tags
 ```
-Sürüm numarası oyunda ana menüde ve Ayarlar'da görünür.
+Sürüm numarası oyunda ana menüde ve Ayarlar'da görünür. `VERSION` dosyası değişip `main`e gönderilince **Releases** kaydı otomatik oluşur (`.github/workflows/release.yml`); notlar CHANGELOG'dan alınır.
 
 ## Testler
 `sh tests/run.sh` (Node.js 18+). Tarayıcısız, sahte THREE/DOM ortamında silah tuşları, kilit, hava savunma, hangar girişi ve taksi akışını kontrol eder.
