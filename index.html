@@ -1,9 +1,9 @@
 <!doctype html>
-<!-- Ay Yıldız: Hedef Kızıl Elma V1.23 · 2026-10-10 -->
+<!-- Ay Yıldız: Hedef Kızıl Elma V1.24 · 2026-10-10 -->
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.23">
+<meta name="game-version" content="V1.24">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -82,6 +82,62 @@ button{ font:inherit; color:var(--ink); cursor:pointer; }
 .sbar{ position:absolute; left:0; right:0; bottom:0; height:24px; background:rgba(5,10,20,.9); border-top:1px solid rgba(255,255,255,.1); display:flex; align-items:center; gap:20px;
   padding:0 max(14px,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(14px,env(safe-area-inset-left)); font-size:10px; letter-spacing:.16em; color:#8ea4b8; text-transform:uppercase; pointer-events:none; white-space:nowrap; overflow:hidden; }
 .sbar b{ color:#fff; } .sbar .v{ margin-left:auto; } .sbar .on::before{ content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background:#7dffb0; margin-right:6px; }
+/* ---------- shared full-screen screens (multiplayer, settings) */
+.modal.fs{ display:block; padding:0; background:linear-gradient(90deg,rgba(4,9,18,.98) 0%,rgba(4,9,18,.95) 55%,rgba(4,9,18,.9) 100%); backdrop-filter:blur(4px); overflow:auto; }
+.modal.fs.hidden{ display:none !important; }
+.modal.fs > .back,#hangarUI > .back{ position:absolute; top:max(12px,env(safe-area-inset-top)); left:max(14px,env(safe-area-inset-left)); padding:8px 14px; font-size:13px; background:rgba(8,15,28,.6); z-index:2; }
+.modal.fs .shdr{ z-index:1; }
+.modal.fs .sbar{ position:fixed; }
+.k{ margin:0 0 8px; font-size:10px; letter-spacing:.22em; color:#8ea4b8; font-weight:600; }
+/* multiplayer */
+.np2{ position:absolute; left:max(18px,env(safe-area-inset-left)); right:max(18px,env(safe-area-inset-right)); top:clamp(52px,13vh,84px); bottom:34px; display:flex; gap:14px; align-items:flex-start; }
+.npan{ flex:1; min-width:0; background:rgba(6,12,22,.88); border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:14px 16px; max-height:100%; overflow:auto; }
+.npan .field{ margin:0 0 10px; } .npan .seg{ margin:0 0 6px; } .npan .mdesc{ margin:4px 0 8px; } .npan .check{ margin:6px 0 10px; }
+.btn.wide{ width:100%; }
+.ncode{ display:block; font-size:clamp(34px,6vw,56px); letter-spacing:.22em; line-height:1.05; margin:0 0 4px; }
+.ninfo{ margin:6px 0; font-size:12px; color:#9fb4c8; line-height:1.45; }
+.npan .joinrow{ margin:10px 0 0; flex-wrap:nowrap; } .npan .joinrow .btn.wide{ flex:1; width:auto; } .npan .joinrow .btn.link{ flex:none; padding:10px 6px; } .npan .joinrow .btn{ padding:10px 14px; font-size:13px; }
+.netlist li{ background:rgba(255,255,255,.03); } .netlist li.empty{ opacity:.5; border-style:dashed; }
+.netstatus{ margin:0; min-height:0; text-transform:none; letter-spacing:.04em; font-size:11px; color:var(--hud); } .netstatus.err{ color:#ff8a8a; }
+/* settings */
+.stabs{ position:absolute; left:max(clamp(16px,3vw,40px),env(safe-area-inset-left)); top:clamp(52px,13vh,84px); width:clamp(150px,22vw,230px); display:flex; flex-direction:column; }
+.stabs button{ text-align:left; height:clamp(34px,9vh,44px); padding:0 14px; border:0; border-left:3px solid transparent; background:none; font-weight:700; letter-spacing:.07em; font-size:clamp(12px,1.4vw,15px); color:#c9d6e2; text-transform:uppercase; }
+.stabs button[aria-selected="true"]{ border-left-color:#e30a17; background:linear-gradient(90deg,rgba(227,10,23,.32),rgba(227,10,23,0)); color:#fff; }
+.spanel{ position:absolute; left:calc(max(clamp(16px,3vw,40px),env(safe-area-inset-left)) + clamp(150px,22vw,230px) + 16px); right:max(18px,env(safe-area-inset-right)); top:clamp(52px,13vh,84px); bottom:34px; overflow:auto;
+  background:rgba(6,12,22,.88); border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:4px 18px; }
+.srow{ display:flex; align-items:center; gap:16px; min-height:clamp(46px,12vh,60px); border-bottom:1px solid rgba(255,255,255,.08); padding:6px 0; }
+.srow:last-child{ border-bottom:0; }
+.srow .sl{ flex:1; min-width:0; } .srow .sl b{ display:block; font-size:14px; } .srow .sl small{ display:block; font-size:11px; color:#8ea4b8; margin-top:2px; }
+.srow .seg{ flex:none; } .srow .seg button{ flex:0 0 auto; padding:7px 12px; font-size:12px; }
+.srow input[type=range]{ width:min(220px,30vw); flex:none; }
+.srow .btn{ padding:8px 14px; font-size:13px; }
+.tgl{ position:relative; width:44px; height:24px; flex:none; cursor:pointer; } .tgl input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+.tgl i{ position:absolute; inset:0; border-radius:12px; background:rgba(255,255,255,.18); transition:background .15s; pointer-events:none; }
+.tgl i::after{ content:""; position:absolute; left:3px; top:3px; width:18px; height:18px; border-radius:50%; background:#fff; transition:left .15s; }
+.tgl input:checked + i{ background:#e30a17; } .tgl input:checked + i::after{ left:23px; } .tgl input:focus-visible + i{ outline:2px solid var(--hud); outline-offset:2px; }
+@media (max-width:640px){ .np2{ flex-direction:column; overflow:auto; } .stabs{ flex-direction:row; width:auto; right:16px; overflow-x:auto; } .stabs button{ height:34px; white-space:nowrap; } .spanel{ left:16px; top:calc(clamp(52px,13vh,84px) + 44px); } }
+/* ---------- aircraft selection */
+#hangarUI .clsrow{ position:absolute; left:max(14px,env(safe-area-inset-left)); top:calc(max(12px,env(safe-area-inset-top)) + 44px); margin:0; }
+.dock2{ position:absolute; left:0; right:0; bottom:24px; padding:clamp(40px,12vh,90px) max(14px,env(safe-area-inset-right)) 8px max(14px,env(safe-area-inset-left));
+  background:linear-gradient(0deg,rgba(4,9,18,.97) 0%,rgba(4,9,18,.75) 55%,rgba(4,9,18,0) 100%); pointer-events:none; }
+.hinfo{ padding-left:clamp(0px,1vw,10px); max-width:62%; }
+.hk{ margin:0; font-size:clamp(9px,1.1vw,12px); letter-spacing:.22em; color:#ff8a8a; text-transform:uppercase; font-weight:600; }
+.hinfo h2{ margin:2px 0 6px; font-size:clamp(24px,4vw,46px); line-height:1; letter-spacing:.04em; }
+.hst{ list-style:none; margin:0; padding:0; display:flex; gap:clamp(12px,2.4vw,28px); flex-wrap:wrap; }
+.hst li small{ display:block; font-size:clamp(8px,.9vw,10px); letter-spacing:.16em; color:#8ea4b8; } .hst li b{ font-size:clamp(13px,1.6vw,18px); }
+.hinfo .desc{ margin:8px 0 0; font-size:13px; color:#9fb4c8; max-width:60ch; }
+.hgo{ position:absolute; right:max(18px,env(safe-area-inset-right)); bottom:calc(clamp(58px,16vh,96px) + 22px); padding:14px 28px; font-size:clamp(14px,1.6vw,18px); }
+.strip{ display:flex; gap:6px; margin-top:10px; overflow-x:auto; scrollbar-width:none; pointer-events:auto; }
+.strip::-webkit-scrollbar{ display:none; }
+.strip .chip{ flex:0 0 clamp(104px,14vw,170px); min-width:0; height:clamp(58px,16vh,96px); padding:6px 9px; border-radius:8px; background:rgba(10,18,32,.82); border:1px solid rgba(255,255,255,.14);
+  display:flex; flex-direction:column; justify-content:flex-end; gap:0; position:relative; overflow:hidden; text-align:left; }
+.strip .chip svg{ position:absolute; left:8px; right:8px; top:6px; width:calc(100% - 16px); height:46%; color:rgba(184,236,255,.32); }
+.strip .chip span{ font-size:clamp(11px,1.2vw,13px); letter-spacing:.05em; } .strip .chip small{ font-size:clamp(9px,.9vw,11px); color:#8ea4b8; font-weight:500; white-space:nowrap; }
+.strip .chip[aria-checked="true"]{ border-color:#e30a17; background:rgba(227,10,23,.22); } .strip .chip[aria-checked="true"] svg{ color:rgba(255,200,205,.55); }
+@media (max-height:560px){ .hinfo .desc{ display:none; } .dock2{ padding-top:30px; } }
+@media (max-height:420px){ .hst li:nth-child(n+4){ display:none; } }
+@media (max-width:760px){ .hinfo{ max-width:100%; } .hgo{ bottom:calc(clamp(58px,16vh,96px) + 22px); padding:10px 18px; } }
+
 /* missions screen */
 #missionsUI{ background:linear-gradient(90deg,rgba(4,9,18,.96) 0%,rgba(4,9,18,.84) 46%,rgba(4,9,18,.25) 100%); }
 #missionsUI .back{ position:absolute; top:max(12px,env(safe-area-inset-top)); left:max(14px,env(safe-area-inset-left)); padding:8px 14px; font-size:13px; background:rgba(8,15,28,.6); }
@@ -371,24 +427,20 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <div id="hangarUI" class="screen hidden">
   <button class="btn ui back" id="btnBack">← Ana menü</button>
   <div class="grptabs ui" id="grpTabs" role="tablist" aria-label="Sistem grupları"></div>
+  <div class="clsrow ui"><div class="seg sm" id="clsSeg" aria-label="Sınıf filtresi"></div><span class="cnt" id="acCount"></span></div>
   <button class="navb ui prev" id="acPrev" type="button" aria-label="Önceki uçak">‹</button>
   <button class="navb ui next" id="acNext" type="button" aria-label="Sonraki uçak">›</button>
-  <div class="dock ui">
-    <div class="sel">
-      <div class="selinfo">
-        <h2 id="hName">TUSAŞ KAAN</h2>
-        <p class="kind" id="hKind"></p>
-        <ul class="stats" id="hStats"></ul>
-        <p class="desc" id="hDesc"></p>
-      </div>
-      <div class="selact">
-        <button class="btn primary" id="btnPlay" type="button">Oyuna başla</button>
-      </div>
+  <div class="dock2">
+    <div class="hinfo">
+      <p class="hk" id="hKind"></p>
+      <h2 id="hName">TUSAŞ KAAN</h2>
+      <ul class="hst" id="hStats"></ul>
+      <p class="desc" id="hDesc"></p>
     </div>
-    <div class="clsrow"><div class="seg sm" id="clsSeg" aria-label="Sınıf filtresi"></div><span class="cnt" id="acCount"></span></div>
-    <div class="chips" id="acChips" role="radiogroup" aria-label="Uçak seçimi"></div>
-    <p class="hint">Sürükle: etrafında dön · Tekerlek: yakınlaş · ← → uçak değiştir · Enter: oyuna başla</p>
+    <button class="btn primary hgo ui" id="btnPlay" type="button">▶ Oyuna başla</button>
+    <div class="strip ui" id="acChips" role="radiogroup" aria-label="Uçak seçimi"></div>
   </div>
+  <div class="sbar"><span>← → uçak değiştir · sürükle: etrafında dön · Enter: oyuna başla</span><span class="v" id="acPos"></span></div>
 </div>
 
 <div id="setupUI" class="screen hidden">
@@ -502,28 +554,36 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   </div>
 </div>
 
-<div id="settings" class="modal hidden">
-  <div class="card wide">
-    <h2>Ayarlar</h2>
-    <p class="sub">Ayarlar bu tarayıcıda saklanır. · <span id="setVer"></span></p>
-    <div class="field"><span class="lbl">Arayüz (ana menü)</span>
-      <div class="seg" id="setUi"><button type="button" data-u="auto">Otomatik</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div>
-      <small class="hint2">Otomatik: telefonda Sinematik, bilgisayarda Komuta. Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır.</small></div>
-    <div class="field"><label for="setVol">Ses seviyesi <output id="setVolV"></output></label><input type="range" id="setVol" min="0" max="100"></div>
-    <div class="field"><span class="lbl">Grafik kalitesi</span>
-      <div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
-    <div class="field"><label for="setSens">Fare duyarlılığı <output id="setSensV"></output></label><input type="range" id="setSens" min="30" max="250"></div>
-    <div class="field"><span class="lbl">Dokunmatik kontroller</span>
-      <div class="seg" id="setTouch"><button type="button" data-t="auto">Otomatik</button><button type="button" data-t="on">Açık</button><button type="button" data-t="off">Kapalı</button></div></div>
-    <div class="field"><span class="lbl">Bomba yardımı</span>
-      <div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
-    <label class="check"><input type="checkbox" id="setLock"> Otomatik hedef kilidi ve uyarı panosu (K)</label>
-    <label class="check"><input type="checkbox" id="setInv"> Yukarı-aşağı kumandayı ters çevir</label>
-    <label class="check"><input type="checkbox" id="setRumble"> Kumanda titreşimi</label>
-    <label class="check"><input type="checkbox" id="setAuto"> Otomatik performans (telefon yavaşlarsa çözünürlüğü düşür)</label>
-    <label class="check"><input type="checkbox" id="setFps"> FPS göstergesi</label>
-    <div class="btnrow"><button class="btn primary" id="btnSetClose">Kapat</button><button class="btn" id="btnFull">Tam ekran</button></div>
+<div id="settings" class="modal fs hidden">
+  <button class="btn back" id="btnSetClose" type="button">← Geri</button>
+  <div class="shdr"><span>■</span> AYARLAR</div>
+  <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="o" aria-selected="false">Oynanış</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button></div>
+  <div class="spanel">
+    <section data-tab="g">
+      <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small>Telefonlarda Orta önerilir</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
+      <div class="srow"><div class="sl"><b>Otomatik performans</b><small>FPS 38’in altına düşerse çözünürlük kademeli düşer</small></div><label class="tgl"><input type="checkbox" id="setAuto"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>FPS göstergesi</b><small>Ekranın altında kare hızı</small></div><label class="tgl"><input type="checkbox" id="setFps"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
+    </section>
+    <section data-tab="k" class="hidden">
+      <div class="srow"><div class="sl"><b>Dokunmatik kontroller</b><small>Otomatik: dokunmatik ekranda açılır</small></div><div class="seg" id="setTouch"><button type="button" data-t="auto">Otomatik</button><button type="button" data-t="on">Açık</button><button type="button" data-t="off">Kapalı</button></div></div>
+      <div class="srow"><div class="sl"><b>Fare / dokunma duyarlılığı</b><small><output id="setSensV"></output></small></div><input type="range" id="setSens" min="30" max="250"></div>
+      <div class="srow"><div class="sl"><b>Yukarı-aşağıyı ters çevir</b><small>Y tuşu</small></div><label class="tgl"><input type="checkbox" id="setInv"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Gamepad</small></div><label class="tgl"><input type="checkbox" id="setRumble"><i></i></label></div>
+    </section>
+    <section data-tab="s" class="hidden">
+      <div class="srow"><div class="sl"><b>Ses seviyesi</b><small><output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
+    </section>
+    <section data-tab="o" class="hidden">
+      <div class="srow"><div class="sl"><b>Bomba yardımı</b><small>Güdümlü: kilitli hedefe yönelir</small></div><div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
+      <div class="srow"><div class="sl"><b>Otomatik hedef kilidi</b><small>Uyarı panosu ile (K tuşu)</small></div><label class="tgl"><input type="checkbox" id="setLock"><i></i></label></div>
+    </section>
+    <section data-tab="a" class="hidden">
+      <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Otomatik: telefonda Sinematik, bilgisayarda Komuta</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Otomatik</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
+      <div class="srow"><div class="sl"><b>Sürüm</b><small>Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır; gerçek verileri yansıtmaz.</small></div><span id="setVer"></span></div>
+    </section>
   </div>
+  <div class="sbar"><span>Değişiklikler otomatik kaydedilir</span><span class="v">Esc: geri</span></div>
 </div>
 
 <div id="records" class="modal hidden">
@@ -535,30 +595,40 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   </div>
 </div>
 
-<div id="netUI" class="modal hidden">
-  <div class="card netcard">
-    <button class="xbtn" id="btnNetClose" type="button" aria-label="Kapat">✕</button>
-    <h2>Çok oyunculu</h2>
-    <div id="netHome">
-      <p class="sub">Arkadaşlarınla aynı odada uç. Odayı kuran oyuncu maçı yönetir; en fazla 4 oyuncu, boş yerler yapay zekâ ile dolar.</p>
+<div id="netUI" class="modal fs hidden">
+  <button class="btn back" id="btnNetClose" type="button">← Ana menü</button>
+  <div class="shdr"><span>■</span> ÇOK OYUNCULU</div>
+  <div class="np2" id="netHome">
+    <div class="npan">
+      <p class="k">ODA KUR</p>
       <div class="field"><label for="netName">Pilot adın</label><input id="netName" class="inp" maxlength="16" placeholder="Pilot" autocomplete="off"></div>
-      <h3>Oda kur</h3>
-      <div class="seg wrap" id="netMode"><button type="button" data-m="coop" aria-pressed="true">İşbirliği</button><button type="button" data-m="team" aria-pressed="false">Takım savaşı</button><button type="button" data-m="ffa" aria-pressed="false">Herkes herkese</button></div>
+      <div class="seg wrap" id="netMode"><button type="button" data-m="coop" aria-pressed="true">İşbirliği</button><button type="button" data-m="team" aria-pressed="false">Takım</button><button type="button" data-m="ffa" aria-pressed="false">Herkes</button></div>
       <p class="mdesc" id="netModeDesc"></p>
       <label class="check"><input type="checkbox" id="netBots" checked> Boş yerleri yapay zekâ ile doldur</label>
-      <button class="btn primary" id="btnNetHost" type="button">Oda kur</button>
-      <h3>Odaya katıl</h3>
-      <div class="joinrow"><input id="netCode" class="inp code" maxlength="6" placeholder="ODA KODU" autocomplete="off" autocapitalize="characters"><button class="btn" id="btnNetJoin" type="button">Katıl</button></div>
+      <button class="btn primary wide" id="btnNetHost" type="button">▶ Oda kur</button>
     </div>
-    <div id="netLobby" class="hidden">
-      <div class="roomrow"><span>Oda kodu</span><b id="netRoom">—</b><button class="btn" id="btnNetCopy" type="button">Kopyala</button></div>
-      <p class="sub" id="netModeTxt"></p>
+    <div class="npan">
+      <p class="k">ODAYA KATIL</p>
+      <div class="joinrow"><input id="netCode" class="inp code" maxlength="6" placeholder="KOD" autocomplete="off" autocapitalize="characters"><button class="btn" id="btnNetJoin" type="button">Katıl</button></div>
+      <p class="ninfo">Arkadaşının verdiği 5 harfli kodu yaz ya da paylaştığı bağlantıyla gir. En fazla 4 oyuncu; odayı kuran oyuncu maçı yönetir. Bağlantı doğrudan oyuncular arasında kurulur (internet gerekir).</p>
+    </div>
+  </div>
+  <div class="np2 hidden" id="netLobby">
+    <div class="npan">
+      <p class="k">ODA KODU</p>
+      <b class="ncode" id="netRoom">—</b>
+      <p class="ninfo">Arkadaşın “Odaya katıl”a bu kodu yazsın.</p>
+      <div class="joinrow"><button class="btn" id="btnNetCopy" type="button">Kodu kopyala</button><button class="btn" id="btnNetLink" type="button">Bağlantıyı kopyala</button></div>
+      <p class="ninfo" id="netModeTxt"></p>
+    </div>
+    <div class="npan">
+      <p class="k" id="netCount">OYUNCULAR</p>
       <ul class="netlist" id="netList"></ul>
       <div class="joinrow"><label for="netAc">Uçağın</label><select id="netAc" class="inp"></select><button class="btn" id="btnNetTeam" type="button">Takım değiştir</button></div>
-      <div class="btnrow"><button class="btn primary" id="btnNetGo" type="button">Maçı başlat</button><span class="sub" id="netWait">Ev sahibinin başlatması bekleniyor…</span><button class="btn link" id="btnNetLeave" type="button">Odadan çık</button></div>
+      <div class="joinrow"><button class="btn primary wide" id="btnNetGo" type="button">▶ Maçı başlat</button><span class="ninfo" id="netWait">Ev sahibinin başlatması bekleniyor…</span><button class="btn link" id="btnNetLeave" type="button">Odadan çık</button></div>
     </div>
-    <p class="netstatus" id="netStatus"></p>
   </div>
+  <div class="sbar"><span class="netstatus" id="netStatus"></span><span class="v">P2P · en fazla 4 oyuncu</span></div>
 </div>
 
 <div id="missionEnd" class="modal hidden">
@@ -621,7 +691,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.23', GAME_DATE='2026-10-10';
+const GAME_VERSION='V1.24', GAME_DATE='2026-10-10';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -2868,6 +2938,8 @@ function cineStep(dt){
   cV3.copy(cV1).multiplyScalar(cb).addScaledVector(cV2,-sb); cV2.multiplyScalar(cb).addScaledVector(cV1,sb); cV1.copy(CINE.fwd).negate();
   cM.makeBasis(cV3,cV2,cV1); CINE.q.setFromRotationMatrix(cM);
 }
+$('setTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; setTab(b.dataset.tab); });
+function setTab(t){ Array.prototype.forEach.call($('setTabs').children,function(x){ x.setAttribute('aria-selected',String(x.dataset.tab===t)); }); Array.prototype.forEach.call(document.querySelectorAll('#settings section'),function(s){ s.classList.toggle('hidden',s.dataset.tab!==t); }); }
 $('setUi').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.ui=b.dataset.u; saveSettings(); syncSettingsUI(); refreshTitle(); });
 function enterHangar(){
   if(!NET.on) aiClear();
@@ -2937,14 +3009,22 @@ function toHangarFromPause(){ if(state!=='paused') return; if(NET.on){ netLeave(
 function refreshHangarUI(){
   const a=AIRCRAFT[selectedId];
   $('hName').textContent=a.name; $('hKind').textContent=regOf(selectedId).maker+' · '+a.kind; $('hDesc').textContent=a.desc;
-  const st=[a.len+' uzunluk',a.span+' kanat açıklığı',a.uav?'İnsansız':'Pilotlu']; if(a.hasAB) st.push('Art yakıcı');
-  st.push(SLOTS[selectedId]>0?(SLOTS[selectedId]+' silah yeri'):'Silahsız'); if(FLARES[selectedId]) st.push(FLARES[selectedId]+' flare');
-  $('hStats').innerHTML=st.map(function(t){ return '<li>'+t+'</li>'; }).join('');
+  const st=[['UZUNLUK',a.len],['AÇIKLIK',a.span],['SİLAH YERİ',SLOTS[selectedId]>0?String(SLOTS[selectedId]):'—'],['FLARE',String(FLARES[selectedId]||0)],['MÜRETTEBAT',a.uav?'İnsansız':'Pilotlu']]; if(a.hasAB) st.push(['MOTOR','Art yakıcı']);
+  $('hStats').innerHTML=st.map(function(t){ return '<li><small>'+t[0]+'</small><b>'+t[1]+'</b></li>'; }).join('');
+  const L=pickList(); $('acPos').textContent=(Math.max(0,L.indexOf(selectedId))+1)+' / '+L.length;
   Array.prototype.forEach.call($('acChips').children,function(b){
     const on=b.dataset.id===selectedId; b.setAttribute('aria-checked',on?'true':'false');
     if(on&&b.scrollIntoView) b.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
   });
 }
+/* top-view silhouettes per airframe type (aircraft points right) */
+const SIL={fighter:'96,20 72,16.5 60,5 54,5 57,16 32,17 24,9 18,9 21,17.5 5,18.5 5,21.5 21,22.5 18,31 24,31 32,23 57,24 54,35 60,35 72,23.5',
+  jet:'96,20 76,17.5 58,6 53,6 56,17 30,17.5 22,10 17,10 20,18 6,19 6,21 20,22 17,30 22,30 30,22.5 56,23 53,34 58,34 76,22.5',
+  wing:'94,20 42,2 34,6 50,18 26,20 50,22 34,34 42,38',
+  prop:'92,20 86,18 84,18 84,17 54,18 52,3 47,3 47,18 22,18.5 15,12 11,12 14,19 6,19.5 6,20.5 14,21 11,28 15,28 22,21.5 47,22 47,37 52,37 54,22 84,23 84,22 86,22',
+  uav:'94,20 82,18.6 53,18.6 51,1 47,1 47,18.6 20,18.8 12,13 8,13 11,19.3 6,19.6 6,20.4 11,20.7 8,27 12,27 20,21.2 47,21.4 47,39 51,39 53,21.4 82,21.4'};
+const SIL_OF={kaan:'fighter',kizilelma:'fighter',hurjet:'jet',anka3:'wing',hurkus:'prop'};
+function silSVG(id){ return '<svg viewBox="0 0 100 40" aria-hidden="true"><polygon fill="currentColor" points="'+SIL[SIL_OF[id]||'uav']+'"/></svg>'; }
 function buildGroups(){
   $('grpTabs').innerHTML=GROUPS.map(function(g){ return '<button type="button" role="tab" data-g="'+g.id+'" aria-selected="'+(g.id===pickGrp)+'"'+(g.on?'':' disabled')+'>'+g.name+'<small>'+g.sub+'</small></button>'; }).join('');
   const used=Object.keys(CLASSES).filter(function(c){ return AC_ORDER.some(function(id){ const r=regOf(id); return r.grp===pickGrp&&r.cls===c; }); });
@@ -2960,7 +3040,7 @@ function buildPicker(){
   L.forEach(function(id){
     const a=AIRCRAFT[id], b=document.createElement('button');
     b.type='button'; b.className='chip'; b.dataset.id=id; b.setAttribute('role','radio');
-    b.innerHTML='<span>'+a.short+'</span><small>'+regOf(id).maker+' · '+a.kind+'</small>';
+    b.innerHTML=silSVG(id)+'<span>'+a.short+'</span><small>'+regOf(id).maker+'</small>';
     b.addEventListener('click',function(){ selectAircraft(id); });
     box.appendChild(b);
   });
@@ -3812,10 +3892,12 @@ function netRenderLobby(){
   if(!$('netLobby')) return;
   $('netRoom').textContent=NET.room||'—';
   $('netModeTxt').textContent=(NET_MODES[NET.mode]||NET_MODES.coop).name+' · '+(NET.bots?'boş yerler botla dolar':'bot yok')+' · en fazla '+NET_MAX+' oyuncu';
-  $('netList').innerHTML=NET.roster.map(function(r){
+  let rows=NET.roster.map(function(r){
     const tm=NET.mode==='team'?('<span class="tm '+r.team+'">'+(r.team==='blue'?'MAVİ':'KIRMIZI')+'</span>'):'';
     return '<li>'+tm+'<b>'+r.name.replace(/[<>&]/g,'')+(r.id===NET.myId?' (sen)':'')+'</b><small>'+(AIRCRAFT[r.ac]?AIRCRAFT[r.ac].short:'')+(r.id==='H'?' · ev sahibi':'')+'</small></li>';
   }).join('');
+  for(let i=NET.roster.length;i<NET_MAX;i++) rows+='<li class="empty"><b>Boş yer</b><small>'+(NET.bots?'yapay zekâ dolduracak':'bekleniyor')+'</small></li>';
+  $('netList').innerHTML=rows; $('netCount').textContent='OYUNCULAR · '+NET.roster.length+' / '+NET_MAX;
   const me=NET.roster.find(function(r){ return r.id===NET.myId; });
   if(me) $('netAc').value=me.ac;
   $('btnNetTeam').classList.toggle('hidden',NET.mode!=='team');
@@ -3833,6 +3915,7 @@ function netPick(ac,team){
   $('btnNetJoin').addEventListener('click',netJoin);
   $('btnNetLeave').addEventListener('click',function(){ netLeave(); });
   $('btnNetGo').addEventListener('click',netStartMatch);
+  $('btnNetLink').addEventListener('click',function(){ const u=location.origin+location.pathname+'?oda='+NET.room; try{ navigator.clipboard.writeText(u); netStatus('Bağlantı kopyalandı: '+u); }catch(e){ netStatus(u); } });
   $('btnNetCopy').addEventListener('click',function(){ const t=NET.room; try{ navigator.clipboard.writeText(t); netStatus('Kod kopyalandı: '+t); }catch(e){ netStatus('Kod: '+t); } });
   $('btnNetTeam').addEventListener('click',function(){ const me=NET.roster.find(function(r){ return r.id===NET.myId; }); if(me) netPick(null,me.team==='blue'?'red':'blue'); });
   $('netAc').addEventListener('change',function(e){ netPick(e.target.value,null); });

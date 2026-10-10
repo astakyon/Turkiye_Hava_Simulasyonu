@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.24 — 2026-10-10
+### Değişti — ekranlar yeni tasarım dilinde
+- **Uçak seçimi:** solda üretici · sınıf, büyük ad ve özellik sütunları (uzunluk, açıklık, silah yeri, flare, mürettebat); sağda ▶ Oyuna başla; altta üstten görünüş siluetli uçak kartları; sınıf filtresi sol üstte; durum çubuğunda sıra (1 / 10).
+- **Çok oyunculu:** tam ekran, iki panel. Oda kur / Odaya katıl yan yana; lobide büyük oda kodu, **Kodu kopyala** ve **Bağlantıyı kopyala** (?oda= bağlantısı), oyuncu listesinde boş yerler ("yapay zekâ dolduracak").
+- **Ayarlar:** sekmeli düzen (Grafik / Kontroller / Ses / Oynanış / Arayüz), her satırda açıklama, aç-kapa anahtarları.
+
 ## V1.23 — 2026-10-10
 ### Düzeltme
 - Ana menüde kamera açısı değişirken artık sadece arka plandaki 3B görüntü kısa süre kararıyor; menü (yazılar, düğmeler, kartlar) hiç kararmıyor.
