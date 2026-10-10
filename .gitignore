@@ -5,3 +5,5 @@ Thumbs.db
 *.zip
 .vscode/
 .idea/
+_dbg.html
+assets/models/_test*

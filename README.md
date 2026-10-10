@@ -6,7 +6,7 @@ Gruplar: **Hilal Kanatlar** (hava sistemleri) · **Mavi Kanatlar** (deniz, yakı
 
 Tek dosyalık (`index.html`) oyun; kurulum yok. Ana ekrana eklenebilir (PWA) ve ilk açılıştan sonra çevrimdışı da çalışır.
 
-**Güncel sürüm:** V1.30 (bkz. [CHANGELOG.md](CHANGELOG.md))
+**Güncel sürüm:** V1.35 (bkz. [CHANGELOG.md](CHANGELOG.md))
 
 ## Özellikler
 - 10 uçak: KAAN, ANKA-3, Hürjet, Hürkuş, ANKA, Aksungur, Kızılelma, Bayraktar TB2, TB3, Akıncı
@@ -21,8 +21,16 @@ Tek dosyalık (`index.html`) oyun; kurulum yok. Ana ekrana eklenebilir (PWA) ve 
 - Çevrimiçi (P2P): oda kodu ile 4 oyuncuya kadar İşbirliği / Takım savaşı / Herkes herkese; boş yerler botla dolar
 - Fotoğraf modu, rekorlar, ayarlar
 
+## Geliştirme
+Kaynak kod `src/` altında parçalara bölünmüştür; `index.html` bunlardan üretilir:
+```
+python3 tools/build.py      # src/ → index.html
+sh tests/run.sh             # testler
+```
+Mimari, modüller ve yeni araç ekleme: [docs/MIMARI.md](docs/MIMARI.md) · 3B model (.glb) ekleme: [docs/MODELLER.md](docs/MODELLER.md)
+
 ## Çalıştırma
-1. `index.html` dosyasını tarayıcıda aç (internet gerekir: three.js ve yazı tipi CDN'den yüklenir).
+1. `index.html` dosyasını tarayıcıda aç. three.js internetten yüklenemezse `vendor/` klasöründeki kopya kullanılır.
 2. Ya da yerelde sunucu ile: `python3 -m http.server 8000` → http://localhost:8000
 
 ## GitHub Pages ile yayınlama

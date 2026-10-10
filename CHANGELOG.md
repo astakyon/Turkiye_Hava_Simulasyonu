@@ -1,6 +1,21 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.35 — 2026-10-10
+Büyümeye hazır altyapı.
+### Yeni
+- **Görsel efektler** (Ayarlar → Grafik → Görsel efektler: Kapalı / Düşük / Yüksek). Bilgisayarda varsayılan Yüksek, telefonda Kapalı.
+  - Düşük: sinematik renk düzeltme, hafif vinyet, yüksek hızda ekran kenarlarında hız bulanıklığı, kenar yumuşatma (MSAA veya FXAA).
+  - Yüksek: + ışık parlaması (bloom). Yalnızca motor alevi, pist ışıkları, lambalar, izli mermiler ve güneş parlıyor; beyaz boya ve bulutlar parlamıyor.
+  - Efekt kitaplıkları yüklenemezse oyun efektsiz devam eder.
+- **3B model (GLB/glTF) altyapısı:** `assets/models.json` bir araç için .glb listelerse model arka planda yüklenir ve oyuncu, hangar ve yapay zekâ kopyalarının hepsini giydirir. Model, aracın gerçek boyuna otomatik ölçeklenir ve yerleştirilir. Draco sıkıştırma, iniş takımı/pervane/kumanda yüzeyi parçaları desteklenir. Model yoksa kodla çizilen model kullanılır.
+- **3B model dene:** Ayarlar → Grafik'te ya da .glb dosyasını sayfaya sürükleyerek seçili uçağa model giydirip bakabilirsin. models.json için gereken satırı da gösterir.
+### Altyapı
+- Kaynak kod `src/` altında 35 modüle bölündü (`src/js`, `src/css`, `src/html`). `index.html` artık `tools/build.py` ile üretiliyor; oyun yine tek dosya olarak çalışıyor.
+- three.js ve eklentileri ile Draco çözücü `vendor/` altında. İnternet yoksa ya da CDN erişilemezse yerel kopya kullanılıyor (Android uygulaması için de gerekli). Çevrimdışı önbellek kitaplıkları da saklıyor.
+- CI: yayından önce `index.html`'in `src/` ile uyumlu olduğu kontrol ediliyor.
+- Belgeler: `docs/MIMARI.md` (modüller, durum makinesi, yeni araç ekleme, efektler, Android planı) ve `docs/MODELLER.md` (model hazırlama, models.json alanları, Blender ayarları, lisans).
+
 ## V1.34 — 2026-10-10
 ### Yeni — Üssü gez (yaya ve araç)
 - **Birinci şahıs yürüyüş:** başlangıç penceresinde yeni **Üssü gez** seçeneği var. Ayrıca uçuşta duraklatma menüsünde **Yürüyerek gez** düğmesi var. Seçtiğin uçağın yanında, hangarın içinde başlarsın.

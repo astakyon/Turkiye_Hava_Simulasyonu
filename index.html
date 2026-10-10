@@ -1,9 +1,9 @@
 <!doctype html>
-<!-- Ay Yıldız: Hedef Kızıl Elma V1.30 · 2026-10-10 -->
+<!-- Ay Yıldız: Hedef Kızıl Elma · bu dosya tools/build.py ile src/ klasöründen üretilir, doğrudan düzenleme -->
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.34">
+<meta name="game-version" content="V1.35">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -576,6 +576,8 @@ input[type=range]{ width:100%; accent-color:var(--red); }
     <section data-tab="g">
       <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small>Telefonlarda Orta önerilir</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
+      <div class="srow"><div class="sl"><b>Görsel efektler</b><small>Düşük: renk düzeltme, hız bulanıklığı, kenar yumuşatma. Yüksek: + ışık parlaması (bloom). Telefonda FPS düşürebilir</small></div><div class="seg" id="setFx"><button type="button" data-f="0">Kapalı</button><button type="button" data-f="1">Düşük</button><button type="button" data-f="2">Yüksek</button></div></div>
+      <div class="srow"><div class="sl"><b>3B model dene</b><small id="setModelInfo">Seçili uçağın yerine .glb modeli dener (sayfaya sürükle-bırak da olur)</small></div><div class="seg"><button type="button" id="btnModelPick">Dosya seç</button><button type="button" id="btnModelRot" disabled>Döndür 90°</button><button type="button" id="btnModelClr" disabled>Kaldır</button></div><input type="file" id="modelFile" accept=".glb,.gltf" hidden></div>
       <div class="srow"><div class="sl"><b>Otomatik performans</b><small>FPS 38’in altına düşerse çözünürlük kademeli düşer</small></div><label class="tgl"><input type="checkbox" id="setAuto"><i></i></label></div>
       <div class="srow"><div class="sl"><b>FPS göstergesi</b><small>Ekranın altında kare hızı</small></div><label class="tgl"><input type="checkbox" id="setFps"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
@@ -706,12 +708,12 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   <p id="prepHint"></p>
   <p class="vr" id="prepVr"></p>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>window.THREE||document.write('<script src="vendor/three-r128/three.min.js"><\/script>')</script>
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.34', GAME_DATE='2026-10-10';
+const GAME_VERSION='V1.35', GAME_DATE='2026-10-10';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -742,12 +744,12 @@ const sky = new THREE.Mesh(
   new THREE.SphereGeometry(40000,24,16),
   new THREE.ShaderMaterial({
     side:THREE.BackSide, depthWrite:false, fog:false,
-    uniforms:{ top:{value:new THREE.Color(0x2c68a8)}, mid:{value:new THREE.Color(0x87b6de)}, hor:{value:HORIZON}, sun:{value:SUN} },
+    uniforms:{ top:{value:new THREE.Color(0x2c68a8)}, mid:{value:new THREE.Color(0x87b6de)}, hor:{value:HORIZON}, sun:{value:SUN}, sunK:{value:1} },
     vertexShader:'varying vec3 vP; void main(){ vP=normalize(position); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
-    fragmentShader:'uniform vec3 top; uniform vec3 mid; uniform vec3 hor; uniform vec3 sun; varying vec3 vP;'+
+    fragmentShader:'uniform float sunK; uniform vec3 top; uniform vec3 mid; uniform vec3 hor; uniform vec3 sun; varying vec3 vP;'+
       'void main(){ vec3 d=normalize(vP); float h=clamp(d.y,0.0,1.0); vec3 c=mix(hor,mid,smoothstep(0.0,0.2,h)); c=mix(c,top,smoothstep(0.16,0.9,h));'+
       'float s=max(dot(d,sun),0.0); c=mix(c,vec3(1.0,0.95,0.86),pow(1.0-h,6.0)*0.35);'+          /* bright haze band at the horizon */
-      'c+=vec3(1.0,0.86,0.62)*(pow(s,6.0)*0.18*(1.0-h*0.6)) + vec3(1.0,0.96,0.85)*(pow(s,48.0)*0.45+pow(s,900.0)*2.2);'+   /* sun glow + disc */
+      'c+=vec3(1.0,0.86,0.62)*(pow(s,6.0)*0.18*(1.0-h*0.6)) + vec3(1.0,0.96,0.85)*(pow(s,48.0)*0.45+pow(s,900.0)*2.2*sunK+pow(s,160.0)*0.5*(sunK-1.0));'+   /* sun glow + disc */
       'if(d.y<0.0) c=hor; gl_FragColor=vec4(c,1.0); }'
   })
 );
@@ -938,6 +940,7 @@ function apMats(){
     shoulder:flat(L(0x6b6f72)), blast:flat(L(0x46494e,{polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1})),
     taxi:flat(L(0x4b4f56,{polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1})), road:flat(L(0x55595e,{side:THREE.DoubleSide})),
     pad:flat(L(0x8f9398))});
+  ['blue','amber','redL'].forEach(function(k){ APM[k].userData.glow=4; }); APM.lamp.userData.glow=2.2;
   return APM;
 }
 /* vehicles: forward is -z, origin on the ground at the vehicle centre */
@@ -990,7 +993,7 @@ function apPoints(list,size){ // list of [x,y,z,r,g,b]
   list.forEach(function(l,i){ P.set([l[0],l[1],l[2]],i*3); C.set([l[3],l[4],l[5]],i*3); });
   const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(P,3)); g.setAttribute('color',new THREE.BufferAttribute(C,3));
   const m=new THREE.PointsMaterial({size:size, sizeAttenuation:false, vertexColors:true, map:AP.dot, transparent:true, alphaTest:0.04, depthWrite:false});
-  m.userData.base=size; AP.pmats.push(m); const pts=new THREE.Points(g,m); pts.frustumCulled=false; scene.add(pts); return pts;
+  m.userData.base=size; m.userData.glow=4; AP.pmats.push(m); const pts=new THREE.Points(g,m); pts.frustumCulled=false; scene.add(pts); return pts;
 }
 function buildAirport(){
   const gy=AIRFIELD_Y, M=apMats(), st=new THREE.Group(); AP.dot=dotTexture();
@@ -1392,7 +1395,7 @@ function addLights(g,tip,strobePos){
   const r=new THREE.Mesh(lg,new THREE.MeshBasicMaterial({color:0xff2222})); r.position.set(-tip[0],tip[1],tip[2]);
   const gr=new THREE.Mesh(lg,new THREE.MeshBasicMaterial({color:0x22ff66})); gr.position.set(tip[0],tip[1],tip[2]);
   const s=new THREE.Mesh(lg,new THREE.MeshBasicMaterial({color:0xffffff})); s.position.set(strobePos[0],strobePos[1],strobePos[2]); s.scale.setScalar(1.6);
-  g.add(r); g.add(gr); g.add(s); return s;
+  [r,gr,s].forEach(function(m){ m.material.userData.glow=4; }); g.add(r); g.add(gr); g.add(s); return s;
 }
 function addProp(g,z,radius,blades,dir,hubColor,px,py){ // dir +1: pusher (hub toward tail), -1: tractor (hub toward nose)
   const pg=new THREE.Group(); pg.position.set(px||0,py||0,z);
@@ -1654,13 +1657,145 @@ try{ const sv0=localStorage.getItem('kaan-sim-aircraft'); if(sv0&&AIRCRAFT[sv0])
 function setAircraft(id){
   const def=AIRCRAFT[id]; if(!def) return;
   if(planeGroup) scene.remove(planeGroup);
-  if(!modelCache[id]){ modelCache[id]=def.build(); upgradeModel(modelCache[id].group); }
+  if(!modelCache[id]) modelCache[id]=buildModel(id);
   model=modelCache[id]; planeGroup=model.group; scene.add(planeGroup);
   if(!model.tip){ const bb=new THREE.Box3().setFromObject(model.group); model.tip=[bb.max.x,(bb.min.y+bb.max.y)/2,bb.min.z+(bb.max.z-bb.min.z)*0.62]; model.tail=bb.max.z*0.85; model.ext=[(bb.max.x-bb.min.x)/2,(bb.max.z-bb.min.z)/2]; }
   CUR=def; activeId=id; lastFov=0;
 }
 
 
+/* ------------------------------------------------------------------ assets: optional libraries and 3D models (GLB/GLTF)
+   Every vehicle is first built from code (always works, no download). If assets/models.json lists a .glb file
+   for an id, that model is loaded in the background and "skins" every copy of the vehicle (player, hangar, AI).
+   See docs/ARCHITECTURE.md → "3B modeller". */
+const VENDOR={base:'vendor/three-r128/', cdn:'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/',
+  files:{CopyShader:'shaders/CopyShader.js', LuminosityHighPassShader:'shaders/LuminosityHighPassShader.js', FXAAShader:'shaders/FXAAShader.js',
+    EffectComposer:'postprocessing/EffectComposer.js', RenderPass:'postprocessing/RenderPass.js', ShaderPass:'postprocessing/ShaderPass.js', UnrealBloomPass:'postprocessing/UnrealBloomPass.js',
+    GLTFLoader:'loaders/GLTFLoader.js', DRACOLoader:'loaders/DRACOLoader.js'}};
+const LIBS={};
+function loadScript(src){ return new Promise(function(res,rej){ const s=document.createElement('script'); s.src=src; s.async=false; s.onload=function(){ res(); }; s.onerror=function(){ s.remove(); rej(new Error('yüklenemedi: '+src)); }; document.head.appendChild(s); }); }
+/* load three.js add-ons on demand: first from our own vendor/ folder (works offline / in the Android app), then from the CDN */
+function needLibs(names){
+  return names.reduce(function(p,n){ return p.then(function(){
+    if(THREE[n]) return; if(LIBS[n]) return LIBS[n];
+    const f=VENDOR.files[n]; if(!f) throw new Error('bilinmeyen kitaplık '+n);
+    LIBS[n]=loadScript(VENDOR.base+f.split('/').pop()).catch(function(){ return loadScript(VENDOR.cdn+f); });
+    return LIBS[n];
+  }); },Promise.resolve());
+}
+const MODELS={manifest:null, skins:{}, inst:{}, loader:null, busy:{}, preview:null};
+/* every built vehicle goes through here so a model file can replace its look later */
+function buildModel(id){ const def=AIRCRAFT[id]||AIRCRAFT.kaan, m=def.build(); upgradeModel(m.group); return trackModel(AIRCRAFT[id]?id:'kaan',m); }
+function trackModel(id,m){ m.acId=id; (MODELS.inst[id]||(MODELS.inst[id]=[])).push(m); if(MODELS.skins[id]) applySkin(m,MODELS.skins[id]); return m; }
+function untrackModel(m){ const L=MODELS.inst[m&&m.acId]; if(!L) return; const i=L.indexOf(m); if(i>=0) L.splice(i,1); }
+function gltfLoader(){
+  return needLibs(['GLTFLoader','DRACOLoader']).then(function(){
+    if(MODELS.loader) return MODELS.loader;
+    const l=new THREE.GLTFLoader();
+    /* Draco-compressed models: decoder from vendor/ when it is there (GitHub Pages, Android app), else from the CDN */
+    const local=VENDOR.base+'draco/', cdn='https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/gltf/';
+    return fetch(local+'draco_wasm_wrapper.js',{method:'HEAD'}).then(function(r){ return r.ok?local:cdn; },function(){ return cdn; }).then(function(path){
+      try{ const d=new THREE.DRACOLoader(); d.setDecoderPath(path); d.setDecoderConfig({type:'wasm'}); l.setDRACOLoader(d); }catch(e){}
+      MODELS.loader=l; return l; });
+  });
+}
+/* parts of the code-built model the game still needs on top of any skin */
+function skinKeep(m,spec){
+  const k=new Set(); (m.flames||[]).forEach(function(f){ k.add(f.outer); k.add(f.inner); (f.ds||[]).forEach(function(d){ k.add(d); }); });
+  if(m.strobe) k.add(m.strobe); if(m.gear&&!spec.gearNodes) k.add(m.gear); if(!spec.propNodes) (m.spinners||[]).forEach(function(s){ k.add(s.obj); });
+  return k;
+}
+function isNavLight(c){ return c.isMesh&&c.material&&c.material.isMeshBasicMaterial&&c.geometry&&c.geometry.type==='SphereGeometry'&&c.geometry.parameters&&c.geometry.parameters.radius<0.3; }
+/* prepare a loaded scene once: our colour pipeline, shadows, reflections, then fit it to the vehicle's real size */
+function makeSkin(id,root,spec){
+  spec=Object.assign({rotation:[0,0,0]},spec||{});
+  if(!root.userData.prepared) root.traverse(function(o){ if(!o.isMesh) return; o.castShadow=true; o.receiveShadow=true; o.userData.rs=true; o.userData.cs=true;
+    (Array.isArray(o.material)?o.material:[o.material]).forEach(function(mt){ if(!mt) return;
+      ['map','emissiveMap'].forEach(function(k){ if(mt[k]){ mt[k].encoding=THREE.LinearEncoding; mt[k].needsUpdate=true; } });   /* game renders in display colours */
+      if(mt.color&&mt.color.convertLinearToSRGB) mt.color.convertLinearToSRGB(); if(mt.emissive&&mt.emissive.convertLinearToSRGB) mt.emissive.convertLinearToSRGB();
+      if(mt.isMeshStandardMaterial&&!mt.envMap){ mt.envMap=ENVMAP; mt.envMapIntensity=0.9; } mt.needsUpdate=true; }); });
+  root.userData.prepared=true;
+  const inner=new THREE.Group(); inner.add(root); inner.rotation.set(spec.rotation[0]*D2R,spec.rotation[1]*D2R,spec.rotation[2]*D2R);
+  const fit=new THREE.Group(); fit.add(inner); fit.updateMatrixWorld(true);
+  /* size and place it like the code-built model (same length, centre and wheel height) */
+  const ref=(MODELS.inst[id]&&MODELS.inst[id][0])||null, def=AIRCRAFT[id]||{};
+  const rb=new THREE.Box3(); if(ref){ const keep=skinKeep(ref,{}); keep.add(ref.gear); ref.group.updateMatrixWorld(true); const inv=new THREE.Matrix4().copy(ref.group.matrixWorld).invert();
+    ref.group.children.forEach(function(c){ if(keep.has(c)||isNavLight(c)||(c.userData&&(c.userData.skin||c.userData.keep))) return; const b=new THREE.Box3().setFromObject(c); if(!b.isEmpty()){ b.applyMatrix4(inv); rb.union(b); } }); }
+  const gb=new THREE.Box3().setFromObject(fit), gs=gb.getSize(new THREE.Vector3()), gc=gb.getCenter(new THREE.Vector3());
+  const L=spec.length||(rb.isEmpty()?(def.lenM||12):(rb.max.z-rb.min.z));
+  const s=spec.scale||(gs.z>1e-6?L/gs.z:1); fit.scale.setScalar(s);
+  const rc=rb.isEmpty()?new THREE.Vector3():rb.getCenter(new THREE.Vector3());
+  let y=rc.y-gc.y*s; if(spec.gearNodes&&def.gearOff!=null) y=-def.gearOff-gb.min.y*s;
+  fit.position.set(rc.x-gc.x*s, y, rc.z-gc.z*s);
+  if(spec.offset) fit.position.add(new THREE.Vector3().fromArray(spec.offset));
+  fit.userData.skin=true;
+  return {id:id, scene:fit, spec:spec, fitScale:s};
+}
+function applySkin(m,skin){
+  removeSkin(m);
+  const spec=skin.spec, keep=skinKeep(m,spec), v=skin.scene.clone(true); v.userData.skin=true;
+  m.hidden=[]; m.group.children.forEach(function(c){ if(keep.has(c)||isNavLight(c)||c.userData.keep||!c.visible) return; c.visible=false; m.hidden.push(c); });
+  m.group.add(v); m.skin=v;
+  const byName=function(n){ return v.getObjectByName(n); };
+  if(spec.gearNodes&&m.gear){ m.gearNodes=spec.gearNodes.map(byName).filter(Boolean); m.gear.children.forEach(function(c){ if(c.visible){ c.visible=false; m.hidden.push(c); } }); }
+  if(spec.propNodes){ m.spinBack=m.spinners; m.spinners=spec.propNodes.map(byName).filter(Boolean).map(function(n){ return {obj:n, disc:{material:{opacity:0}}}; }); }
+  m.surfaces=(spec.surfaces||[]).map(function(s){ const n=byName(s.node); return n?{n:n, axis:s.axis||'x', input:s.input||'pitch', max:(s.max||20)*D2R, sign:s.sign||1, base:n.rotation[s.axis||'x']}:null; }).filter(Boolean);
+  if(spec.flames&&m.flames) spec.flames.forEach(function(p,i){ const f=m.flames[i]; if(!f) return; f.outer.position.fromArray(p); f.inner.position.fromArray(p); f.base=p.slice(); });
+  if(renderer.shadowMap.enabled) v.traverse(function(o){ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; } });
+}
+function removeSkin(m){
+  if(!m.skin) return; m.group.remove(m.skin); m.skin=null;
+  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=null;
+  if(m.spinBack){ m.spinners=m.spinBack; m.spinBack=null; }
+}
+function setSkin(id,root,spec){
+  const skin=makeSkin(id,root,spec); MODELS.skins[id]=skin;
+  (MODELS.inst[id]||[]).forEach(function(m){ applySkin(m,skin); });
+  return skin;
+}
+function clearSkin(id){ delete MODELS.skins[id]; (MODELS.inst[id]||[]).forEach(removeSkin); }
+/* per frame: gear doors / props / control surfaces of skinned models follow the game */
+function skinSync(){
+  for(const id in MODELS.skins){ (MODELS.inst[id]||[]).forEach(function(m){ if(m.gearNodes){ const on=m.gear?m.gear.visible:true; m.gearNodes.forEach(function(n){ n.visible=on; }); } }); }
+  if(model&&model.surfaces&&model.surfaces.length){ const inp={pitch:S.pitchIn||0, roll:S.rollIn||0, yaw:S.yawIn||0};
+    model.surfaces.forEach(function(s){ s.n.rotation[s.axis]=s.base+clamp(inp[s.input],-1,1)*s.max*s.sign; }); }
+}
+/* read assets/models.json and load what it lists (selected vehicle first) */
+function modelsInit(){
+  if(typeof fetch!=='function'||typeof location==='undefined'||location.protocol==='file:') return;
+  fetch('assets/models.json',{cache:'no-cache'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){
+    if(!j||!j.models) return; MODELS.manifest=j;
+    const ids=Object.keys(j.models).filter(function(id){ return j.models[id]&&j.models[id].file&&AIRCRAFT[id]; });
+    ids.sort(function(a,b){ return (b===selectedId)-(a===selectedId); });
+    ids.reduce(function(p,id){ return p.then(function(){ return loadModelFile(id,j.models[id]); }); },Promise.resolve());
+  }).catch(function(){});
+}
+function loadModelFile(id,spec){
+  if(MODELS.busy[id]) return MODELS.busy[id];
+  MODELS.busy[id]=gltfLoader().then(function(l){ return new Promise(function(res){ l.load(spec.file,function(g){ setSkin(id,g.scene,spec); res(true); },undefined,function(e){ console.warn('model yüklenemedi',spec.file,e); res(false); }); }); });
+  return MODELS.busy[id];
+}
+/* try a model without touching code: drop a .glb on the page, or Ayarlar → Grafik → 3B model dene */
+function previewModelFile(file){
+  if(!file) return; const id=selectedId, name=(file.name||'').toLowerCase();
+  if(!/\.(glb|gltf)$/.test(name)){ toast('Sadece .glb veya .gltf dosyası','#ffc24a'); return; }
+  toast('Model yükleniyor: '+file.name,'#b8ecff');
+  Promise.all([gltfLoader(),file.arrayBuffer()]).then(function(r){
+    r[0].parse(r[1],'',function(g){ const prev=MODELS.preview&&MODELS.preview.id===id?MODELS.preview.spec.rotation:[0,0,0];
+      const skin=setSkin(id,g.scene,{rotation:prev.slice(),preview:true}); MODELS.preview={id:id, root:g.scene, spec:skin.spec, file:file.name};
+      toast(AIRCRAFT[id].name+' için model uygulandı (yalnızca bu oturum). Yön yanlışsa Ayarlar → Grafik → Döndür','#7dffb0'); syncModelUI(); },
+      function(e){ toast('Model okunamadı: '+(e&&e.message||e),'#ff6a6a'); });
+  }).catch(function(e){ toast('Model yüklenemedi: '+(e&&e.message||e),'#ff6a6a'); });
+}
+function previewRotate(){ const p=MODELS.preview; if(!p) return; p.spec.rotation[1]=(p.spec.rotation[1]+90)%360; p.root.parent&&p.root.parent.remove(p.root); setSkin(p.id,p.root,p.spec); syncModelUI(); }
+function previewClear(){ const p=MODELS.preview; if(!p) return; clearSkin(p.id); MODELS.preview=null; syncModelUI(); }
+function syncModelUI(){
+  const p=MODELS.preview, el=$('setModelInfo'); if(!el) return;
+  el.textContent=p?(AIRCRAFT[p.id].short+' ← '+p.file+' · models.json için: "'+p.id+'": {"file":"assets/models/'+p.file+'", "rotation":['+p.spec.rotation.join(',')+']}'):'Seçili uçağın yerine .glb modeli dener (sayfaya sürükle-bırak da olur)';
+  $('btnModelRot').disabled=!p; $('btnModelClr').disabled=!p;
+}
+window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
+window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; e.preventDefault(); previewModelFile(f); });
 /* ------------------------------------------------------------------ hangar waiting area (all aircraft parked, camera flies to the selected one) */
 const HANGAR={cx:-278, z:900, step:36};
 const TAXI_PT=new THREE.Vector3(0,AIRFIELD_Y+6,HANGAR.z-20);
@@ -1856,11 +1991,11 @@ function buildHangar(){
     const def=AIRCRAFT[id], x=HANGAR.cx+(i-(AC_ORDER.length-1)/2)*HANGAR.step;
     const l1=new THREE.Mesh(lg,lineMat); l1.position.set(x,gy+0.27,HANGAR.z-18); scene.add(l1);
     const l2=new THREE.Mesh(cg,lineMat); l2.position.set(x,gy+0.27,HANGAR.z-27); scene.add(l2);
-    const model=def.build(), g=upgradeModel(model.group);
+    const model=buildModel(id), g=model.group;
     g.position.set(x,gy+def.gearOff,HANGAR.z); g.userData.id=id; scene.add(g);
     const label=makeLabel(def.short); label.position.set(x,gy+def.gearOff+def.cam[0]*1.1+1.5,HANGAR.z); scene.add(label);
     const bb=new THREE.Box3().setFromObject(g); displays[id]={model:model,g:g,label:label,x:x,ox:(bb.min.x+bb.max.x)/2-x,oz:(bb.min.z+bb.max.z)/2-HANGAR.z,len:bb.max.z-bb.min.z};
-    const bl=blobMesh(); bl.scale.set((bb.max.x-bb.min.x)*0.75,1,(bb.max.z-bb.min.z)*0.95); bl.position.set((bb.min.x+bb.max.x)/2-x,0.32-def.gearOff,(bb.min.z+bb.max.z)/2-HANGAR.z); g.add(bl);
+    const bl=blobMesh(); bl.scale.set((bb.max.x-bb.min.x)*0.75,1,(bb.max.z-bb.min.z)*0.95); bl.position.set((bb.min.x+bb.max.x)/2-x,0.32-def.gearOff,(bb.min.z+bb.max.z)/2-HANGAR.z); bl.userData.keep=true; g.add(bl);
   });
 }
 function updateHangar(dt){
@@ -2831,6 +2966,7 @@ function applyQuality(){
   if(GFX.trees) GFX.trees.count=Math.floor(GFX.treeN*[0.35,0.7,1][q]);
   if(GFX.clouds) GFX.clouds.count=Math.floor(GFX.cloudN*[0.5,0.75,1][q]);
   resize(); if(typeof applyShadows==='function') applyShadows();
+  if(typeof applyFX==='function') applyFX();
 }
 
 /* ------------------------------------------------------------------ wingtip vapour at high G */
@@ -3083,6 +3219,7 @@ function resize(){
   DPR=Math.min(window.devicePixelRatio||1,2); HW=window.innerWidth; HH=window.innerHeight;
   hud.width=Math.round(HW*DPR); hud.height=Math.round(HH*DPR);
   renderer.setSize(HW,HH,false); camera.aspect=HW/HH; camera.updateProjectionMatrix();
+  if(typeof fxResize==='function') fxResize();
 }
 window.addEventListener('resize',function(){ resize(); if(typeof refreshTitle==='function'&&state==='menu'&&menuMode==='title') refreshTitle(); }); resize();
 
@@ -3380,6 +3517,83 @@ function drawHUD(){
   if(state==='paused'){ hx.fillStyle='rgba(4,9,18,0.45)'; hx.fillRect(0,0,w,h); }
 }
 
+/* ------------------------------------------------------------------ post-processing: bloom, colour grade, vignette, speed blur, anti-aliasing
+   Levels (Ayarlar → Grafik → Görsel efektler): 0 off (plain render), 1 grade + speed blur, 2 + bloom.
+   Bloom is selective: the scene is rendered into a high-precision buffer and only lights, flames and the sun are pushed
+   above the bloom threshold (see GLOW), so white paint and clouds do not smear. */
+var FX={level:0, on:false, composer:null, bloom:null, grade:null, fxaa:null, hdr:false, msaa:false, failed:false, loading:null, glowOn:false, scanT:0};
+var GLOW=new Map();   /* material -> {base colour, factor} */
+function fxDefault(){ let coarse=false; try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){} return (!coarse&&SETTINGS.quality>=1)?2:0; }
+function fxWanted(){ return SETTINGS.fx==null?fxDefault():SETTINGS.fx; }
+const GRADE_SHADER={
+  uniforms:{tDiffuse:{value:null}, uSpeed:{value:0}, uVig:{value:0.24}, uHdr:{value:0}, uSat:{value:1.1}, uCon:{value:1.06}},
+  vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
+  fragmentShader:[
+    'uniform sampler2D tDiffuse; uniform float uSpeed; uniform float uVig; uniform float uHdr; uniform float uSat; uniform float uCon; varying vec2 vUv;',
+    'vec3 tone(vec3 c){ vec3 k=0.82+(1.0-exp(-max(c-0.82,0.0)/0.18))*0.18; return mix(c,k,step(0.82,c)*uHdr); }',
+    'void main(){',
+    '  vec2 d=vUv-0.5; float r=length(d); vec3 c=texture2D(tDiffuse,vUv).rgb;',
+    '  if(uSpeed>0.001){ float k=uSpeed*0.011*smoothstep(0.32,0.85,r); vec3 a=c; for(int i=1;i<6;i++){ a+=texture2D(tDiffuse,vUv-d*k*float(i)).rgb; } c=a/6.0; }',
+    '  c=tone(c);',
+    '  float l=dot(c,vec3(0.2126,0.7152,0.0722)); c=mix(vec3(l),c,uSat); c=(c-0.5)*uCon+0.5;',
+    '  c+=vec3(0.014,0.005,-0.012)*smoothstep(0.45,1.0,l)+vec3(-0.008,0.0,0.012)*(1.0-smoothstep(0.0,0.4,l));',
+    '  c*=1.0-uVig*smoothstep(0.42,1.05,r*1.3);',
+    '  gl_FragColor=vec4(clamp(c,0.0,1.0),1.0);',
+    '}'].join('\n')
+};
+function applyFX(){
+  const lv=fxWanted(); FX.level=lv;
+  if(lv===0||FX.failed){ FX.on=false; glowApply(false); return; }
+  if(FX.loading) return;
+  FX.loading=needLibs(['CopyShader','LuminosityHighPassShader','FXAAShader','EffectComposer','ShaderPass','RenderPass','UnrealBloomPass']).then(function(){
+    FX.loading=null; try{ fxBuild(); FX.on=FX.level>0; glowApply(FX.on&&FX.hdr&&FX.level>=2); }catch(e){ console.warn('efektler kapatıldı',e); FX.failed=true; FX.on=false; glowApply(false); }
+  }).catch(function(e){ FX.loading=null; FX.failed=true; FX.on=false; console.warn('efekt kitaplıkları yüklenemedi',e); toast('Görsel efektler yüklenemedi (internet?) — normal görüntüyle devam','#ffc24a'); });
+}
+function fxBuild(){
+  const gl=renderer.getContext(), w2=!!renderer.capabilities.isWebGL2;
+  const halfOK=w2?!!(gl.getExtension('EXT_color_buffer_float')||gl.getExtension('EXT_color_buffer_half_float')):!!(gl.getExtension('OES_texture_half_float')&&gl.getExtension('EXT_color_buffer_half_float'));
+  FX.hdr=halfOK&&FX.level>=2;
+  const pr=renderer.getPixelRatio(), W=Math.max(1,Math.round(HW*pr)), H=Math.max(1,Math.round(HH*pr));
+  const opts={minFilter:THREE.LinearFilter, magFilter:THREE.LinearFilter, format:THREE.RGBAFormat, type:FX.hdr?THREE.HalfFloatType:THREE.UnsignedByteType, depthBuffer:true, stencilBuffer:false};
+  let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget;
+  if(FX.msaa){ rt=new THREE.WebGLMultisampleRenderTarget(W,H,opts); rt.samples=4; } else rt=new THREE.WebGLRenderTarget(W,H,opts);
+  if(FX.composer){ FX.composer.renderTarget1.dispose(); FX.composer.renderTarget2.dispose(); }
+  const c=new THREE.EffectComposer(renderer,rt); c.setPixelRatio(pr); c.setSize(HW,HH);
+  c.addPass(new THREE.RenderPass(scene,camera));
+  FX.bloom=null;
+  if(FX.level>=2){ FX.bloom=new THREE.UnrealBloomPass(new THREE.Vector2(HW,HH),FX.hdr?0.75:0.25,0.42,FX.hdr?1.9:0.94); c.addPass(FX.bloom); }
+  FX.grade=new THREE.ShaderPass(GRADE_SHADER); FX.grade.uniforms.uHdr.value=FX.hdr?1:0; c.addPass(FX.grade);
+  FX.fxaa=null; if(!FX.msaa){ FX.fxaa=new THREE.ShaderPass(THREE.FXAAShader); c.addPass(FX.fxaa); }
+  FX.composer=c; fxResize();
+}
+function fxResize(){
+  if(!FX||!FX.composer) return; const pr=renderer.getPixelRatio();
+  FX.composer.setPixelRatio(pr); FX.composer.setSize(HW,HH);
+  if(FX.fxaa) FX.fxaa.uniforms.resolution.value.set(1/Math.max(1,HW*pr),1/Math.max(1,HH*pr));
+}
+/* lights, flames, tracers and the sun get extra intensity only while HDR bloom is on (otherwise colours stay exactly as designed) */
+function glowScan(){
+  scene.traverse(function(o){ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):null; if(!ms) return;
+    ms.forEach(function(m){ if(!m||GLOW.has(m)||!m.color) return; const f=m.userData.glow||(m.blending===THREE.AdditiveBlending?4:0); if(!f) return;
+      GLOW.set(m,{base:m.color.clone(),f:f}); if(FX.glowOn) m.color.copy(m.color).multiplyScalar(f); }); });
+}
+function glowApply(on){
+  if(on) glowScan();
+  if(on===FX.glowOn) return; FX.glowOn=on;
+  GLOW.forEach(function(g,m){ m.color.copy(g.base); if(on) m.color.multiplyScalar(g.f); });
+  if(sky.material.uniforms.sunK) sky.material.uniforms.sunK.value=on?3.2:1;
+}
+function fxUniforms(dt){
+  if(FX.glowOn){ FX.scanT-=dt; if(FX.scanT<=0){ FX.scanT=2; glowScan(); } }
+  let sp=0; if(state==='play'&&!S.crashed&&!S.onGround){ sp=clamp((S.speed/Math.max(1,CUR.vTop)-0.5)/0.5,0,1)*0.8+(S.ab?0.25:0); }
+  else if(state==='walk'&&WALK.mode==='car') sp=clamp((Math.abs(WALK.car.v)-14)/16,0,1)*0.5;
+  const u=FX.grade.uniforms.uSpeed; u.value+=(sp-u.value)*Math.min(1,dt*(sp<u.value?6:2));
+}
+function renderFrame(dt){
+  if(FX.on&&FX.composer){ fxUniforms(dt||0); FX.composer.render(dt||0); }
+  else renderer.render(scene,camera);
+}
+function fxReset(){ if(FX.grade) FX.grade.uniforms.uSpeed.value=0; }
 /* ------------------------------------------------------------------ input + menu */
 let menuMode='title';
 function showScreen(name){ $('startUI').classList.add('hidden'); ['title','hangarUI','setupUI','pause','missionsUI'].forEach(function(id){ $(id).classList.toggle('hidden',id!==name); }); }
@@ -3451,6 +3665,10 @@ function cineStep(dt){
   cV3.copy(cV1).multiplyScalar(cb).addScaledVector(cV2,-sb); cV2.multiplyScalar(cb).addScaledVector(cV1,sb); cV1.copy(CINE.fwd).negate();
   cM.makeBasis(cV3,cV2,cV1); CINE.q.setFromRotationMatrix(cM);
 }
+$('setFx').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.fx=+b.dataset.f; FX.failed=false; saveSettings(); applyFX(); syncSettingsUI(); });
+$('btnModelPick').addEventListener('click',function(){ $('modelFile').click(); });
+$('modelFile').addEventListener('change',function(e){ const f=e.target.files&&e.target.files[0]; if(f) previewModelFile(f); e.target.value=''; });
+$('btnModelRot').addEventListener('click',previewRotate); $('btnModelClr').addEventListener('click',previewClear);
 $('setShadow').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.shadows=b.dataset.s==='1'; saveSettings(); applyShadows(); syncSettingsUI(); });
 $('setTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; setTab(b.dataset.tab); });
 function setTab(t){ Array.prototype.forEach.call($('setTabs').children,function(x){ x.setAttribute('aria-selected',String(x.dataset.tab===t)); }); Array.prototype.forEach.call(document.querySelectorAll('#settings section'),function(s){ s.classList.toggle('hidden',s.dataset.tab!==t); }); }
@@ -3512,6 +3730,7 @@ $('startUI').addEventListener('click',function(e){ if(e.target===$('startUI')) c
 $('acPrev').addEventListener('click',function(){ cycleAircraft(-1); });
 $('acNext').addEventListener('click',function(){ cycleAircraft(1); });
 function startGame(mode){
+  if(typeof fxReset==='function') fxReset();
   if(mode==='walk'){ startWalk(); return; }
   walkLeave(); WALK.from='play';
   initAudio(); padFireLock=true; startMode=mode; CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1;
@@ -3588,6 +3807,7 @@ function syncSettingsUI(){
   $('setVol').value=Math.round(SETTINGS.volume*100); $('setVolV').textContent=Math.round(SETTINGS.volume*100)+'%';
   $('setSens').value=Math.round(SETTINGS.sens*100); $('setSensV').textContent=Math.round(SETTINGS.sens*100)+'%';
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
+  Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); }); syncModelUI();
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
   $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
@@ -3626,7 +3846,7 @@ let photoPrevCam=0;
 function enterPhoto(){ if(state!=='play') return; state='photo'; photoPrevCam=camMode; camMode=0; camSnap=true; $('photoBar').classList.remove('hidden'); }
 function exitPhoto(){ if(state!=='photo') return; state='play'; camMode=photoPrevCam; camSnap=true; $('photoBar').classList.add('hidden'); $('gl').focus(); }
 function takePhoto(){
-  renderer.render(scene,camera);
+  renderFrame(0);
   let url=''; try{ url=renderer.domElement.toDataURL('image/png'); }catch(e){ url=''; }
   $('photoImg').src=url||'';
   $('photoNote').textContent=url?'Kaydetmek için görüntüye sağ tıkla (telefonda uzun bas) ve "Resmi kaydet"i seç.':'Bu tarayıcı ekran görüntüsüne izin vermedi.';
@@ -3888,7 +4108,7 @@ function actById(id){ for(let i=0;i<ACT.length;i++) if(ACT[i].id===id) return AC
 function localAuth(a){ return a.ai&&!a.remote; }
 
 function makeActor(o){
-  const def=AIRCRAFT[o.ac]||AIRCRAFT.kaan, mdl=def.build(); upgradeModel(mdl.group);
+  const def=AIRCRAFT[o.ac]||AIRCRAFT.kaan, mdl=buildModel(AIRCRAFT[o.ac]?o.ac:'kaan');
   if(mdl.gear) mdl.gear.visible=false; scene.add(mdl.group);
   const a={id:o.id,name:o.name,team:o.team,ac:o.ac,def:def,mdl:mdl,g:mdl.group,ai:!!o.ai,remote:!!o.remote,human:!!o.human,wing:!!o.wing,slot:o.slot||1,
     pos:new THREE.Vector3(),q:new THREE.Quaternion(),fwd:new THREE.Vector3(0,0,-1),dir:new THREE.Vector3(0,0,-1),evDir:new THREE.Vector3(),wp:new THREE.Vector3(),
@@ -3897,7 +4117,7 @@ function makeActor(o){
     np:new THREE.Vector3(),nq:new THREE.Quaternion(),nT:-1,spawn:o.spawn||null};
   ACT.push(a); return a;
 }
-function removeActor(a){ scene.remove(a.g); const i=ACT.indexOf(a); if(i>=0) ACT.splice(i,1); if(lockTgt===a){ lockTgt=null; lockT=0; } }
+function removeActor(a){ scene.remove(a.g); untrackModel(a.mdl); const i=ACT.indexOf(a); if(i>=0) ACT.splice(i,1); if(lockTgt===a){ lockTgt=null; lockT=0; } }
 function aiClear(){ while(ACT.length) removeActor(ACT[ACT.length-1]); wingSpawned=false; DF.wave=0; DF.next=0; DF.downs=0; abul.forEach(function(b){ b.on=false; b.m.visible=false; }); }
 function orientActor(a){
   const f=a.fwd; aV1.crossVectors(f,UPV); if(aV1.lengthSq()<1e-6) aV1.set(1,0,0); aV1.normalize(); aV2.crossVectors(aV1,f).normalize();
@@ -4448,7 +4668,6 @@ function netPick(ac,team){
 // clients learn about new red waves in co-op
 function netSpawnRed(r){ if(actById(r.id)) return; const a=makeActor({id:r.id,name:r.name,team:'red',ac:r.ac,ai:true,remote:true,human:false}); a.alive=false; a.g.visible=false; a.nT=-1; }
 
-/* ------------------------------------------------------------------ loop */
 /* ------------------------------------------------------------------ on foot (first person) and driving a car around the base */
 const WALK={mode:'foot', pos:new THREE.Vector3(), yaw:Math.PI, pitch:0, run:false, camD:1, cy:0, fp:false, boxes:null, near:null, nearId:null, sx:0, sy:0,
   car:{x:0,z:0,h:0,v:0,steer:0,mesh:null}, from:'play', bob:0, hint:6};
@@ -4597,7 +4816,8 @@ function updateWalkTouch(){
   document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });
 })();
 
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI();
+/* ------------------------------------------------------------------ loop */
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -4609,11 +4829,11 @@ function frame(now){
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
   netStep(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
-  placeModel(dt); updateHangar(dt); airportStep(dt); updateTaxiVisuals();
+  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow();
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
-  renderer.render(scene,camera);
+  renderFrame(dt);
   drawHUD(); audioUpdate(); updateTouchUI(); updateWalkTouch();
 }
 requestAnimationFrame(frame);

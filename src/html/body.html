@@ -1,0 +1,322 @@
+<canvas id="gl" tabindex="0"></canvas>
+<canvas id="hud"></canvas>
+
+<div id="title" class="screen">
+  <div class="tt-a ui" id="titleA">
+    <div class="brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p class="tag">Hedef Kızıl Elma</p></div></div>
+    <button class="mbig mitem" type="button" data-act="fly"><b>▶ UÇ</b><small id="flySubA"></small></button>
+    <ul class="mlist">
+      <li><button class="mitem" type="button" data-act="hangar" id="btnStart"><span>01</span>UÇAK SEÇ<small id="mAac"></small></button></li>
+      <li><button class="mitem" type="button" data-act="missions"><span>02</span>GÖREVLER<small id="mAmis"></small></button></li>
+      <li><button class="mitem" type="button" data-act="net" id="btnNet"><span>03</span>ÇOK OYUNCULU<small>4 KİŞİ</small></button></li>
+      <li><button class="mitem" type="button" data-act="settings"><span>04</span>AYARLAR<small id="mAload"></small></button></li>
+    </ul>
+  </div>
+  <div class="tcap" id="tCap"><b></b><small></small></div>
+  <div class="tt-b" id="titleB">
+    <div class="tb-top"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM2"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM2)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><span>HİLAL KANATLAR</span></div>
+    <div class="tb-title"><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div>
+    <div class="tb-tiles ui">
+      <button class="tile p mitem" type="button" data-act="fly"><i>01</i><b>UÇ</b><small id="flySubB"></small></button>
+      <button class="tile mitem" type="button" data-act="missions"><i>02</i><b>GÖREVLER</b><small>İt dalaşı, yer hedefleri…</small></button>
+      <button class="tile mitem" type="button" data-act="net"><i>03</i><b>ÇOK OYUNCULU</b><small>Oda kur · koda katıl</small></button>
+      <button class="tile mitem" type="button" data-act="hangar"><i>04</i><b>HANGAR</b><small>Uçağını seç</small></button>
+    </div>
+  </div>
+  <div class="ticons ui"><button class="ic" type="button" id="btnSettings" aria-label="Ayarlar" title="Ayarlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button><button class="ic" type="button" id="btnControls" aria-label="Kontroller" title="Kontroller"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 13H9l-1.6 1.8A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16.5" cy="11" r=".6" fill="currentColor"/><circle cx="18" cy="12.8" r=".6" fill="currentColor"/></svg></button><button class="ic" type="button" id="btnRecords" aria-label="Rekorlar" title="Rekorlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/></svg></button></div>
+  <div class="sbar"><span id="sbAc"></span><span id="sbNet"></span><span class="v" id="verTag"></span></div>
+</div>
+
+<div id="missionsUI" class="screen hidden">
+  <button class="btn ui back" id="btnMisBack" type="button">← Ana menü</button>
+  <div class="shdr"><span>■</span> GÖREVLER</div>
+  <ul class="mlist mis ui" id="misList"></ul>
+  <div class="misdet ui">
+    <p class="k" id="misK"></p><h2 id="misName"></h2><p class="d" id="misDesc"></p>
+    <div class="mchips" id="misChips"></div>
+    <div class="mrow2"><button class="btn primary" id="btnMisGo" type="button">▶ Göreve başla</button><button class="btn" id="btnMisAc" type="button"></button></div>
+  </div>
+  <div class="sbar"><span id="sbAc2"></span><span class="v">↑ ↓ görev · Enter başla · Esc geri</span></div>
+</div>
+
+<div id="hangarUI" class="screen hidden">
+  <button class="btn ui back" id="btnBack">← Ana menü</button>
+  <div class="grptabs ui" id="grpTabs" role="tablist" aria-label="Sistem grupları"></div>
+  <div class="clsrow ui"><div class="seg sm" id="clsSeg" aria-label="Sınıf filtresi"></div><span class="cnt" id="acCount"></span></div>
+  <button class="navb ui prev" id="acPrev" type="button" aria-label="Önceki uçak">‹</button>
+  <button class="navb ui next" id="acNext" type="button" aria-label="Sonraki uçak">›</button>
+  <div class="dock2">
+    <div class="hinfo">
+      <p class="hk" id="hKind"></p>
+      <h2 id="hName">TUSAŞ KAAN</h2>
+      <ul class="hst" id="hStats"></ul>
+      <p class="desc" id="hDesc"></p>
+    </div>
+    <button class="btn primary hgo ui" id="btnPlay" type="button">▶ Oyuna başla</button>
+    <div class="strip ui" id="acChips" role="radiogroup" aria-label="Uçak seçimi"></div>
+  </div>
+  <div class="sbar"><span>← → uçak değiştir · sürükle: etrafında dön · Enter: oyuna başla</span><span class="v" id="acPos"></span></div>
+</div>
+
+<div id="setupUI" class="screen hidden">
+  <div class="setup ui">
+    <p class="kind"><span class="step">Uçuş öncesi · silah yükü</span> · <span id="suKind"></span></p>
+    <h2 id="suName">TUSAŞ KAAN</h2>
+    <section>
+      <h3>Silah yükü <span class="slots" id="suSlots"></span></h3>
+      <table class="svc"><tbody id="suLoad"></tbody></table>
+    </section>
+    <div class="lrow"><button class="btn" id="btnLoadBack" type="button">← Geri</button><button class="btn primary go" id="btnLoadDone" type="button">Devam →</button></div>
+  </div>
+</div>
+
+<div id="startUI" class="modal start hidden">
+  <div class="card startcard ui">
+    <button class="xbtn" id="btnStartX" type="button" aria-label="Kapat">✕</button>
+    <h2>Uçuşa hazır</h2>
+    <p class="sub" id="stSub"></p>
+    <h3>Oyun modu</h3>
+    <div class="seg wrap" id="missionSeg"></div>
+    <p class="mdesc" id="mDesc"></p>
+    <div class="airow">
+      <label>Düşman uçak<select id="aiEnemy"><option value="0">Yok</option><option value="2">2 uçak</option><option value="4">4 uçak</option></select></label>
+      <label>Kanat adamı<select id="aiWing"><option value="1">Açık</option><option value="0">Kapalı</option></select></label>
+      <label>Zorluk<select id="aiSkill"><option value="0">Kolay</option><option value="1">Orta</option><option value="2">Zor</option></select></label>
+    </div>
+    <h3>Nereden başlamak istersin?</h3>
+    <div class="startopts" id="startSeg">
+      <button type="button" data-s="hangar"><b>Hangardan</b><small>Taksi yolundan piste git</small></button>
+      <button type="button" data-s="runway"><b>Pistten</b><small>Pist başında, kalkışa hazır</small></button>
+      <button type="button" data-s="air"><b>Havada</b><small>Doğrudan uçuşla başla</small></button>
+      <button type="button" data-s="walk"><b>Üssü gez</b><small>Hangarda yürü, araca bin</small></button>
+    </div>
+  </div>
+</div>
+
+<div id="pause" class="modal hidden">
+  <div class="card">
+    <h2>Duraklatıldı</h2>
+    <p class="sub">Uçağı değiştirmek için hangara dönebilirsin.</p>
+    <div class="stack">
+      <button class="btn primary" id="btnResume">Devam et</button>
+      <button class="btn" id="btnToHangar">Hangara dön</button>
+      <button class="btn" id="btnWalk">Yürüyerek gez</button>
+      <button class="btn" id="btnPauseControls">Kontroller</button>
+      <button class="btn" id="btnPauseSettings">Ayarlar</button>
+    </div>
+  </div>
+</div>
+
+<div id="controls" class="modal hidden">
+  <div class="card">
+    <h2>Kontroller</h2>
+    <p class="padline" id="padStatus">Kumanda bağlı değil — bağlayıp bir tuşa bas</p>
+    <div class="cols">
+      <div>
+        <h3>Klavye ve fare</h3>
+        <ul class="keys">
+          <li><span class="k"><kbd>W</kbd><kbd>↑</kbd></span>Burun aşağı</li>
+          <li><span class="k"><kbd>S</kbd><kbd>↓</kbd></span>Burun yukarı</li>
+          <li><span class="k"><kbd>A</kbd><kbd>←</kbd></span>Sola yat / yerde sola dön</li>
+          <li><span class="k"><kbd>D</kbd><kbd>→</kbd></span>Sağa yat / yerde sağa dön</li>
+          <li><span class="k"><kbd>Q</kbd><kbd>E</kbd></span>Sola / sağa yaw</li>
+          <li><span class="k"><kbd>R</kbd><kbd>F</kbd></span>Gazı artır / azalt</li>
+          <li><span class="k"><kbd>Shift</kbd></span>Art yakıcı (olan uçaklarda)</li>
+          <li><span class="k"><kbd>Space</kbd></span>Top / mühimmat ateşi</li>
+          <li><span class="k"><kbd>X</kbd></span>Seçili silahı kullan (bomba bırak / füze at)</li>
+          <li><span class="k"><kbd>1</kbd>–<kbd>5</kbd><kbd>N</kbd></span>Silah seç (panelde görünen sıra) / sıradaki silah</li>
+          <li><span class="k"><kbd>Tab</kbd></span>Hedef kilidini değiştir</li>
+          <li><span class="k"><kbd>K</kbd></span>Hedef kilidi aç / kapat</li>
+          <li><span class="k"><kbd>Z</kbd></span>Flare bırak (füzeden kaçınma)</li>
+          <li><span class="k"><kbd>G</kbd></span>İniş takımı</li>
+          <li><span class="k"><kbd>T</kbd></span>Otomatik taksi aç / kapat</li>
+          <li><span class="k"><kbd>L</kbd></span>Taksiyi atla: pist başına geç (hangarda: pistten başla)</li>
+          <li><span class="k"><kbd>B</kbd></span>Fren / hava freni</li>
+          <li><span class="k"><kbd>C</kbd></span>Kamera: dış / kokpit (İHA'da sensör)</li>
+          <li><span class="k"><kbd>V</kbd></span>Kamerayı sıfırla</li>
+          <li><span class="k"><kbd>H</kbd></span>Fotoğraf modu</li>
+          <li><span class="k"><kbd>Fare</kbd></span>Sürükle: kamerayı döndür</li>
+          <li><span class="k"><kbd>Tekerlek</kbd></span>Yakınlaş / uzaklaş</li>
+          <li><span class="k"><kbd>Y</kbd></span>Yukarı-aşağı ters çevir</li>
+          <li><span class="k"><kbd>M</kbd></span>Sesi aç / kapat</li>
+          <li><span class="k"><kbd>P</kbd><kbd>Esc</kbd></span>Duraklat</li>
+        </ul>
+        <h3>Üssü gez (yaya / araç)</h3>
+        <ul class="keys">
+          <li><span class="k"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>Yürü / araçta gaz-fren ve direksiyon</li>
+          <li><span class="k"><kbd>Fare</kbd></span>Etrafa bak (ekrana tıkla, imleç kilitlenir; Esc bırakır)</li>
+          <li><span class="k"><kbd>Shift</kbd></span>Koş (Caps Lock: sürekli koş)</li>
+          <li><span class="k"><kbd>E</kbd></span>Araca bin / in · yakındaki uçağa bin ve uç</li>
+          <li><span class="k"><kbd>Space</kbd></span>El freni</li>
+          <li><span class="k"><kbd>C</kbd></span>Araç kamerası: arkadan / sürücü koltuğu</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Kumanda (Xbox / PlayStation)</h3>
+        <ul class="keys">
+          <li><span class="k"><kbd>Sol çubuk</kbd></span>Pitch ve yatış / yerde direksiyon</li>
+          <li><span class="k"><kbd>Sağ çubuk ↔</kbd></span>Yaw</li>
+          <li><span class="k"><kbd>RT</kbd><kbd>LT</kbd></span>Gaz artır / azalt</li>
+          <li><span class="k"><kbd>Sağ çubuk ↕</kbd></span>Gaz (itme / çekme)</li>
+          <li><span class="k"><kbd>RB</kbd></span>Art yakıcı</li>
+          <li><span class="k"><kbd>LB</kbd></span>Fren / hava freni</li>
+          <li><span class="k"><kbd>A / ✕</kbd></span>Ateş</li>
+          <li><span class="k"><kbd>R3</kbd></span>Seçili silahı kullan (sağ çubuğa bas)</li>
+          <li><span class="k"><kbd>L3</kbd></span>Flare bırak (sol çubuğa bas)</li>
+          <li><span class="k"><kbd>B / ○</kbd></span>İniş takımı</li>
+          <li><span class="k"><kbd>X / □</kbd></span>Kamera</li>
+          <li><span class="k"><kbd>Y / △</kbd></span>Pitch ters çevir (taksi sırasında: taksiyi atla)</li>
+          <li><span class="k"><kbd>Geri</kbd></span>Sıradaki silahı seç</li>
+          <li><span class="k"><kbd>Start</kbd></span>Duraklat</li>
+          <li><span class="k"><kbd>←</kbd><kbd>→</kbd></span>Hangarda uçak seç (yön tuşları)</li>
+          <li><span class="k"><kbd>A</kbd></span>Hangarda: uçağa bin</li>
+          <li><span class="k"><kbd>LB</kbd><kbd>RB</kbd></span>Hangarda: görev seç</li>
+          <li><span class="k"><kbd>X</kbd></span>Hangarda: havada başla</li>
+          <li><span class="k"><kbd>Y</kbd></span>Hangarda: pistten başla</li>
+        </ul>
+      </div>
+    </div>
+    <button class="btn primary" id="btnCtlClose">Kapat</button>
+  </div>
+</div>
+
+<div id="settings" class="modal fs hidden">
+  <button class="btn back" id="btnSetClose" type="button">← Geri</button>
+  <div class="shdr"><span>■</span> AYARLAR</div>
+  <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="o" aria-selected="false">Oynanış</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button></div>
+  <div class="spanel">
+    <section data-tab="g">
+      <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small>Telefonlarda Orta önerilir</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
+      <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
+      <div class="srow"><div class="sl"><b>Görsel efektler</b><small>Düşük: renk düzeltme, hız bulanıklığı, kenar yumuşatma. Yüksek: + ışık parlaması (bloom). Telefonda FPS düşürebilir</small></div><div class="seg" id="setFx"><button type="button" data-f="0">Kapalı</button><button type="button" data-f="1">Düşük</button><button type="button" data-f="2">Yüksek</button></div></div>
+      <div class="srow"><div class="sl"><b>3B model dene</b><small id="setModelInfo">Seçili uçağın yerine .glb modeli dener (sayfaya sürükle-bırak da olur)</small></div><div class="seg"><button type="button" id="btnModelPick">Dosya seç</button><button type="button" id="btnModelRot" disabled>Döndür 90°</button><button type="button" id="btnModelClr" disabled>Kaldır</button></div><input type="file" id="modelFile" accept=".glb,.gltf" hidden></div>
+      <div class="srow"><div class="sl"><b>Otomatik performans</b><small>FPS 38’in altına düşerse çözünürlük kademeli düşer</small></div><label class="tgl"><input type="checkbox" id="setAuto"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>FPS göstergesi</b><small>Ekranın altında kare hızı</small></div><label class="tgl"><input type="checkbox" id="setFps"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
+    </section>
+    <section data-tab="k" class="hidden">
+      <div class="srow"><div class="sl"><b>Dokunmatik kontroller</b><small>Otomatik: dokunmatik ekranda açılır</small></div><div class="seg" id="setTouch"><button type="button" data-t="auto">Otomatik</button><button type="button" data-t="on">Açık</button><button type="button" data-t="off">Kapalı</button></div></div>
+      <div class="srow"><div class="sl"><b>Fare / dokunma duyarlılığı</b><small><output id="setSensV"></output></small></div><input type="range" id="setSens" min="30" max="250"></div>
+      <div class="srow"><div class="sl"><b>Yukarı-aşağıyı ters çevir</b><small>Y tuşu</small></div><label class="tgl"><input type="checkbox" id="setInv"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Gamepad</small></div><label class="tgl"><input type="checkbox" id="setRumble"><i></i></label></div>
+    </section>
+    <section data-tab="s" class="hidden">
+      <div class="srow"><div class="sl"><b>Ses seviyesi</b><small><output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
+    </section>
+    <section data-tab="o" class="hidden">
+      <div class="srow"><div class="sl"><b>Bomba yardımı</b><small>Güdümlü: kilitli hedefe yönelir</small></div><div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
+      <div class="srow"><div class="sl"><b>Otomatik hedef kilidi</b><small>Uyarı panosu ile (K tuşu)</small></div><label class="tgl"><input type="checkbox" id="setLock"><i></i></label></div>
+    </section>
+    <section data-tab="a" class="hidden">
+      <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Otomatik: telefonda Sinematik, bilgisayarda Komuta</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Otomatik</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
+      <div class="srow"><div class="sl"><b>Sürüm</b><small>Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır; gerçek verileri yansıtmaz.</small></div><span id="setVer"></span></div>
+    </section>
+  </div>
+  <div class="sbar"><span>Değişiklikler otomatik kaydedilir</span><span class="v">Esc: geri</span></div>
+</div>
+
+<div id="records" class="modal hidden">
+  <div class="card">
+    <h2>Rekorlar</h2>
+    <p class="sub">Görev süreleri (en iyi) ve en yüksek puan, uçak başına.</p>
+    <table class="rec"><thead><tr><th>Uçak</th><th>Parkur</th><th>Yer</th><th>Hava</th><th>Keşif</th><th>Puan</th></tr></thead><tbody id="recBody"></tbody></table>
+    <div class="btnrow"><button class="btn primary" id="btnRecClose">Kapat</button><button class="btn link" id="btnRecReset">Rekorları sıfırla</button></div>
+  </div>
+</div>
+
+<div id="netUI" class="modal fs hidden">
+  <button class="btn back" id="btnNetClose" type="button">← Ana menü</button>
+  <div class="shdr"><span>■</span> ÇOK OYUNCULU</div>
+  <div class="np2" id="netHome">
+    <div class="npan">
+      <p class="k">ODA KUR</p>
+      <div class="field"><label for="netName">Pilot adın</label><input id="netName" class="inp" maxlength="16" placeholder="Pilot" autocomplete="off"></div>
+      <div class="seg wrap" id="netMode"><button type="button" data-m="coop" aria-pressed="true">İşbirliği</button><button type="button" data-m="team" aria-pressed="false">Takım</button><button type="button" data-m="ffa" aria-pressed="false">Herkes</button></div>
+      <p class="mdesc" id="netModeDesc"></p>
+      <label class="check"><input type="checkbox" id="netBots" checked> Boş yerleri yapay zekâ ile doldur</label>
+      <button class="btn primary wide" id="btnNetHost" type="button">▶ Oda kur</button>
+    </div>
+    <div class="npan">
+      <p class="k">ODAYA KATIL</p>
+      <div class="joinrow"><input id="netCode" class="inp code" maxlength="6" placeholder="KOD" autocomplete="off" autocapitalize="characters"><button class="btn" id="btnNetJoin" type="button">Katıl</button></div>
+      <p class="ninfo">Arkadaşının verdiği 5 harfli kodu yaz ya da paylaştığı bağlantıyla gir. En fazla 4 oyuncu; odayı kuran oyuncu maçı yönetir. Bağlantı doğrudan oyuncular arasında kurulur (internet gerekir).</p>
+    </div>
+  </div>
+  <div class="np2 hidden" id="netLobby">
+    <div class="npan">
+      <p class="k">ODA KODU</p>
+      <b class="ncode" id="netRoom">—</b>
+      <p class="ninfo">Arkadaşın “Odaya katıl”a bu kodu yazsın.</p>
+      <div class="joinrow"><button class="btn" id="btnNetCopy" type="button">Kodu kopyala</button><button class="btn" id="btnNetLink" type="button">Bağlantıyı kopyala</button></div>
+      <p class="ninfo" id="netModeTxt"></p>
+    </div>
+    <div class="npan">
+      <p class="k" id="netCount">OYUNCULAR</p>
+      <ul class="netlist" id="netList"></ul>
+      <div class="joinrow"><label for="netAc">Uçağın</label><select id="netAc" class="inp"></select><button class="btn" id="btnNetTeam" type="button">Takım değiştir</button></div>
+      <div class="joinrow"><button class="btn primary wide" id="btnNetGo" type="button">▶ Maçı başlat</button><span class="ninfo" id="netWait">Ev sahibinin başlatması bekleniyor…</span><button class="btn link" id="btnNetLeave" type="button">Odadan çık</button></div>
+    </div>
+  </div>
+  <div class="sbar"><span class="netstatus" id="netStatus"></span><span class="v">P2P · en fazla 4 oyuncu</span></div>
+</div>
+
+<div id="missionEnd" class="modal hidden">
+  <div class="card">
+    <h2 id="mendTitle"></h2>
+    <p class="sub" id="mendBody"></p>
+    <div class="stack"><button class="btn primary" id="btnMRetry">Tekrar dene</button><button class="btn" id="btnMHangar">Hangara dön</button></div>
+  </div>
+</div>
+
+<div id="service" class="modal hidden">
+  <div class="card">
+    <h2 id="svcTitle">Bakım hangarı</h2>
+    <p class="sub" id="svcSub"></p>
+    <div class="svchp" id="svcHpRow"><span id="svcHpTxt">CAN</span><div class="bar"><i id="svcHpBar"></i></div></div>
+    <table class="svc"><tbody id="svcBody"></tbody></table>
+    <p class="sub" id="svcSlots"></p>
+    <div class="btnrow"><button class="btn primary" id="btnSvcOk">Bakımı yap ve yükle</button><button class="btn" id="btnSvcCancel">Vazgeç</button></div>
+  </div>
+</div>
+
+<div id="photoBar" class="photobar hidden">
+  <span>Fotoğraf modu: fareyle döndür, tekerlekle yakınlaş</span>
+  <button class="btn primary" id="btnShot">Fotoğraf çek</button>
+  <button class="btn" id="btnPhotoExit">Kapat</button>
+</div>
+
+<div id="photoResult" class="modal hidden">
+  <div class="card wide">
+    <h2>Fotoğraf</h2>
+    <img id="photoImg" alt="Ekran görüntüsü">
+    <p class="sub" id="photoNote"></p>
+    <button class="btn primary" id="btnPhotoClose">Kapat</button>
+  </div>
+</div>
+
+<div id="touch" class="touch hidden">
+  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
+  <div class="ttaxi"><button type="button" id="tAuto" class="hidden">OTO TAKSİ</button><button type="button" id="tSkip" class="hidden">PİSTE GEÇ</button></div>
+  <div class="tstick" id="tStick"><div class="tknob" id="tKnob"></div></div>
+  <div class="tright" id="tRight">
+    <button type="button" id="tFlare" class="tb flare">FLARE</button>
+    <button type="button" id="tFire" class="tb fire">ATEŞ</button>
+    <div class="tyaw"><button type="button" id="tYawL" aria-label="Sola dümen">◀</button><button type="button" id="tYawR" aria-label="Sağa dümen">▶</button></div>
+  </div>
+  <div class="tthr" id="tThr"><div class="tabz" id="tABZ">ART<br>YAKICI</div><div class="tthrfill" id="tThrFill"></div><div class="tthrlbl" id="tThrLbl">GAZ<br>0%</div></div>
+  <div class="twpn" id="tWpn"></div>
+</div>
+<div id="wtouch" class="touch hidden">
+  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button></div>
+  <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
+  <div class="tright wright"><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
+</div>
+<div id="fps" class="fps hidden"></div>
+<div id="rotate" class="hidden">Daha rahat oynamak için telefonu yatay çevir</div>
+
+<div id="prep" class="prep hidden">
+  <h3>Kalkış hazırlığı</h3>
+  <ul id="prepList"></ul>
+  <p id="prepHint"></p>
+  <p class="vr" id="prepVr"></p>
+</div>
