@@ -4,13 +4,17 @@ Oyundaki her araç önce **kodla** çizilir. İstersen bir aracı gerçek bir 3B
 oyuncunun uçağı, hangardaki kopyası ve yapay zekâ uçakları otomatik olarak yeni modeli kullanır. Model yüklenemezse
 (dosya yok, internet yok, hata) oyun hiçbir şey olmamış gibi kod modeliyle devam eder.
 
-## 1. Hızlı deneme (kod yazmadan)
-1. Oyunda uçağı seç.
-2. **Ayarlar → Grafik → 3B model dene → Dosya seç** (ya da .glb dosyasını oyun sayfasına sürükle-bırak).
-3. Model ters veya yan duruyorsa **Döndür 90°** ile düzelt.
-4. Ayarlar satırında, `models.json`'a yazman gereken satır hazır olarak görünür.
+## 1. Model Kütüphanesi (kod yazmadan)
+Ana menü → **Model Kütüphanesi** (ya da Ayarlar → Grafik → Model kütüphanesi → Aç). Bir .glb dosyasını oyun sayfasına sürükleyip bırakmak da kütüphaneyi açar.
+- **Bilgi:** boyutlar, üçgen/parça/malzeme sayısı, kaynak (kod modeli, models.json, bu cihaz). **.glb olarak indir** ile ekrandaki modeli (boyasıyla) indirirsin.
+- **Test:** iniş takımı, motor/art yakıcı, silahlar, pervane, seyir ışıkları, kumanda yüzeyleri, tel kafes.
+- **Görünüm** (kod modelleri): ana renk, kamuflaj (lekeli / dijital / çizgili, ikinci renk, desen boyu), mat ↔ parlak.
+- **Model:** içe aktar — `.glb`, `.gltf` (+`.bin`), `.fbx`, `.obj` (+`.mtl`), `.stl`, `.dae`; dokuları (`.png/.jpg`) da birlikte seç.
+  Dosya otomatik .glb'ye çevrilir. Yön (90° adımlar), uzunluk, yükseklik ayarlanır; adlandırılmış parçalara görev verilir
+  (iniş takımı, pervane, kanatçık, irtifa/istikamet dümeni). **models.json satırını kopyala** kalıcı ekleme için gereken satırı verir.
 
-Bu deneme yalnızca o oturum içindir; sayfa yenilenince kalkar.
+Kütüphanedeki değişiklikler **o cihazda** saklanır (boya: tarayıcı belleği, modeller: IndexedDB) ve oyunda hemen kullanılır.
+Bu cihazdaki model, `assets/models.json`'daki modelden önceliklidir. Herkesin görmesi için 2. adımı uygula.
 
 ## 2. Kalıcı ekleme
 1. Dosyayı `assets/models/` klasörüne koy (ör. `assets/models/kaan.glb`).
@@ -45,7 +49,7 @@ Araç kimlikleri: `kaan`, `anka3`, `hurjet`, `hurkus`, `anka`, `aksungur`, `kizi
 | `surfaces` | Hareketli yüzeyler: `{"node":"aileron_L","axis":"x","input":"roll","max":18,"sign":-1}`; `input`: `pitch`, `roll`, `yaw` | — |
 | `flames` | Motor alevlerinin konumları [[x,y,z], …] (model koordinatında, ölçek sonrası metre) | kod modelindeki yerler |
 
-Seyir ışıkları, flaşör, motor alevi ve asılı silahlar kod modelinden gelmeye devam eder.
+Motor alevi ve asılı silahlar kod modelinden gelmeye devam eder. Kodun seyir ışıkları ve flaşörü içe aktarılan modelde gizlenir (modelin kendi ışıkları vardır); korumak için `"keepLights": true` yaz.
 
 ## Modeli hazırlama (Blender)
 - **Birim:** metre. **Yön:** oyunda burun −Z, üst +Y olmalı. Blender'da burnu **+Y** yönüne, üstü +Z'ye çevir ve dışa aktarırken "+Y Up" seçili kalsın; glTF'de burun −Z olur. Yine de ters çıkarsa `rotation` ile düzelt.

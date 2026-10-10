@@ -5,13 +5,15 @@
 const VENDOR={base:'vendor/three-r128/', cdn:'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/',
   files:{CopyShader:'shaders/CopyShader.js', LuminosityHighPassShader:'shaders/LuminosityHighPassShader.js', FXAAShader:'shaders/FXAAShader.js',
     EffectComposer:'postprocessing/EffectComposer.js', RenderPass:'postprocessing/RenderPass.js', ShaderPass:'postprocessing/ShaderPass.js', UnrealBloomPass:'postprocessing/UnrealBloomPass.js',
-    GLTFLoader:'loaders/GLTFLoader.js', DRACOLoader:'loaders/DRACOLoader.js'}};
+    GLTFLoader:'loaders/GLTFLoader.js', DRACOLoader:'loaders/DRACOLoader.js', GLTFExporter:'exporters/GLTFExporter.js',
+    FBXLoader:'loaders/FBXLoader.js', OBJLoader:'loaders/OBJLoader.js', MTLLoader:'loaders/MTLLoader.js', STLLoader:'loaders/STLLoader.js', ColladaLoader:'loaders/ColladaLoader.js', TGALoader:'loaders/TGALoader.js',
+    NURBSUtils:'curves/NURBSUtils.js', NURBSCurve:'curves/NURBSCurve.js', fflate:'libs/fflate.min.js'}};
 const LIBS={};
 function loadScript(src){ return new Promise(function(res,rej){ const s=document.createElement('script'); s.src=src; s.async=false; s.onload=function(){ res(); }; s.onerror=function(){ s.remove(); rej(new Error('yüklenemedi: '+src)); }; document.head.appendChild(s); }); }
 /* load three.js add-ons on demand: first from our own vendor/ folder (works offline / in the Android app), then from the CDN */
 function needLibs(names){
   return names.reduce(function(p,n){ return p.then(function(){
-    if(THREE[n]) return; if(LIBS[n]) return LIBS[n];
+    if(THREE[n]||(n==='fflate'&&typeof window!=='undefined'&&window.fflate)) return; if(LIBS[n]) return LIBS[n];
     const f=VENDOR.files[n]; if(!f) throw new Error('bilinmeyen kitaplık '+n);
     LIBS[n]=loadScript(VENDOR.base+f.split('/').pop()).catch(function(){ return loadScript(VENDOR.cdn+f); });
     return LIBS[n];
@@ -20,7 +22,7 @@ function needLibs(names){
 const MODELS={manifest:null, skins:{}, inst:{}, loader:null, busy:{}, preview:null};
 /* every built vehicle goes through here so a model file can replace its look later */
 function buildModel(id){ const def=AIRCRAFT[id]||AIRCRAFT.kaan, m=def.build(); upgradeModel(m.group); return trackModel(AIRCRAFT[id]?id:'kaan',m); }
-function trackModel(id,m){ m.acId=id; (MODELS.inst[id]||(MODELS.inst[id]=[])).push(m); if(MODELS.skins[id]) applySkin(m,MODELS.skins[id]); return m; }
+function trackModel(id,m){ m.acId=id; (MODELS.inst[id]||(MODELS.inst[id]=[])).push(m); if(MODELS.skins[id]) applySkin(m,MODELS.skins[id]); applyLivery(m); return m; }
 function untrackModel(m){ const L=MODELS.inst[m&&m.acId]; if(!L) return; const i=L.indexOf(m); if(i>=0) L.splice(i,1); }
 function gltfLoader(){
   return needLibs(['GLTFLoader','DRACOLoader']).then(function(){
@@ -68,7 +70,8 @@ function makeSkin(id,root,spec){
 function applySkin(m,skin){
   removeSkin(m);
   const spec=skin.spec, keep=skinKeep(m,spec), v=skin.scene.clone(true); v.userData.skin=true;
-  m.hidden=[]; m.group.children.forEach(function(c){ if(keep.has(c)||isNavLight(c)||c.userData.keep||!c.visible) return; c.visible=false; m.hidden.push(c); });
+  m.hidden=[]; m.group.children.forEach(function(c){ if((keep.has(c)&&c!==m.strobe)||(spec.keepLights&&isNavLight(c))||c.userData.keep||!c.visible) return; c.visible=false; m.hidden.push(c); });
+  if(m.strobe&&!spec.keepLights){ m.strobeOff=m.strobe; m.strobe=null; }
   m.group.add(v); m.skin=v;
   const byName=function(n){ return v.getObjectByName(n); };
   if(spec.gearNodes&&m.gear){ m.gearNodes=spec.gearNodes.map(byName).filter(Boolean); m.gear.children.forEach(function(c){ if(c.visible){ c.visible=false; m.hidden.push(c); } }); }
@@ -79,7 +82,7 @@ function applySkin(m,skin){
 }
 function removeSkin(m){
   if(!m.skin) return; m.group.remove(m.skin); m.skin=null;
-  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=null;
+  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=null; if(m.strobeOff){ m.strobe=m.strobeOff; m.strobeOff=null; }
   if(m.spinBack){ m.spinners=m.spinBack; m.spinBack=null; }
 }
 function setSkin(id,root,spec){
@@ -96,6 +99,7 @@ function skinSync(){
 }
 /* read assets/models.json and load what it lists (selected vehicle first) */
 function modelsInit(){
+  localModelsInit();
   if(typeof fetch!=='function'||typeof location==='undefined'||location.protocol==='file:') return;
   fetch('assets/models.json',{cache:'no-cache'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){
     if(!j||!j.models) return; MODELS.manifest=j;
@@ -106,27 +110,6 @@ function modelsInit(){
 }
 function loadModelFile(id,spec){
   if(MODELS.busy[id]) return MODELS.busy[id];
-  MODELS.busy[id]=gltfLoader().then(function(l){ return new Promise(function(res){ l.load(spec.file,function(g){ setSkin(id,g.scene,spec); res(true); },undefined,function(e){ console.warn('model yüklenemedi',spec.file,e); res(false); }); }); });
+  MODELS.busy[id]=gltfLoader().then(function(l){ return new Promise(function(res){ l.load(spec.file,function(g){ if(MODELS.skins[id]&&MODELS.skins[id].spec.local){ res(false); return; } setSkin(id,g.scene,spec); res(true); },undefined,function(e){ console.warn('model yüklenemedi',spec.file,e); res(false); }); }); });
   return MODELS.busy[id];
 }
-/* try a model without touching code: drop a .glb on the page, or Ayarlar → Grafik → 3B model dene */
-function previewModelFile(file){
-  if(!file) return; const id=selectedId, name=(file.name||'').toLowerCase();
-  if(!/\.(glb|gltf)$/.test(name)){ toast('Sadece .glb veya .gltf dosyası','#ffc24a'); return; }
-  toast('Model yükleniyor: '+file.name,'#b8ecff');
-  Promise.all([gltfLoader(),file.arrayBuffer()]).then(function(r){
-    r[0].parse(r[1],'',function(g){ const prev=MODELS.preview&&MODELS.preview.id===id?MODELS.preview.spec.rotation:[0,0,0];
-      const skin=setSkin(id,g.scene,{rotation:prev.slice(),preview:true}); MODELS.preview={id:id, root:g.scene, spec:skin.spec, file:file.name};
-      toast(AIRCRAFT[id].name+' için model uygulandı (yalnızca bu oturum). Yön yanlışsa Ayarlar → Grafik → Döndür','#7dffb0'); syncModelUI(); },
-      function(e){ toast('Model okunamadı: '+(e&&e.message||e),'#ff6a6a'); });
-  }).catch(function(e){ toast('Model yüklenemedi: '+(e&&e.message||e),'#ff6a6a'); });
-}
-function previewRotate(){ const p=MODELS.preview; if(!p) return; p.spec.rotation[1]=(p.spec.rotation[1]+90)%360; p.root.parent&&p.root.parent.remove(p.root); setSkin(p.id,p.root,p.spec); syncModelUI(); }
-function previewClear(){ const p=MODELS.preview; if(!p) return; clearSkin(p.id); MODELS.preview=null; syncModelUI(); }
-function syncModelUI(){
-  const p=MODELS.preview, el=$('setModelInfo'); if(!el) return;
-  el.textContent=p?(AIRCRAFT[p.id].short+' ← '+p.file+' · models.json için: "'+p.id+'": {"file":"assets/models/'+p.file+'", "rotation":['+p.spec.rotation.join(',')+']}'):'Seçili uçağın yerine .glb modeli dener (sayfaya sürükle-bırak da olur)';
-  $('btnModelRot').disabled=!p; $('btnModelClr').disabled=!p;
-}
-window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
-window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; e.preventDefault(); previewModelFile(f); });

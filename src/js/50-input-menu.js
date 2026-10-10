@@ -29,6 +29,7 @@ function titleAct(act){
   if(act==='missions'){ openMissions(); return; }
   if(act==='net'){ openNet(); return; }
   if(act==='settings'){ syncSettingsUI(); openModal('settings'); return; }
+  if(act==='library'){ openLibrary(); return; }
 }
 $('title').addEventListener('click',function(e){ const b=e.target.closest('.mitem'); if(b){ titleAct(b.dataset.act); } });
 window.addEventListener('online',function(){ if(menuMode==='title') refreshTitle(); }); window.addEventListener('offline',function(){ if(menuMode==='title') refreshTitle(); });
@@ -70,9 +71,6 @@ function cineStep(dt){
   cM.makeBasis(cV3,cV2,cV1); CINE.q.setFromRotationMatrix(cM);
 }
 $('setFx').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.fx=+b.dataset.f; FX.failed=false; saveSettings(); applyFX(); syncSettingsUI(); });
-$('btnModelPick').addEventListener('click',function(){ $('modelFile').click(); });
-$('modelFile').addEventListener('change',function(e){ const f=e.target.files&&e.target.files[0]; if(f) previewModelFile(f); e.target.value=''; });
-$('btnModelRot').addEventListener('click',previewRotate); $('btnModelClr').addEventListener('click',previewClear);
 $('setShadow').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.shadows=b.dataset.s==='1'; saveSettings(); applyShadows(); syncSettingsUI(); });
 $('setTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; setTab(b.dataset.tab); });
 function setTab(t){ Array.prototype.forEach.call($('setTabs').children,function(x){ x.setAttribute('aria-selected',String(x.dataset.tab===t)); }); Array.prototype.forEach.call(document.querySelectorAll('#settings section'),function(s){ s.classList.toggle('hidden',s.dataset.tab!==t); }); }

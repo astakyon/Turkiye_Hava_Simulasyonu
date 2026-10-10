@@ -104,7 +104,7 @@ function hudCue(cx,cy,w,h){
 function svcPointerOn(){ return S.onGround&&S.clearance&&!S.taxi&&needsService()&&!svcInZone()&&!S.crashed; }
 function drawHUD(){
   hx.setTransform(DPR,0,0,DPR,0,0); hx.clearRect(0,0,HW,HH);
-  if(state==='menu'||state==='photo') return;
+  if(state==='menu'||state==='photo'||state==='library') return;
   if(state==='walk'||(state==='paused'&&WALK.from==='walk')){ drawWalkHUD(); return; }
   const w=HW, h=HH; sc=clamp(Math.min(w,h)/760,0.7,1.5);
   const cx=w/2, cy=h/2, tch=TOUCH.vis;

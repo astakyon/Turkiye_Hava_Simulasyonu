@@ -13,7 +13,7 @@ function placeModel(dt){
   model.flames.forEach(f=>{ f.outer.scale.set(wd,wd,len*fl); f.inner.scale.set(wd,wd,len*0.55*fl);
     if(f.ds) f.ds.forEach((m,i)=>{ m.visible=ab; if(ab){ m.position.set(f.base[0],f.base[1],f.base[2]+len*fl*(0.2+0.2*i)); const k2=1-0.22*i; m.scale.set(k2,k2,1.5); } }); });
   model.spinners.forEach(sp=>{ sp.obj.rotation.z+=dt*(8+thr*75)*(state==='menu'?0.4:1); sp.disc.material.opacity=0.04+0.2*thr; });
-  model.strobe.visible=Math.sin(T*9)>0.8;
+  if(model.strobe) model.strobe.visible=Math.sin(T*9)>0.8;
   model.gear.visible=cine?false:S.gear;
 }
 function cameraUpdate(dt){

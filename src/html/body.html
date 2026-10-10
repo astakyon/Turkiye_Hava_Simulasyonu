@@ -9,7 +9,8 @@
       <li><button class="mitem" type="button" data-act="hangar" id="btnStart"><span>01</span>UÇAK SEÇ<small id="mAac"></small></button></li>
       <li><button class="mitem" type="button" data-act="missions"><span>02</span>GÖREVLER<small id="mAmis"></small></button></li>
       <li><button class="mitem" type="button" data-act="net" id="btnNet"><span>03</span>ÇOK OYUNCULU<small>4 KİŞİ</small></button></li>
-      <li><button class="mitem" type="button" data-act="settings"><span>04</span>AYARLAR<small id="mAload"></small></button></li>
+      <li><button class="mitem" type="button" data-act="library"><span>04</span>MODEL KÜTÜPHANESİ<small>3B İNCELE</small></button></li>
+      <li><button class="mitem" type="button" data-act="settings"><span>05</span>AYARLAR<small id="mAload"></small></button></li>
     </ul>
   </div>
   <div class="tcap" id="tCap"><b></b><small></small></div>
@@ -21,10 +22,50 @@
       <button class="tile mitem" type="button" data-act="missions"><i>02</i><b>GÖREVLER</b><small>İt dalaşı, yer hedefleri…</small></button>
       <button class="tile mitem" type="button" data-act="net"><i>03</i><b>ÇOK OYUNCULU</b><small>Oda kur · koda katıl</small></button>
       <button class="tile mitem" type="button" data-act="hangar"><i>04</i><b>HANGAR</b><small>Uçağını seç</small></button>
+      <button class="tile mitem" type="button" data-act="library"><i>05</i><b>MODELLER</b><small>3B kütüphane</small></button>
     </div>
   </div>
   <div class="ticons ui"><button class="ic" type="button" id="btnSettings" aria-label="Ayarlar" title="Ayarlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button><button class="ic" type="button" id="btnControls" aria-label="Kontroller" title="Kontroller"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 13H9l-1.6 1.8A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16.5" cy="11" r=".6" fill="currentColor"/><circle cx="18" cy="12.8" r=".6" fill="currentColor"/></svg></button><button class="ic" type="button" id="btnRecords" aria-label="Rekorlar" title="Rekorlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/></svg></button></div>
   <div class="sbar"><span id="sbAc"></span><span id="sbNet"></span><span class="v" id="verTag"></span></div>
+</div>
+
+<div id="libUI" class="screen hidden">
+  <div class="lbar ui"><button class="btn back" id="btnLibBack" type="button">← Geri</button><b class="lttl"><span>■</span> MODEL KÜTÜPHANESİ</b><span class="lmsg" id="libMsg"></span></div>
+  <nav class="llist ui" id="libList" aria-label="Modeller"></nav>
+  <div class="lview ui" id="libView">
+    <div class="lvbtns"><button type="button" id="libBg" title="Arka plan">Arka plan: <b id="libBgN">Hangar</b></button><button type="button" id="libRot" aria-pressed="true">Döndür</button><button type="button" id="libGuide" aria-pressed="false">Kılavuz</button><button type="button" id="libReset">Sıfırla</button></div>
+  </div>
+  <aside class="lpanel ui">
+    <div class="lhead"><small id="libKind"></small><h2 id="libName"></h2><span class="lsrc" id="libSrc"></span></div>
+    <div class="ltabs" id="libTabs" role="tablist"><button type="button" data-t="info" aria-selected="true">Bilgi</button><button type="button" data-t="test" aria-selected="false">Test</button><button type="button" data-t="look" aria-selected="false">Görünüm</button><button type="button" data-t="model" aria-selected="false">Model</button></div>
+    <section data-t="info"><dl class="linfo" id="libInfo"></dl><button class="btn wide" type="button" id="libExport">⭳ .glb olarak indir</button><p class="lnote">Modeli Blender gibi programlarda açıp geliştirmek için indir. Geri yüklemek için Model sekmesi.</p></section>
+    <section data-t="test" hidden>
+      <div class="lsw" id="libTests"></div>
+      <p class="lnote" id="libTestNote"></p>
+    </section>
+    <section data-t="look" hidden>
+      <p class="lnote" id="libLookNote"></p>
+      <div class="lgrp"><b>Ana renk</b><div class="lsw2" id="libColors"></div><label class="lcol">Özel renk <input type="color" id="libColor" value="#9aa4ad"></label></div>
+      <div class="lgrp"><b>Kamuflaj</b><div class="seg sm" id="libCamo"><button type="button" data-c="0">Yok</button><button type="button" data-c="1">Lekeli</button><button type="button" data-c="2">Dijital</button><button type="button" data-c="3">Çizgili</button></div>
+        <label class="lcol">İkinci renk <input type="color" id="libColor2" value="#5d6670"></label><label class="lrng">Desen boyu <input type="range" id="libCamoS" min="0.3" max="3" step="0.1" value="1"></label></div>
+      <div class="lgrp"><b>Yüzey</b><label class="lrng">Mat ↔ Parlak <input type="range" id="libGloss" min="0" max="1" step="0.05" value="0.5"></label></div>
+      <button class="btn wide" type="button" id="libLookReset">Orijinal görünüme dön</button>
+      <p class="lnote">Değişiklikler bu cihazda saklanır; oyunda bu uçağın bütün kopyalarına (sen, hangar, yapay zekâ) uygulanır.</p>
+    </section>
+    <section data-t="model" hidden>
+      <p class="lnote" id="libModelNote"></p>
+      <button class="btn wide primary" type="button" id="libImport">⭱ Model içe aktar</button>
+      <input type="file" id="libFile" multiple accept=".glb,.gltf,.bin,.fbx,.obj,.mtl,.stl,.dae,.png,.jpg,.jpeg,.webp,.tga" hidden>
+      <p class="lnote">.glb, .gltf (+.bin), .fbx, .obj (+.mtl), .stl, .dae. Dokular (.png/.jpg) varsa onları da birlikte seç. Dosya otomatik .glb'ye çevrilip bu cihazda saklanır.</p>
+      <div id="libSkinBox" hidden>
+        <div class="lgrp"><b>Yön</b><div class="seg sm"><button type="button" data-r="0">X +90°</button><button type="button" data-r="1">Y +90°</button><button type="button" data-r="2">Z +90°</button></div><small class="lrot" id="libRotV"></small></div>
+        <div class="lgrp"><b>Boyut ve yer</b><label class="lrng">Uzunluk (m) <input type="number" id="libLen" min="1" max="80" step="0.1"></label><label class="lrng">Yükseklik <input type="range" id="libOffY" min="-3" max="3" step="0.05" value="0"></label></div>
+        <div class="lgrp"><b>Hareketli parçalar</b><small class="lnote">Parçaya dokun: modelde yanıp söner. Görevini seç.</small><div class="lparts" id="libParts"></div></div>
+        <div class="lrow"><button class="btn" type="button" id="libJson">models.json satırını kopyala</button><button class="btn danger" type="button" id="libRemove">Kod modeline dön</button></div>
+        <pre class="ljson" id="libJsonOut" hidden></pre>
+      </div>
+    </section>
+  </aside>
 </div>
 
 <div id="missionsUI" class="screen hidden">
@@ -189,7 +230,7 @@
       <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small>Telefonlarda Orta önerilir</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
       <div class="srow"><div class="sl"><b>Görsel efektler</b><small>Düşük: renk düzeltme, hız bulanıklığı, kenar yumuşatma. Yüksek: + ışık parlaması (bloom). Telefonda FPS düşürebilir</small></div><div class="seg" id="setFx"><button type="button" data-f="0">Kapalı</button><button type="button" data-f="1">Düşük</button><button type="button" data-f="2">Yüksek</button></div></div>
-      <div class="srow"><div class="sl"><b>3B model dene</b><small id="setModelInfo">Seçili uçağın yerine .glb modeli dener (sayfaya sürükle-bırak da olur)</small></div><div class="seg"><button type="button" id="btnModelPick">Dosya seç</button><button type="button" id="btnModelRot" disabled>Döndür 90°</button><button type="button" id="btnModelClr" disabled>Kaldır</button></div><input type="file" id="modelFile" accept=".glb,.gltf" hidden></div>
+      <div class="srow"><div class="sl"><b>Model kütüphanesi</b><small>Bütün modelleri 3B incele, renk ve kamuflaj değiştir, kendi modelini (.glb, .fbx, .obj, .stl, .dae) yükle</small></div><button class="btn" id="btnLibOpen" type="button">Aç</button></div>
       <div class="srow"><div class="sl"><b>Otomatik performans</b><small>FPS 38’in altına düşerse çözünürlük kademeli düşer</small></div><label class="tgl"><input type="checkbox" id="setAuto"><i></i></label></div>
       <div class="srow"><div class="sl"><b>FPS göstergesi</b><small>Ekranın altında kare hızı</small></div><label class="tgl"><input type="checkbox" id="setFps"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>

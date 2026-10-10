@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.35">
+<meta name="game-version" content="V1.36">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -383,6 +383,52 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 #photoResult img{ width:100%; border-radius:8px; display:block; margin:0 0 12px; }
 .padline{ margin:0 0 18px; font-size:13px; color:var(--dim); }
 @media (max-width:640px){ .cols{ grid-template-columns:1fr; } #title{ background:linear-gradient(180deg,rgba(4,9,18,.9),rgba(4,9,18,.5)); } .selact{ flex-direction:row; align-items:center; width:100%; } }
+/* ---------- model library */
+#libUI{ --lw:clamp(150px,17vw,230px); --rw:clamp(250px,26vw,360px); --top:calc(max(10px,env(safe-area-inset-top)) + 46px); }
+#libUI .lbar{ position:absolute; left:0; right:0; top:0; height:var(--top); display:flex; align-items:center; gap:14px; padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 0 max(14px,env(safe-area-inset-left)); background:linear-gradient(180deg,rgba(4,9,18,.92),rgba(4,9,18,.55)); }
+#libUI .lbar .back{ padding:7px 14px; font-size:13px; background:rgba(8,15,28,.6); }
+#libUI .lttl{ font-size:13px; letter-spacing:.22em; white-space:nowrap; } #libUI .lttl span{ color:var(--red); }
+#libUI .lmsg{ margin-left:auto; font-size:12px; color:#7dffb0; max-width:46vw; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#libUI .lmsg.err{ color:#ff8a8a; }
+.llist{ position:absolute; left:0; top:var(--top); bottom:0; width:var(--lw); overflow-y:auto; padding:8px 8px max(10px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left)); background:rgba(4,9,18,.82); border-right:1px solid var(--line); -webkit-overflow-scrolling:touch; }
+.llist h4{ margin:12px 6px 4px; font-size:10px; letter-spacing:.18em; color:#ff8a8a; font-weight:700; } .llist h4 small{ display:block; color:var(--dim); letter-spacing:.06em; font-weight:600; margin-top:2px; }
+.llist button{ display:flex; flex-direction:column; align-items:flex-start; width:100%; text-align:left; padding:7px 8px; margin:2px 0; border-radius:6px; border:1px solid transparent; background:none; color:var(--ink); }
+.llist button b{ font-size:13px; } .llist button small{ font-size:10px; color:var(--dim); }
+.llist button[aria-current="true"]{ background:rgba(227,10,23,.2); border-color:var(--red); }
+.llist button:disabled{ opacity:.4; }
+.llist .tagm{ display:inline-block; margin-left:4px; padding:0 4px; border-radius:3px; font-size:9px; background:#7dffb0; color:#062012; font-weight:700; vertical-align:1px; }
+.lview{ position:absolute; left:var(--lw); right:var(--rw); top:var(--top); bottom:0; pointer-events:none; }
+.lvbtns{ position:absolute; left:50%; transform:translateX(-50%); bottom:max(12px,env(safe-area-inset-bottom)); display:flex; gap:6px; pointer-events:auto; flex-wrap:wrap; justify-content:center; width:max-content; max-width:96%; }
+.lvbtns button{ padding:6px 10px; border-radius:16px; border:1px solid var(--line); background:rgba(8,15,28,.7); font-size:12px; font-weight:600; }
+.lvbtns button[aria-pressed="true"]{ border-color:var(--red); background:rgba(227,10,23,.3); }
+.lpanel{ position:absolute; right:0; top:var(--top); bottom:0; width:var(--rw); overflow-y:auto; padding:12px max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) 14px; background:rgba(4,9,18,.86); border-left:1px solid var(--line); -webkit-overflow-scrolling:touch; }
+.lhead small{ font-size:10px; letter-spacing:.16em; color:#ff8a8a; font-weight:700; } .lhead h2{ margin:2px 0 4px; font-size:clamp(18px,2.2vw,26px); }
+.lsrc{ display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px; background:rgba(255,255,255,.1); color:var(--dim); } .lsrc.glb{ background:rgba(125,255,176,.18); color:#7dffb0; }
+.ltabs{ display:flex; gap:4px; margin:12px 0 10px; border-bottom:1px solid var(--line); }
+.ltabs button{ flex:1; padding:8px 4px; font-size:12px; font-weight:700; background:none; border:0; border-bottom:2px solid transparent; color:var(--dim); }
+.ltabs button[aria-selected="true"]{ color:#fff; border-bottom-color:var(--red); }
+.linfo{ display:grid; grid-template-columns:auto 1fr; gap:6px 12px; margin:0 0 14px; font-size:13px; } .linfo dt{ color:var(--dim); } .linfo dd{ margin:0; font-weight:600; text-align:right; }
+.lnote{ font-size:11px; color:var(--dim); line-height:1.45; margin:6px 0 10px; }
+.btn.wide{ display:block; width:100%; padding:11px 14px; font-size:14px; margin:6px 0; } .btn.danger{ border-color:rgba(255,120,120,.5); color:#ffb0b0; }
+.lsw{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.lsw button{ padding:10px 8px; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,.05); font-size:12px; font-weight:600; text-align:left; }
+.lsw button[aria-pressed="true"]{ border-color:var(--red); background:rgba(227,10,23,.22); } .lsw button:disabled{ opacity:.35; }
+.lgrp{ margin:0 0 14px; } .lgrp > b{ display:block; font-size:12px; margin:0 0 6px; letter-spacing:.04em; }
+.lsw2{ display:flex; flex-wrap:wrap; gap:6px; margin:0 0 8px; }
+.lsw2 button{ width:30px; height:30px; border-radius:50%; border:2px solid rgba(255,255,255,.25); padding:0; }
+.lsw2 button[aria-pressed="true"]{ border-color:#fff; box-shadow:0 0 0 2px var(--red); } .lsw2 button.orig{ width:auto; padding:0 10px; border-radius:15px; font-size:11px; font-weight:700; background:rgba(255,255,255,.08); }
+.lcol,.lrng{ display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12px; color:var(--dim); margin:6px 0; }
+.lcol input[type=color]{ width:44px; height:28px; border:1px solid var(--line); border-radius:6px; background:none; padding:0; }
+.lrng input[type=range]{ flex:1; max-width:60%; } .lrng input[type=number]{ width:80px; padding:5px 8px; border-radius:6px; border:1px solid var(--line); background:rgba(255,255,255,.06); color:#fff; }
+.lrot{ display:block; font-size:11px; color:var(--dim); margin-top:4px; }
+.lparts{ max-height:220px; overflow-y:auto; border:1px solid var(--line); border-radius:6px; }
+.lparts .pr{ display:flex; align-items:center; gap:6px; padding:5px 6px; border-bottom:1px solid rgba(255,255,255,.06); font-size:11px; }
+.lparts .pr button{ flex:1; text-align:left; background:none; border:0; color:var(--ink); font-size:11px; padding:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lparts select{ flex:none; font-size:11px; background:#0d1626; color:#fff; border:1px solid var(--line); border-radius:4px; padding:2px; }
+.lrow{ display:flex; gap:6px; flex-wrap:wrap; } .lrow .btn{ flex:1; padding:9px 10px; font-size:12px; }
+.ljson{ white-space:pre-wrap; word-break:break-all; font-size:10px; background:rgba(0,0,0,.35); border:1px solid var(--line); border-radius:6px; padding:8px; margin:8px 0 0; user-select:text; -webkit-user-select:text; }
+@media (max-height:560px){ #libUI{ --top:calc(max(6px,env(safe-area-inset-top)) + 38px); } .lvbtns button{ font-size:11px; padding:5px 8px; } .lvbtns{ gap:4px; bottom:8px; } .lhead h2{ font-size:17px; } .ltabs{ margin:8px 0 8px; } .lpanel{ padding-top:8px; } .linfo{ font-size:12px; gap:4px 10px; } }
+@media (max-width:760px){ #libUI{ --lw:128px; --rw:230px; } #libUI .lttl{ font-size:11px; letter-spacing:.12em; } #libUI .lmsg{ display:none; } .llist button b{ font-size:12px; } .lvbtns button{ font-size:11px; padding:5px 8px; } }
 </style>
 </head>
 <body>
@@ -397,7 +443,8 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <li><button class="mitem" type="button" data-act="hangar" id="btnStart"><span>01</span>UÇAK SEÇ<small id="mAac"></small></button></li>
       <li><button class="mitem" type="button" data-act="missions"><span>02</span>GÖREVLER<small id="mAmis"></small></button></li>
       <li><button class="mitem" type="button" data-act="net" id="btnNet"><span>03</span>ÇOK OYUNCULU<small>4 KİŞİ</small></button></li>
-      <li><button class="mitem" type="button" data-act="settings"><span>04</span>AYARLAR<small id="mAload"></small></button></li>
+      <li><button class="mitem" type="button" data-act="library"><span>04</span>MODEL KÜTÜPHANESİ<small>3B İNCELE</small></button></li>
+      <li><button class="mitem" type="button" data-act="settings"><span>05</span>AYARLAR<small id="mAload"></small></button></li>
     </ul>
   </div>
   <div class="tcap" id="tCap"><b></b><small></small></div>
@@ -409,10 +456,50 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <button class="tile mitem" type="button" data-act="missions"><i>02</i><b>GÖREVLER</b><small>İt dalaşı, yer hedefleri…</small></button>
       <button class="tile mitem" type="button" data-act="net"><i>03</i><b>ÇOK OYUNCULU</b><small>Oda kur · koda katıl</small></button>
       <button class="tile mitem" type="button" data-act="hangar"><i>04</i><b>HANGAR</b><small>Uçağını seç</small></button>
+      <button class="tile mitem" type="button" data-act="library"><i>05</i><b>MODELLER</b><small>3B kütüphane</small></button>
     </div>
   </div>
   <div class="ticons ui"><button class="ic" type="button" id="btnSettings" aria-label="Ayarlar" title="Ayarlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button><button class="ic" type="button" id="btnControls" aria-label="Kontroller" title="Kontroller"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 13H9l-1.6 1.8A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16.5" cy="11" r=".6" fill="currentColor"/><circle cx="18" cy="12.8" r=".6" fill="currentColor"/></svg></button><button class="ic" type="button" id="btnRecords" aria-label="Rekorlar" title="Rekorlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/></svg></button></div>
   <div class="sbar"><span id="sbAc"></span><span id="sbNet"></span><span class="v" id="verTag"></span></div>
+</div>
+
+<div id="libUI" class="screen hidden">
+  <div class="lbar ui"><button class="btn back" id="btnLibBack" type="button">← Geri</button><b class="lttl"><span>■</span> MODEL KÜTÜPHANESİ</b><span class="lmsg" id="libMsg"></span></div>
+  <nav class="llist ui" id="libList" aria-label="Modeller"></nav>
+  <div class="lview ui" id="libView">
+    <div class="lvbtns"><button type="button" id="libBg" title="Arka plan">Arka plan: <b id="libBgN">Hangar</b></button><button type="button" id="libRot" aria-pressed="true">Döndür</button><button type="button" id="libGuide" aria-pressed="false">Kılavuz</button><button type="button" id="libReset">Sıfırla</button></div>
+  </div>
+  <aside class="lpanel ui">
+    <div class="lhead"><small id="libKind"></small><h2 id="libName"></h2><span class="lsrc" id="libSrc"></span></div>
+    <div class="ltabs" id="libTabs" role="tablist"><button type="button" data-t="info" aria-selected="true">Bilgi</button><button type="button" data-t="test" aria-selected="false">Test</button><button type="button" data-t="look" aria-selected="false">Görünüm</button><button type="button" data-t="model" aria-selected="false">Model</button></div>
+    <section data-t="info"><dl class="linfo" id="libInfo"></dl><button class="btn wide" type="button" id="libExport">⭳ .glb olarak indir</button><p class="lnote">Modeli Blender gibi programlarda açıp geliştirmek için indir. Geri yüklemek için Model sekmesi.</p></section>
+    <section data-t="test" hidden>
+      <div class="lsw" id="libTests"></div>
+      <p class="lnote" id="libTestNote"></p>
+    </section>
+    <section data-t="look" hidden>
+      <p class="lnote" id="libLookNote"></p>
+      <div class="lgrp"><b>Ana renk</b><div class="lsw2" id="libColors"></div><label class="lcol">Özel renk <input type="color" id="libColor" value="#9aa4ad"></label></div>
+      <div class="lgrp"><b>Kamuflaj</b><div class="seg sm" id="libCamo"><button type="button" data-c="0">Yok</button><button type="button" data-c="1">Lekeli</button><button type="button" data-c="2">Dijital</button><button type="button" data-c="3">Çizgili</button></div>
+        <label class="lcol">İkinci renk <input type="color" id="libColor2" value="#5d6670"></label><label class="lrng">Desen boyu <input type="range" id="libCamoS" min="0.3" max="3" step="0.1" value="1"></label></div>
+      <div class="lgrp"><b>Yüzey</b><label class="lrng">Mat ↔ Parlak <input type="range" id="libGloss" min="0" max="1" step="0.05" value="0.5"></label></div>
+      <button class="btn wide" type="button" id="libLookReset">Orijinal görünüme dön</button>
+      <p class="lnote">Değişiklikler bu cihazda saklanır; oyunda bu uçağın bütün kopyalarına (sen, hangar, yapay zekâ) uygulanır.</p>
+    </section>
+    <section data-t="model" hidden>
+      <p class="lnote" id="libModelNote"></p>
+      <button class="btn wide primary" type="button" id="libImport">⭱ Model içe aktar</button>
+      <input type="file" id="libFile" multiple accept=".glb,.gltf,.bin,.fbx,.obj,.mtl,.stl,.dae,.png,.jpg,.jpeg,.webp,.tga" hidden>
+      <p class="lnote">.glb, .gltf (+.bin), .fbx, .obj (+.mtl), .stl, .dae. Dokular (.png/.jpg) varsa onları da birlikte seç. Dosya otomatik .glb'ye çevrilip bu cihazda saklanır.</p>
+      <div id="libSkinBox" hidden>
+        <div class="lgrp"><b>Yön</b><div class="seg sm"><button type="button" data-r="0">X +90°</button><button type="button" data-r="1">Y +90°</button><button type="button" data-r="2">Z +90°</button></div><small class="lrot" id="libRotV"></small></div>
+        <div class="lgrp"><b>Boyut ve yer</b><label class="lrng">Uzunluk (m) <input type="number" id="libLen" min="1" max="80" step="0.1"></label><label class="lrng">Yükseklik <input type="range" id="libOffY" min="-3" max="3" step="0.05" value="0"></label></div>
+        <div class="lgrp"><b>Hareketli parçalar</b><small class="lnote">Parçaya dokun: modelde yanıp söner. Görevini seç.</small><div class="lparts" id="libParts"></div></div>
+        <div class="lrow"><button class="btn" type="button" id="libJson">models.json satırını kopyala</button><button class="btn danger" type="button" id="libRemove">Kod modeline dön</button></div>
+        <pre class="ljson" id="libJsonOut" hidden></pre>
+      </div>
+    </section>
+  </aside>
 </div>
 
 <div id="missionsUI" class="screen hidden">
@@ -577,7 +664,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small>Telefonlarda Orta önerilir</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
       <div class="srow"><div class="sl"><b>Görsel efektler</b><small>Düşük: renk düzeltme, hız bulanıklığı, kenar yumuşatma. Yüksek: + ışık parlaması (bloom). Telefonda FPS düşürebilir</small></div><div class="seg" id="setFx"><button type="button" data-f="0">Kapalı</button><button type="button" data-f="1">Düşük</button><button type="button" data-f="2">Yüksek</button></div></div>
-      <div class="srow"><div class="sl"><b>3B model dene</b><small id="setModelInfo">Seçili uçağın yerine .glb modeli dener (sayfaya sürükle-bırak da olur)</small></div><div class="seg"><button type="button" id="btnModelPick">Dosya seç</button><button type="button" id="btnModelRot" disabled>Döndür 90°</button><button type="button" id="btnModelClr" disabled>Kaldır</button></div><input type="file" id="modelFile" accept=".glb,.gltf" hidden></div>
+      <div class="srow"><div class="sl"><b>Model kütüphanesi</b><small>Bütün modelleri 3B incele, renk ve kamuflaj değiştir, kendi modelini (.glb, .fbx, .obj, .stl, .dae) yükle</small></div><button class="btn" id="btnLibOpen" type="button">Aç</button></div>
       <div class="srow"><div class="sl"><b>Otomatik performans</b><small>FPS 38’in altına düşerse çözünürlük kademeli düşer</small></div><label class="tgl"><input type="checkbox" id="setAuto"><i></i></label></div>
       <div class="srow"><div class="sl"><b>FPS göstergesi</b><small>Ekranın altında kare hızı</small></div><label class="tgl"><input type="checkbox" id="setFps"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
@@ -713,7 +800,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.35', GAME_DATE='2026-10-10';
+const GAME_VERSION='V1.36', GAME_DATE='2026-10-10';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -1671,13 +1758,15 @@ function setAircraft(id){
 const VENDOR={base:'vendor/three-r128/', cdn:'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/',
   files:{CopyShader:'shaders/CopyShader.js', LuminosityHighPassShader:'shaders/LuminosityHighPassShader.js', FXAAShader:'shaders/FXAAShader.js',
     EffectComposer:'postprocessing/EffectComposer.js', RenderPass:'postprocessing/RenderPass.js', ShaderPass:'postprocessing/ShaderPass.js', UnrealBloomPass:'postprocessing/UnrealBloomPass.js',
-    GLTFLoader:'loaders/GLTFLoader.js', DRACOLoader:'loaders/DRACOLoader.js'}};
+    GLTFLoader:'loaders/GLTFLoader.js', DRACOLoader:'loaders/DRACOLoader.js', GLTFExporter:'exporters/GLTFExporter.js',
+    FBXLoader:'loaders/FBXLoader.js', OBJLoader:'loaders/OBJLoader.js', MTLLoader:'loaders/MTLLoader.js', STLLoader:'loaders/STLLoader.js', ColladaLoader:'loaders/ColladaLoader.js', TGALoader:'loaders/TGALoader.js',
+    NURBSUtils:'curves/NURBSUtils.js', NURBSCurve:'curves/NURBSCurve.js', fflate:'libs/fflate.min.js'}};
 const LIBS={};
 function loadScript(src){ return new Promise(function(res,rej){ const s=document.createElement('script'); s.src=src; s.async=false; s.onload=function(){ res(); }; s.onerror=function(){ s.remove(); rej(new Error('yüklenemedi: '+src)); }; document.head.appendChild(s); }); }
 /* load three.js add-ons on demand: first from our own vendor/ folder (works offline / in the Android app), then from the CDN */
 function needLibs(names){
   return names.reduce(function(p,n){ return p.then(function(){
-    if(THREE[n]) return; if(LIBS[n]) return LIBS[n];
+    if(THREE[n]||(n==='fflate'&&typeof window!=='undefined'&&window.fflate)) return; if(LIBS[n]) return LIBS[n];
     const f=VENDOR.files[n]; if(!f) throw new Error('bilinmeyen kitaplık '+n);
     LIBS[n]=loadScript(VENDOR.base+f.split('/').pop()).catch(function(){ return loadScript(VENDOR.cdn+f); });
     return LIBS[n];
@@ -1686,7 +1775,7 @@ function needLibs(names){
 const MODELS={manifest:null, skins:{}, inst:{}, loader:null, busy:{}, preview:null};
 /* every built vehicle goes through here so a model file can replace its look later */
 function buildModel(id){ const def=AIRCRAFT[id]||AIRCRAFT.kaan, m=def.build(); upgradeModel(m.group); return trackModel(AIRCRAFT[id]?id:'kaan',m); }
-function trackModel(id,m){ m.acId=id; (MODELS.inst[id]||(MODELS.inst[id]=[])).push(m); if(MODELS.skins[id]) applySkin(m,MODELS.skins[id]); return m; }
+function trackModel(id,m){ m.acId=id; (MODELS.inst[id]||(MODELS.inst[id]=[])).push(m); if(MODELS.skins[id]) applySkin(m,MODELS.skins[id]); applyLivery(m); return m; }
 function untrackModel(m){ const L=MODELS.inst[m&&m.acId]; if(!L) return; const i=L.indexOf(m); if(i>=0) L.splice(i,1); }
 function gltfLoader(){
   return needLibs(['GLTFLoader','DRACOLoader']).then(function(){
@@ -1734,7 +1823,8 @@ function makeSkin(id,root,spec){
 function applySkin(m,skin){
   removeSkin(m);
   const spec=skin.spec, keep=skinKeep(m,spec), v=skin.scene.clone(true); v.userData.skin=true;
-  m.hidden=[]; m.group.children.forEach(function(c){ if(keep.has(c)||isNavLight(c)||c.userData.keep||!c.visible) return; c.visible=false; m.hidden.push(c); });
+  m.hidden=[]; m.group.children.forEach(function(c){ if((keep.has(c)&&c!==m.strobe)||(spec.keepLights&&isNavLight(c))||c.userData.keep||!c.visible) return; c.visible=false; m.hidden.push(c); });
+  if(m.strobe&&!spec.keepLights){ m.strobeOff=m.strobe; m.strobe=null; }
   m.group.add(v); m.skin=v;
   const byName=function(n){ return v.getObjectByName(n); };
   if(spec.gearNodes&&m.gear){ m.gearNodes=spec.gearNodes.map(byName).filter(Boolean); m.gear.children.forEach(function(c){ if(c.visible){ c.visible=false; m.hidden.push(c); } }); }
@@ -1745,7 +1835,7 @@ function applySkin(m,skin){
 }
 function removeSkin(m){
   if(!m.skin) return; m.group.remove(m.skin); m.skin=null;
-  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=null;
+  (m.hidden||[]).forEach(function(c){ c.visible=true; }); m.hidden=[]; m.gearNodes=null; m.surfaces=null; if(m.strobeOff){ m.strobe=m.strobeOff; m.strobeOff=null; }
   if(m.spinBack){ m.spinners=m.spinBack; m.spinBack=null; }
 }
 function setSkin(id,root,spec){
@@ -1762,6 +1852,7 @@ function skinSync(){
 }
 /* read assets/models.json and load what it lists (selected vehicle first) */
 function modelsInit(){
+  localModelsInit();
   if(typeof fetch!=='function'||typeof location==='undefined'||location.protocol==='file:') return;
   fetch('assets/models.json',{cache:'no-cache'}).then(function(r){ return r.ok?r.json():null; }).then(function(j){
     if(!j||!j.models) return; MODELS.manifest=j;
@@ -1772,30 +1863,9 @@ function modelsInit(){
 }
 function loadModelFile(id,spec){
   if(MODELS.busy[id]) return MODELS.busy[id];
-  MODELS.busy[id]=gltfLoader().then(function(l){ return new Promise(function(res){ l.load(spec.file,function(g){ setSkin(id,g.scene,spec); res(true); },undefined,function(e){ console.warn('model yüklenemedi',spec.file,e); res(false); }); }); });
+  MODELS.busy[id]=gltfLoader().then(function(l){ return new Promise(function(res){ l.load(spec.file,function(g){ if(MODELS.skins[id]&&MODELS.skins[id].spec.local){ res(false); return; } setSkin(id,g.scene,spec); res(true); },undefined,function(e){ console.warn('model yüklenemedi',spec.file,e); res(false); }); }); });
   return MODELS.busy[id];
 }
-/* try a model without touching code: drop a .glb on the page, or Ayarlar → Grafik → 3B model dene */
-function previewModelFile(file){
-  if(!file) return; const id=selectedId, name=(file.name||'').toLowerCase();
-  if(!/\.(glb|gltf)$/.test(name)){ toast('Sadece .glb veya .gltf dosyası','#ffc24a'); return; }
-  toast('Model yükleniyor: '+file.name,'#b8ecff');
-  Promise.all([gltfLoader(),file.arrayBuffer()]).then(function(r){
-    r[0].parse(r[1],'',function(g){ const prev=MODELS.preview&&MODELS.preview.id===id?MODELS.preview.spec.rotation:[0,0,0];
-      const skin=setSkin(id,g.scene,{rotation:prev.slice(),preview:true}); MODELS.preview={id:id, root:g.scene, spec:skin.spec, file:file.name};
-      toast(AIRCRAFT[id].name+' için model uygulandı (yalnızca bu oturum). Yön yanlışsa Ayarlar → Grafik → Döndür','#7dffb0'); syncModelUI(); },
-      function(e){ toast('Model okunamadı: '+(e&&e.message||e),'#ff6a6a'); });
-  }).catch(function(e){ toast('Model yüklenemedi: '+(e&&e.message||e),'#ff6a6a'); });
-}
-function previewRotate(){ const p=MODELS.preview; if(!p) return; p.spec.rotation[1]=(p.spec.rotation[1]+90)%360; p.root.parent&&p.root.parent.remove(p.root); setSkin(p.id,p.root,p.spec); syncModelUI(); }
-function previewClear(){ const p=MODELS.preview; if(!p) return; clearSkin(p.id); MODELS.preview=null; syncModelUI(); }
-function syncModelUI(){
-  const p=MODELS.preview, el=$('setModelInfo'); if(!el) return;
-  el.textContent=p?(AIRCRAFT[p.id].short+' ← '+p.file+' · models.json için: "'+p.id+'": {"file":"assets/models/'+p.file+'", "rotation":['+p.spec.rotation.join(',')+']}'):'Seçili uçağın yerine .glb modeli dener (sayfaya sürükle-bırak da olur)';
-  $('btnModelRot').disabled=!p; $('btnModelClr').disabled=!p;
-}
-window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
-window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; e.preventDefault(); previewModelFile(f); });
 /* ------------------------------------------------------------------ hangar waiting area (all aircraft parked, camera flies to the selected one) */
 const HANGAR={cx:-278, z:900, step:36};
 const TAXI_PT=new THREE.Vector3(0,AIRFIELD_Y+6,HANGAR.z-20);
@@ -2005,7 +2075,7 @@ function updateHangar(dt){
     d.g.visible=!hide; d.label.visible=!hide&&state==='menu'&&menuMode==='hangar'&&sel;
     if(hide) return;
     const m=d.model;
-    m.strobe.visible=Math.sin(T*9+d.x)>0.8; m.gear.visible=true;
+    if(m.strobe) m.strobe.visible=Math.sin(T*9+d.x)>0.8; if(m.gear) m.gear.visible=true;
     m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); });
     m.spinners.forEach(function(sp){ sp.obj.rotation.z+=dt*(sel&&state==='menu'&&menuMode!=='title'?2.5:0.4); sp.disc.material.opacity=0.04; });
   });
@@ -3145,7 +3215,7 @@ function placeModel(dt){
   model.flames.forEach(f=>{ f.outer.scale.set(wd,wd,len*fl); f.inner.scale.set(wd,wd,len*0.55*fl);
     if(f.ds) f.ds.forEach((m,i)=>{ m.visible=ab; if(ab){ m.position.set(f.base[0],f.base[1],f.base[2]+len*fl*(0.2+0.2*i)); const k2=1-0.22*i; m.scale.set(k2,k2,1.5); } }); });
   model.spinners.forEach(sp=>{ sp.obj.rotation.z+=dt*(8+thr*75)*(state==='menu'?0.4:1); sp.disc.material.opacity=0.04+0.2*thr; });
-  model.strobe.visible=Math.sin(T*9)>0.8;
+  if(model.strobe) model.strobe.visible=Math.sin(T*9)>0.8;
   model.gear.visible=cine?false:S.gear;
 }
 function cameraUpdate(dt){
@@ -3317,7 +3387,7 @@ function hudCue(cx,cy,w,h){
 function svcPointerOn(){ return S.onGround&&S.clearance&&!S.taxi&&needsService()&&!svcInZone()&&!S.crashed; }
 function drawHUD(){
   hx.setTransform(DPR,0,0,DPR,0,0); hx.clearRect(0,0,HW,HH);
-  if(state==='menu'||state==='photo') return;
+  if(state==='menu'||state==='photo'||state==='library') return;
   if(state==='walk'||(state==='paused'&&WALK.from==='walk')){ drawWalkHUD(); return; }
   const w=HW, h=HH; sc=clamp(Math.min(w,h)/760,0.7,1.5);
   const cx=w/2, cy=h/2, tch=TOUCH.vis;
@@ -3625,6 +3695,7 @@ function titleAct(act){
   if(act==='missions'){ openMissions(); return; }
   if(act==='net'){ openNet(); return; }
   if(act==='settings'){ syncSettingsUI(); openModal('settings'); return; }
+  if(act==='library'){ openLibrary(); return; }
 }
 $('title').addEventListener('click',function(e){ const b=e.target.closest('.mitem'); if(b){ titleAct(b.dataset.act); } });
 window.addEventListener('online',function(){ if(menuMode==='title') refreshTitle(); }); window.addEventListener('offline',function(){ if(menuMode==='title') refreshTitle(); });
@@ -3666,9 +3737,6 @@ function cineStep(dt){
   cM.makeBasis(cV3,cV2,cV1); CINE.q.setFromRotationMatrix(cM);
 }
 $('setFx').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.fx=+b.dataset.f; FX.failed=false; saveSettings(); applyFX(); syncSettingsUI(); });
-$('btnModelPick').addEventListener('click',function(){ $('modelFile').click(); });
-$('modelFile').addEventListener('change',function(e){ const f=e.target.files&&e.target.files[0]; if(f) previewModelFile(f); e.target.value=''; });
-$('btnModelRot').addEventListener('click',previewRotate); $('btnModelClr').addEventListener('click',previewClear);
 $('setShadow').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.shadows=b.dataset.s==='1'; saveSettings(); applyShadows(); syncSettingsUI(); });
 $('setTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; setTab(b.dataset.tab); });
 function setTab(t){ Array.prototype.forEach.call($('setTabs').children,function(x){ x.setAttribute('aria-selected',String(x.dataset.tab===t)); }); Array.prototype.forEach.call(document.querySelectorAll('#settings section'),function(s){ s.classList.toggle('hidden',s.dataset.tab!==t); }); }
@@ -3807,7 +3875,7 @@ function syncSettingsUI(){
   $('setVol').value=Math.round(SETTINGS.volume*100); $('setVolV').textContent=Math.round(SETTINGS.volume*100)+'%';
   $('setSens').value=Math.round(SETTINGS.sens*100); $('setSensV').textContent=Math.round(SETTINGS.sens*100)+'%';
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
-  Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); }); syncModelUI();
+  Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); });
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
   $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
@@ -3981,11 +4049,13 @@ function pinchDist(){ const v=Array.from(ptrs.values()); return v.length<2?0:Mat
 function orbitBy(dx,dy){
   dx*=SETTINGS.sens; dy*=SETTINGS.sens;
   if(state==='walk'){ walkLook(dx,dy); return; }
+  if(state==='library'){ libOrbit(dx,dy); return; }
   if(state==='menu'){ if(menuMode==='title') return; MENUV.yaw-=dx*0.006; MENUV.pitch=clamp(MENUV.pitch+dy*0.005,-0.1,1.35); MENUV.idle=0; }
   else{ CAMU.yaw-=dx*0.006; CAMU.pitch=clamp(CAMU.pitch-dy*0.005,-1.3,1.2); }
 }
 function zoomBy(f){
   if(state==='walk'){ WALK.camD=clamp(WALK.camD*f,0.5,2.5); return; }
+  if(state==='library'){ libZoom(f); return; }
   if(state==='menu'){ if(menuMode==='title') return; MENUV.zoom=clamp(MENUV.zoom*f,0.3,2.4); MENUV.idle=0; }
   else if(camMode===0){ CAMU.zoom=clamp(CAMU.zoom*f,0.35,4); }
 }
@@ -4025,6 +4095,7 @@ window.addEventListener('keydown',e=>{
   if(!$('service').classList.contains('hidden')&&state==='menu'){ if(e.code==='Escape') closeService(false); else if(e.code==='Enter'&&!(e.target&&e.target.tagName==='BUTTON')) closeService(true); return; }
   if(anyModalOpen()){ if(e.code==='Escape') closeModals(); return; }
   if(state==='walk'){ walkKey(e); return; }
+  if(state==='library'){ if(e.code==='Escape') closeLibrary(); return; }
   const onBtn=!!(e.target&&e.target.tagName==='BUTTON');
   if(state==='service'){
     if(e.code==='Enter'&&!onBtn){ e.preventDefault(); closeService(true); } else if(e.code==='Escape') closeService(false);
@@ -4816,6 +4887,380 @@ function updateWalkTouch(){
   document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });
 })();
 
+/* ------------------------------------------------------------------ model library: inspect every model in 3D, test parts, repaint, import / export
+   Opens from the main menu or Ayarlar → Grafik. Renders its own small studio scene (the game world is not drawn meanwhile).
+   Livery and imported models are kept on this device (localStorage / IndexedDB) and used in the game right away. */
+const LIB={on:false, scene:null, cam:null, holder:null, item:null, inst:null, obj:null, yaw:0.9, pitch:0.28, dist:24, dist0:24, tgt:new THREE.Vector3(), auto:true, idle:0,
+  bg:0, tab:'info', tests:{gear:true, ab:false, wpn:false, spin:true, lights:true, wire:false, surf:false}, guides:false, helpers:null, floor:null, blob:null,
+  raw:{}, wireMats:[], flash:null, msgT:0, vw:1, vh:1};
+const LIB_BGS=[{n:'Hangar', top:'#2a323c', bot:'#12171d', floor:0x4c535b},{n:'Gündüz', top:'#4f8fd0', bot:'#d6e6f2', floor:0x7d9a5c},{n:'Gün batımı', top:'#2b3f6e', bot:'#f2a35e', floor:0x5a4a44},{n:'Stüdyo', top:'#eef1f4', bot:'#c9cfd5', floor:0xd6dade}];
+function libItems(){
+  const L=[];
+  GROUPS.forEach(function(g){ L.push({head:g.name, sub:g.sub, off:!g.on}); if(!g.on) return;
+    AC_ORDER.filter(function(id){ return regOf(id).grp===g.id; }).forEach(function(id){ L.push({key:'ac:'+id, kind:'ac', id:id, name:AIRCRAFT[id].name, sub:regOf(id).maker+' · '+(CLASSES[regOf(id).cls]||'')}); }); });
+  L.push({head:'Yer araçları', sub:'Havalimanı'});
+  [['veh:follow','BENİ İZLE aracı','Sürülebilir',function(){ return vehCar('follow'); }],['veh:pickup','Arazi kamyoneti','Devriye',function(){ return vehCar('pickup'); }],
+   ['veh:fuel','Yakıt tankeri','İkmal',function(){ return vehTruck('fuel'); }],['veh:fire','İtfaiye aracı','Kurtarma',function(){ return vehTruck('fire'); }],
+   ['veh:tug','Uçak çekici','Yer hizmeti',function(){ return vehTug(); }],['veh:gpu','Yer güç ünitesi','Yer hizmeti',function(){ return vehGPU(); }],['veh:bus','Personel otobüsü','Ulaşım',function(){ return vehBus(); }]]
+    .forEach(function(v){ L.push({key:v[0], kind:'veh', name:v[1], sub:v[2], build:v[3]}); });
+  L.push({head:'Ekipman', sub:'Hangar'});
+  [['eq:bomb','Bomba arabası','Mühimmat',function(){ return prCart('bomb'); }],['eq:missile','Füze arabası','Mühimmat',function(){ return prCart('missile'); }],
+   ['eq:stand','Bakım merdiveni','Bakım',function(){ return prStand(); }],['eq:bench','İş tezgâhı','Atölye',function(){ return prWorkbench(); }],['eq:chest','Takım dolabı','Atölye',function(){ return prToolChest(); }]]
+    .forEach(function(v){ L.push({key:v[0], kind:'eq', name:v[1], sub:v[2], build:v[3]}); });
+  return L;
+}
+function libMsg(t,err){ const el=$('libMsg'); el.textContent=t||''; el.classList.toggle('err',!!err); LIB.msgT=t?6:0; }
+function libBgTex(b){ return apTex(4,256,function(x,W,H){ const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,b.top); g.addColorStop(0.62,b.bot); g.addColorStop(1,b.bot); x.fillStyle=g; x.fillRect(0,0,W,H); }); }
+function libSetup(){
+  if(LIB.scene) return;
+  const s=new THREE.Scene(); LIB.scene=s; LIB.cam=new THREE.PerspectiveCamera(38,1,0.1,2000);
+  s.add(new THREE.HemisphereLight(0xdfeeff,0x3a3f46,0.85));
+  const key=new THREE.DirectionalLight(0xffffff,1.05); key.position.set(30,42,24); s.add(key);
+  const rim=new THREE.DirectionalLight(0xb8d4ff,0.45); rim.position.set(-34,18,-30); s.add(rim);
+  const fl=new THREE.Mesh(new THREE.CircleGeometry(1,64).rotateX(-Math.PI/2),new THREE.MeshLambertMaterial({color:0x4c535b})); s.add(fl); LIB.floor=fl;
+  LIB.blob=blobMesh(); s.add(LIB.blob);
+  LIB.holder=new THREE.Group(); s.add(LIB.holder);
+  LIB.bgTex=LIB_BGS.map(libBgTex);
+}
+function openLibrary(key){
+  if(state==='play'||state==='walk') return;
+  libSetup(); closeModals(); state='library'; menuMode='library'; LIB.on=true;
+  showScreen(''); $('libUI').classList.remove('hidden');
+  libRenderList(); libSelect(key||LIB.item&&LIB.item.key||('ac:'+selectedId)); libSetBg(LIB.bg); libLayout();
+}
+function closeLibrary(){
+  if(!LIB.on) return; libWire(false); libClear(); LIB.on=false; $('libUI').classList.add('hidden');
+  enterTitle();
+}
+function libRenderList(){
+  $('libList').innerHTML=libItems().map(function(it){
+    if(it.head) return '<h4>'+it.head+'<small>'+it.sub+'</small></h4>';
+    const skin=it.kind==='ac'&&MODELS.skins[it.id], liv=it.kind==='ac'&&LIV.data[it.id];
+    return '<button type="button" data-k="'+it.key+'"'+(LIB.item&&LIB.item.key===it.key?' aria-current="true"':'')+'><b>'+it.name+(skin?'<span class="tagm">GLB</span>':'')+(liv&&!skin?'<span class="tagm" style="background:#ffc24a">BOYA</span>':'')+'</b><small>'+it.sub+'</small></button>';
+  }).join('');
+}
+function libClear(){
+  if(LIB.inst){ untrackModel(LIB.inst); }
+  while(LIB.holder&&LIB.holder.children.length) LIB.holder.remove(LIB.holder.children[0]);
+  LIB.inst=null; LIB.obj=null; libGuides(false,true);
+}
+function libSelect(key){
+  const it=libItems().find(function(i){ return i.key===key; }); if(!it) return;
+  libWire(false); libClear(); LIB.item=it; LIB.tests.wpn=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
+  let obj;
+  if(it.kind==='ac'){ const m=buildModel(it.id); LIB.inst=m; obj=m.group; obj.position.set(0,AIRFIELD_Y*0+AIRCRAFT[it.id].gearOff,0); m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); }); }
+  else { obj=it.build(); obj.traverse(function(o){ if(o.isMesh&&o.material&&o.material.isMeshPhongMaterial) o.material=stdOf(o.material); }); }
+  LIB.obj=obj; LIB.holder.add(obj);
+  libFrame(); libRenderList(); libRefreshPanel();
+  if(LIB.guides) libGuides(true);
+}
+/* frame the camera on the model and size the floor */
+function libFrame(){
+  const obj=LIB.obj; if(!obj) return; obj.updateMatrixWorld(true);
+  const bb=libBox(), sz=bb.getSize(new THREE.Vector3()), c=bb.getCenter(new THREE.Vector3());
+  LIB.tgt.copy(c); LIB.size=sz; const R=Math.max(sz.x,sz.y,sz.z);
+  LIB.dist0=LIB.dist=Math.max(4,R*1.75); LIB.floor.scale.setScalar(Math.max(8,R*2.2)); LIB.floor.position.y=bb.min.y-0.02;
+  LIB.blob.position.set(c.x,bb.min.y+0.01,c.z); LIB.blob.scale.set(Math.max(1,sz.x*0.85),1,Math.max(1,sz.z*0.95));
+}
+function libBox(){ const bb=new THREE.Box3(), m=LIB.inst;
+  LIB.obj.updateMatrixWorld(true);
+  LIB.obj.traverse(function(o){ if(!o.isMesh||!o.visible) return; let p=o; while(p&&p!==LIB.obj){ if(!p.visible) return; p=p.parent; }
+    if(m&&m.flames&&m.flames.some(function(f){ return f.outer===o||f.inner===o; })) return; if(m&&m.stores&&isChildOf(o,m.stores)) return;
+    o.geometry.computeBoundingBox&&!o.geometry.boundingBox&&o.geometry.computeBoundingBox(); const b=o.geometry.boundingBox; if(!b) return; bb.union(b.clone().applyMatrix4(o.matrixWorld)); });
+  if(bb.isEmpty()) bb.setFromCenterAndSize(new THREE.Vector3(),new THREE.Vector3(10,3,10)); return bb; }
+function isChildOf(o,p){ while(o){ if(o===p) return true; o=o.parent; } return false; }
+function libStats(){
+  let tri=0, meshes=0; const mats=new Set();
+  LIB.obj.traverse(function(o){ if(!o.isMesh||!o.visible) return; let p=o.parent; while(p){ if(!p.visible) return; p=p.parent; } meshes++;
+    const g=o.geometry; tri+=(g.index?g.index.count:g.attributes.position.count)/3*(o.isInstancedMesh?o.count:1); (Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){ mats.add(m); }); });
+  return {tri:Math.round(tri), meshes:meshes, mats:mats.size};
+}
+function libSrc(){ const it=LIB.item; if(!it||it.kind!=='ac') return {t:'Kod modeli', glb:false};
+  const sk=MODELS.skins[it.id]; if(!sk) return {t:'Kod modeli', glb:false};
+  return {t:sk.spec.local?'GLB · bu cihazda':(sk.spec.preview?'GLB · deneme':'GLB · models.json'), glb:true}; }
+function libRefreshPanel(){
+  const it=LIB.item; if(!it) return; const ac=it.kind==='ac', def=ac?AIRCRAFT[it.id]:null, src=libSrc();
+  $('libKind').textContent=ac?(GROUPS.find(function(g){ return g.id===regOf(it.id).grp; }).name.toUpperCase()+' · '+regOf(it.id).maker):(it.kind==='veh'?'YER ARACI':'EKİPMAN');
+  $('libName').textContent=it.name; const sr=$('libSrc'); sr.textContent=src.t; sr.classList.toggle('glb',src.glb);
+  const bb=libBox(), sz=bb.getSize(new THREE.Vector3()), st=libStats(), f=function(v){ return v.toFixed(1).replace('.',',')+' m'; };
+  const rows=[['Uzunluk',f(sz.z)],[ac?'Kanat açıklığı':'Genişlik',f(sz.x)],['Yükseklik',f(sz.y)],['Üçgen',st.tri.toLocaleString('tr-TR')],['Parça',String(st.meshes)],['Malzeme',String(st.mats)]];
+  if(ac) rows.unshift(['Sınıf',CLASSES[regOf(it.id).cls]||'—']), rows.push(['Silah yeri',SLOTS[it.id]>0?String(SLOTS[it.id]):'—'],['Mürettebat',def.uav?'İnsansız':'Pilotlu']);
+  $('libInfo').innerHTML=rows.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('');
+  ['look','model'].forEach(function(t){ $('libTabs').querySelector('[data-t="'+t+'"]').disabled=!ac; });
+  if(!ac&&(LIB.tab==='look'||LIB.tab==='model')) libTab('info'); else libTab(LIB.tab);
+  libRefreshTests(); libRefreshLook(); libRefreshModel();
+}
+function libTab(t){ LIB.tab=t; Array.prototype.forEach.call($('libTabs').children,function(b){ b.setAttribute('aria-selected',String(b.dataset.t===t)); });
+  Array.prototype.forEach.call(document.querySelectorAll('#libUI .lpanel section'),function(s){ s.hidden=s.dataset.t!==t; }); }
+/* ---- test tab */
+const LIB_TESTS=[['gear','İniş takımı'],['ab','Motor / art yakıcı'],['wpn','Silahlar'],['spin','Pervane'],['lights','Seyir ışıkları'],['surf','Kumanda yüzeyleri'],['wire','Tel kafes']];
+function libRefreshTests(){
+  const it=LIB.item, m=LIB.inst, ac=it.kind==='ac';
+  const can={gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), wire:true};
+  $('libTests').innerHTML=LIB_TESTS.map(function(t){ return '<button type="button" data-x="'+t[0]+'" aria-pressed="'+(!!LIB.tests[t[0]]&&can[t[0]])+'"'+(can[t[0]]?'':' disabled')+'>'+t[1]+'</button>'; }).join('');
+  $('libTestNote').textContent=ac?(can.surf?'Kumanda yüzeyleri modeldeki işaretli parçalarla oynar.':'Kumanda yüzeyi testi için içe aktarılmış modelde parçaları işaretle (Model sekmesi).'):'Yer araçları ve ekipman için yalnızca tel kafes görünümü.';
+}
+function libToggle(k){ LIB.tests[k]=!LIB.tests[k]; if(k==='wire') libWire(LIB.tests.wire); if(k==='wpn') libStores(); if(k==='gear') libApplyTests(); libRefreshTests(); if(k==='gear'||k==='wpn') libFrame(); }
+function libApplyTests(){ const m=LIB.inst; if(!m) return; if(m.gear) m.gear.visible=!!LIB.tests.gear; }
+function libStores(){
+  const m=LIB.inst; if(!m) return;
+  if(!m.stores){ m.stores=new THREE.Group(); m.group.add(m.stores); } const g=m.stores; while(g.children.length) g.remove(g.children[0]);
+  if(!LIB.tests.wpn) return;
+  const id=LIB.item.id; m.group.updateMatrixWorld(true);
+  const bb=new THREE.Box3().setFromObject(m.group), inv=new THREE.Matrix4().copy(m.group.matrixWorld).invert(); bb.applyMatrix4(inv);
+  const tipX=bb.max.x, k=clamp(tipX/6,0.6,1.5), zc=bb.min.z+(bb.max.z-bb.min.z)*0.62-1.2*k, y=PYLON_Y[id]||-0.4, l=loadoutOf(id), list=[];
+  WORDER.forEach(function(w){ for(let i=0;i<(l[w]||0);i++) list.push(w); });
+  list.forEach(function(w,i){ const side=i%2?1:-1, idx=Math.floor(i/2), W=WEAPONS[w];
+    const s=new THREE.Mesh(W.kind==='bomb'?bombVisGeo:misVisGeo,stdOf(W.kind==='bomb'?bombMats[w]:misVisMat)); s.position.set(side*tipX*(0.16+0.1*idx),y,zc); s.scale.setScalar(k); g.add(s); });
+}
+function libWire(on){
+  if(!on){ LIB.wireMats.forEach(function(m){ m.wireframe=false; }); LIB.wireMats=[]; LIB.tests.wire=false; return; }
+  if(!LIB.obj) return; LIB.obj.traverse(function(o){ if(!o.isMesh) return; (Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){ if(m&&!m.wireframe&&LIB.wireMats.indexOf(m)<0){ m.wireframe=true; LIB.wireMats.push(m); } }); });
+}
+/* ---- guides: grid, forward arrow, bounding box */
+function libGuides(on,quiet){
+  if(LIB.helpers){ LIB.helpers.forEach(function(h){ LIB.scene.remove(h); }); LIB.helpers=null; }
+  if(!on||!LIB.obj) return;
+  const bb=libBox(), sz=bb.getSize(new THREE.Vector3()), R=Math.max(sz.x,sz.z)*1.4;
+  const grid=new THREE.GridHelper(Math.ceil(R/2)*2,Math.ceil(R/2),0xff4a4a,0x8a96a3); grid.position.y=bb.min.y+0.01;
+  const arr=new THREE.ArrowHelper(new THREE.Vector3(0,0,-1),new THREE.Vector3(0,bb.min.y+0.05,bb.min.z),Math.max(2,sz.z*0.35),0xff2a38,0.8,0.5);
+  const box=new THREE.Box3Helper(bb,0x7dffb0);
+  LIB.helpers=[grid,arr,box]; LIB.helpers.forEach(function(h){ LIB.scene.add(h); });
+}
+/* ---- per frame */
+function libStep(dt){
+  if(LIB.msgT>0){ LIB.msgT-=dt; if(LIB.msgT<=0) libMsg(''); }
+  const m=LIB.inst;
+  if(m){
+    if(m.gear) m.gear.visible=!!LIB.tests.gear;
+    const ab=LIB.tests.ab, len=ab?(0.9+2.4+5.5):0.05, wd=ab?1.15:1;
+    m.flames.forEach(function(f){ const fl=1+(ab?(Math.random()-.5)*0.2:0); f.outer.scale.set(wd,wd,len*fl); f.inner.scale.set(wd,wd,len*0.55*fl); });
+    (m.spinners||[]).forEach(function(sp){ if(LIB.tests.spin){ sp.obj.rotation.z+=dt*(ab?40:14); if(sp.disc&&sp.disc.material) sp.disc.material.opacity=ab?0.18:0.08; } });
+    if(m.strobe) m.strobe.visible=LIB.tests.lights&&Math.sin(T*9)>0.6;
+    if(m.surfaces&&m.surfaces.length) m.surfaces.forEach(function(s,i){ const v=LIB.tests.surf?Math.sin(T*2.2+i*0.7):0; s.n.rotation[s.axis]=s.base+v*s.max*s.sign; });
+  }
+  if(LIB.flash){ LIB.flash.t-=dt; const on=LIB.flash.t>0&&Math.sin(LIB.flash.t*18)>0; LIB.flash.mats.forEach(function(x){ if(x.m.emissive) x.m.emissive.setHex(on?0xff3030:x.e); }); if(LIB.flash.t<=0) LIB.flash=null; }
+  LIB.idle+=dt; if(LIB.auto&&LIB.idle>1.5) LIB.yaw+=dt*0.25;
+  const cp=Math.cos(LIB.pitch), sp2=Math.sin(LIB.pitch), c=LIB.cam;
+  c.position.set(LIB.tgt.x+Math.sin(LIB.yaw)*cp*LIB.dist, LIB.tgt.y+sp2*LIB.dist, LIB.tgt.z+Math.cos(LIB.yaw)*cp*LIB.dist);
+  if(c.position.y<LIB.floor.position.y+0.3) c.position.y=LIB.floor.position.y+0.3;
+  c.lookAt(LIB.tgt); c.near=Math.max(0.05,LIB.dist/200); c.far=LIB.dist*30; c.updateProjectionMatrix();
+}
+function libRender(){
+  const W=renderer.domElement.clientWidth||window.innerWidth, H=renderer.domElement.clientHeight||window.innerHeight;
+  const lv=$('libView').getBoundingClientRect(), shift=(lv.left+lv.width/2)-W/2;
+  if(LIB.vw!==W||LIB.vh!==H||LIB.shift!==shift){ LIB.vw=W; LIB.vh=H; LIB.shift=shift; LIB.cam.aspect=W/H; LIB.cam.setViewOffset(W,H,-shift,0,W,H); }
+  renderer.render(LIB.scene,LIB.cam);
+}
+function libLayout(){ LIB.shift=null; }
+function libSetBg(i){ LIB.bg=i; const b=LIB_BGS[i]; LIB.scene.background=LIB.bgTex[i]; LIB.floor.material.color.setHex(b.floor); $('libBgN').textContent=b.n; }
+function libOrbit(dx,dy){ LIB.yaw-=dx*0.007; LIB.pitch=clamp(LIB.pitch+dy*0.005,-0.15,1.45); LIB.idle=0; }
+function libZoom(f){ LIB.dist=clamp(LIB.dist*f,LIB.dist0*0.25,LIB.dist0*3); LIB.idle=0; }
+
+/* ------------------------------------------------------------------ livery: base colour, camouflage, gloss (code-built aircraft) */
+const LIV={data:{}, base:{}, mats:{}};
+try{ LIV.data=JSON.parse(localStorage.getItem('ayy-livery')||'{}')||{}; }catch(e){ LIV.data={}; }
+function livSave(){ try{ localStorage.setItem('ayy-livery',JSON.stringify(LIV.data)); }catch(e){} }
+const LIV_COLORS=['#c3c9ce','#8e979f','#5d6670','#2f363d','#c9b48a','#6f7a52','#3f5a78','#e9ecef'];
+function meshArea(g){ const p=g.attributes.position, ix=g.index, a=new THREE.Vector3(), b=new THREE.Vector3(), c=new THREE.Vector3(); let s=0; const n=ix?ix.count:p.count;
+  for(let i=0;i<n;i+=3){ const i0=ix?ix.getX(i):i, i1=ix?ix.getX(i+1):i+1, i2=ix?ix.getX(i+2):i+2; a.fromBufferAttribute(p,i0); b.fromBufferAttribute(p,i1); c.fromBufferAttribute(p,i2); s+=b.sub(a).cross(c.sub(a)).length()*0.5; } return s; }
+/* the paint colour of a code model = the opaque material colour covering the most surface */
+function livBaseHex(m){
+  const id=m.acId; if(LIV.base[id]!=null) return LIV.base[id];
+  const area={}; m.group.traverse(function(o){ if(!o.isMesh) return; const mt=o.userData.liv0||o.material; if(!mt||Array.isArray(mt)||!mt.color||mt.transparent||mt.isMeshBasicMaterial) return;
+    if(m.gear&&isChildOf(o,m.gear)) return; const k=mt.color.getHex(); o.scale; area[k]=(area[k]||0)+meshArea(o.geometry)*o.scale.x*o.scale.z; });
+  let best=null, bv=0; for(const k in area) if(area[k]>bv){ bv=area[k]; best=+k; }
+  LIV.base[id]=best; return best;
+}
+function livMaterial(id,orig){
+  const key=id+'|'+orig.uuid; let mt=LIV.mats[key]; const d=LIV.data[id]||{};
+  if(!mt){ mt=orig.clone(); mt.userData=Object.assign({},orig.userData);
+    const U={uCamoK:{value:0}, uCamo2:{value:new THREE.Color()}, uCamoS:{value:1}}; mt.userData.livU=U;
+    mt.onBeforeCompile=function(sh){ Object.assign(sh.uniforms,U);
+      sh.vertexShader='varying vec3 vLivP;\n'+sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n vLivP=position;');
+      sh.fragmentShader='varying vec3 vLivP; uniform float uCamoK; uniform vec3 uCamo2; uniform float uCamoS;\n'+
+        'float lvh(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }\n'+
+        'float lvn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f); return mix(mix(lvh(i),lvh(i+vec2(1,0)),f.x),mix(lvh(i+vec2(0,1)),lvh(i+vec2(1,1)),f.x),f.y); }\n'+
+        sh.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\n'+
+        ' if(uCamoK>0.5){ vec2 q=(vLivP.xz+vec2(vLivP.y*0.7,-vLivP.y*0.4))/uCamoS; float k=0.0;'+
+        '  if(uCamoK<1.5){ float n=lvn(q*0.42)*0.65+lvn(q*1.1)*0.35; k=smoothstep(0.5,0.54,n); }'+
+        '  else if(uCamoK<2.5){ vec2 c=floor(q*2.2); float n=lvh(c)*0.5+lvn(c*0.21)*0.5; k=step(0.52,n); }'+
+        '  else { float n=sin((q.x*0.9+q.y*0.55+lvn(q*0.5)*2.2)*1.6); k=smoothstep(0.15,0.25,n); }'+
+        '  diffuseColor.rgb=mix(diffuseColor.rgb,uCamo2,k); }');
+    };
+    mt.customProgramCacheKey=function(){ return 'ayy-livery'; };
+    LIV.mats[key]=mt;
+  }
+  mt.color.copy(d.color?new THREE.Color(d.color):orig.color);
+  if('roughness' in mt) mt.roughness=d.gloss!=null?clamp(0.85-d.gloss*0.7,0.12,0.9):orig.roughness;
+  if('metalness' in mt) mt.metalness=d.gloss!=null?clamp(0.1+d.gloss*0.35,0,0.5):orig.metalness;
+  const U=mt.userData.livU; U.uCamoK.value=d.camo||0; U.uCamo2.value.set(d.camo2||'#5d6670'); U.uCamoS.value=d.camoS||1;
+  return mt;
+}
+function applyLivery(m){
+  if(!m||!m.group||!m.acId) return; const id=m.acId, d=LIV.data[id], base=livBaseHex(m);
+  m.group.traverse(function(o){ if(!o.isMesh) return; const orig=o.userData.liv0||o.material; if(!orig||Array.isArray(orig)||!orig.color) return;
+    if(m.skin&&isChildOf(o,m.skin)) return;
+    if(!d||orig.color.getHex()!==base||(m.gear&&isChildOf(o,m.gear))){ if(o.userData.liv0){ o.material=o.userData.liv0; delete o.userData.liv0; } return; }
+    o.userData.liv0=orig; o.material=livMaterial(id,orig); });
+}
+function liveryRefresh(id){ (MODELS.inst[id]||[]).forEach(applyLivery); if(LIB.inst&&LIB.inst.acId===id) applyLivery(LIB.inst); }
+function livSet(id,patch){ const d=Object.assign({},LIV.data[id]||{},patch); LIV.data[id]=d; livSave(); liveryRefresh(id); libRefreshLook(); libRenderList(); }
+function livReset(id){ delete LIV.data[id]; livSave(); liveryRefresh(id); libRefreshLook(); libRenderList(); }
+function libRefreshLook(){
+  const it=LIB.item; if(!it||it.kind!=='ac') return; const d=LIV.data[it.id]||{}, skin=!!MODELS.skins[it.id];
+  $('libLookNote').textContent=skin?'Bu uçak içe aktarılmış bir model kullanıyor; boya ayarları yalnızca kod modelinde geçerli. Model sekmesinden kod modeline dönebilirsin.':'Ana boya rengini, kamuflaj desenini ve yüzey parlaklığını değiştir.';
+  const base=LIB.inst?livBaseHex(LIB.inst):null, cur=d.color||null;
+  $('libColors').innerHTML='<button type="button" class="orig" data-col="" aria-pressed="'+(!cur)+'">Orijinal</button>'+LIV_COLORS.map(function(c){ return '<button type="button" data-col="'+c+'" style="background:'+c+'" aria-pressed="'+(cur===c)+'" aria-label="'+c+'"></button>'; }).join('');
+  $('libColor').value=cur||('#'+('000000'+(base!=null?base:0x9aa4ad).toString(16)).slice(-6));
+  Array.prototype.forEach.call($('libCamo').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.c===(d.camo||0))); });
+  $('libColor2').value=d.camo2||'#5d6670'; $('libCamoS').value=d.camoS||1; $('libGloss').value=d.gloss!=null?d.gloss:0.5;
+}
+
+/* ------------------------------------------------------------------ import: many formats → .glb, kept on this device (IndexedDB) */
+const MDB={db:null};
+function mdbOpen(){ if(MDB.db) return Promise.resolve(MDB.db); if(typeof indexedDB==='undefined') return Promise.reject(new Error('IndexedDB yok'));
+  return new Promise(function(res,rej){ const r=indexedDB.open('ayyildiz-models',1); r.onupgradeneeded=function(){ r.result.createObjectStore('skins',{keyPath:'id'}); }; r.onsuccess=function(){ MDB.db=r.result; res(r.result); }; r.onerror=function(){ rej(r.error); }; }); }
+function mdbTx(mode,fn){ return mdbOpen().then(function(db){ return new Promise(function(res,rej){ const tx=db.transaction('skins',mode), st=tx.objectStore('skins'), q=fn(st); tx.oncomplete=function(){ res(q&&q.result); }; tx.onerror=function(){ rej(tx.error); }; }); }); }
+function mdbPut(rec){ return mdbTx('readwrite',function(s){ return s.put(rec); }); }
+function mdbDel(id){ return mdbTx('readwrite',function(s){ return s.delete(id); }); }
+function mdbAll(){ return mdbTx('readonly',function(s){ return s.getAll(); }); }
+/* models saved on this device win over assets/models.json */
+function localModelsInit(){
+  mdbAll().then(function(list){ (list||[]).forEach(function(r){ if(!AIRCRAFT[r.id]||!r.glb) return;
+    gltfLoader().then(function(l){ l.parse(r.glb,'',function(g){ LIB.raw[r.id]={root:g.scene, glb:r.glb, name:r.name}; setSkin(r.id,g.scene,Object.assign({},r.spec,{local:true})); if(LIB.on) libRenderList(); },function(){}); }); }); }).catch(function(){});
+}
+const EXT_PRI=['glb','gltf','fbx','obj','dae','stl'];
+function extOf(n){ const m=/\.([a-z0-9]+)$/i.exec(n||''); return m?m[1].toLowerCase():''; }
+function importFiles(files,id){
+  files=Array.prototype.slice.call(files||[]); if(!files.length) return;
+  id=id||(LIB.item&&LIB.item.kind==='ac'?LIB.item.id:selectedId);
+  const main=EXT_PRI.map(function(e){ return files.find(function(f){ return extOf(f.name)===e; }); }).find(Boolean);
+  if(!main){ libMsg('Desteklenen model dosyası yok (.glb .gltf .fbx .obj .stl .dae)',true); return; }
+  const ext=extOf(main.name), urls={}; files.forEach(function(f){ urls[f.name.toLowerCase()]=URL.createObjectURL(f); });
+  const mgr=new THREE.LoadingManager(); mgr.setURLModifier(function(u){ if(/^(blob|data):/.test(u)&&!/\/[^\/]*\.[a-z0-9]{2,4}$/i.test(u)) return u; const n=decodeURIComponent(u.split(/[\\\/]/).pop().split('?')[0]).toLowerCase(); return urls[n]||u; });
+  libMsg('Model okunuyor: '+main.name+' …');
+  const need={glb:['GLTFLoader','DRACOLoader'],gltf:['GLTFLoader','DRACOLoader'],fbx:['fflate','NURBSUtils','NURBSCurve','TGALoader','FBXLoader'],obj:['MTLLoader','OBJLoader'],dae:['TGALoader','ColladaLoader'],stl:['STLLoader']}[ext].concat(['GLTFExporter']);
+  const done=function(){ Object.keys(urls).forEach(function(k){ URL.revokeObjectURL(urls[k]); }); };
+  needLibs(need).then(function(){ return readModel(ext,main,files,mgr,urls); }).then(function(root){
+    if(!root) throw new Error('boş model');
+    if(ext==='glb') return main.arrayBuffer().then(function(buf){ return {root:root, glb:buf}; });
+    return toGLB(root).then(function(buf){ return gltfLoader().then(function(l){ return new Promise(function(res,rej){ l.parse(buf,'',function(g){ res({root:g.scene, glb:buf}); },rej); }); }); });
+  }).then(function(r){
+    done(); const prev=MODELS.skins[id]&&MODELS.skins[id].spec&&MODELS.skins[id].spec.local?MODELS.skins[id].spec:null;
+    const spec={rotation:ext==='stl'?[-90,0,0]:[0,0,0], local:true};   /* STL files are usually Z-up */
+    if(prev&&LIB.raw[id]&&LIB.raw[id].name===main.name){ spec.rotation=prev.rotation.slice(); }
+    LIB.raw[id]={root:r.root, glb:r.glb, name:main.name}; setSkin(id,r.root,spec); libPersist(id);
+    libMsg(AIRCRAFT[id].name+' ← '+main.name+' ('+Math.round(r.glb.byteLength/1024)+' KB). Yön yanlışsa Model sekmesinden döndür.');
+    if(LIB.on){ libSelect('ac:'+id); libTab('model'); }
+  }).catch(function(e){ done(); console.warn(e); libMsg('Model yüklenemedi: '+(e&&e.message||e),true); });
+}
+function readModel(ext,main,files,mgr,urls){
+  if(ext==='glb'||ext==='gltf') return gltfLoader().then(function(l){ return new Promise(function(res,rej){
+    if(ext==='glb') main.arrayBuffer().then(function(b){ l.parse(b,'',function(g){ res(g.scene); },rej); });
+    else { const l2=new THREE.GLTFLoader(mgr); if(l.dracoLoader) l2.setDRACOLoader(l.dracoLoader); l2.load(urls[main.name.toLowerCase()],function(g){ res(g.scene); },undefined,rej); } }); });
+  if(ext==='fbx') return main.arrayBuffer().then(function(b){ return new THREE.FBXLoader(mgr).parse(b,''); });
+  if(ext==='stl') return main.arrayBuffer().then(function(b){ const g=new THREE.STLLoader().parse(b); g.computeVertexNormals();
+    const col=g.hasColors?new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.5,metalness:0.2}):new THREE.MeshStandardMaterial({color:0xa9b1b8,roughness:0.5,metalness:0.25}); const m=new THREE.Mesh(g,col); m.name='stl'; const r=new THREE.Group(); r.add(m); return r; });
+  if(ext==='dae') return main.text().then(function(t){ return new THREE.ColladaLoader(mgr).parse(t,'').scene; });
+  if(ext==='obj'){ const mtl=files.find(function(f){ return extOf(f.name)==='mtl'; });
+    return (mtl?mtl.text():Promise.resolve(null)).then(function(mt){ return main.text().then(function(t){ const ol=new THREE.OBJLoader(mgr);
+      if(mt){ const mats=new THREE.MTLLoader(mgr).parse(mt,''); mats.preload(); ol.setMaterials(mats); } return ol.parse(t); }); }); }
+  return Promise.reject(new Error('desteklenmeyen biçim'));
+}
+function toGLB(root){ return new Promise(function(res,rej){ try{ new THREE.GLTFExporter().parse(root,function(b){ res(b); },{binary:true, onlyVisible:true, embedImages:true, maxTextureSize:2048}); }catch(e){ rej(e); } }); }
+function libPersist(id){ const r=LIB.raw[id], sk=MODELS.skins[id]; if(!r||!sk) return;
+  const spec=libSpecOut(sk.spec); mdbPut({id:id, name:r.name, glb:r.glb, spec:spec}).catch(function(e){ libMsg('Cihaza kaydedilemedi: '+(e&&e.message||e),true); }); }
+function libSpecOut(s){ const o={rotation:(s.rotation||[0,0,0]).slice()}; ['length','offset','gearNodes','propNodes','surfaces','flames'].forEach(function(k){ if(s[k]!=null&&!(Array.isArray(s[k])&&!s[k].length)) o[k]=JSON.parse(JSON.stringify(s[k])); }); return o; }
+function libReskin(patch){
+  const it=LIB.item; if(!it||it.kind!=='ac') return; const id=it.id, sk=MODELS.skins[id], r=LIB.raw[id]; if(!sk||!r) return;
+  const spec=Object.assign({},sk.spec,patch); if(r.root.parent) r.root.parent.remove(r.root);
+  setSkin(id,r.root,spec); libPersist(id); libSelectKeep();
+}
+function libSelectKeep(){ const yaw=LIB.yaw, pitch=LIB.pitch, d=LIB.dist/LIB.dist0, tests=Object.assign({},LIB.tests); libSelect(LIB.item.key); LIB.yaw=yaw; LIB.pitch=pitch; LIB.dist=LIB.dist0*d; Object.assign(LIB.tests,tests,{wire:false}); libApplyTests(); libStores(); libRefreshTests(); }
+function libRemoveSkin(){ const it=LIB.item; if(!it||it.kind!=='ac') return; const id=it.id; clearSkin(id); delete LIB.raw[id]; mdbDel(id).catch(function(){});
+  if(MODELS.manifest&&MODELS.manifest.models&&MODELS.manifest.models[id]){ MODELS.busy[id]=null; loadModelFile(id,MODELS.manifest.models[id]); }
+  libMsg(AIRCRAFT[id].name+' kod modeline döndü'); libSelectKeep(); }
+const PART_ROLES=[['','—'],['gear','İniş takımı'],['prop','Pervane'],['ail_l','Kanatçık sol'],['ail_r','Kanatçık sağ'],['elev','İrtifa dümeni'],['rud','İstikamet dümeni']];
+function libPartRole(spec,n){
+  if((spec.gearNodes||[]).indexOf(n)>=0) return 'gear'; if((spec.propNodes||[]).indexOf(n)>=0) return 'prop';
+  const s=(spec.surfaces||[]).find(function(x){ return x.node===n; }); if(!s) return '';
+  return s.input==='roll'?(s.sign<0?'ail_l':'ail_r'):(s.input==='pitch'?'elev':'rud');
+}
+function libSetPart(n,role){
+  const sk=MODELS.skins[LIB.item.id]; const s=sk.spec;
+  const gear=(s.gearNodes||[]).filter(function(x){ return x!==n; }), prop=(s.propNodes||[]).filter(function(x){ return x!==n; }), surf=(s.surfaces||[]).filter(function(x){ return x.node!==n; });
+  if(role==='gear') gear.push(n); else if(role==='prop') prop.push(n);
+  else if(role==='ail_l') surf.push({node:n,axis:'x',input:'roll',max:18,sign:-1}); else if(role==='ail_r') surf.push({node:n,axis:'x',input:'roll',max:18,sign:1});
+  else if(role==='elev') surf.push({node:n,axis:'x',input:'pitch',max:20,sign:1}); else if(role==='rud') surf.push({node:n,axis:'y',input:'yaw',max:22,sign:1});
+  libReskin({gearNodes:gear.length?gear:null, propNodes:prop.length?prop:null, surfaces:surf});
+  if(role==='surf'||/ail|elev|rud/.test(role)){ LIB.tests.surf=true; libRefreshTests(); }
+}
+function libFlashPart(n){
+  const m=LIB.inst; if(!m||!m.skin) return; const o=m.skin.getObjectByName(n); if(!o) return; const mats=[];
+  o.traverse(function(c){ if(!c.isMesh) return; const arr=Array.isArray(c.material)?c.material:[c.material];
+    const nm=arr.map(function(x){ const k=x.clone(); mats.push({m:k,e:x.emissive?x.emissive.getHex():0}); return k; }); c.material=Array.isArray(c.material)?nm:nm[0]; });
+  LIB.flash={t:1.6, mats:mats};
+}
+function libRefreshModel(){
+  const it=LIB.item; if(!it||it.kind!=='ac') return; const id=it.id, sk=MODELS.skins[id], r=LIB.raw[id];
+  const editable=!!(sk&&r);
+  $('libModelNote').textContent=sk?(editable?'İçe aktarılmış model: '+r.name+'. Yön, boy ve hareketli parçaları buradan ayarla; değişiklikler bu cihazda saklanır.':'Bu model assets/models.json dosyasından geliyor. Düzenlemek için aynı dosyayı buradan içe aktar.'):'Şu an kodla çizilen model kullanılıyor. Kendi modelini yükleyebilirsin; oyunda hangar, sen ve yapay zekâ kopyalarına uygulanır.';
+  $('libSkinBox').hidden=!editable; $('libJsonOut').hidden=true; if(!editable) return;
+  const s=sk.spec; $('libRotV').textContent='Döndürme: X '+s.rotation[0]+'°, Y '+s.rotation[1]+'°, Z '+s.rotation[2]+'° · burun kırmızı oka (Kılavuz) bakmalı';
+  const bb=libBox(); $('libLen').value=(s.length||(bb.max.z-bb.min.z)).toFixed(1); $('libOffY').value=s.offset?s.offset[1]:0;
+  const names=[]; r.root.traverse(function(o){ if(o!==r.root&&o.name&&names.indexOf(o.name)<0&&names.length<300) names.push(o.name); });
+  $('libParts').innerHTML=names.length?names.map(function(n){ const role=libPartRole(s,n);
+    return '<div class="pr"><button type="button" data-n="'+n.replace(/"/g,'&quot;')+'" title="'+n.replace(/"/g,'&quot;')+'">'+n.replace(/</g,'&lt;')+'</button><select data-n="'+n.replace(/"/g,'&quot;')+'">'+PART_ROLES.map(function(p){ return '<option value="'+p[0]+'"'+(p[0]===role?' selected':'')+'>'+p[1]+'</option>'; }).join('')+'</select></div>'; }).join(''):'<div class="pr">Modelde adlandırılmış parça yok</div>';
+}
+function libJsonLine(){
+  const id=LIB.item.id, s=libSpecOut(MODELS.skins[id].spec), o={file:'assets/models/'+id+'.glb'}; Object.assign(o,s);
+  const txt='"'+id+'": '+JSON.stringify(o);
+  const el=$('libJsonOut'); el.textContent=txt+'\n\n.glb dosyasını assets/models/'+id+'.glb olarak kaydet (Bilgi → .glb olarak indir).'; el.hidden=false;
+  try{ navigator.clipboard.writeText(txt).then(function(){ libMsg('models.json satırı kopyalandı'); },function(){}); }catch(e){}
+}
+/* export what is on screen (code model or imported one, with current paint) as .glb */
+function libExport(){
+  const it=LIB.item; if(!it||!LIB.obj) return; libMsg('.glb hazırlanıyor…');
+  needLibs(['GLTFExporter']).then(function(){
+    const m=LIB.inst, hide=[]; if(m){ m.flames.forEach(function(f){ [f.outer,f.inner].forEach(function(x){ if(x.visible){ x.visible=false; hide.push(x); } }); }); }
+    if(LIB.helpers) LIB.helpers.forEach(function(h){ h.visible=false; });
+    const wire=LIB.wireMats.slice(); libWire(false);
+    const pos=LIB.obj.position.clone(); LIB.obj.position.set(0,0,0); LIB.obj.updateMatrixWorld(true);
+    return toGLB(LIB.obj).then(function(buf){ LIB.obj.position.copy(pos); hide.forEach(function(x){ x.visible=true; }); if(LIB.helpers) LIB.helpers.forEach(function(h){ h.visible=true; }); if(wire.length) libWire(true);
+      const name=(it.kind==='ac'?it.id:it.key.replace(':','-'))+'.glb', a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buf],{type:'model/gltf-binary'})); a.download=name; document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },2000); libMsg(name+' indirildi ('+Math.round(buf.byteLength/1024)+' KB)'); LIB.lastExport=buf; });
+  }).catch(function(e){ libMsg('Dışa aktarılamadı: '+(e&&e.message||e),true); });
+}
+/* ---- wiring */
+$('libList').addEventListener('click',function(e){ const b=e.target.closest('button[data-k]'); if(b) libSelect(b.dataset.k); });
+$('libTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled) libTab(b.dataset.t); });
+$('libTests').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled) libToggle(b.dataset.x); });
+$('btnLibBack').addEventListener('click',closeLibrary);
+$('libBg').addEventListener('click',function(){ libSetBg((LIB.bg+1)%LIB_BGS.length); });
+$('libRot').addEventListener('click',function(){ LIB.auto=!LIB.auto; $('libRot').setAttribute('aria-pressed',String(LIB.auto)); });
+$('libGuide').addEventListener('click',function(){ LIB.guides=!LIB.guides; $('libGuide').setAttribute('aria-pressed',String(LIB.guides)); libGuides(LIB.guides); });
+$('libReset').addEventListener('click',function(){ LIB.yaw=0.9; LIB.pitch=0.28; LIB.dist=LIB.dist0; LIB.idle=0; });
+$('libExport').addEventListener('click',libExport);
+$('libColors').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; livSet(LIB.item.id,{color:b.dataset.col||null}); });
+$('libColor').addEventListener('input',function(e){ livSet(LIB.item.id,{color:e.target.value}); });
+$('libCamo').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b) livSet(LIB.item.id,{camo:+b.dataset.c}); });
+$('libColor2').addEventListener('input',function(e){ livSet(LIB.item.id,{camo2:e.target.value, camo:(LIV.data[LIB.item.id]||{}).camo||1}); });
+$('libCamoS').addEventListener('input',function(e){ livSet(LIB.item.id,{camoS:+e.target.value}); });
+$('libGloss').addEventListener('input',function(e){ livSet(LIB.item.id,{gloss:+e.target.value}); });
+$('libLookReset').addEventListener('click',function(){ livReset(LIB.item.id); });
+$('libImport').addEventListener('click',function(){ $('libFile').click(); });
+$('libFile').addEventListener('change',function(e){ importFiles(e.target.files); e.target.value=''; });
+document.querySelector('#libSkinBox .seg').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const sk=MODELS.skins[LIB.item.id]; const r=sk.spec.rotation.slice(); r[+b.dataset.r]=(r[+b.dataset.r]+90)%360; libReskin({rotation:r}); });
+$('libLen').addEventListener('change',function(e){ const v=+e.target.value; if(v>0.5) libReskin({length:v, scale:null}); });
+$('libOffY').addEventListener('change',function(e){ libReskin({offset:[0,+e.target.value,0]}); });
+$('libParts').addEventListener('click',function(e){ const b=e.target.closest('button[data-n]'); if(b) libFlashPart(b.dataset.n); });
+$('libParts').addEventListener('change',function(e){ const s=e.target.closest('select'); if(s) libSetPart(s.dataset.n,s.value); });
+$('libJson').addEventListener('click',libJsonLine);
+$('libRemove').addEventListener('click',libRemoveSkin);
+$('btnLibOpen').addEventListener('click',function(){ if(state==='menu') openLibrary(); else toast('Model kütüphanesi ana menüden açılır','#ffc24a'); });
+window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
+window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files; if(!f||!f.length) return; e.preventDefault(); if(state==='menu'&&!LIB.on) openLibrary('ac:'+selectedId); if(LIB.on) importFiles(f); });
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
@@ -4824,6 +5269,7 @@ function frame(now){
   requestAnimationFrame(frame);
   let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; perfStep(Math.min(dt,0.5)); dt=Math.min(dt,0.05);
   T+=dt; pollPad();
+  if(state==='library'){ libStep(dt); libRender(); drawHUD(); return; }
   if(state==='play') update(dt);
   if(state==='walk') walkUpdate(dt);
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }

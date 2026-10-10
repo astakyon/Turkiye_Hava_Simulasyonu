@@ -1,5 +1,5 @@
 /* Ay Yıldız: Hedef Kızıl Elma — çevrimdışı önbellek. Sürüm değişince önbellek yenilenir. */
-const CACHE='ayyildiz-V1.35';
+const CACHE='ayyildiz-V1.36';
 const CORE=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js','vendor/three-r128/three.min.js'];
 self.addEventListener('install',e=>{ e.waitUntil(caches.open(CACHE).then(c=>Promise.all(CORE.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting())); });
 self.addEventListener('activate',e=>{ e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())); });

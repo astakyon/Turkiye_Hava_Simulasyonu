@@ -30,6 +30,7 @@ CI (`pages.yml`) önce `tools/build.py --check`, sonra testleri çalıştırır;
 | 50–54 | menü/giriş, ayarlar arayüzü, gamepad, dokunmatik, fare/klavye |
 | 60 | yapay zekâ ve çevrimiçi (P2P) |
 | 70 | üssü gezme (yaya + araç) |
+| 72 | **model kütüphanesi**: 3B önizleme stüdyosu, testler, boya/kamuflaj, içe/dışa aktarma |
 | 99 | başlatma ve ana döngü |
 
 Yeni özellik → uygun numarayla yeni dosya (ör. `36-weather.js`). Bütün dosyalar aynı kapsamda (tek IIFE) birleşir;
@@ -37,7 +38,7 @@ başka bir dosyanın `const` değişkenine **yükleme anında** erişme (sadece 
 aksi halde "before initialization" hatası olur.
 
 ## Durum makinesi
-`state`: `menu` · `play` · `paused` · `service` · `photo` · `walk`
+`state`: `menu` · `play` · `paused` · `service` · `photo` · `walk` · `library`
 `menuMode` (menüdeyken): `title` · `hangar` · `loadout` · `start` · `missions`
 Ana döngü (`99-main.js`): giriş → `update` (uçuş) / `walkUpdate` (yaya) → yapay zekâ ve ağ → modeller → kamera → `renderFrame` → HUD.
 
@@ -54,7 +55,8 @@ aynı kayıt yapısı kullanılacak; fizik ve kamera modu gruba göre seçilecek
 ## 3B modeller (GLB)
 Her araç önce kodla çizilir (indirme yok, her zaman çalışır). `assets/models.json` bir .glb listeliyorsa model arka planda
 yüklenir ve aracın **bütün kopyalarını** (oyuncu, hangar, yapay zekâ) "giydirir". Ayrıntı: [MODELLER.md](MODELLER.md).
-Hızlı deneme: Ayarlar → Grafik → **3B model dene** (ya da .glb dosyasını sayfaya sürükle).
+Kod yazmadan: ana menü → **Model Kütüphanesi** (içe aktarma, boya, test). Kütüphane açıkken oyun dünyası çizilmez; kendi küçük stüdyo sahnesi (`LIB.scene`) çizilir.
+Boya (`LIV`, 72-library.js) kod modelinde en geniş alanı kaplayan boyayı bulur ve aracın bütün kopyalarında onu değiştirir; kamuflaj gölgelendiriciye eklenen desenle çizilir.
 
 ## Görsel efektler (post-processing)
 `46-postfx.js` — three.js `EffectComposer`. Ayarlar → Grafik → **Görsel efektler**:

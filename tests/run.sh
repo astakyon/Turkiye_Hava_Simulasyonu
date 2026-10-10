@@ -15,3 +15,4 @@ node net_harness.js /tmp/sim.js net_ffa.test.js
 node harness.js /tmp/sim.js airport.test.js
 node harness.js /tmp/sim.js hangar_taxi.test.js
 node harness.js /tmp/sim.js walk.test.js
+node harness.js /tmp/sim.js library.test.js

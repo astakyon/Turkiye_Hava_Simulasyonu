@@ -6,7 +6,7 @@ Gruplar: **Hilal Kanatlar** (hava sistemleri) · **Mavi Kanatlar** (deniz, yakı
 
 Tek dosyalık (`index.html`) oyun; kurulum yok. Ana ekrana eklenebilir (PWA) ve ilk açılıştan sonra çevrimdışı da çalışır.
 
-**Güncel sürüm:** V1.35 (bkz. [CHANGELOG.md](CHANGELOG.md))
+**Güncel sürüm:** V1.36 (bkz. [CHANGELOG.md](CHANGELOG.md))
 
 ## Özellikler
 - 10 uçak: KAAN, ANKA-3, Hürjet, Hürkuş, ANKA, Aksungur, Kızılelma, Bayraktar TB2, TB3, Akıncı
@@ -19,6 +19,8 @@ Tek dosyalık (`index.html`) oyun; kurulum yok. Ana ekrana eklenebilir (PWA) ve 
 - Bakım hangarı: iniş sonrası onarım ve silah yükleme
 - Yapay zekâ: düşman savaş uçakları (Kırmızı Kuvvet), kanat adamı, İt dalaşı görevi, zorluk seçimi
 - Çevrimiçi (P2P): oda kodu ile 4 oyuncuya kadar İşbirliği / Takım savaşı / Herkes herkese; boş yerler botla dolar
+- Model Kütüphanesi: bütün modelleri 3B incele, test et, boya/kamuflaj değiştir, kendi modelini yükle (.glb .gltf .fbx .obj .stl .dae)
+- Üssü gez: yaya (birinci şahıs) ve araçla
 - Fotoğraf modu, rekorlar, ayarlar
 
 ## Geliştirme

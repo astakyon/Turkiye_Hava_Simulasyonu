@@ -194,7 +194,7 @@ function updateHangar(dt){
     d.g.visible=!hide; d.label.visible=!hide&&state==='menu'&&menuMode==='hangar'&&sel;
     if(hide) return;
     const m=d.model;
-    m.strobe.visible=Math.sin(T*9+d.x)>0.8; m.gear.visible=true;
+    if(m.strobe) m.strobe.visible=Math.sin(T*9+d.x)>0.8; if(m.gear) m.gear.visible=true;
     m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); });
     m.spinners.forEach(function(sp){ sp.obj.rotation.z+=dt*(sel&&state==='menu'&&menuMode!=='title'?2.5:0.4); sp.disc.material.opacity=0.04; });
   });

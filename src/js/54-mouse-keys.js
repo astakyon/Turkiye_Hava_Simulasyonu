@@ -5,11 +5,13 @@ function pinchDist(){ const v=Array.from(ptrs.values()); return v.length<2?0:Mat
 function orbitBy(dx,dy){
   dx*=SETTINGS.sens; dy*=SETTINGS.sens;
   if(state==='walk'){ walkLook(dx,dy); return; }
+  if(state==='library'){ libOrbit(dx,dy); return; }
   if(state==='menu'){ if(menuMode==='title') return; MENUV.yaw-=dx*0.006; MENUV.pitch=clamp(MENUV.pitch+dy*0.005,-0.1,1.35); MENUV.idle=0; }
   else{ CAMU.yaw-=dx*0.006; CAMU.pitch=clamp(CAMU.pitch-dy*0.005,-1.3,1.2); }
 }
 function zoomBy(f){
   if(state==='walk'){ WALK.camD=clamp(WALK.camD*f,0.5,2.5); return; }
+  if(state==='library'){ libZoom(f); return; }
   if(state==='menu'){ if(menuMode==='title') return; MENUV.zoom=clamp(MENUV.zoom*f,0.3,2.4); MENUV.idle=0; }
   else if(camMode===0){ CAMU.zoom=clamp(CAMU.zoom*f,0.35,4); }
 }
@@ -49,6 +51,7 @@ window.addEventListener('keydown',e=>{
   if(!$('service').classList.contains('hidden')&&state==='menu'){ if(e.code==='Escape') closeService(false); else if(e.code==='Enter'&&!(e.target&&e.target.tagName==='BUTTON')) closeService(true); return; }
   if(anyModalOpen()){ if(e.code==='Escape') closeModals(); return; }
   if(state==='walk'){ walkKey(e); return; }
+  if(state==='library'){ if(e.code==='Escape') closeLibrary(); return; }
   const onBtn=!!(e.target&&e.target.tagName==='BUTTON');
   if(state==='service'){
     if(e.code==='Enter'&&!onBtn){ e.preventDefault(); closeService(true); } else if(e.code==='Escape') closeService(false);

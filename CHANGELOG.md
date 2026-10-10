@@ -1,6 +1,22 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.36 — 2026-10-10
+### Yeni — Model Kütüphanesi
+- Ana menüde yeni **Model Kütüphanesi** var (ayrıca Ayarlar → Grafik → Model kütüphanesi). Bütün modeller listede: 10 uçak, 7 yer aracı, 5 ekipman. Mavi Kanatlar ve kara sistemleri için yer hazır.
+- **3B önizleme:** model kendi stüdyosunda döner. Parmakla ya da fareyle çevirip yakınlaştırırsın. Arka planlar: Hangar, Gündüz, Gün batımı, Stüdyo. **Kılavuz** açılınca ızgara, burun yönü oku ve sınır kutusu görünür.
+- **Bilgi:** boyutlar, üçgen/parça/malzeme sayısı, kaynak. **.glb olarak indir** ile her model, Blender vb. programlarda açılabilecek şekilde indirilir.
+- **Test:** iniş takımı, motor/art yakıcı, silahlar, pervane, seyir ışıkları, kumanda yüzeyleri, tel kafes.
+- **Görünüm:** ana renk (hazır renkler ya da özel renk), kamuflaj (lekeli / dijital / çizgili, ikinci renk, desen boyu), mat ↔ parlak. Değişiklik oyunda o uçağın bütün kopyalarına (sen, hangar, yapay zekâ) hemen uygulanır.
+- **Model içe aktarma:** .glb, .gltf, .fbx, .obj (+.mtl), .stl, .dae, dokularıyla birlikte. Gelen dosya otomatik .glb'ye çevrilir.
+  - Yön, uzunluk ve yükseklik ayarlanabilir.
+  - Adlandırılmış parçalara görev verilir: iniş takımı, pervane, kanatçık, irtifa ve istikamet dümeni.
+  - **models.json satırını kopyala** ile kalıcı ekleme satırı hazırlanır.
+- Boya ve içe aktarılan modeller bu cihazda saklanır, sayfa yenilense de kalır. .glb dosyasını sayfaya sürüklemek kütüphaneyi açar.
+### Değişti
+- Ayarlar'daki "3B model dene" satırı kütüphaneye taşındı.
+- İçe aktarılan modellerde kodun seyir ışıkları gizlenir (`keepLights` ile korunur).
+
 ## V1.35 — 2026-10-10
 Büyümeye hazır altyapı.
 ### Yeni

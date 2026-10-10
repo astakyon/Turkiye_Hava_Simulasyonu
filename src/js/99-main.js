@@ -6,6 +6,7 @@ function frame(now){
   requestAnimationFrame(frame);
   let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; perfStep(Math.min(dt,0.5)); dt=Math.min(dt,0.05);
   T+=dt; pollPad();
+  if(state==='library'){ libStep(dt); libRender(); drawHUD(); return; }
   if(state==='play') update(dt);
   if(state==='walk') walkUpdate(dt);
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
