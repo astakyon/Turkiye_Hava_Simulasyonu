@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.30 — 2026-10-10
+Aşama 1: ışık ve atmosfer.
+### Yeni
+- **Güneş gölgeleri:** uçaklar, hangarlar ve binalar gölge düşürür; gölge kamera ile birlikte uçağı takip eder. Ayarlar → Grafik → **Gölgeler** (bilgisayarda varsayılan açık, telefonda kapalı; Yüksek kalitede daha keskin).
+- **Gerçekçi uçak malzemeleri:** boya ve metal yüzeyler ışığa göre parlıyor, gökyüzünü ve yeri yansıtıyor; kanopiler cam gibi.
+- **Gökyüzü ve atmosfer:** ufukta parlak pus bandı, güneşin etrafında sıcak hâle, ufuk rengine uyumlu mesafe sisi.
+### Not
+- Sinematik renk tonu (ACES) denendi; stilize renkleri soldurduğu için kapalı bırakıldı.
+
 ## V1.24 — 2026-10-10
 ### Değişti — ekranlar yeni tasarım dilinde
 - **Uçak seçimi:** solda üretici · sınıf, büyük ad ve özellik sütunları (uzunluk, açıklık, silah yeri, flare, mürettebat); sağda ▶ Oyuna başla; altta üstten görünüş siluetli uçak kartları; sınıf filtresi sol üstte; durum çubuğunda sıra (1 / 10).

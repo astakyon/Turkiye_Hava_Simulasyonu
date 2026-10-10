@@ -8,9 +8,9 @@
 ## Grafik ve içerik planı (karar: cilalı stilize, telefon öncelikli, ileride Android)
 | Aşama | Sürüm | İçerik | Durum |
 |---|---|---|---|
-| 0 | V1.20 | İsim/marka, gruplar (Hilal Kanatlar / Mavi Kanatlar / Kara), sınıf filtresi, araç kayıt sistemi, silah uyumu altyapısı, otomatik performans + FPS, PWA | ✅ |
-| 1 | V1.21 | Işık ve atmosfer: PBR malzeme, güneş gölgeleri, ton eşleme, gökyüzü/güneş, mesafe pusu, kanopi yansıması | ⏳ sıradaki |
-| 2 | V1.22 | Havalimanı: pist işaretleri, kenar/yaklaşma ışıkları, PAPI, kule, terminal, radar, itfaiye, yakıt, yer araçları, tabelalar | |
+| 0 | V1.20–V1.24 | İsim/marka, yeni menüler, gruplar (Hilal Kanatlar / Mavi Kanatlar / Kara), sınıf filtresi, araç kayıt sistemi, silah uyumu altyapısı, otomatik performans + FPS, PWA | ✅ |
+| 1 | V1.30 | Işık ve atmosfer: PBR malzeme, güneş gölgeleri, gökyüzü/güneş, mesafe pusu, kanopi yansıması | ✅ |
+| 2 | V1.31 | Havalimanı: pist işaretleri, kenar/yaklaşma ışıkları, PAPI, kule, terminal, radar, itfaiye, yakıt, yer araçları, tabelalar | |
 | 3 | V1.23 | Hangar iç tasarımı: bölmeli hangarlar (kategori başına), iç aydınlatma, vitrin görünümü, silah sergisi | |
 | 4 | V1.24 | Ada/çevre: arazi dokuları, köy/yol/sahil, deniz yansıması, ağaç çeşitliliği, mesafeye göre detay | |
 | 5 | V1.25 | Uçak detayları: fotoğraflara yüksek benzerlik, panel çizgileri, çıkartmalar, ışıklar, takım ve kumanda yüzeyi animasyonu | |
