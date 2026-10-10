@@ -5,7 +5,7 @@ const AIRCRAFT={
   kaan:{name:'TUSAŞ KAAN',short:'KAAN',kind:'Savaş uçağı',len:'21 m',span:'14 m',uav:false,hasAB:true,
     desc:'Çift motorlu beşinci nesil savaş uçağı. Art yakıcı, yüksek manevra ve top ateşi.',
     build:function(){ return buildKaan(); }, buildOld:function(){ const m=buildKaanV1(); m.spinners=[]; return m; },
-    gearOff:2.4,belly:1.2,cam:[5.4,23],eye:[0,1.22,-4.98],muzzle:[0.9,-0.1,-7],
+    gearOff:2.4,belly:1.2,cam:[5.4,23],eye:[0,1.6,-5.9],muzzle:[1.62,0.72,-4.7],
     idle:0.4,thrust:10.5,abT:14,kD:0.000125,stall:[52,84],authV:110,gLim:14,pitchMax:1.25,roll:3.3,yaw:0.45,stallNose:0.9,minV:60,vTop:300,
     vr:78,landV:150,sinkMax:8,gearV:150,brake:8,rollFric:1.1,airV:210,fireInt:0.05,bulletV:850,blife:1.5,weapon:'TOP',snd:SND_JET},
   anka3:{name:'TUSAŞ ANKA-3',short:'ANKA-3',kind:'Muharip İHA · uçan kanat',len:'~9 m',span:'~13 m',uav:true,hasAB:false,

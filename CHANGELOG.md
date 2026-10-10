@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.38 — 2026-10-10
+### Değişti — KAAN, fotoğraflara göre düzeltildi
+Ölçüler fotoğraflardan alındı (üstten görünüş 14 m açıklığa, yandan görünüş 21 m boya ölçeklendi).
+- **Gövde:** kokpitin hemen arkasında ±2 m genişliğe açılan "omuzlar". Kokpit kesiti elmas biçimli (düz eğimli yanlar). Chine çizgisi burundan kanada doğru yükseliyor. Gövde daha derin, arka gövde motorlara doğru incelip yükseliyor.
+- **Hava alıkları:** daha büyük (≈1,3 m), omuzların altında, dış kenarı eğik; önden bakınca omuz ile burun arasındaki girinti belli.
+- **Kanat:** daha yukarıda (chine hizasında), hafif anhedral. Kökü geride başlıyor, firar kenarı geriye açılı. İç flap sabit, dış flaperon hareketli.
+- **Kuyruk:** dikey kuyruklar daha büyük ve daha önde (27° dışa yatık, tam boy dümen). Yatay kuyruklar kanadın hemen arkasında, lülelerin ötesine uzanıyor.
+- **Motorlar:** lüleler birbirinden daha uzak (±1 m), arada merkez çıkıntı.
+- **Kokpit:** kanopi öne alındı (−7,4 → −4,9 m), daha uzun ve yüksek; altın renkli arka çerçeve; burun önünde turuncu EOTS camı.
+- **Boya:** üst yüzey mavi-gri; kokpit arkasında yay şeklinde başlayıp arkaya doğru seyrelen **açık renk** kesik çizgiler. Chine altı koyu gri, burun konisi açık gri. Yanlarda büyük siyah **KAAN** yazısı. Dikey kuyrukta bayrak ve "Türk Havacılık Uzay Sanayii" yazısı. Burunda test sondası.
+- **İniş takımı:** burun takımı alıkların arkasına (−4,85 m), ana takımlar alıkların altına alındı.
+- Kokpit kamerası ve top ağzı yeni yerlere taşındı.
+
 ## V1.37 — 2026-10-10
 ### Yeni — KAAN detaylı model (1/22 model yenileme)
 - **Gövde:** keskin "chine" kenarlı gizli burun, yan kenarı kanat köküne kesintisiz birleşen gövde, motor çıkıntıları, burun konisi.
