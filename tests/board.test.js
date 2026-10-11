@@ -1,6 +1,6 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
 BF.cat='all'; BF.diff=0; BF.dur='all'; BF.sort='def';
-T('board has aircraft and helicopter missions',boardList().length===MORDER.length+HMIS.length+DYN.list.length+LESSONS.length,boardList().length);
+T('board has aircraft and helicopter missions',boardList().length===MORDER.length+HMIS.length+DYN.list.length+LESSONS.length+RACES.length,boardList().length);
 BF.cat='heli'; T('category filter',boardList().length===HMIS.length&&boardList().every(function(e){ return e.kind==='heli'; }));
 BF.cat='all'; BF.diff=3; T('difficulty filter',boardList().length>=1&&boardList().every(function(e){ return bMeta(e).diff===3; }));
 BF.diff=0; BF.dur='short'; T('duration filter',boardList().every(function(e){ const m=bMeta(e); return m.dur>0&&m.dur<=7; }));
