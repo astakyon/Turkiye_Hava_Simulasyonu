@@ -412,3 +412,27 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .ljson{ white-space:pre-wrap; word-break:break-all; font-size:10px; background:rgba(0,0,0,.35); border:1px solid var(--line); border-radius:6px; padding:8px; margin:8px 0 0; user-select:text; -webkit-user-select:text; }
 @media (max-height:560px){ #libUI{ --top:calc(max(6px,env(safe-area-inset-top)) + 38px); } .lvbtns button{ font-size:11px; padding:5px 8px; } .lvbtns{ gap:4px; bottom:8px; } .lhead h2{ font-size:17px; } .ltabs{ margin:8px 0 8px; } .lpanel{ padding-top:8px; } .linfo{ font-size:12px; gap:4px 10px; } }
 @media (max-width:760px){ #libUI{ --lw:128px; --rw:230px; } #libUI .lttl{ font-size:11px; letter-spacing:.12em; } #libUI .lmsg{ display:none; } .llist button b{ font-size:12px; } .lvbtns button{ font-size:11px; padding:5px 8px; } }
+
+/* controls settings */
+.ctabs{ margin-bottom:10px; }
+.cnote{ font-size:12px; opacity:.8; margin:8px 0; line-height:1.4; }
+.cschemes{ margin:6px 0 8px; }
+.clist{ display:flex; flex-direction:column; gap:4px; }
+.crow{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:5px 8px; border-radius:8px; background:rgba(255,255,255,.04); }
+.crow.conf{ background:rgba(255,74,74,.14); }
+.crow .cl{ font-size:13px; display:flex; flex-direction:column; }
+.crow .cl small{ color:#ff8a7a; font-size:11px; }
+.crow .cb{ display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end; }
+.kchip{ min-width:34px; padding:4px 9px; border-radius:6px; border:1px solid rgba(184,236,255,.45); background:rgba(8,15,28,.55); color:#fff; font:600 12px/1.2 "Chakra Petch",system-ui,sans-serif; cursor:pointer; }
+.kchip.add{ opacity:.6; } .kchip.cap{ background:#ffc24a; color:#06121f; border-color:#ffc24a; }
+.crow.conf .kchip{ border-color:#ff6a5a; }
+.crowbtns{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+#ctlHelp h4{ margin:10px 0 4px; font-size:12px; opacity:.75; text-transform:uppercase; letter-spacing:.05em; }
+/* touch layout options */
+.touch .tstick{ transform:scale(var(--tscale,1)); transform-origin:bottom left; }
+.touch .tright{ transform:scale(var(--tscale,1)); transform-origin:bottom right; }
+.touch .tthr{ transform:scale(var(--tscale,1)); transform-origin:bottom right; }
+.touch.lefty .tstick{ left:auto; right:max(14px,calc(env(safe-area-inset-right,0px) + 10px)); transform-origin:bottom right; }
+.touch.lefty .tthr{ right:auto; left:max(12px,calc(env(safe-area-inset-left,0px) + 8px)); transform-origin:bottom left; }
+.touch.lefty .tright{ right:auto; left:calc(max(12px,calc(env(safe-area-inset-left,0px) + 8px)) + var(--thw) + 12px); transform-origin:bottom left; }
+#wtouch.lefty .wright{ right:auto; left:max(18px,calc(env(safe-area-inset-left,0px) + 14px)); }

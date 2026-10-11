@@ -24,17 +24,17 @@ function update(dt){
   if(S.crashed){ S.crashT-=dt; if(S.crashT<=0) resetFlight(startMode==='hangar'?'runway':startMode); updateParts(dt); updateBullets(dt); updateTargets(dt); vaporStep(dt); updateBombs(dt); updateGround(dt); updateThreats(dt); return; }
 
   const k=keys;
-  const pc=clamp(((k.KeyS||k.ArrowDown)?1:0)-((k.KeyW||k.ArrowUp)?1:0)+PAD.pitch+TOUCH.pitch,-1,1);
-  const rc=clamp(((k.KeyD||k.ArrowRight)?1:0)-((k.KeyA||k.ArrowLeft)?1:0)+PAD.roll+TOUCH.roll,-1,1);
-  const yc=clamp((k.KeyE?1:0)-(k.KeyQ?1:0)+PAD.yaw+TOUCH.yaw,-1,1);
+  const pc=clamp(kb('air','noseUp')-kb('air','noseDown')+PAD.pitch+TOUCH.pitch,-1,1);
+  const rc=clamp(kb('air','rollR')-kb('air','rollL')+PAD.roll+TOUCH.roll,-1,1);
+  const yc=clamp(kb('air','yawR')-kb('air','yawL')+PAD.yaw+TOUCH.yaw,-1,1);
   const ease=1-Math.exp(-9*dt);
   S.pitchIn+=((invertY?-pc:pc)-S.pitchIn)*ease; S.rollIn+=(rc-S.rollIn)*ease; S.yawIn+=(yc-S.yawIn)*ease;
   if(!S.auto){
-    if(k.KeyR) S.throttle=Math.min(1,S.throttle+0.45*dt);
-    if(k.KeyF) S.throttle=Math.max(0,S.throttle-0.45*dt);
+    if(kb('air','thrUp')) S.throttle=Math.min(1,S.throttle+0.45*dt);
+    if(kb('air','thrDown')) S.throttle=Math.max(0,S.throttle-0.45*dt);
     if(PAD.thr) S.throttle=clamp(S.throttle+clamp(PAD.thr,-1.5,1.5)*0.5*dt,0,1);
   }
-  S.ab=!!(CUR.hasAB&&(k.ShiftLeft||k.ShiftRight||PAD.ab||TOUCH.ab)); S.brake=!!(k.KeyB||PAD.brake||TOUCH.brake);
+  S.ab=!!(CUR.hasAB&&(kb('air','ab')||PAD.ab||TOUCH.ab)); S.brake=!!(kb('air','brake')||PAD.brake||TOUCH.brake);
   if(S.auto) autoTaxi(dt);
   if(courseT!==null) courseT+=dt;
 
@@ -103,7 +103,7 @@ function update(dt){
 
   if(!S.crashed){
     if(MS.rings&&rings.length) checkRing(prevPos,S.pos);
-    if(k.Space||PAD.fire||TOUCH.fire){ fireCd-=dt; while(fireCd<=0){ fire(); fireCd+=CUR.fireInt; } } else fireCd=0;
+    if(kb('air','gun')||PAD.fire||TOUCH.fire){ fireCd-=dt; while(fireCd<=0){ fire(); fireCd+=CUR.fireInt; } } else fireCd=0;
   }
   updateBullets(dt); updateParts(dt); updateTargets(dt); vaporStep(dt); updateBombs(dt); updateGround(dt); updateThreats(dt);
   if(M.id==='free' && targets.length && targets.every(t=>!t.alive)){ allDeadT+=dt; if(allDeadT>4){ allDeadT=0; spawnTargets(); toast('Yeni hedefler havada','#ffb25a'); } } else allDeadT=0;

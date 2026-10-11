@@ -153,71 +153,7 @@
   <div class="card">
     <h2>Kontroller</h2>
     <p class="padline" id="padStatus">Kumanda bağlı değil — bağlayıp bir tuşa bas</p>
-    <div class="cols">
-      <div>
-        <h3>Klavye ve fare</h3>
-        <ul class="keys">
-          <li><span class="k"><kbd>W</kbd><kbd>↑</kbd></span>Burun aşağı</li>
-          <li><span class="k"><kbd>S</kbd><kbd>↓</kbd></span>Burun yukarı</li>
-          <li><span class="k"><kbd>A</kbd><kbd>←</kbd></span>Sola yat / yerde sola dön</li>
-          <li><span class="k"><kbd>D</kbd><kbd>→</kbd></span>Sağa yat / yerde sağa dön</li>
-          <li><span class="k"><kbd>Q</kbd><kbd>E</kbd></span>Sola / sağa yaw</li>
-          <li><span class="k"><kbd>R</kbd><kbd>F</kbd></span>Gazı artır / azalt</li>
-          <li><span class="k"><kbd>Shift</kbd></span>Art yakıcı (olan uçaklarda)</li>
-          <li><span class="k"><kbd>Space</kbd></span>Top / mühimmat ateşi</li>
-          <li><span class="k"><kbd>X</kbd></span>Seçili silahı kullan (bomba bırak / füze at)</li>
-          <li><span class="k"><kbd>1</kbd>–<kbd>5</kbd><kbd>N</kbd></span>Silah seç (panelde görünen sıra) / sıradaki silah</li>
-          <li><span class="k"><kbd>Tab</kbd></span>Hedef kilidini değiştir</li>
-          <li><span class="k"><kbd>K</kbd></span>Hedef kilidi aç / kapat</li>
-          <li><span class="k"><kbd>Z</kbd></span>Flare bırak (füzeden kaçınma)</li>
-          <li><span class="k"><kbd>G</kbd></span>İniş takımı</li>
-          <li><span class="k"><kbd>T</kbd></span>Otomatik taksi aç / kapat</li>
-          <li><span class="k"><kbd>L</kbd></span>Taksiyi atla: pist başına geç (hangarda: pistten başla)</li>
-          <li><span class="k"><kbd>B</kbd></span>Fren / hava freni</li>
-          <li><span class="k"><kbd>C</kbd></span>Kamera: dış / kokpit (İHA'da sensör)</li>
-          <li><span class="k"><kbd>V</kbd></span>Kamerayı sıfırla</li>
-          <li><span class="k"><kbd>H</kbd></span>Fotoğraf modu</li>
-          <li><span class="k"><kbd>Fare</kbd></span>Sürükle: kamerayı döndür</li>
-          <li><span class="k"><kbd>Tekerlek</kbd></span>Yakınlaş / uzaklaş</li>
-          <li><span class="k"><kbd>Y</kbd></span>Yukarı-aşağı ters çevir</li>
-          <li><span class="k"><kbd>N</kbd></span>Sesi aç / kapat</li>
-          <li><span class="k"><kbd>P</kbd><kbd>Esc</kbd></span>Duraklat</li>
-        </ul>
-        <h3>Üssü gez (yaya / araç)</h3>
-        <ul class="keys">
-          <li><span class="k"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>Yürü / araçta gaz-fren ve direksiyon</li>
-          <li><span class="k"><kbd>Fare</kbd></span>Etrafa bak (ekrana tıkla, imleç kilitlenir; Esc bırakır)</li>
-          <li><span class="k"><kbd>Shift</kbd></span>Koş (Caps Lock: sürekli koş)</li>
-          <li><span class="k"><kbd>E</kbd></span>Araca bin / in · yakındaki uçağa bin ve uç</li>
-          <li><span class="k"><kbd>Space</kbd></span>El freni</li>
-          <li><span class="k"><kbd>C</kbd></span>Araç kamerası: arkadan / sürücü koltuğu</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Kumanda (Xbox / PlayStation)</h3>
-        <ul class="keys">
-          <li><span class="k"><kbd>Sol çubuk</kbd></span>Pitch ve yatış / yerde direksiyon</li>
-          <li><span class="k"><kbd>Sağ çubuk ↔</kbd></span>Yaw</li>
-          <li><span class="k"><kbd>RT</kbd><kbd>LT</kbd></span>Gaz artır / azalt</li>
-          <li><span class="k"><kbd>Sağ çubuk ↕</kbd></span>Gaz (itme / çekme)</li>
-          <li><span class="k"><kbd>RB</kbd></span>Art yakıcı</li>
-          <li><span class="k"><kbd>LB</kbd></span>Fren / hava freni</li>
-          <li><span class="k"><kbd>A / ✕</kbd></span>Ateş</li>
-          <li><span class="k"><kbd>R3</kbd></span>Seçili silahı kullan (sağ çubuğa bas)</li>
-          <li><span class="k"><kbd>L3</kbd></span>Flare bırak (sol çubuğa bas)</li>
-          <li><span class="k"><kbd>B / ○</kbd></span>İniş takımı</li>
-          <li><span class="k"><kbd>X / □</kbd></span>Kamera</li>
-          <li><span class="k"><kbd>Y / △</kbd></span>Pitch ters çevir (taksi sırasında: taksiyi atla)</li>
-          <li><span class="k"><kbd>Geri</kbd></span>Sıradaki silahı seç</li>
-          <li><span class="k"><kbd>Start</kbd></span>Duraklat</li>
-          <li><span class="k"><kbd>←</kbd><kbd>→</kbd></span>Hangarda uçak seç (yön tuşları)</li>
-          <li><span class="k"><kbd>A</kbd></span>Hangarda: uçağa bin</li>
-          <li><span class="k"><kbd>LB</kbd><kbd>RB</kbd></span>Hangarda: görev seç</li>
-          <li><span class="k"><kbd>X</kbd></span>Hangarda: havada başla</li>
-          <li><span class="k"><kbd>Y</kbd></span>Hangarda: pistten başla</li>
-        </ul>
-      </div>
-    </div>
+    <div class="cols" id="ctlHelp"></div>
     <button class="btn primary" id="btnCtlClose">Kapat</button>
   </div>
 </div>
@@ -238,10 +174,35 @@
       <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
     </section>
     <section data-tab="k" class="hidden">
-      <div class="srow"><div class="sl"><b>Dokunmatik kontroller</b><small>Otomatik: dokunmatik ekranda açılır</small></div><div class="seg" id="setTouch"><button type="button" data-t="auto">Otomatik</button><button type="button" data-t="on">Açık</button><button type="button" data-t="off">Kapalı</button></div></div>
-      <div class="srow"><div class="sl"><b>Fare / dokunma duyarlılığı</b><small><output id="setSensV"></output></small></div><input type="range" id="setSens" min="30" max="250"></div>
-      <div class="srow"><div class="sl"><b>Yukarı-aşağıyı ters çevir</b><small>Y tuşu</small></div><label class="tgl"><input type="checkbox" id="setInv"><i></i></label></div>
-      <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Gamepad</small></div><label class="tgl"><input type="checkbox" id="setRumble"><i></i></label></div>
+      <div id="ctlUI">
+        <div class="seg ctabs" role="tablist"><button type="button" data-dev="kb">Klavye / Fare</button><button type="button" data-dev="pad">Gamepad</button><button type="button" data-dev="touch">Dokunmatik</button></div>
+        <div id="ctlP_kb">
+          <div class="srow"><div class="sl"><b>Fare / dokunma duyarlılığı</b><small><output id="setSensV"></output></small></div><input type="range" id="setSens" min="30" max="250"></div>
+          <div class="srow"><div class="sl"><b>Yukarı-aşağıyı ters çevir</b><small>Uçakta burun kontrolü</small></div><label class="tgl"><input type="checkbox" id="setInv"><i></i></label></div>
+          <p class="cnote">Şema seç, sonra değiştirmek istediğin tuşa tıkla ve yeni tuşa bas. <b>Esc</b> vazgeçer, <b>Geri sil</b> tuşu kaldırır. Kırmızı satırlar aynı tuşu kullanan eylemlerdir.</p>
+          <div class="seg wrap cschemes" id="ctlSch_kb"></div>
+          <div class="clist" id="ctlList_kb"></div>
+          <div class="crowbtns"><button type="button" class="btn" id="ctlReset_kb">Bu şemayı varsayılana döndür</button><button type="button" class="btn" id="ctlResetAll">Tüm tuşları sıfırla</button></div>
+        </div>
+        <div id="ctlP_pad" class="hidden">
+          <p class="cnote" id="padState"></p>
+          <div class="srow"><div class="sl"><b>Ölü bölge</b><small><output id="padDzV"></output></small></div><input type="range" id="padDz" min="3" max="35"></div>
+          <div class="srow"><div class="sl"><b>Çubuk hassasiyeti</b><small><output id="padSensV"></output></small></div><input type="range" id="padSens" min="50" max="200"></div>
+          <div class="srow"><div class="sl"><b>Dikey eksenleri ters çevir</b><small>Sol ve sağ çubuk ↑↓</small></div><label class="tgl"><input type="checkbox" id="padInv"><i></i></label></div>
+          <div class="srow"><div class="sl"><b>Kumanda titreşimi</b></div><label class="tgl"><input type="checkbox" id="setRumble"><i></i></label></div>
+          <p class="cnote">Değiştirmek için bir atamaya tıkla, sonra kumandada tuşa bas ya da çubuğu it.</p>
+          <div class="seg wrap cschemes" id="ctlSch_pad"></div>
+          <div class="clist" id="ctlList_pad"></div>
+          <div class="crowbtns"><button type="button" class="btn" id="ctlReset_pad">Bu şemayı varsayılana döndür</button></div>
+        </div>
+        <div id="ctlP_touch" class="hidden">
+          <div class="srow"><div class="sl"><b>Dokunmatik kontroller</b><small>Otomatik: dokunmatik ekranda açılır</small></div><div class="seg" id="setTouch"><button type="button" data-t="auto">Otomatik</button><button type="button" data-t="on">Açık</button><button type="button" data-t="off">Kapalı</button></div></div>
+          <div class="srow"><div class="sl"><b>Düğme boyutu</b><small><output id="tchSizeV"></output></small></div><input type="range" id="tchSize" min="70" max="140"></div>
+          <div class="srow"><div class="sl"><b>Saydamlık</b><small><output id="tchOpV"></output></small></div><input type="range" id="tchOp" min="30" max="100"></div>
+          <div class="srow"><div class="sl"><b>Çubuk hassasiyeti</b><small><output id="tchStickV"></output></small></div><input type="range" id="tchStick" min="50" max="200"></div>
+          <div class="srow"><div class="sl"><b>Solak düzeni</b><small>Çubuk sağda, düğmeler solda</small></div><label class="tgl"><input type="checkbox" id="tchLeft"><i></i></label></div>
+        </div>
+      </div>
     </section>
     <section data-tab="s" class="hidden">
       <div class="srow"><div class="sl"><b>Ses seviyesi</b><small><output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>

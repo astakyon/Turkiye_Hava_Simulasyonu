@@ -37,14 +37,14 @@ function startWalk(){
 }
 function walkLeave(){ try{ if(document.pointerLockElement) document.exitPointerLock(); }catch(e){} }
 function walkInput(){
-  const k=keys, f=((k.KeyW||k.ArrowUp)?1:0)-((k.KeyS||k.ArrowDown)?1:0)+(-WALK.sy), r=((k.KeyD||k.ArrowRight)?1:0)-((k.KeyA||k.ArrowLeft)?1:0)+WALK.sx;
+  const car=WALK.mode==='car', f=(car?act('land','gas')-act('land','brake'):act('foot','fwd')-act('foot','back'))+(-WALK.sy), r=(car?act('land','right')-act('land','left'):act('foot','right')-act('foot','left'))+WALK.sx;
   return {f:clamp(f,-1,1), r:clamp(r,-1,1)};
 }
 function walkUpdate(dt){
   planeGroup.visible=false; WALK.hint=Math.max(0,WALK.hint-dt);
   const inp=walkInput(), gy=AIRFIELD_Y;
   if(WALK.mode==='foot'){
-    const sp=(WALK.run||keys.ShiftLeft||keys.ShiftRight)?8.5:4.2, sy=Math.sin(WALK.yaw), cy=Math.cos(WALK.yaw);
+    const sp=(WALK.run||act('foot','run')>0.5)?8.5:4.2, sy=Math.sin(WALK.yaw), cy=Math.cos(WALK.yaw);
     let mx=(-sy*inp.f+cy*inp.r), mz=(-cy*inp.f-sy*inp.r); const m=Math.hypot(mx,mz); if(m>1){ mx/=m; mz/=m; }
     WALK.pos.x+=mx*sp*dt; WALK.pos.z+=mz*sp*dt;
     pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes());
@@ -58,13 +58,13 @@ function walkUpdate(dt){
     const c=WALK.car; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
     else { let best=9; AC_ORDER.forEach(function(id){ const d=displays[id]; if(!d||!d.g.visible) return; const dd=Math.hypot(d.x+(d.ox||0)-WALK.pos.x,HANGAR.z+(d.oz||0)-WALK.pos.z); if(dd<best){ best=dd; WALK.nearId=id; } }); if(WALK.nearId) WALK.near='plane'; }
   } else {
-    const c=WALK.car, brk=keys.Space;
+    const c=WALK.car, brk=act('land','handbrake')>0.5, turbo=act('land','turbo')>0.5;
     let thr=Math.max(0,inp.f), rev=Math.max(0,-inp.f);
     if(thr>0){ c.v+=(c.v<0?14:5.5)*thr*dt; }
     else if(rev>0){ c.v-=(c.v>0.3?14:3.5)*rev*dt; c.v=Math.max(c.v,-7); }
     else { const dec=1.6*dt; c.v=Math.abs(c.v)<dec?0:c.v-Math.sign(c.v)*dec; }
     if(brk){ const dec=18*dt; c.v=Math.abs(c.v)<dec?0:c.v-Math.sign(c.v)*dec; }
-    c.v=clamp(c.v-c.v*0.04*dt,-7,30);
+    if(turbo&&thr>0) c.v+=4*dt; c.v=clamp(c.v-c.v*0.04*dt,-7,turbo?42:30);
     const tgt=inp.r*0.55*(1-Math.min(0.65,Math.abs(c.v)/38)); c.steer+=(tgt-c.steer)*Math.min(1,dt*6);
     c.h-=(c.v/2.7)*Math.tan(c.steer)*dt;
     c.x+=-Math.sin(c.h)*c.v*dt; c.z+=-Math.cos(c.h)*c.v*dt;
@@ -102,7 +102,7 @@ function drawWalkHUD(){
   if(foot){ hx.fillStyle='rgba(255,255,255,0.85)'; hx.beginPath(); hx.arc(w/2,h/2,2.2*s,0,Math.PI*2); hx.fill(); }
   hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.textAlign='left'; hx.fillStyle='#b8ecff';
   const top=Math.round(20*s); hx.textAlign=WALK.tvis?'center':'left';
-  hx.fillText(foot?(WALK.run||keys.ShiftLeft?'YAYA · KOŞU':'YAYA'):'ARAÇ · BENİ İZLE', WALK.tvis?w/2:Math.round(16*s), top);
+  hx.fillText(foot?(WALK.run||act('foot','run')>0.5?'YAYA · KOŞU':'YAYA'):'ARAÇ · BENİ İZLE', WALK.tvis?w/2:Math.round(16*s), top);
   if(!foot){ hx.font='700 '+Math.round(30*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff'; hx.fillText(Math.round(Math.abs(WALK.car.v)*3.6)+' km/sa', WALK.tvis?w/2:Math.round(16*s), top+Math.round(30*s)); }
   let msg='';
   if(foot&&WALK.near==='car') msg=(WALK.tvis?'BİN':'E')+' — araca bin';
@@ -118,12 +118,14 @@ function walkLook(dx,dy){ const s=SETTINGS.sens||1;
   if(WALK.mode==='foot'){ WALK.yaw-=dx*0.004*s; WALK.pitch=clamp(WALK.pitch-dy*0.004*s,-1.35,1.35); }
   else { WALK.cy-=dx*0.005*s; WALK.pitch=clamp(WALK.pitch-dy*0.004*s,-0.6,0.9); } }
 function walkKey(e){
-  if(e.code==='Escape'||e.code==='KeyP'){ walkLeave(); pauseGame(); return; }
-  if(e.code==='KeyE'||e.code==='Enter'||e.code==='KeyF'){ walkInteract(); return; }
-  if(e.code==='KeyC'&&WALK.mode==='car'){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
-  if(e.code==='KeyM') walkWarp();
-  if(e.code==='Space'&&WALK.mode==='foot') WALK.jumpQ=true;
-  if(e.code==='CapsLock') WALK.run=!WALK.run;
+  if(isKey(e,'gen','pause')||e.code==='Escape'){ walkLeave(); pauseGame(); return; }
+  const foot=WALK.mode==='foot';
+  if(foot?isKey(e,'foot','use'):isKey(e,'land','exit')){ walkInteract(); return; }
+  if(!foot&&isKey(e,'land','cam')){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
+  if(isKey(e,'gen','map')){ if(typeof openMap==='function') openMap(); else walkWarp(); }
+  if(isKey(e,'gen','mute')) toggleMute();
+  if(foot&&isKey(e,'foot','jump')) WALK.jumpQ=true;
+  if(isKey(e,'foot','runToggle')) WALK.run=!WALK.run;
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.code)>=0) e.preventDefault();
 }
 function updateWalkTouch(){

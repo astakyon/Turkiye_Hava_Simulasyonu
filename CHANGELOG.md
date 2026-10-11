@@ -1,6 +1,23 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.52 — 2026-10-11
+### Yeni — Kontrol sistemi
+- **Ayarlar → Kontroller** üç sekme oldu: **Klavye / Fare**, **Gamepad**, **Dokunmatik**.
+- **Kontrol şemaları:** her araç türünün ayrı şeması var: **Hava aracı**, **Helikopter**, **Kara aracı**, **Deniz aracı**, **Yaya**, **Genel** (duraklat, harita, kamera, ses, fotoğraf). Helikopter ve deniz şemaları ilgili araçlar gelince kullanılacak, şimdiden ayarlanabiliyor.
+- **Tuş atama:** bir atamaya tıkla, yeni tuşa ya da kumanda tuşuna bas (çubuk yönü de olur).
+  - Eylem başına en çok 3 atama. **Esc** vazgeçer, **Geri sil** kaldırır.
+  - Aynı tuşu kullanan eylemler kırmızıyla ve "Çakışma" notuyla gösteriliyor.
+  - "Bu şemayı varsayılana döndür" ve "Tüm tuşları sıfırla" düğmeleri var.
+- **Gamepad:** ölü bölge, çubuk hassasiyeti, dikey eksenleri ters çevirme, titreşim. Bağlı kumandanın adı gösteriliyor.
+  - Gamepad artık **yürürken ve araçtayken** de çalışıyor: yürüme, bakma, zıplama, binme, gaz, fren ve direksiyon.
+- **Dokunmatik:** düğme boyutu, saydamlık, çubuk hassasiyeti, **solak düzeni** (çubuk sağda, düğmeler solda).
+- **Kontroller penceresi:** tuş listesi artık güncel atamalardan kendiliğinden oluşuyor.
+- **Araçta turbo:** Shift.
+### Değişti
+- **Ses aç/kapat** artık **U** tuşu. V1.51'de N tuşu sıradaki silahla çakışıyordu.
+- **M tuşu** harita için ayrıldı. Harita gelene kadar yürürken yerler listesini açıyor.
+
 ## V1.51 — 2026-10-11
 ### Düzeltildi
 - **Uzaktan titreşen nesneler:** derinlik hesabı uzak mesafeler için hassaslaştırıldı. Havalimanı zemini, pist çizgileri, yollar, çatılar ve türbinler uzaktan bakınca artık titremiyor.

@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.51">
+<meta name="game-version" content="V1.52">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -429,6 +429,30 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .ljson{ white-space:pre-wrap; word-break:break-all; font-size:10px; background:rgba(0,0,0,.35); border:1px solid var(--line); border-radius:6px; padding:8px; margin:8px 0 0; user-select:text; -webkit-user-select:text; }
 @media (max-height:560px){ #libUI{ --top:calc(max(6px,env(safe-area-inset-top)) + 38px); } .lvbtns button{ font-size:11px; padding:5px 8px; } .lvbtns{ gap:4px; bottom:8px; } .lhead h2{ font-size:17px; } .ltabs{ margin:8px 0 8px; } .lpanel{ padding-top:8px; } .linfo{ font-size:12px; gap:4px 10px; } }
 @media (max-width:760px){ #libUI{ --lw:128px; --rw:230px; } #libUI .lttl{ font-size:11px; letter-spacing:.12em; } #libUI .lmsg{ display:none; } .llist button b{ font-size:12px; } .lvbtns button{ font-size:11px; padding:5px 8px; } }
+
+/* controls settings */
+.ctabs{ margin-bottom:10px; }
+.cnote{ font-size:12px; opacity:.8; margin:8px 0; line-height:1.4; }
+.cschemes{ margin:6px 0 8px; }
+.clist{ display:flex; flex-direction:column; gap:4px; }
+.crow{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:5px 8px; border-radius:8px; background:rgba(255,255,255,.04); }
+.crow.conf{ background:rgba(255,74,74,.14); }
+.crow .cl{ font-size:13px; display:flex; flex-direction:column; }
+.crow .cl small{ color:#ff8a7a; font-size:11px; }
+.crow .cb{ display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end; }
+.kchip{ min-width:34px; padding:4px 9px; border-radius:6px; border:1px solid rgba(184,236,255,.45); background:rgba(8,15,28,.55); color:#fff; font:600 12px/1.2 "Chakra Petch",system-ui,sans-serif; cursor:pointer; }
+.kchip.add{ opacity:.6; } .kchip.cap{ background:#ffc24a; color:#06121f; border-color:#ffc24a; }
+.crow.conf .kchip{ border-color:#ff6a5a; }
+.crowbtns{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+#ctlHelp h4{ margin:10px 0 4px; font-size:12px; opacity:.75; text-transform:uppercase; letter-spacing:.05em; }
+/* touch layout options */
+.touch .tstick{ transform:scale(var(--tscale,1)); transform-origin:bottom left; }
+.touch .tright{ transform:scale(var(--tscale,1)); transform-origin:bottom right; }
+.touch .tthr{ transform:scale(var(--tscale,1)); transform-origin:bottom right; }
+.touch.lefty .tstick{ left:auto; right:max(14px,calc(env(safe-area-inset-right,0px) + 10px)); transform-origin:bottom right; }
+.touch.lefty .tthr{ right:auto; left:max(12px,calc(env(safe-area-inset-left,0px) + 8px)); transform-origin:bottom left; }
+.touch.lefty .tright{ right:auto; left:calc(max(12px,calc(env(safe-area-inset-left,0px) + 8px)) + var(--thw) + 12px); transform-origin:bottom left; }
+#wtouch.lefty .wright{ right:auto; left:max(18px,calc(env(safe-area-inset-left,0px) + 14px)); }
 </style>
 </head>
 <body>
@@ -587,71 +611,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   <div class="card">
     <h2>Kontroller</h2>
     <p class="padline" id="padStatus">Kumanda bağlı değil — bağlayıp bir tuşa bas</p>
-    <div class="cols">
-      <div>
-        <h3>Klavye ve fare</h3>
-        <ul class="keys">
-          <li><span class="k"><kbd>W</kbd><kbd>↑</kbd></span>Burun aşağı</li>
-          <li><span class="k"><kbd>S</kbd><kbd>↓</kbd></span>Burun yukarı</li>
-          <li><span class="k"><kbd>A</kbd><kbd>←</kbd></span>Sola yat / yerde sola dön</li>
-          <li><span class="k"><kbd>D</kbd><kbd>→</kbd></span>Sağa yat / yerde sağa dön</li>
-          <li><span class="k"><kbd>Q</kbd><kbd>E</kbd></span>Sola / sağa yaw</li>
-          <li><span class="k"><kbd>R</kbd><kbd>F</kbd></span>Gazı artır / azalt</li>
-          <li><span class="k"><kbd>Shift</kbd></span>Art yakıcı (olan uçaklarda)</li>
-          <li><span class="k"><kbd>Space</kbd></span>Top / mühimmat ateşi</li>
-          <li><span class="k"><kbd>X</kbd></span>Seçili silahı kullan (bomba bırak / füze at)</li>
-          <li><span class="k"><kbd>1</kbd>–<kbd>5</kbd><kbd>N</kbd></span>Silah seç (panelde görünen sıra) / sıradaki silah</li>
-          <li><span class="k"><kbd>Tab</kbd></span>Hedef kilidini değiştir</li>
-          <li><span class="k"><kbd>K</kbd></span>Hedef kilidi aç / kapat</li>
-          <li><span class="k"><kbd>Z</kbd></span>Flare bırak (füzeden kaçınma)</li>
-          <li><span class="k"><kbd>G</kbd></span>İniş takımı</li>
-          <li><span class="k"><kbd>T</kbd></span>Otomatik taksi aç / kapat</li>
-          <li><span class="k"><kbd>L</kbd></span>Taksiyi atla: pist başına geç (hangarda: pistten başla)</li>
-          <li><span class="k"><kbd>B</kbd></span>Fren / hava freni</li>
-          <li><span class="k"><kbd>C</kbd></span>Kamera: dış / kokpit (İHA'da sensör)</li>
-          <li><span class="k"><kbd>V</kbd></span>Kamerayı sıfırla</li>
-          <li><span class="k"><kbd>H</kbd></span>Fotoğraf modu</li>
-          <li><span class="k"><kbd>Fare</kbd></span>Sürükle: kamerayı döndür</li>
-          <li><span class="k"><kbd>Tekerlek</kbd></span>Yakınlaş / uzaklaş</li>
-          <li><span class="k"><kbd>Y</kbd></span>Yukarı-aşağı ters çevir</li>
-          <li><span class="k"><kbd>N</kbd></span>Sesi aç / kapat</li>
-          <li><span class="k"><kbd>P</kbd><kbd>Esc</kbd></span>Duraklat</li>
-        </ul>
-        <h3>Üssü gez (yaya / araç)</h3>
-        <ul class="keys">
-          <li><span class="k"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>Yürü / araçta gaz-fren ve direksiyon</li>
-          <li><span class="k"><kbd>Fare</kbd></span>Etrafa bak (ekrana tıkla, imleç kilitlenir; Esc bırakır)</li>
-          <li><span class="k"><kbd>Shift</kbd></span>Koş (Caps Lock: sürekli koş)</li>
-          <li><span class="k"><kbd>E</kbd></span>Araca bin / in · yakındaki uçağa bin ve uç</li>
-          <li><span class="k"><kbd>Space</kbd></span>El freni</li>
-          <li><span class="k"><kbd>C</kbd></span>Araç kamerası: arkadan / sürücü koltuğu</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Kumanda (Xbox / PlayStation)</h3>
-        <ul class="keys">
-          <li><span class="k"><kbd>Sol çubuk</kbd></span>Pitch ve yatış / yerde direksiyon</li>
-          <li><span class="k"><kbd>Sağ çubuk ↔</kbd></span>Yaw</li>
-          <li><span class="k"><kbd>RT</kbd><kbd>LT</kbd></span>Gaz artır / azalt</li>
-          <li><span class="k"><kbd>Sağ çubuk ↕</kbd></span>Gaz (itme / çekme)</li>
-          <li><span class="k"><kbd>RB</kbd></span>Art yakıcı</li>
-          <li><span class="k"><kbd>LB</kbd></span>Fren / hava freni</li>
-          <li><span class="k"><kbd>A / ✕</kbd></span>Ateş</li>
-          <li><span class="k"><kbd>R3</kbd></span>Seçili silahı kullan (sağ çubuğa bas)</li>
-          <li><span class="k"><kbd>L3</kbd></span>Flare bırak (sol çubuğa bas)</li>
-          <li><span class="k"><kbd>B / ○</kbd></span>İniş takımı</li>
-          <li><span class="k"><kbd>X / □</kbd></span>Kamera</li>
-          <li><span class="k"><kbd>Y / △</kbd></span>Pitch ters çevir (taksi sırasında: taksiyi atla)</li>
-          <li><span class="k"><kbd>Geri</kbd></span>Sıradaki silahı seç</li>
-          <li><span class="k"><kbd>Start</kbd></span>Duraklat</li>
-          <li><span class="k"><kbd>←</kbd><kbd>→</kbd></span>Hangarda uçak seç (yön tuşları)</li>
-          <li><span class="k"><kbd>A</kbd></span>Hangarda: uçağa bin</li>
-          <li><span class="k"><kbd>LB</kbd><kbd>RB</kbd></span>Hangarda: görev seç</li>
-          <li><span class="k"><kbd>X</kbd></span>Hangarda: havada başla</li>
-          <li><span class="k"><kbd>Y</kbd></span>Hangarda: pistten başla</li>
-        </ul>
-      </div>
-    </div>
+    <div class="cols" id="ctlHelp"></div>
     <button class="btn primary" id="btnCtlClose">Kapat</button>
   </div>
 </div>
@@ -672,10 +632,35 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
     </section>
     <section data-tab="k" class="hidden">
-      <div class="srow"><div class="sl"><b>Dokunmatik kontroller</b><small>Otomatik: dokunmatik ekranda açılır</small></div><div class="seg" id="setTouch"><button type="button" data-t="auto">Otomatik</button><button type="button" data-t="on">Açık</button><button type="button" data-t="off">Kapalı</button></div></div>
-      <div class="srow"><div class="sl"><b>Fare / dokunma duyarlılığı</b><small><output id="setSensV"></output></small></div><input type="range" id="setSens" min="30" max="250"></div>
-      <div class="srow"><div class="sl"><b>Yukarı-aşağıyı ters çevir</b><small>Y tuşu</small></div><label class="tgl"><input type="checkbox" id="setInv"><i></i></label></div>
-      <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Gamepad</small></div><label class="tgl"><input type="checkbox" id="setRumble"><i></i></label></div>
+      <div id="ctlUI">
+        <div class="seg ctabs" role="tablist"><button type="button" data-dev="kb">Klavye / Fare</button><button type="button" data-dev="pad">Gamepad</button><button type="button" data-dev="touch">Dokunmatik</button></div>
+        <div id="ctlP_kb">
+          <div class="srow"><div class="sl"><b>Fare / dokunma duyarlılığı</b><small><output id="setSensV"></output></small></div><input type="range" id="setSens" min="30" max="250"></div>
+          <div class="srow"><div class="sl"><b>Yukarı-aşağıyı ters çevir</b><small>Uçakta burun kontrolü</small></div><label class="tgl"><input type="checkbox" id="setInv"><i></i></label></div>
+          <p class="cnote">Şema seç, sonra değiştirmek istediğin tuşa tıkla ve yeni tuşa bas. <b>Esc</b> vazgeçer, <b>Geri sil</b> tuşu kaldırır. Kırmızı satırlar aynı tuşu kullanan eylemlerdir.</p>
+          <div class="seg wrap cschemes" id="ctlSch_kb"></div>
+          <div class="clist" id="ctlList_kb"></div>
+          <div class="crowbtns"><button type="button" class="btn" id="ctlReset_kb">Bu şemayı varsayılana döndür</button><button type="button" class="btn" id="ctlResetAll">Tüm tuşları sıfırla</button></div>
+        </div>
+        <div id="ctlP_pad" class="hidden">
+          <p class="cnote" id="padState"></p>
+          <div class="srow"><div class="sl"><b>Ölü bölge</b><small><output id="padDzV"></output></small></div><input type="range" id="padDz" min="3" max="35"></div>
+          <div class="srow"><div class="sl"><b>Çubuk hassasiyeti</b><small><output id="padSensV"></output></small></div><input type="range" id="padSens" min="50" max="200"></div>
+          <div class="srow"><div class="sl"><b>Dikey eksenleri ters çevir</b><small>Sol ve sağ çubuk ↑↓</small></div><label class="tgl"><input type="checkbox" id="padInv"><i></i></label></div>
+          <div class="srow"><div class="sl"><b>Kumanda titreşimi</b></div><label class="tgl"><input type="checkbox" id="setRumble"><i></i></label></div>
+          <p class="cnote">Değiştirmek için bir atamaya tıkla, sonra kumandada tuşa bas ya da çubuğu it.</p>
+          <div class="seg wrap cschemes" id="ctlSch_pad"></div>
+          <div class="clist" id="ctlList_pad"></div>
+          <div class="crowbtns"><button type="button" class="btn" id="ctlReset_pad">Bu şemayı varsayılana döndür</button></div>
+        </div>
+        <div id="ctlP_touch" class="hidden">
+          <div class="srow"><div class="sl"><b>Dokunmatik kontroller</b><small>Otomatik: dokunmatik ekranda açılır</small></div><div class="seg" id="setTouch"><button type="button" data-t="auto">Otomatik</button><button type="button" data-t="on">Açık</button><button type="button" data-t="off">Kapalı</button></div></div>
+          <div class="srow"><div class="sl"><b>Düğme boyutu</b><small><output id="tchSizeV"></output></small></div><input type="range" id="tchSize" min="70" max="140"></div>
+          <div class="srow"><div class="sl"><b>Saydamlık</b><small><output id="tchOpV"></output></small></div><input type="range" id="tchOp" min="30" max="100"></div>
+          <div class="srow"><div class="sl"><b>Çubuk hassasiyeti</b><small><output id="tchStickV"></output></small></div><input type="range" id="tchStick" min="50" max="200"></div>
+          <div class="srow"><div class="sl"><b>Solak düzeni</b><small>Çubuk sağda, düğmeler solda</small></div><label class="tgl"><input type="checkbox" id="tchLeft"><i></i></label></div>
+        </div>
+      </div>
     </section>
     <section data-tab="s" class="hidden">
       <div class="srow"><div class="sl"><b>Ses seviyesi</b><small><output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
@@ -802,7 +787,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.51', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.52', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -4993,17 +4978,17 @@ function update(dt){
   if(S.crashed){ S.crashT-=dt; if(S.crashT<=0) resetFlight(startMode==='hangar'?'runway':startMode); updateParts(dt); updateBullets(dt); updateTargets(dt); vaporStep(dt); updateBombs(dt); updateGround(dt); updateThreats(dt); return; }
 
   const k=keys;
-  const pc=clamp(((k.KeyS||k.ArrowDown)?1:0)-((k.KeyW||k.ArrowUp)?1:0)+PAD.pitch+TOUCH.pitch,-1,1);
-  const rc=clamp(((k.KeyD||k.ArrowRight)?1:0)-((k.KeyA||k.ArrowLeft)?1:0)+PAD.roll+TOUCH.roll,-1,1);
-  const yc=clamp((k.KeyE?1:0)-(k.KeyQ?1:0)+PAD.yaw+TOUCH.yaw,-1,1);
+  const pc=clamp(kb('air','noseUp')-kb('air','noseDown')+PAD.pitch+TOUCH.pitch,-1,1);
+  const rc=clamp(kb('air','rollR')-kb('air','rollL')+PAD.roll+TOUCH.roll,-1,1);
+  const yc=clamp(kb('air','yawR')-kb('air','yawL')+PAD.yaw+TOUCH.yaw,-1,1);
   const ease=1-Math.exp(-9*dt);
   S.pitchIn+=((invertY?-pc:pc)-S.pitchIn)*ease; S.rollIn+=(rc-S.rollIn)*ease; S.yawIn+=(yc-S.yawIn)*ease;
   if(!S.auto){
-    if(k.KeyR) S.throttle=Math.min(1,S.throttle+0.45*dt);
-    if(k.KeyF) S.throttle=Math.max(0,S.throttle-0.45*dt);
+    if(kb('air','thrUp')) S.throttle=Math.min(1,S.throttle+0.45*dt);
+    if(kb('air','thrDown')) S.throttle=Math.max(0,S.throttle-0.45*dt);
     if(PAD.thr) S.throttle=clamp(S.throttle+clamp(PAD.thr,-1.5,1.5)*0.5*dt,0,1);
   }
-  S.ab=!!(CUR.hasAB&&(k.ShiftLeft||k.ShiftRight||PAD.ab||TOUCH.ab)); S.brake=!!(k.KeyB||PAD.brake||TOUCH.brake);
+  S.ab=!!(CUR.hasAB&&(kb('air','ab')||PAD.ab||TOUCH.ab)); S.brake=!!(kb('air','brake')||PAD.brake||TOUCH.brake);
   if(S.auto) autoTaxi(dt);
   if(courseT!==null) courseT+=dt;
 
@@ -5072,7 +5057,7 @@ function update(dt){
 
   if(!S.crashed){
     if(MS.rings&&rings.length) checkRing(prevPos,S.pos);
-    if(k.Space||PAD.fire||TOUCH.fire){ fireCd-=dt; while(fireCd<=0){ fire(); fireCd+=CUR.fireInt; } } else fireCd=0;
+    if(kb('air','gun')||PAD.fire||TOUCH.fire){ fireCd-=dt; while(fireCd<=0){ fire(); fireCd+=CUR.fireInt; } } else fireCd=0;
   }
   updateBullets(dt); updateParts(dt); updateTargets(dt); vaporStep(dt); updateBombs(dt); updateGround(dt); updateThreats(dt);
   if(M.id==='free' && targets.length && targets.every(t=>!t.alive)){ allDeadT+=dt; if(allDeadT>4){ allDeadT=0; spawnTargets(); toast('Yeni hedefler havada','#ffb25a'); } } else allDeadT=0;
@@ -5620,6 +5605,127 @@ function ambStep(dt){
   AMBS.crT-=dt; if(AMBS.crT<=0){ AMBS.crT=0.35+Math.random()*0.6;
     if((TOD.nightK||0)>0.6&&alt<40&&!sea&&state==='walk'){ for(let k=0;k<3;k++) setTimeout(function(){ chirp(4300,4200,0.04,0.012,'square'); },k*70); } }
 }
+/* ------------------------------------------------------------------ control schemes and bindings
+   Every input goes through named actions grouped by scheme (vehicle type). Keyboard keys and gamepad buttons/axes are
+   bound per action and can be rebound in Settings → Controls; touch has its own layout options.
+   Gamepad specs: 'b7' = button 7 (value 0..1), 'a1-' / 'a1+' = axis 1 negative / positive half (dead zone + curve applied). */
+const CTRL_DEF={
+  gen:{name:'Genel', acts:[
+    ['pause','Duraklat / menü',['Escape','KeyP'],['b9']], ['map','Harita',['KeyM'],[]], ['camera','Kamera değiştir',['KeyC'],['b2']],
+    ['resetView','Kamerayı sıfırla',['KeyV'],[]], ['photo','Fotoğraf modu',['KeyH'],[]], ['invert','Yukarı-aşağı ters çevir',['KeyY'],[]], ['mute','Sesi aç / kapat',['KeyU'],[]]]},
+  air:{name:'Hava aracı', acts:[
+    ['noseDown','Burun aşağı',['KeyW','ArrowUp'],['a1-']], ['noseUp','Burun yukarı',['KeyS','ArrowDown'],['a1+']],
+    ['rollL','Sola yat / yerde sola dön',['KeyA','ArrowLeft'],['a0-']], ['rollR','Sağa yat / yerde sağa dön',['KeyD','ArrowRight'],['a0+']],
+    ['yawL','Sola yaw',['KeyQ'],['a2-','b14']], ['yawR','Sağa yaw',['KeyE'],['a2+','b15']],
+    ['thrUp','Gaz artır',['KeyR'],['b7','a3-','b12']], ['thrDown','Gaz azalt',['KeyF'],['b6','a3+','b13']],
+    ['ab','Art yakıcı',['ShiftLeft','ShiftRight'],['b5']], ['brake','Fren / hava freni',['KeyB'],['b4']],
+    ['gun','Top / mühimmat ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['nextWpn','Sıradaki silah',['KeyN'],['b8']],
+    ['lock','Hedef kilidi aç / kapat',['KeyK'],[]], ['nextTarget','Hedef kilidini değiştir',['Tab'],[]], ['flares','Flare bırak',['KeyZ'],['b10']],
+    ['gear','İniş takımı',['KeyG'],['b1']], ['autoTaxi','Otomatik taksi',['KeyT'],[]], ['skipTaxi','Taksiyi atla',['KeyL'],['b3']]]},
+  heli:{name:'Helikopter', acts:[
+    ['cycF','İleri (cyclic)',['KeyW','ArrowUp'],['a1-']], ['cycB','Geri (cyclic)',['KeyS','ArrowDown'],['a1+']],
+    ['cycL','Sola kay (cyclic)',['KeyA','ArrowLeft'],['a0-']], ['cycR','Sağa kay (cyclic)',['KeyD','ArrowRight'],['a0+']],
+    ['collUp','Yüksel (collective)',['KeyR','ShiftLeft'],['b7','a3-']], ['collDn','Alçal (collective)',['KeyF','ControlLeft'],['b6','a3+']],
+    ['yawL','Sola dön (pedal)',['KeyQ'],['a2-','b14']], ['yawR','Sağa dön (pedal)',['KeyE'],['a2+','b15']],
+    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['flares','Flare bırak',['KeyZ'],['b10']], ['exit','İn',['KeyG'],['b1']]]},
+  land:{name:'Kara aracı', acts:[
+    ['gas','Gaz',['KeyW','ArrowUp'],['b7','a1-']], ['brake','Fren / geri',['KeyS','ArrowDown'],['b6','a1+']],
+    ['left','Sola dön',['KeyA','ArrowLeft'],['a0-']], ['right','Sağa dön',['KeyD','ArrowRight'],['a0+']],
+    ['handbrake','El freni',['Space'],['b0']], ['turbo','Turbo',['ShiftLeft','ShiftRight'],['b5']], ['cam','Araç kamerası',['KeyC'],['b2']], ['exit','Araçtan in',['KeyE','KeyF','Enter'],['b1']]]},
+  sea:{name:'Deniz aracı', acts:[
+    ['thrUp','Hız artır',['KeyW','ArrowUp'],['b7','a1-']], ['thrDown','Hız azalt / geri',['KeyS','ArrowDown'],['b6','a1+']],
+    ['rudL','Dümen sola',['KeyA','ArrowLeft'],['a0-']], ['rudR','Dümen sağa',['KeyD','ArrowRight'],['a0+']],
+    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['cam','Kamera',['KeyC'],['b2']]]},
+  foot:{name:'Yaya', acts:[
+    ['fwd','İleri',['KeyW','ArrowUp'],['a1-']], ['back','Geri',['KeyS','ArrowDown'],['a1+']], ['left','Sola',['KeyA','ArrowLeft'],['a0-']], ['right','Sağa',['KeyD','ArrowRight'],['a0+']],
+    ['run','Koş (basılı tut)',['ShiftLeft','ShiftRight'],['b10']], ['runToggle','Sürekli koş aç / kapat',['CapsLock'],[]], ['jump','Zıpla',['Space'],['b0']], ['use','Araca / uçağa bin',['KeyE','KeyF','Enter'],['b2']],
+    ['lookL','Sola bak',[],['a2-']], ['lookR','Sağa bak',[],['a2+']], ['lookU','Yukarı bak',[],['a3-']], ['lookD','Aşağı bak',[],['a3+']]]}
+};
+const CTRL_ORDER=['air','heli','land','sea','foot','gen'];
+const CTRL={kb:{}, pad:{}};
+function ctrlDefaults(){ CTRL_ORDER.forEach(function(s){ CTRL.kb[s]={}; CTRL.pad[s]={}; CTRL_DEF[s].acts.forEach(function(a){ CTRL.kb[s][a[0]]=a[2].slice(); CTRL.pad[s][a[0]]=a[3].slice(); }); }); }
+function ctrlLoad(){ ctrlDefaults(); try{ const o=JSON.parse(localStorage.getItem('ayy-controls')||'null'); if(o) ['kb','pad'].forEach(function(d){ for(const s in (o[d]||{})) for(const a in o[d][s]) if(CTRL[d][s]&&CTRL[d][s][a]) CTRL[d][s][a]=o[d][s][a].slice(0,3); }); }catch(e){} }
+function ctrlSave(){ try{ localStorage.setItem('ayy-controls',JSON.stringify(CTRL)); }catch(e){} }
+function ctrlResetScheme(dev,s){ CTRL_DEF[s].acts.forEach(function(a){ CTRL[dev][s][a[0]]=(dev==='kb'?a[2]:a[3]).slice(); }); ctrlSave(); }
+ctrlLoad();
+/* keyboard: held / pressed-this-event */
+function kb(s,a){ const L=CTRL.kb[s]&&CTRL.kb[s][a]; if(!L) return 0; for(let i=0;i<L.length;i++) if(keys[L[i]]) return 1; return 0; }
+function isKey(e,s,a){ const L=CTRL.kb[s]&&CTRL.kb[s][a]; return !!L&&L.indexOf(e.code)>=0; }
+/* gamepad: analog value of an action, and its rising edge */
+let PADRAW=null; const padWas={};
+function padOpt(){ const p=SETTINGS.pad||{}; return {dz:p.dz==null?0.12:p.dz, sens:p.sens==null?1:p.sens, invY:!!p.invY}; }
+function padSpec(sp){ const g=PADRAW; if(!g) return 0;
+  if(sp[0]==='b'){ const b=g.buttons[+sp.slice(1)]; return b?(b.value||(b.pressed?1:0)):0; }
+  const i=+sp.slice(1,-1), sg=sp.slice(-1)==='+'?1:-1, o=padOpt(); let v=g.axes[i]||0; if(o.invY&&(i===1||i===3)) v=-v;
+  return Math.min(1,Math.max(0,padCurve(v*sg,o.dz)*o.sens)); }
+function pad(s,a){ const L=CTRL.pad[s]&&CTRL.pad[s][a]; if(!L||!PADRAW) return 0; let m=0; for(let i=0;i<L.length;i++) m=Math.max(m,padSpec(L[i])); return m; }
+function padEdge(s,a){ const k=s+'.'+a, v=pad(s,a)>0.55, w=!!padWas[k]; padWas[k]=v; return v&&!w; }
+/* combined analog value (keyboard + gamepad) */
+function act(s,a){ return Math.max(kb(s,a),pad(s,a)); }
+/* ---- labels */
+const KEYNAME={Space:'Boşluk',Escape:'Esc',Enter:'Enter',Tab:'Tab',ShiftLeft:'Sol Shift',ShiftRight:'Sağ Shift',ControlLeft:'Sol Ctrl',ControlRight:'Sağ Ctrl',AltLeft:'Sol Alt',AltRight:'Sağ Alt',
+  CapsLock:'Caps Lock',Backspace:'Geri sil',ArrowUp:'↑',ArrowDown:'↓',ArrowLeft:'←',ArrowRight:'→',Comma:',',Period:'.',Slash:'/',Semicolon:'Ş',Quote:'İ',BracketLeft:'Ğ',BracketRight:'Ü',Backquote:'"',Minus:'*',Equal:'-',Backslash:',',IntlBackslash:'<'};
+function keyName(c){ return KEYNAME[c]||c.replace(/^Key/,'').replace(/^Digit/,'').replace(/^Numpad/,'Num ').replace(/^F(\d+)$/,'F$1'); }
+const PADNAME={b0:'A / ✕',b1:'B / ○',b2:'X / □',b3:'Y / △',b4:'LB',b5:'RB',b6:'LT',b7:'RT',b8:'Geri',b9:'Start',b10:'L3',b11:'R3',b12:'Yön ↑',b13:'Yön ↓',b14:'Yön ←',b15:'Yön →',b16:'Ana tuş',
+  'a0-':'Sol çubuk ←','a0+':'Sol çubuk →','a1-':'Sol çubuk ↑','a1+':'Sol çubuk ↓','a2-':'Sağ çubuk ←','a2+':'Sağ çubuk →','a3-':'Sağ çubuk ↑','a3+':'Sağ çubuk ↓'};
+function padName(sp){ return PADNAME[sp]||(sp[0]==='b'?'Tuş '+sp.slice(1):'Eksen '+sp.slice(1)); }
+/* conflicts: the same key / button on two actions of one scheme (or a scheme and Genel) */
+const GEN_GROUND=['pause','map','mute'];   /* on foot / in a car only these general actions are live */
+function ctrlConflicts(dev,s){ const seen={}, out={}; [s].concat(s==='gen'?[]:['gen']).forEach(function(sc){ CTRL_DEF[sc].acts.forEach(function(a){ if(sc==='gen'&&(s==='land'||s==='foot')&&GEN_GROUND.indexOf(a[0])<0) return; (CTRL[dev][sc][a[0]]||[]).forEach(function(c){ (seen[c]=seen[c]||[]).push(sc+'.'+a[0]); }); }); });
+  for(const c in seen) if(seen[c].length>1) seen[c].forEach(function(k){ (out[k]=out[k]||[]).push(c); }); return out; }
+/* ---- help modal: generated from the current bindings */
+function renderCtlHelp(){ const el=$('ctlHelp'); if(!el) return;
+  const col=function(dev,title){ let h='<div><h3>'+title+'</h3>';
+    ['air','land','foot','gen'].forEach(function(s){ h+='<h4>'+CTRL_DEF[s].name+'</h4><ul class="keys">'; CTRL_DEF[s].acts.forEach(function(a){ const L=CTRL[dev][s][a[0]]; if(!L.length) return;
+      h+='<li><span class="k">'+L.map(function(c){ return '<kbd>'+(dev==='kb'?keyName(c):padName(c))+'</kbd>'; }).join('')+'</span>'+a[1]+'</li>'; }); h+='</ul>'; });
+    if(dev==='kb') h+='<ul class="keys"><li><span class="k"><kbd>1</kbd>–<kbd>5</kbd></span>Silah seç</li><li><span class="k"><kbd>Fare</kbd></span>Sürükle: kamerayı döndür · tekerlek: yakınlaş</li></ul>';
+    return h+'</div>'; };
+  el.innerHTML=col('kb','Klavye ve fare')+col('pad','Kumanda (Xbox / PlayStation)')+'<p class="lnote" style="grid-column:1/-1">Tuşları <b>Ayarlar → Kontroller</b> bölümünden değiştirebilirsin.</p>'; }
+/* ---- settings UI (Settings → Controls): device tabs, scheme chips, rebinding by pressing a key / button */
+const CUI={dev:'kb', scheme:'air', cap:null};
+function ctlUI(){ const host=$('ctlUI'); if(!host) return;
+  ['kb','pad','touch'].forEach(function(d){ const b=host.querySelector('[data-dev="'+d+'"]'); if(b){ b.setAttribute('aria-selected',String(CUI.dev===d)); b.setAttribute('aria-pressed',String(CUI.dev===d)); } });
+  ['kb','pad','touch'].forEach(function(d){ const p=$('ctlP_'+d); if(p) p.classList.toggle('hidden',CUI.dev!==d); });
+  if(CUI.dev==='touch'){ touchUISync(); return; }
+  const list=$('ctlList_'+CUI.dev), chips=$('ctlSch_'+CUI.dev); if(!list) return;
+  chips.innerHTML=CTRL_ORDER.map(function(s){ return '<button type="button" data-s="'+s+'" aria-pressed="'+(CUI.scheme===s)+'">'+CTRL_DEF[s].name+'</button>'; }).join('');
+  const conf=ctrlConflicts(CUI.dev,CUI.scheme), dev=CUI.dev, nm=dev==='kb'?keyName:padName;
+  list.innerHTML=CTRL_DEF[CUI.scheme].acts.map(function(a){ const L=CTRL[dev][CUI.scheme][a[0]], k=CUI.scheme+'.'+a[0], bad=conf[k];
+    const capHere=CUI.cap&&CUI.cap.a===a[0];
+    return '<div class="crow'+(bad?' conf':'')+'"><span class="cl">'+a[1]+(bad?'<small>Çakışma: '+bad.map(nm).join(', ')+'</small>':'')+'</span><span class="cb">'+
+      L.map(function(c,i){ return '<button type="button" class="kchip'+(capHere&&CUI.cap.i===i?' cap':'')+'" data-a="'+a[0]+'" data-i="'+i+'">'+(capHere&&CUI.cap.i===i?'Bas…':nm(c))+'</button>'; }).join('')+
+      (L.length<3?'<button type="button" class="kchip add'+(capHere&&CUI.cap.i===L.length?' cap':'')+'" data-a="'+a[0]+'" data-i="'+L.length+'">'+(capHere&&CUI.cap.i===L.length?'Bas…':'+')+'</button>':'')+'</span></div>'; }).join('');
+  if(dev==='pad'){ const o=padOpt(); $('padDz').value=Math.round(o.dz*100); $('padDzV').textContent=Math.round(o.dz*100)+'%'; $('padSens').value=Math.round(o.sens*100); $('padSensV').textContent=Math.round(o.sens*100)+'%'; $('padInv').checked=o.invY;
+    $('padState').textContent=PAD.on?('Bağlı: '+PAD.id.replace(/\(.*?\)/g,'').trim().slice(0,40)):'Kumanda bağlı değil — bağlayıp bir tuşa bas'; }
+}
+function ctlCapture(a,i){ CUI.cap={a:a,i:i,dev:CUI.dev,t:performance.now()}; ctlUI(); }
+function ctlAssign(code){ const c=CUI.cap; if(!c) return; const L=CTRL[c.dev][CUI.scheme][c.a]; if(code===null){ if(c.i<L.length) L.splice(c.i,1); } else { const j=L.indexOf(code); if(j>=0&&j!==c.i) L.splice(j,1); L[Math.min(c.i,L.length)]=code; }
+  CUI.cap=null; ctrlSave(); ctlUI(); renderCtlHelp(); }
+/* key capture runs before every other key handler */
+window.addEventListener('keydown',function(e){ if(!CUI.cap||CUI.cap.dev!=='kb') return; e.preventDefault(); e.stopImmediatePropagation();
+  if(e.code==='Escape'){ CUI.cap=null; ctlUI(); return; } if(e.code==='Backspace'||e.code==='Delete'){ ctlAssign(null); return; } ctlAssign(e.code); },true);
+/* gamepad capture: polled from the frame loop while the settings are open */
+function ctlPadCapture(){ if(!CUI.cap||CUI.cap.dev!=='pad') return; const g=getPad(); if(!g) return; if(performance.now()-CUI.cap.t<300) return;
+  for(let i=0;i<g.buttons.length;i++) if(g.buttons[i]&&g.buttons[i].pressed){ ctlAssign('b'+i); return; }
+  for(let i=0;i<g.axes.length;i++){ const v=g.axes[i]||0; if(Math.abs(v)>0.7){ ctlAssign('a'+i+(v>0?'+':'-')); return; } } }
+/* touch layout */
+function touchOpt(){ const t=SETTINGS.tch||{}; return {size:t.size==null?1:t.size, op:t.op==null?1:t.op, left:!!t.left, stick:t.stick==null?1:t.stick}; }
+function applyTouchOpt(){ const o=touchOpt(); ['touch','wtouch'].forEach(function(id){ const el=$(id); if(!el) return; if(el.style.setProperty) el.style.setProperty('--tscale',o.size); el.style.opacity=o.op; el.classList.toggle('lefty',o.left); }); }
+function touchUISync(){ const o=touchOpt(); $('tchSize').value=Math.round(o.size*100); $('tchSizeV').textContent=Math.round(o.size*100)+'%'; $('tchOp').value=Math.round(o.op*100); $('tchOpV').textContent=Math.round(o.op*100)+'%';
+  $('tchStick').value=Math.round(o.stick*100); $('tchStickV').textContent=Math.round(o.stick*100)+'%'; $('tchLeft').checked=o.left; }
+function ctlBindUI(){
+  const host=$('ctlUI'); if(!host) return;
+  host.addEventListener('click',function(e){ const t=e.target.closest('button'); if(!t) return;
+    if(t.dataset.dev){ CUI.dev=t.dataset.dev; CUI.cap=null; ctlUI(); return; }
+    if(t.dataset.s&&t.parentElement.classList.contains('cschemes')){ CUI.scheme=t.dataset.s; CUI.cap=null; ctlUI(); return; }
+    if(t.classList.contains('kchip')){ ctlCapture(t.dataset.a,+t.dataset.i); return; }
+    if(t.id==='ctlReset_kb'||t.id==='ctlReset_pad'){ ctrlResetScheme(CUI.dev,CUI.scheme); ctlUI(); renderCtlHelp(); toast(CTRL_DEF[CUI.scheme].name+' şeması varsayılana döndü'); return; }
+    if(t.id==='ctlResetAll'){ ctrlDefaults(); ctrlSave(); ctlUI(); renderCtlHelp(); toast('Tüm tuşlar varsayılana döndü'); } });
+  const sl=function(id,key,obj,div){ $(id).addEventListener('input',function(e){ SETTINGS[obj]=SETTINGS[obj]||{}; SETTINGS[obj][key]=+e.target.value/div; saveSettings(); if(obj==='tch') applyTouchOpt(); ctlUI(); }); };
+  sl('padDz','dz','pad',100); sl('padSens','sens','pad',100); sl('tchSize','size','tch',100); sl('tchOp','op','tch',100); sl('tchStick','stick','tch',100);
+  $('padInv').addEventListener('change',function(e){ SETTINGS.pad=SETTINGS.pad||{}; SETTINGS.pad.invY=e.target.checked; saveSettings(); });
+  $('tchLeft').addEventListener('change',function(e){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.left=e.target.checked; saveSettings(); applyTouchOpt(); });
+}
 /* ------------------------------------------------------------------ input + menu */
 let menuMode='title';
 function showScreen(name){ $('startUI').classList.add('hidden'); ['title','hangarUI','setupUI','pause','missionsUI'].forEach(function(id){ $(id).classList.toggle('hidden',id!==name); }); }
@@ -5828,6 +5934,7 @@ function openModal(id){ $(id).classList.remove('hidden'); }
 function closeModals(){ MODALS.forEach(function(id){ $(id).classList.add('hidden'); }); }
 function anyModalOpen(){ return MODALS.some(function(id){ return !$(id).classList.contains('hidden'); }); }
 function syncSettingsUI(){
+  if(typeof ctlUI==='function') ctlUI();
   $('setVer').textContent='Sürüm '+GAME_VERSION;
   $('setVol').value=Math.round(SETTINGS.volume*100); $('setVolV').textContent=Math.round(SETTINGS.volume*100)+'%';
   $('setSens').value=Math.round(SETTINGS.sens*100); $('setSensV').textContent=Math.round(SETTINGS.sens*100)+'%';
@@ -5904,7 +6011,7 @@ function rumble(ms,weak,strong){
   try{ g.vibrationActuator.playEffect('dual-rumble',{duration:ms,weakMagnitude:weak,strongMagnitude:strong}); }catch(e){}
 }
 function pollPad(){
-  const g=getPad();
+  const g=getPad(); PADRAW=g; ctlPadCapture(); if(CUI.cap&&CUI.cap.dev==='pad') return;
   if(!g){
     if(PAD.on){ PAD.on=false; PAD.id=''; padStatus.textContent='Kumanda bağlı değil — bağlayıp bir tuşa bas'; }
     PAD.pitch=PAD.roll=PAD.yaw=PAD.thr=0; PAD.ab=PAD.brake=PAD.fire=false; return;
@@ -5929,12 +6036,22 @@ function pollPad(){
   else if(state==='paused'){ if(eA||eStart) resumeGame(); else if(eB) toHangarFromPause(); }
   else if(state==='mend'){ if(eA) restartMission(); else if(eB) endToHangar(); }
   else if(state==='service'){ if(eA) closeService(true); else if(eB) closeService(false); }
-  else if(state==='play'){ if(eR3) fireWeapon(); if(eL3) dropFlares(); if(eStart) pauseGame(); if(eB) toggleGear(); if(eX) toggleCam(); if(eY){ if(S.onGround&&S.taxi&&!S.clearance) skipTaxi(); else toggleInvert(); } if(eBack) cycleWeapon(1); }
-  PAD.pitch=padCurve(ax(1),0.12);
-  PAD.roll=padCurve(ax(0),0.12);
-  PAD.yaw=padCurve(ax(2),0.15)+((b(15)?1:0)-(b(14)?1:0));
-  PAD.thr=(bv(7)-bv(6))+padCurve(-ax(3),0.2)+((b(12)?1:0)-(b(13)?1:0));
-  PAD.ab=b(5); PAD.brake=b(4); PAD.fire=b(0)&&!padFireLock;
+  const P=function(s,a){ return padEdge(s,a); };
+  const E={weapon:P('air','weapon'),flares:P('air','flares'),gear:P('air','gear'),skip:P('air','skipTaxi'),next:P('air','nextWpn'),lock:P('air','lock'),tgt:P('air','nextTarget'),auto:P('air','autoTaxi'),
+    pause:P('gen','pause'),cam:P('gen','camera'),inv:P('gen','invert'),photo:P('gen','photo'),map:P('gen','map'),mute:P('gen','mute'),view:P('gen','resetView'),
+    use:P('foot','use'),jump:P('foot','jump'),runT:P('foot','runToggle'),exit:P('land','exit'),ccam:P('land','cam')};
+  if(state==='play'){ if(E.weapon) fireWeapon(); if(E.flares) dropFlares(); if(E.pause) pauseGame(); if(E.gear) toggleGear(); if(E.cam) toggleCam(); if(E.skip&&S.onGround&&S.taxi&&!S.clearance) skipTaxi(); if(E.inv) toggleInvert();
+    if(E.next) cycleWeapon(1); if(E.lock) toggleLock(); if(E.tgt) cycleLock(); if(E.auto) toggleAutoTaxi(); if(E.photo) enterPhoto(); if(E.mute) toggleMute(); if(E.view){ CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1; } if(E.map&&typeof openMap==='function') openMap(); }
+  else if(state==='walk'){ if(E.pause){ walkLeave(); pauseGame(); }
+    if(WALK.mode==='foot'){ if(E.use) walkInteract(); if(E.jump) WALK.jumpQ=true; if(E.runT) WALK.run=!WALK.run; }
+    else { if(E.exit) walkInteract(); if(E.ccam){ WALK.fp=!WALK.fp; WALK.pitch=0; } }
+    const lx=pad('foot','lookR')-pad('foot','lookL'), ly=pad('foot','lookD')-pad('foot','lookU'); if(lx||ly) walkLook(lx*9,ly*7); }
+  PAD.pitch=pad('air','noseUp')-pad('air','noseDown');
+  PAD.roll=pad('air','rollR')-pad('air','rollL');
+  PAD.yaw=pad('air','yawR')-pad('air','yawL');
+  PAD.thr=pad('air','thrUp')-pad('air','thrDown');
+  if(pad('air','gun')<0.5) padFireLock=false;
+  PAD.ab=pad('air','ab')>0.5; PAD.brake=pad('air','brake')>0.5; PAD.fire=pad('air','gun')>0.5&&!padFireLock;
 }
 window.addEventListener('gamepadconnected',()=>pollPad());
 
@@ -5949,7 +6066,7 @@ function touchWanted(){
 window.addEventListener('pointerdown',function(e){ if(e.pointerType==='touch') TOUCH.seen=true; },true);
 (function(){
   const stick=$('tStick'); let sid=null;
-  function sMove(e){ const r=stick.getBoundingClientRect(), R=r.width/2*0.85; let dx=(e.clientX-(r.left+r.width/2))/R, dy=(e.clientY-(r.top+r.height/2))/R; const l=Math.hypot(dx,dy); if(l>1){ dx/=l; dy/=l; } TOUCH.sx=dx; TOUCH.sy=dy; TOUCH.roll=padCurve(dx,0.06); TOUCH.pitch=padCurve(dy,0.06); }
+  function sMove(e){ const r=stick.getBoundingClientRect(), R=r.width/2*0.85; let dx=(e.clientX-(r.left+r.width/2))/R, dy=(e.clientY-(r.top+r.height/2))/R; const l=Math.hypot(dx,dy); if(l>1){ dx/=l; dy/=l; } TOUCH.sx=dx; TOUCH.sy=dy; const ks=touchOpt().stick; TOUCH.roll=clamp(padCurve(dx,0.06)*ks,-1,1); TOUCH.pitch=clamp(padCurve(dy,0.06)*ks,-1,1); }
   function sEnd(e){ if(e.pointerId!==sid) return; sid=null; TOUCH.sx=TOUCH.sy=TOUCH.roll=TOUCH.pitch=0; }
   stick.addEventListener('pointerdown',function(e){ e.preventDefault(); try{ stick.setPointerCapture(e.pointerId); }catch(err){} sid=e.pointerId; sMove(e); });
   stick.addEventListener('pointermove',function(e){ if(e.pointerId===sid) sMove(e); });
@@ -6095,22 +6212,23 @@ window.addEventListener('keydown',e=>{
     if(e.code==='KeyV'){ MENUV.zoom=1; MENUV.pitch=0.2; MENUV.idle=0; return; }
     return;
   }
-  if(e.code==='KeyV'){ CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1; return; }
-  if(e.code==='Escape'||e.code==='KeyP'){ if(state==='play') pauseGame(); else if(state==='paused') resumeGame(); return; }
+  if(isKey(e,'gen','resetView')){ CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1; return; }
+  if(isKey(e,'gen','pause')||e.code==='Escape'){ if(state==='play') pauseGame(); else if(state==='paused') resumeGame(); return; }
+  if(isKey(e,'gen','mute')) toggleMute();
   if(state!=='play') return;
-  if(e.code==='KeyC') toggleCam();
-  if(e.code==='KeyY') toggleInvert();
-  if(e.code==='KeyN') toggleMute();
-  if(e.code==='KeyG') toggleGear();
-  if(e.code==='KeyT') toggleAutoTaxi();
-  if(e.code==='KeyL') skipTaxi();
-  if(e.code==='KeyH') enterPhoto();
-  if(e.code==='KeyX') fireWeapon();
-  if(e.code==='KeyN') cycleWeapon(1);
-  if(e.code==='KeyK') toggleLock();
+  if(isKey(e,'gen','camera')) toggleCam();
+  if(isKey(e,'gen','invert')) toggleInvert();
+  if(isKey(e,'gen','photo')) enterPhoto();
+  if(isKey(e,'gen','map')&&typeof openMap==='function') openMap();
+  if(isKey(e,'air','gear')) toggleGear();
+  if(isKey(e,'air','autoTaxi')) toggleAutoTaxi();
+  if(isKey(e,'air','skipTaxi')) skipTaxi();
+  if(isKey(e,'air','weapon')) fireWeapon();
+  if(isKey(e,'air','nextWpn')) cycleWeapon(1);
+  if(isKey(e,'air','lock')) toggleLock();
   if(e.code.indexOf('Digit')===0&&+e.code[5]>=1&&+e.code[5]<=5) pickWeaponByNumber(+e.code[5]);
-  if(e.code==='KeyZ') dropFlares();
-  if(e.code==='Tab'){ e.preventDefault(); cycleLock(); }
+  if(isKey(e,'air','flares')) dropFlares();
+  if(isKey(e,'air','nextTarget')){ e.preventDefault(); cycleLock(); }
 });
 window.addEventListener('keyup',e=>{ keys[e.code]=false; });
 window.addEventListener('blur',()=>{ for(const k in keys) keys[k]=false; if(state==='play') pauseGame(); });
@@ -6736,14 +6854,14 @@ function startWalk(){
 }
 function walkLeave(){ try{ if(document.pointerLockElement) document.exitPointerLock(); }catch(e){} }
 function walkInput(){
-  const k=keys, f=((k.KeyW||k.ArrowUp)?1:0)-((k.KeyS||k.ArrowDown)?1:0)+(-WALK.sy), r=((k.KeyD||k.ArrowRight)?1:0)-((k.KeyA||k.ArrowLeft)?1:0)+WALK.sx;
+  const car=WALK.mode==='car', f=(car?act('land','gas')-act('land','brake'):act('foot','fwd')-act('foot','back'))+(-WALK.sy), r=(car?act('land','right')-act('land','left'):act('foot','right')-act('foot','left'))+WALK.sx;
   return {f:clamp(f,-1,1), r:clamp(r,-1,1)};
 }
 function walkUpdate(dt){
   planeGroup.visible=false; WALK.hint=Math.max(0,WALK.hint-dt);
   const inp=walkInput(), gy=AIRFIELD_Y;
   if(WALK.mode==='foot'){
-    const sp=(WALK.run||keys.ShiftLeft||keys.ShiftRight)?8.5:4.2, sy=Math.sin(WALK.yaw), cy=Math.cos(WALK.yaw);
+    const sp=(WALK.run||act('foot','run')>0.5)?8.5:4.2, sy=Math.sin(WALK.yaw), cy=Math.cos(WALK.yaw);
     let mx=(-sy*inp.f+cy*inp.r), mz=(-cy*inp.f-sy*inp.r); const m=Math.hypot(mx,mz); if(m>1){ mx/=m; mz/=m; }
     WALK.pos.x+=mx*sp*dt; WALK.pos.z+=mz*sp*dt;
     pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes());
@@ -6757,13 +6875,13 @@ function walkUpdate(dt){
     const c=WALK.car; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
     else { let best=9; AC_ORDER.forEach(function(id){ const d=displays[id]; if(!d||!d.g.visible) return; const dd=Math.hypot(d.x+(d.ox||0)-WALK.pos.x,HANGAR.z+(d.oz||0)-WALK.pos.z); if(dd<best){ best=dd; WALK.nearId=id; } }); if(WALK.nearId) WALK.near='plane'; }
   } else {
-    const c=WALK.car, brk=keys.Space;
+    const c=WALK.car, brk=act('land','handbrake')>0.5, turbo=act('land','turbo')>0.5;
     let thr=Math.max(0,inp.f), rev=Math.max(0,-inp.f);
     if(thr>0){ c.v+=(c.v<0?14:5.5)*thr*dt; }
     else if(rev>0){ c.v-=(c.v>0.3?14:3.5)*rev*dt; c.v=Math.max(c.v,-7); }
     else { const dec=1.6*dt; c.v=Math.abs(c.v)<dec?0:c.v-Math.sign(c.v)*dec; }
     if(brk){ const dec=18*dt; c.v=Math.abs(c.v)<dec?0:c.v-Math.sign(c.v)*dec; }
-    c.v=clamp(c.v-c.v*0.04*dt,-7,30);
+    if(turbo&&thr>0) c.v+=4*dt; c.v=clamp(c.v-c.v*0.04*dt,-7,turbo?42:30);
     const tgt=inp.r*0.55*(1-Math.min(0.65,Math.abs(c.v)/38)); c.steer+=(tgt-c.steer)*Math.min(1,dt*6);
     c.h-=(c.v/2.7)*Math.tan(c.steer)*dt;
     c.x+=-Math.sin(c.h)*c.v*dt; c.z+=-Math.cos(c.h)*c.v*dt;
@@ -6801,7 +6919,7 @@ function drawWalkHUD(){
   if(foot){ hx.fillStyle='rgba(255,255,255,0.85)'; hx.beginPath(); hx.arc(w/2,h/2,2.2*s,0,Math.PI*2); hx.fill(); }
   hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.textAlign='left'; hx.fillStyle='#b8ecff';
   const top=Math.round(20*s); hx.textAlign=WALK.tvis?'center':'left';
-  hx.fillText(foot?(WALK.run||keys.ShiftLeft?'YAYA · KOŞU':'YAYA'):'ARAÇ · BENİ İZLE', WALK.tvis?w/2:Math.round(16*s), top);
+  hx.fillText(foot?(WALK.run||act('foot','run')>0.5?'YAYA · KOŞU':'YAYA'):'ARAÇ · BENİ İZLE', WALK.tvis?w/2:Math.round(16*s), top);
   if(!foot){ hx.font='700 '+Math.round(30*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff'; hx.fillText(Math.round(Math.abs(WALK.car.v)*3.6)+' km/sa', WALK.tvis?w/2:Math.round(16*s), top+Math.round(30*s)); }
   let msg='';
   if(foot&&WALK.near==='car') msg=(WALK.tvis?'BİN':'E')+' — araca bin';
@@ -6817,12 +6935,14 @@ function walkLook(dx,dy){ const s=SETTINGS.sens||1;
   if(WALK.mode==='foot'){ WALK.yaw-=dx*0.004*s; WALK.pitch=clamp(WALK.pitch-dy*0.004*s,-1.35,1.35); }
   else { WALK.cy-=dx*0.005*s; WALK.pitch=clamp(WALK.pitch-dy*0.004*s,-0.6,0.9); } }
 function walkKey(e){
-  if(e.code==='Escape'||e.code==='KeyP'){ walkLeave(); pauseGame(); return; }
-  if(e.code==='KeyE'||e.code==='Enter'||e.code==='KeyF'){ walkInteract(); return; }
-  if(e.code==='KeyC'&&WALK.mode==='car'){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
-  if(e.code==='KeyM') walkWarp();
-  if(e.code==='Space'&&WALK.mode==='foot') WALK.jumpQ=true;
-  if(e.code==='CapsLock') WALK.run=!WALK.run;
+  if(isKey(e,'gen','pause')||e.code==='Escape'){ walkLeave(); pauseGame(); return; }
+  const foot=WALK.mode==='foot';
+  if(foot?isKey(e,'foot','use'):isKey(e,'land','exit')){ walkInteract(); return; }
+  if(!foot&&isKey(e,'land','cam')){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
+  if(isKey(e,'gen','map')){ if(typeof openMap==='function') openMap(); else walkWarp(); }
+  if(isKey(e,'gen','mute')) toggleMute();
+  if(foot&&isKey(e,'foot','jump')) WALK.jumpQ=true;
+  if(isKey(e,'foot','runToggle')) WALK.run=!WALK.run;
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.code)>=0) e.preventDefault();
 }
 function updateWalkTouch(){
@@ -7236,7 +7356,7 @@ $('btnLibOpen').addEventListener('click',function(){ if(state==='menu') openLibr
 window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
 window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files; if(!f||!f.length) return; e.preventDefault(); if(state==='menu'&&!LIB.on) openLibrary('ac:'+selectedId); if(LIB.on) importFiles(f); });
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); todBuild(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){

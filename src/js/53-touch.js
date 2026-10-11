@@ -9,7 +9,7 @@ function touchWanted(){
 window.addEventListener('pointerdown',function(e){ if(e.pointerType==='touch') TOUCH.seen=true; },true);
 (function(){
   const stick=$('tStick'); let sid=null;
-  function sMove(e){ const r=stick.getBoundingClientRect(), R=r.width/2*0.85; let dx=(e.clientX-(r.left+r.width/2))/R, dy=(e.clientY-(r.top+r.height/2))/R; const l=Math.hypot(dx,dy); if(l>1){ dx/=l; dy/=l; } TOUCH.sx=dx; TOUCH.sy=dy; TOUCH.roll=padCurve(dx,0.06); TOUCH.pitch=padCurve(dy,0.06); }
+  function sMove(e){ const r=stick.getBoundingClientRect(), R=r.width/2*0.85; let dx=(e.clientX-(r.left+r.width/2))/R, dy=(e.clientY-(r.top+r.height/2))/R; const l=Math.hypot(dx,dy); if(l>1){ dx/=l; dy/=l; } TOUCH.sx=dx; TOUCH.sy=dy; const ks=touchOpt().stick; TOUCH.roll=clamp(padCurve(dx,0.06)*ks,-1,1); TOUCH.pitch=clamp(padCurve(dy,0.06)*ks,-1,1); }
   function sEnd(e){ if(e.pointerId!==sid) return; sid=null; TOUCH.sx=TOUCH.sy=TOUCH.roll=TOUCH.pitch=0; }
   stick.addEventListener('pointerdown',function(e){ e.preventDefault(); try{ stick.setPointerCapture(e.pointerId); }catch(err){} sid=e.pointerId; sMove(e); });
   stick.addEventListener('pointermove',function(e){ if(e.pointerId===sid) sMove(e); });

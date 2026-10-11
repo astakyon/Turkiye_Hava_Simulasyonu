@@ -4,6 +4,7 @@ function openModal(id){ $(id).classList.remove('hidden'); }
 function closeModals(){ MODALS.forEach(function(id){ $(id).classList.add('hidden'); }); }
 function anyModalOpen(){ return MODALS.some(function(id){ return !$(id).classList.contains('hidden'); }); }
 function syncSettingsUI(){
+  if(typeof ctlUI==='function') ctlUI();
   $('setVer').textContent='Sürüm '+GAME_VERSION;
   $('setVol').value=Math.round(SETTINGS.volume*100); $('setVolV').textContent=Math.round(SETTINGS.volume*100)+'%';
   $('setSens').value=Math.round(SETTINGS.sens*100); $('setSensV').textContent=Math.round(SETTINGS.sens*100)+'%';

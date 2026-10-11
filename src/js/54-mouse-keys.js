@@ -93,22 +93,23 @@ window.addEventListener('keydown',e=>{
     if(e.code==='KeyV'){ MENUV.zoom=1; MENUV.pitch=0.2; MENUV.idle=0; return; }
     return;
   }
-  if(e.code==='KeyV'){ CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1; return; }
-  if(e.code==='Escape'||e.code==='KeyP'){ if(state==='play') pauseGame(); else if(state==='paused') resumeGame(); return; }
+  if(isKey(e,'gen','resetView')){ CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1; return; }
+  if(isKey(e,'gen','pause')||e.code==='Escape'){ if(state==='play') pauseGame(); else if(state==='paused') resumeGame(); return; }
+  if(isKey(e,'gen','mute')) toggleMute();
   if(state!=='play') return;
-  if(e.code==='KeyC') toggleCam();
-  if(e.code==='KeyY') toggleInvert();
-  if(e.code==='KeyN') toggleMute();
-  if(e.code==='KeyG') toggleGear();
-  if(e.code==='KeyT') toggleAutoTaxi();
-  if(e.code==='KeyL') skipTaxi();
-  if(e.code==='KeyH') enterPhoto();
-  if(e.code==='KeyX') fireWeapon();
-  if(e.code==='KeyN') cycleWeapon(1);
-  if(e.code==='KeyK') toggleLock();
+  if(isKey(e,'gen','camera')) toggleCam();
+  if(isKey(e,'gen','invert')) toggleInvert();
+  if(isKey(e,'gen','photo')) enterPhoto();
+  if(isKey(e,'gen','map')&&typeof openMap==='function') openMap();
+  if(isKey(e,'air','gear')) toggleGear();
+  if(isKey(e,'air','autoTaxi')) toggleAutoTaxi();
+  if(isKey(e,'air','skipTaxi')) skipTaxi();
+  if(isKey(e,'air','weapon')) fireWeapon();
+  if(isKey(e,'air','nextWpn')) cycleWeapon(1);
+  if(isKey(e,'air','lock')) toggleLock();
   if(e.code.indexOf('Digit')===0&&+e.code[5]>=1&&+e.code[5]<=5) pickWeaponByNumber(+e.code[5]);
-  if(e.code==='KeyZ') dropFlares();
-  if(e.code==='Tab'){ e.preventDefault(); cycleLock(); }
+  if(isKey(e,'air','flares')) dropFlares();
+  if(isKey(e,'air','nextTarget')){ e.preventDefault(); cycleLock(); }
 });
 window.addEventListener('keyup',e=>{ keys[e.code]=false; });
 window.addEventListener('blur',()=>{ for(const k in keys) keys[k]=false; if(state==='play') pauseGame(); });

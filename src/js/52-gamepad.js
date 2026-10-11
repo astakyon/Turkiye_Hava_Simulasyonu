@@ -20,7 +20,7 @@ function rumble(ms,weak,strong){
   try{ g.vibrationActuator.playEffect('dual-rumble',{duration:ms,weakMagnitude:weak,strongMagnitude:strong}); }catch(e){}
 }
 function pollPad(){
-  const g=getPad();
+  const g=getPad(); PADRAW=g; ctlPadCapture(); if(CUI.cap&&CUI.cap.dev==='pad') return;
   if(!g){
     if(PAD.on){ PAD.on=false; PAD.id=''; padStatus.textContent='Kumanda bağlı değil — bağlayıp bir tuşa bas'; }
     PAD.pitch=PAD.roll=PAD.yaw=PAD.thr=0; PAD.ab=PAD.brake=PAD.fire=false; return;
@@ -45,12 +45,22 @@ function pollPad(){
   else if(state==='paused'){ if(eA||eStart) resumeGame(); else if(eB) toHangarFromPause(); }
   else if(state==='mend'){ if(eA) restartMission(); else if(eB) endToHangar(); }
   else if(state==='service'){ if(eA) closeService(true); else if(eB) closeService(false); }
-  else if(state==='play'){ if(eR3) fireWeapon(); if(eL3) dropFlares(); if(eStart) pauseGame(); if(eB) toggleGear(); if(eX) toggleCam(); if(eY){ if(S.onGround&&S.taxi&&!S.clearance) skipTaxi(); else toggleInvert(); } if(eBack) cycleWeapon(1); }
-  PAD.pitch=padCurve(ax(1),0.12);
-  PAD.roll=padCurve(ax(0),0.12);
-  PAD.yaw=padCurve(ax(2),0.15)+((b(15)?1:0)-(b(14)?1:0));
-  PAD.thr=(bv(7)-bv(6))+padCurve(-ax(3),0.2)+((b(12)?1:0)-(b(13)?1:0));
-  PAD.ab=b(5); PAD.brake=b(4); PAD.fire=b(0)&&!padFireLock;
+  const P=function(s,a){ return padEdge(s,a); };
+  const E={weapon:P('air','weapon'),flares:P('air','flares'),gear:P('air','gear'),skip:P('air','skipTaxi'),next:P('air','nextWpn'),lock:P('air','lock'),tgt:P('air','nextTarget'),auto:P('air','autoTaxi'),
+    pause:P('gen','pause'),cam:P('gen','camera'),inv:P('gen','invert'),photo:P('gen','photo'),map:P('gen','map'),mute:P('gen','mute'),view:P('gen','resetView'),
+    use:P('foot','use'),jump:P('foot','jump'),runT:P('foot','runToggle'),exit:P('land','exit'),ccam:P('land','cam')};
+  if(state==='play'){ if(E.weapon) fireWeapon(); if(E.flares) dropFlares(); if(E.pause) pauseGame(); if(E.gear) toggleGear(); if(E.cam) toggleCam(); if(E.skip&&S.onGround&&S.taxi&&!S.clearance) skipTaxi(); if(E.inv) toggleInvert();
+    if(E.next) cycleWeapon(1); if(E.lock) toggleLock(); if(E.tgt) cycleLock(); if(E.auto) toggleAutoTaxi(); if(E.photo) enterPhoto(); if(E.mute) toggleMute(); if(E.view){ CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1; } if(E.map&&typeof openMap==='function') openMap(); }
+  else if(state==='walk'){ if(E.pause){ walkLeave(); pauseGame(); }
+    if(WALK.mode==='foot'){ if(E.use) walkInteract(); if(E.jump) WALK.jumpQ=true; if(E.runT) WALK.run=!WALK.run; }
+    else { if(E.exit) walkInteract(); if(E.ccam){ WALK.fp=!WALK.fp; WALK.pitch=0; } }
+    const lx=pad('foot','lookR')-pad('foot','lookL'), ly=pad('foot','lookD')-pad('foot','lookU'); if(lx||ly) walkLook(lx*9,ly*7); }
+  PAD.pitch=pad('air','noseUp')-pad('air','noseDown');
+  PAD.roll=pad('air','rollR')-pad('air','rollL');
+  PAD.yaw=pad('air','yawR')-pad('air','yawL');
+  PAD.thr=pad('air','thrUp')-pad('air','thrDown');
+  if(pad('air','gun')<0.5) padFireLock=false;
+  PAD.ab=pad('air','ab')>0.5; PAD.brake=pad('air','brake')>0.5; PAD.fire=pad('air','gun')>0.5&&!padFireLock;
 }
 window.addEventListener('gamepadconnected',()=>pollPad());
 
