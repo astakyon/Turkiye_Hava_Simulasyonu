@@ -1,6 +1,20 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.44 — 2026-10-11
+### Yeni — Kırsal alan
+- **Rüzgâr santrali:** marinanın doğusundaki tepelerde dönen 11 rüzgâr türbini. Uçaklar çarpabilir.
+- **Güneş enerjisi santrali (GES):** köy ile kara üssü yolu arasında, çitle çevrili 240 panel dizisi, invertör kabinleri ve tabela.
+- **Köy seraları:** köyün güneybatısında 10 plastik sera.
+- **Zeytinlik:** köyün batısındaki yamaçta sıra sıra zeytin ağaçları.
+- **Gölet:** gölün yanında iskele, kayık ve banklar.
+- **Köye canlılık:**
+  - Caminin yanında çınar altında çay bahçesi.
+  - Bayraklı köy ilkokulu ve futbol sahası.
+  - Tarlayı süren kırmızı traktör, otlayan koyun sürüsü.
+  - Evlerin bacalarından tüten duman.
+- **Hızlı geçiş (M / GİT ▸):** Gölet ve Köy · çay bahçesi eklendi.
+
 ## V1.43 — 2026-10-11
 ### Yeni — Hilal Marina, deniz trafiği, kumsal ve martılar
 - **Hilal Marina** (üs yarımadasının doğu kıyısı):

@@ -17,7 +17,7 @@
 | 4b | V1.41 | Kara üssü (Bozkurtlar): kışla, garajlar, araç parkı, atış poligonu | ✅ |
 | 4c | V1.42 | Yol ağı ve trafik, Hilalkent kasabası | ✅ |
 | 4d | V1.43 | Hilal Marina, deniz otobüsü ve gemi trafiği, kumsal, martılar | ✅ |
-| 4e | V1.44 | Kırsal: rüzgâr türbinleri, GES, seralar, zeytinlik, göl/baraj, köye canlılık | |
+| 4e | V1.44 | Kırsal: rüzgâr türbinleri, GES, seralar, zeytinlik, gölet, köye canlılık | ✅ |
 | 4f | V1.45 | Askeri tesisler: dağda radar, hava savunma mevzisi, mühimmat deposu | |
 | 4g | V1.46 | Atmosfer: gece döngüsü, ışıklar, sis, ortam sesleri | |
 | 4h | V1.47 | Güney ada: asma köprü ve şehir | |

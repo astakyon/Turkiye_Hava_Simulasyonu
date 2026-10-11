@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------ base surroundings (Stage 4)
    Mowed grass, perimeter fence and the main gate, the road north to the village (houses, mosque, shops), fields,
    tree belts, rocks, surf along the shore, lighthouse on the southern tip, ILS glide-slope masts, weather station. */
-const ENV={fence:[], foam:null, beacon:null, beamT:0, gate:{x:-150,z:-1672}, road:[], village:{x:-330,z:-2880}};
+const ENV={houses:[], fence:[], foam:null, beacon:null, beamT:0, gate:{x:-150,z:-1672}, road:[], village:{x:-330,z:-2880}};
 /* rounded rectangle path (closed), sampled every `step` metres */
 function rrPath(x0,x1,z0,z1,R,step){
   const pts=[]; function arc(cx,cz,a0,a1){ for(let k=0;k<=12;k++){ const a=a0+(a1-a0)*k/12; pts.push([cx+R*Math.cos(a),cz+R*Math.sin(a)]); } }
@@ -86,7 +86,7 @@ function buildSurroundings(){
     const rf=new THREE.Mesh(rg,roofMat); rf.position.set(0,y+h+h*0.275,0); g.add(rf);
     for(let k=0;k<Math.floor(w/3);k++){ [-1,1].forEach(function(s){ apBox(g,winMat,-w/2+1.5+k*3,y+h*0.45,s*(d/2+0.02),1.1,1.2,0.05); }); }
     apBox(g,doorMat,0,y,d/2+0.03,1.1,2.1,0.05);
-    wbAdd(g); return g;
+    wbAdd(g); ENV.houses.push([x,y+h+h*0.55*0.6,z,w,d,rot]); return g;
   }
   let n=0; for(let k=0;k<160&&n<34;k++){ const x=V.x-170+r()*340, z=V.z-150+r()*300;
     if(streets.some(function(s){ const a=s[0], b=s[1]; return Math.abs(a[0]-b[0])>1?(Math.abs(z-a[1])<11&&x>a[0]-8&&x<b[0]+8):(Math.abs(x-a[0])<11&&z>a[1]-8&&z<b[1]+8); })) continue;
@@ -119,7 +119,7 @@ function buildSurroundings(){
   const fieldGroups=fmats.map(function(){ return []; });
   for(let k=0,placed=0;k<400&&placed<46;k++){
     const x=-1500+r()*2400, z=-3700+r()*1700; if(Math.hypot(x-V.x,z-V.z)<230||Math.hypot(x,z)<1950) continue;
-    if(ENV.road.some(function(p){ return Math.hypot(p[0]-x,p[1]-z)<70; })||nearNavalRoad(x,z,70)) continue;
+    if(ENV.road.some(function(p){ return Math.hypot(p[0]-x,p[1]-z)<70; })||nearNavalRoad(x,z,70)||ruralClear(x,z,90)) continue;
     const h=terrainH(x,z); if(h<6||h>140) continue; if(Math.abs(terrainH(x+60,z)-h)+Math.abs(terrainH(x,z+60)-h)>16) continue;
     const w=70+r()*90, l=60+r()*80, rot=r()*0.5-0.25, pg=new THREE.PlaneGeometry(w,l,8,8); pg.rotateX(-Math.PI/2); pg.rotateY(rot);
     const p=pg.attributes.position; for(let i=0;i<p.count;i++){ const wx=p.getX(i)+x, wz=p.getZ(i)+z; p.setXYZ(i,wx,terrainH(wx,wz)+1.1,wz); }
@@ -129,7 +129,7 @@ function buildSurroundings(){
   const tPos=[];
   for(let k=0;k<9000&&tPos.length<2600;k++){ const a=r()*Math.PI*2, d=1720+r()*1100, x=Math.cos(a)*d, z=Math.sin(a)*d; const h=terrainH(x,z); if(h<4||h>300) continue;
     if(x>-600&&x<320&&z>-1700&&z<1700) continue; if(fbm(x/260+3,z/260+9,2)<0.47) continue;
-    if(ENV.road.some(function(p){ return Math.abs(p[0]-x)<14&&Math.abs(p[1]-z)<14; })||nearNavalRoad(x,z,14)||inAnyPad(x,z,30)) continue;
+    if(ENV.road.some(function(p){ return Math.abs(p[0]-x)<14&&Math.abs(p[1]-z)<14; })||nearNavalRoad(x,z,14)||inAnyPad(x,z,30)||ruralClear(x,z,10)) continue;
     if(Math.hypot(x-V.x,z-V.z)<190) continue; tPos.push([x,h,z,0.7+r()*0.8,r()<0.55?0:1]); }
   ENV.road.forEach(function(p,i){ if(i%4||i<10) return; [-1,1].forEach(function(s){ const x=p[0]+s*11, z=p[1]; tPos.push([x,terrainH(x,z),z,0.8+r()*0.3,1]); }); });
   TREE_EXTRA.forEach(function(t){ tPos.push(t); });
