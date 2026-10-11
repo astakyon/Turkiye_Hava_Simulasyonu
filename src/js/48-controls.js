@@ -20,7 +20,7 @@ const CTRL_DEF={
     ['cycL','Sola kay (cyclic)',['KeyA','ArrowLeft'],['a0-']], ['cycR','Sağa kay (cyclic)',['KeyD','ArrowRight'],['a0+']],
     ['collUp','Yüksel (collective)',['KeyR','ShiftLeft'],['b7','a3-']], ['collDn','Alçal (collective)',['KeyF','ControlLeft'],['b6','a3+']],
     ['yawL','Sola dön (pedal)',['KeyQ'],['a2-','b14']], ['yawR','Sağa dön (pedal)',['KeyE'],['a2+','b15']],
-    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['flares','Flare bırak',['KeyZ'],['b10']], ['exit','İn',['KeyG'],['b1']]]},
+    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['flares','Flare bırak',['KeyZ'],['b10']], ['nextWpn','Silah değiştir (CİRİT / UMTAS)',['Tab'],['b3']], ['hook','Yük kancası / asker bindir-indir',['KeyB'],['b4']], ['assist','Askı yardımı (hover assist) aç/kapat',['KeyH'],['b5']], ['exit','İn',['KeyG'],['b1']]]},
   land:{name:'Kara aracı', acts:[
     ['gas','Gaz',['KeyW','ArrowUp'],['b7','a1-']], ['brake','Fren / geri',['KeyS','ArrowDown'],['b6','a1+']],
     ['left','Sola dön',['KeyA','ArrowLeft'],['a0-']], ['right','Sağa dön',['KeyD','ArrowRight'],['a0+']],

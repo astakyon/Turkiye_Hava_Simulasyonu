@@ -12,6 +12,7 @@ const CALL={tab:0, sel:0, where:'me', list:[], jobs:[], cd:0, pickPt:null, pickK
 if(typeof RADIO_WHO!=='undefined') RADIO_WHO.loj={n:'Lojistik',p:0.95,r:1.08,c:'#ffb25a'};
 function callKind(id){ return CAR_KINDS.find(function(k){ return k.id===id; }); }
 function callLocked(id){ if(typeof accIsAdmin==='function'&&accIsAdmin()) return false; if(SETTINGS.rankLocks===false) return false; const need=VEH_RANK[id]; return need!=null&&typeof accProfile==='function'&&(accProfile().rank||0)<need; }
+function callHow(id){ return CALL_DROP[id]?'Paraşütle indirilir':'Sürerek gelir'; }
 function callIsOpen(){ return !!CALL.open; }
 /* ---- free ground for a vehicle */
 function callFree(x,z,r){
@@ -115,7 +116,7 @@ function callRender(){
   callHub(); }
 function callHub(){
   const T=CALL_TABS[CALL.tab], id=T.ids[CALL.sel], K=callKind(id)||{n:id}, lk=callLocked(id);
-  $('callHub').innerHTML='<b>'+K.n+'</b><small>'+(lk?'Rütbe gerekli: '+(typeof rankName==='function'?rankName(VEH_RANK[id]):''):(CALL_DROP[id]?'Paraşütle indirilir':'Sürerek gelir')+(K.weapon?' · silahlı':''))+'</small>'+
+  $('callHub').innerHTML='<b>'+K.n+'</b><small>'+(lk?'Rütbe gerekli: '+(typeof rankName==='function'?rankName(VEH_RANK[id]):''):callHow(id)+(K.weapon?' · silahlı':''))+'</small>'+
     '<div class="cwhere"><button type="button" data-w="me" class="'+(CALL.where==='me'?'on':'')+'">Yanıma</button><button type="button" data-w="map" class="'+(CALL.where==='map'?'on':'')+'">Haritadan</button></div>'+
     '<button type="button" class="btn primary" id="callGo"'+(lk?' disabled':'')+'>Çağır</button>'; }
 function callOpen(){

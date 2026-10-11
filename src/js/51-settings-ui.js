@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ settings / records / photo UI */
-const MODALS=['controls','settings','records','photoResult','netUI','sndLib','acctUI','adminUI','callUI'];
+const MODALS=['controls','settings','records','photoResult','netUI','sndLib','acctUI','adminUI','callUI','hmEnd'];
 function openModal(id){ $(id).classList.remove('hidden'); if(id==='settings') setSnapshot(); }
 function closeModals(){ MODALS.forEach(function(id){ $(id).classList.add('hidden'); }); }
 function anyModalOpen(){ return MODALS.some(function(id){ return !$(id).classList.contains('hidden'); }); }

@@ -106,6 +106,7 @@
       <ul class="hst" id="hStats"></ul>
       <p class="desc" id="hDesc"></p>
       <div class="hperf" id="hPerf"></div>
+      <div class="hmis hidden" id="hMis"></div>
       <button class="btn hcmp ui" id="btnCmp" type="button" title="Bu aracı sabitle, sonra başka bir araç seç">⇄ Karşılaştır</button>
     </div>
     <button class="btn primary hgo ui" id="btnPlay" type="button">▶ Oyuna başla</button>
@@ -263,6 +264,10 @@
   <div class="sbar"><span>Değişiklikler otomatik kaydedilir</span><span class="v">Esc: geri</span></div>
 </div>
 
+<div id="hmEnd" class="modal hmend hidden" role="dialog" aria-label="Görev sonucu">
+  <div class="box"><h2 id="hmEndT">GÖREV</h2><p id="hmEndS"></p>
+    <div class="row"><button type="button" class="btn primary" id="hmAgain">Tekrar dene</button><button type="button" class="btn" id="hmFree">Serbest uçuşa devam</button><button type="button" class="btn back" id="hmHangar">Hangara dön</button></div></div>
+</div>
 <div id="callUI" class="modal callui hidden" role="dialog" aria-label="Araç çağır">
   <div class="cwrap"><div class="ctabs" id="callTabs"></div>
     <div class="cring" id="callRing"></div><div class="chub" id="callHub"></div>
