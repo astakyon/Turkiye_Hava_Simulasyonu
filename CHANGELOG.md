@@ -1,6 +1,28 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.41 — 2026-10-11
+### Yeni — Bozkurtlar kara üssü
+Adanın kuzeyindeki düzlükte, koya bakan geniş bir kışla. Köyden kuzeye uzanan yeni yolla bağlı.
+- **Giriş:** "AY YILDIZ KARA ÜSSÜ" nizamiyesi, köşelerde gözetleme kuleleri, çit.
+- **Komutanlık:** "BOZKURTLAR KOMUTANLIĞI" binası, tören alanı, şeref tribünü, bayrak direği.
+- **Yaşam alanı:** 6 koğuş, yemekhane, revir, futbol sahası, su kulesi.
+- **Motorlu birlik:** 5 sundurma altında sıra sıra araçlar:
+  - **Altay** tankları,
+  - **T-155 Fırtına** obüsleri,
+  - **Pars 8×8** zırhlı araçları,
+  - mayına dayanıklı **4×4 araçlar** ve askerî kamyonlar.
+- **Destek:** bakım atölyesi, akaryakıt istasyonu, toprak örtülü cephanelikler, helikopter pisti.
+- **Sürüş parkuru:** rampalı toprak pistte sürekli tur atan bir Altay.
+- **Atış poligonu (doğu):**
+  - atış hattı sundurması ve kulvarlar,
+  - 300/600/900 m hedefler ve hedef tümseği,
+  - hurda tank hedefleri, kırmızı bayraklı kule.
+- **Hızlı geçiş (M / GİT ▸):** Kara Üssü, Motorlu birlik, Atış poligonu eklendi.
+### Değişti
+- Düşman yer hedefleri artık üslerin içinde ya da yakınında çıkmıyor.
+- Ada ağaçları yeni yolların üzerinden kaldırıldı.
+
 ## V1.40 — 2026-10-11
 ### Yeni — Deniz üssü (Mavi Kanatlar)
 Köyün batısındaki korunaklı koyda, köyden yolla bağlı.

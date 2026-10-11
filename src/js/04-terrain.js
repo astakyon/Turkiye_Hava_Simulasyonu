@@ -7,13 +7,15 @@ function fbm(x,y,oct){ let s=0,a=.5,f=1,n=0; for(let i=0;i<oct;i++){ s+=a*vnoise
 const AIRFIELD_Y = 22;
 /* flat pads cut into the terrain for the bases (x0..x1, z0..z1 fully flat at y; smooth falloff `f` metres; `hardWest`: no
    falloff on the sea side so the quay meets deep water). DECKS: walkable surfaces above the terrain (quays, piers). */
-const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hardWest:true}];
+const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hardWest:true},
+  {id:'land',x0:400,x1:1900,z0:-7950,z1:-7250,y:34,f:320},{id:'range',x0:2120,x1:3300,z0:-7800,z1:-7520,y:34,f:260}];
 const DECKS=[];
 function padW(p,x,z){
   let dx=0; if(x<p.x0){ if(p.hardWest){ if(x<p.x0-6) return 0; } else dx=p.x0-x; } else if(x>p.x1) dx=x-p.x1;
   const dz=z<p.z0?p.z0-z:(z>p.z1?z-p.z1:0); if(dx>=p.f||dz>=p.f) return 0;
   return (1-smooth(0,p.f,dx))*(1-smooth(0,p.f,dz));
 }
+function inAnyPad(x,z,m){ return PADS.some(function(p){ return x>p.x0-m&&x<p.x1+m&&z>p.z0-m&&z<p.z1+m; }); }
 function inPad(id,x,z,m){ const p=PADS.find(function(q){ return q.id===id; }); m=m||0; return x>p.x0-m&&x<p.x1+m&&z>p.z0-m&&z<p.z1+m; }
 /* walkable ground height: terrain, raised by decks (quays, piers) */
 function groundH(x,z){ let h=terrainH(x,z); for(let i=0;i<DECKS.length;i++){ const d=DECKS[i]; if(x>d.x0&&x<d.x1&&z>d.z0&&z<d.z1&&d.y>h) h=d.y; } return h; }
@@ -76,10 +78,10 @@ function terrainH(x,z){
     const x=(r()-.5)*28000, z=(r()-.5)*28000;
     if(fbm(x/900+40,z/900+40,2)<0.52) continue;
     if(Math.hypot(x,z)<1900) continue;
-    const h=terrainH(x,z); if(h<10||h>520) continue;
+    const h=terrainH(x,z); if(h<10||h>520||inAnyPad(x,z,120)) continue;
     if(Math.abs(terrainH(x+25,z)-h)+Math.abs(terrainH(x,z+25)-h)>28) continue;
     for(let c=0;c<4 && k<NT;c++){
-      const tx=x+(r()-.5)*160, tz=z+(r()-.5)*160, th=terrainH(tx,tz); if(th<10) continue;
+      const tx=x+(r()-.5)*160, tz=z+(r()-.5)*160, th=terrainH(tx,tz); if(th<10||inAnyPad(tx,tz,40)) continue;
       const sc=0.8+r()*1.6;
       m4.compose(p3.set(tx,th-1,tz), q4.setFromAxisAngle(UP,r()*6.28), s3.set(sc,sc*(0.9+r()*0.5),sc));
       trees.setMatrixAt(k++, m4);

@@ -5,7 +5,9 @@
 const NAVAL={x0:-1990,x1:-1500,qx1:-1760,z0:-4300,z1:-3150,y:3.1, gate:{x:-1500,z:-3330}, piers:[-4100,-3880,-3660], mole:-3450,
   road:null, cranes:[], radars:[], boat:null, boatT:0, built:false};
 NAVAL.road=smoothPath([[-490,-2910],[-760,-2955],[-1050,-3065],[-1290,-3235],[-1420,-3322],[-1500,-3330],[-1560,-3330]],6);
-function nearNavalRoad(x,z,d){ const R=NAVAL.road; for(let i=0;i<R.length;i+=2){ if(Math.abs(R[i][0]-x)<d&&Math.abs(R[i][1]-z)<d) return true; } return false; }
+const EXTRA_ROADS=[];
+function nearNavalRoad(x,z,d){ for(let k=0;k<EXTRA_ROADS.length;k++){ const R=EXTRA_ROADS[k]; for(let i=0;i<R.length;i+=2){ if(Math.abs(R[i][0]-x)<d&&Math.abs(R[i][1]-z)<d) return true; } } return false; }
+EXTRA_ROADS.push(NAVAL.road);
 /* obstacle with an absolute top height (aircraft crash into it; on foot it blocks unless `air`) */
 function navObst(x0,x1,z0,z1,y1,air){ AP.obst.push({x0:Math.min(x0,x1),x1:Math.max(x0,x1),z0:Math.min(z0,z1),z1:Math.max(z0,z1),y1:y1,air:!!air}); AP.topY=Math.max(AP.topY||0,y1); }
 /* box whose top is narrowed across z (rubble-mound breakwater, quay wall batter) */
@@ -246,7 +248,7 @@ function buildNaval(){
   for(let z=N.z0+20;z<N.z1-15;z+=22){ if([N.gate.z,-3700,-4080,-3200].some(function(c){ return Math.abs(z-c)<14; })) continue; [-1,1].forEach(function(s){ TREE_EXTRA.push([-1690+s*10,PY,z,0.7+r()*0.3,1]); }); }
   for(let x=N.qx1+20;x<N.x1-10;x+=20){ if(Math.abs(x+1690)<14) continue; [-1,1].forEach(function(s){ TREE_EXTRA.push([x,PY,N.gate.z+s*10,0.7+r()*0.3,1]); }); }
   N.road.forEach(function(p,i){ if(i%6||i<4||p[0]<N.x1+20) return; [-1,1].forEach(function(s){ const x=p[0], z=p[1]+s*11; if(r()<0.35) return; TREE_EXTRA.push([x,terrainH(x,z),z,0.8+r()*0.3,1]); }); });
-  bakeInto(st);
+  bakeInto(st); clearTreesNear(N.road,14);
   /* ---- patrol boat sailing in the bay */
   const pb=buildPatrol('P-1203'); const pg=bakeGroup(pb.group); const boat=new THREE.Group(); boat.add(pg);
   const wake=new THREE.Mesh(new THREE.PlaneGeometry(14,90),new THREE.MeshBasicMaterial({map:apTex(32,128,function(x,W,H){ x.clearRect(0,0,W,H); const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,'rgba(255,255,255,0.75)'); g.addColorStop(1,'rgba(255,255,255,0)'); x.fillStyle=g;
@@ -257,6 +259,12 @@ function buildNaval(){
 /* bake a group into a few meshes per material and add them to the scene */
 function bakeInto(g){ g.updateMatrixWorld(true); const b=bakeGroup(g); b.children.slice().forEach(function(m){ scene.add(m); }); g.traverse(function(o){ if(o.isMesh&&o.geometry) o.geometry.dispose(); }); return b; }
 const TREE_EXTRA=[];
+/* hide island trees (04-terrain instanced cones) standing on a road */
+function clearTreesNear(path,d){ const T0=GFX.trees; if(!T0) return; const m=new THREE.Matrix4(), p=new THREE.Vector3(), z0=new THREE.Matrix4().makeScale(0,0,0);
+  let x0=1e9,x1=-1e9,zA=1e9,zB=-1e9; path.forEach(function(q){ x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); zA=Math.min(zA,q[1]); zB=Math.max(zB,q[1]); });
+  for(let i=0;i<GFX.treeN;i++){ T0.getMatrixAt(i,m); p.setFromMatrixPosition(m); if(p.x<x0-d||p.x>x1+d||p.z<zA-d||p.z>zB+d) continue;
+    for(let k=0;k<path.length;k+=2){ if(Math.abs(path[k][0]-p.x)<d&&Math.abs(path[k][1]-p.z)<d){ T0.setMatrixAt(i,z0); break; } } }
+  T0.instanceMatrix.needsUpdate=true; }
 function navalStep(dt){
   if(!NAVAL.built) return;
   NAVAL.cranes.forEach(function(c){ c.g.rotation.y=c.a+Math.sin(T*0.05+c.ph)*0.9; });

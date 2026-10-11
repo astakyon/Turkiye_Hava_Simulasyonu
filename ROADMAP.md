@@ -14,7 +14,7 @@
 | 3 | V1.32 | Hangar iç tasarımı: kapalı bekleme hangarı (çelik makaslar, tavan lambaları, epoksi zemin, bayrak ve pankartlar, tezgâh, takım dolabı, raf, silah arabaları), bakım hangarı iç donanımı | ✅ |
 | 4 | V1.39 | Üs çevresi: çit, nizamiye, köy, tarlalar, orman, kıyı köpüğü, deniz feneri | ✅ |
 | 4a | V1.40 | Deniz üssü (Mavi Kanatlar): iskeleler, dalgakıran, TCG Anadolu, fırkateyn/korvetler, denizaltı barınağı, yüzer havuz, vinçler | ✅ |
-| 4b | V1.41 | Kara üssü (Bozkurtlar): kışla, garajlar, araç parkı, atış poligonu | |
+| 4b | V1.41 | Kara üssü (Bozkurtlar): kışla, garajlar, araç parkı, atış poligonu | ✅ |
 | 4c | V1.42 | Yol ağı ve trafik, kasaba | |
 | 4d | V1.43 | Sivil liman, gemi trafiği, kumsal, martılar | |
 | 4e | V1.44 | Kırsal: rüzgâr türbinleri, GES, seralar, zeytinlik, göl/baraj, köye canlılık | |

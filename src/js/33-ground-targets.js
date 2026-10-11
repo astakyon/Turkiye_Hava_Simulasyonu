@@ -32,7 +32,7 @@ function gBuild(type){
 function gSite(rnd,taken){
   for(let tries=0;tries<300;tries++){
     const x=(rnd()-.5)*22000, z=(rnd()-.5)*22000;
-    if(Math.hypot(x,z)<3500) continue;
+    if(Math.hypot(x,z)<3500||inAnyPad(x,z,400)) continue;
     const h=terrainH(x,z); if(h<12||h>650) continue;
     if(Math.abs(terrainH(x+14,z)-h)+Math.abs(terrainH(x,z+14)-h)>5) continue;
     if(taken.some(function(q){ return Math.hypot(q[0]-x,q[1]-z)<500; })) continue;

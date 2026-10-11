@@ -149,7 +149,7 @@ function updateWalkTouch(){
 
 
 /* quick travel between the places of the island (on foot or in the car) */
-const WARPS=[{n:'Hangar',x:null},{n:'Nizamiye',x:-150,z:-1700,h:0},{n:'Köy',x:-330,z:-2960,h:0},{n:'Deniz Üssü',x:-1560,z:-3330,h:Math.PI/2},{n:'Deniz Üssü · rıhtım',x:-1940,z:-3780,h:0}];
+const WARPS=[{n:'Hangar',x:null},{n:'Nizamiye',x:-150,z:-1700,h:0},{n:'Köy',x:-330,z:-2960,h:0},{n:'Deniz Üssü',x:-1560,z:-3330,h:Math.PI/2},{n:'Deniz Üssü · rıhtım',x:-1940,z:-3780,h:0},{n:'Kara Üssü',x:900,z:-7290,h:0},{n:'Kara Üssü · motorlu birlik',x:1200,z:-7545,h:Math.PI/2},{n:'Atış poligonu',x:2160,z:-7660,h:-Math.PI/2}];
 function walkWarp(){
   WALK.warp=((WALK.warp==null?0:WALK.warp)+1)%WARPS.length; const w=WARPS[WALK.warp], c=WALK.car;
   if(w.x==null){ if(WALK.mode==='car'){ c.x=HG.X0+7; c.z=896; c.h=0; } else { const d=displays[selectedId]; WALK.pos.set(d.x+(d.ox||0)+4,AIRFIELD_Y+1.7,HANGAR.z-22); WALK.yaw=Math.PI+0.25; } }
