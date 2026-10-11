@@ -96,3 +96,5 @@ function careerRender(){
     return '<tr><td>'+d.toLocaleDateString('tr-TR')+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})+'</td><td>'+((AIRCRAFT[l.ac]||{}).short||l.ac)+'</td><td>'+((MISSIONS[l.m]||{}).name||l.m)+'</td><td>'+Math.floor(l.dur/60)+':'+String(l.dur%60).padStart(2,'0')+'</td><td>'+l.res+'</td><td>+'+l.xp+'</td></tr>'; }).join('')+'</tbody></table>':'<p class="ninfo">Henüz uçuş kaydı yok. Bir uçuş yap, burada görünsün.</p>';
   $('carRanks').innerHTML=RANKS.map(function(R,i){ return '<div class="rr'+(i===r?' cur':'')+(i<r?' past':'')+'">'+rankSVG(i,28)+'<b>'+R[0]+'</b><small>'+R[2].toLocaleString('tr-TR')+' TP</small></div>'; }).join('');
 }
+/* multiplayer: the rank abbreviation goes in front of the pilot name */
+(function(){ const N=netNameVal; netNameVal=function(){ const v=N.apply(this,arguments), r=rankShort(accProfile().rank||0); return (v.indexOf(r+' ')===0?v:(r+' '+v)).slice(0,20); }; })();
