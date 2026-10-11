@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.78 — 2026-10-11
+- **Uçuş okulu:** Ana menüye "Uçuş Okulu" eklendi; dersler görev panosunda "Okul" kategorisinde de var. Sekiz ders: Kalkış, Trafik turu, İniş, Rüzgârlı iniş (Hürkuş), Havada asılı kalma, Askı yükü (T625), Silah kullanımı (Hürjet), Gemiye iniş (T625: önce rıhtımdaki fırkateyn, sonra seyir hâlindeki korvet).
+- **Adım adım ilerleme:** Her derste HUD'da bir kontrol listesi var; yapılan adımlar işaretleniyor, süre isteyen adımlarda (ör. 10 m'de 5 saniye sabit dur) sayaç görünüyor. Trafik turunda dönüş noktaları gökyüzünde halka olarak işaretli.
+- **Eğitmen telsizi:** Eğitmen her adımı telsizden anlatıyor (sesli ve altyazılı), başarıları onaylıyor. Kaza olursa ders tekrar başlatılabiliyor.
+- **Rüzgârlı iniş:** Ders sırasında doğudan 25 knotluk yan rüzgâr ve türbülans esiyor; ders bitince hava eski hâline dönüyor.
+- **Lisanslar:** Uçak dersleri Pilot lisansı, helikopter dersleri Helikopter lisansı, silah dersi Silah sertifikası veriyor. Lisanslar kariyerde madalya olarak görünüyor. Tamamlanan dersler panoda ✓ ile işaretleniyor.
+
 ## V1.77 — 2026-10-11
 - **Dinamik görevler:** Görev panosunda yeni "Dinamik" kategorisi var. Her oyun açılışında adadaki yerlere göre altı görev üretiliyor: üç uçak görevi, iki helikopter görevi ve bir kara konvoyu. "↻ Yeni görevler" ile istediğin an yeni set alabilirsin.
 - **Uçak görevleri:** Devriye (sırayla yerlerin üzerinden geç), Önleme (üsse gelen kamikaze İHA'ları 2 km'den önce düşür), Yakın hava desteği (dost mevziye saldıran araçları imha et), Refakat (nakliye uçağını düşman avcılarından koru), İHA keşfi (İHA ile bölgeleri tara; insanlı uçak seçiliyse Aksungur verilir), Deniz devriyesi (deniz noktaları ve gemi tanımlama).
