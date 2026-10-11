@@ -5,7 +5,7 @@
 const CTRL_DEF={
   gen:{name:'Genel', acts:[
     ['pause','Duraklat / menü',['Escape','KeyP'],['b9']], ['map','Harita',['KeyM'],[]], ['camera','Kamera değiştir',['KeyC'],['b2']],
-    ['resetView','Kamerayı sıfırla',['KeyV'],[]], ['photo','Fotoğraf modu',['KeyH'],[]], ['invert','Yukarı-aşağı ters çevir',['KeyY'],[]], ['mute','Sesi aç / kapat',['KeyU'],[]]]},
+    ['resetView','Kamerayı sıfırla',['KeyV'],[]], ['photo','Fotoğraf modu',['KeyH'],[]], ['invert','Yukarı-aşağı ters çevir',['KeyY'],[]], ['mute','Sesi aç / kapat',['KeyU'],[]], ['radio','Telsiz menüsü (hazır mesajlar)',['KeyO'],[]], ['ptt','Bas-konuş (çok oyunculu)',['KeyI'],[]]]},
   air:{name:'Hava aracı', acts:[
     ['noseDown','Burun aşağı',['KeyW','ArrowUp'],['a1-']], ['noseUp','Burun yukarı',['KeyS','ArrowDown'],['a1+']],
     ['rollL','Sola yat / yerde sola dön',['KeyA','ArrowLeft'],['a0-']], ['rollR','Sağa yat / yerde sağa dön',['KeyD','ArrowRight'],['a0+']],
@@ -63,7 +63,7 @@ const PADNAME={b0:'A / ✕',b1:'B / ○',b2:'X / □',b3:'Y / △',b4:'LB',b5:'R
   'a0-':'Sol çubuk ←','a0+':'Sol çubuk →','a1-':'Sol çubuk ↑','a1+':'Sol çubuk ↓','a2-':'Sağ çubuk ←','a2+':'Sağ çubuk →','a3-':'Sağ çubuk ↑','a3+':'Sağ çubuk ↓'};
 function padName(sp){ return PADNAME[sp]||(sp[0]==='b'?'Tuş '+sp.slice(1):'Eksen '+sp.slice(1)); }
 /* conflicts: the same key / button on two actions of one scheme (or a scheme and Genel) */
-const GEN_GROUND=['pause','map','mute'];   /* on foot / in a car only these general actions are live */
+const GEN_GROUND=['pause','map','mute','radio','ptt'];   /* on foot / in a car only these general actions are live */
 function ctrlConflicts(dev,s){ const seen={}, out={}; [s].concat(s==='gen'?[]:['gen']).forEach(function(sc){ CTRL_DEF[sc].acts.forEach(function(a){ if(sc==='gen'&&(s==='land'||s==='foot')&&GEN_GROUND.indexOf(a[0])<0) return; (CTRL[dev][sc][a[0]]||[]).forEach(function(c){ (seen[c]=seen[c]||[]).push(sc+'.'+a[0]); }); }); });
   for(const c in seen) if(seen[c].length>1) seen[c].forEach(function(k){ (out[k]=out[k]||[]).push(c); }); return out; }
 /* ---- help modal: generated from the current bindings */

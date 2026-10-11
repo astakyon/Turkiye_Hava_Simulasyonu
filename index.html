@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.61">
+<meta name="game-version" content="V1.62">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -498,6 +498,15 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .sndctl input[type=range]{ width:90px; } .sndctl output{ min-width:34px; } .sndctl .btn{ padding:6px 10px; font-size:12px; }
 .sndempty{ color:var(--dim); padding:18px; text-align:center; }
 @media (max-width:700px){ .sndcard{ grid-template-columns:1fr; } .sndctl{ justify-content:flex-start; } }
+
+/* radio */
+.radiosub{ position:fixed; left:50%; top:calc(max(10px,env(safe-area-inset-top)) + 58px); transform:translateX(-50%); z-index:5; max-width:min(720px,92vw); padding:8px 14px; border-radius:8px; background:rgba(4,9,18,.72); border:1px solid rgba(160,200,230,.25); font-size:14px; line-height:1.35; text-align:center; pointer-events:none; }
+.radiosub.hidden,.radiomenu.hidden,.pttind.hidden{ display:none; }
+.radiomenu{ position:fixed; left:max(14px,env(safe-area-inset-left)); top:50%; transform:translateY(-50%); z-index:6; display:flex; flex-direction:column; gap:4px; padding:10px; min-width:200px; border-radius:10px; background:rgba(4,9,18,.86); border:1px solid var(--line); }
+.radiomenu b{ font-size:11px; letter-spacing:.2em; color:#ff8a8a; margin:0 4px 4px; } .radiomenu small{ color:var(--dim); font-size:11px; margin:4px; }
+.radiomenu button{ display:flex; gap:8px; align-items:center; text-align:left; padding:7px 8px; border-radius:6px; border:1px solid transparent; background:none; color:var(--ink); font-size:13px; }
+.radiomenu button:hover{ border-color:var(--line); background:rgba(255,255,255,.05); } .radiomenu kbd{ min-width:20px; text-align:center; padding:1px 4px; border-radius:4px; background:rgba(255,255,255,.12); font:700 11px ui-monospace,monospace; }
+.pttind{ position:fixed; right:max(14px,env(safe-area-inset-right)); top:calc(max(10px,env(safe-area-inset-top)) + 58px); z-index:6; padding:6px 12px; border-radius:16px; background:#c8141c; color:#fff; font-weight:700; font-size:12px; letter-spacing:.06em; }
 </style>
 </head>
 <body>
@@ -718,6 +727,9 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <div class="srow"><div class="sl"><b>Ses seviyesi</b><small><output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
       <div class="srow"><div class="sl"><b>Müzik</b><small>Oyunun kendi bestesi: ana menü teması, sakin uçuş, çatışma, zafer ve yenilgi; duruma göre değişir</small></div><label class="tgl"><input type="checkbox" id="setMusic"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Arayüz sesleri</b><small>Düğme, sekme ve bildirim sesleri</small></div><label class="tgl"><input type="checkbox" id="setUiSnd"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Telsiz konuşmaları</b><small>Kule, kanat adamı ve AWACS çağrıları tarayıcının Türkçe sesiyle okunur (cihazına göre ses değişir)</small></div><label class="tgl"><input type="checkbox" id="setRadioTts"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Telsiz altyazıları</b><small>Konuşmalar ekranda yazıyla da görünür</small></div><label class="tgl"><input type="checkbox" id="setRadioSub"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Çağrı adın</b><small>Telsizde sana böyle seslenilir</small></div><input id="setCallsign" class="inp" maxlength="20" placeholder="Hilal 1" style="max-width:160px"></div>
       <div class="srow"><div class="sl"><b>Ses kütüphanesi</b><small>Kanal karışımı (müzik, efekt, arayüz, telsiz, ortam), her sesi dinle, ayarla ya da kendi ses dosyanla değiştir</small></div><button class="btn" id="btnSndOpen" type="button">Aç</button></div>
     </section>
     <section data-tab="o" class="hidden">
@@ -761,10 +773,12 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <div class="seg wrap" id="netMode"><button type="button" data-m="coop" aria-pressed="true">İşbirliği</button><button type="button" data-m="team" aria-pressed="false">Takım</button><button type="button" data-m="ffa" aria-pressed="false">Herkes</button></div>
       <p class="mdesc" id="netModeDesc"></p>
       <label class="check"><input type="checkbox" id="netBots" checked> Boş yerleri yapay zekâ ile doldur</label>
+      <label class="check"><input type="checkbox" id="netVoice"> Sesli sohbet (mikrofon, bas-konuş)</label>
       <button class="btn primary wide" id="btnNetHost" type="button">▶ Oda kur</button>
     </div>
     <div class="npan">
       <p class="k">ODAYA KATIL</p>
+      <label class="check"><input type="checkbox" id="netVoice2"> Sesli sohbet (mikrofon, bas-konuş)</label>
       <div class="joinrow"><input id="netCode" class="inp code" maxlength="6" placeholder="KOD" autocomplete="off" autocapitalize="characters"><button class="btn" id="btnNetJoin" type="button">Katıl</button></div>
       <p class="ninfo">Arkadaşının verdiği 5 harfli kodu yaz ya da paylaştığı bağlantıyla gir. En fazla 4 oyuncu; odayı kuran oyuncu maçı yönetir. Bağlantı doğrudan oyuncular arasında kurulur (internet gerekir).</p>
     </div>
@@ -821,8 +835,11 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   </div>
 </div>
 
+<div id="radioSub" class="radiosub hidden"></div>
+<div id="radioMenu" class="radiomenu hidden"></div>
+<div id="pttInd" class="pttind hidden">🎙 KONUŞUYORSUN</div>
 <div id="touch" class="touch hidden">
-  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
+  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
   <div class="ttaxi"><button type="button" id="tAuto" class="hidden">OTO TAKSİ</button><button type="button" id="tSkip" class="hidden">PİSTE GEÇ</button></div>
   <div class="tstick" id="tStick"><div class="tknob" id="tKnob"></div></div>
   <div class="tright" id="tRight">
@@ -860,7 +877,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.61', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.62', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -5397,6 +5414,7 @@ function sndMixStep(){
 function sndPlay(id,o){
   if(!AC||muted) return; const d=SNDI[id]; if(!d) return; o=o||{};
   if(d.music){ if(typeof musPreview==='function') musPreview(d.music); return; }
+  if(d.phrase&&!o.raw){ if(typeof radioSay==='function') radioSay(d.phrase,null,{force:true}); return; }
   const v=sndVol(id)*(o.vol==null?1:o.vol), p=sndPitch(id)*(o.pitch==null?1:o.pitch), dest=o.dest||sndOut(d.bus);
   if(SND.buf[id]){ const s=AC.createBufferSource(), g=AC.createGain(); s.buffer=SND.buf[id]; s.playbackRate.value=p; g.gain.value=v; s.connect(g); g.connect(dest); s.start();
     if(d.loop) s.stop(AC.currentTime+Math.min(4,s.buffer.duration/p)); return s; }
@@ -6315,7 +6333,7 @@ function ambStep(dt){
 const CTRL_DEF={
   gen:{name:'Genel', acts:[
     ['pause','Duraklat / menü',['Escape','KeyP'],['b9']], ['map','Harita',['KeyM'],[]], ['camera','Kamera değiştir',['KeyC'],['b2']],
-    ['resetView','Kamerayı sıfırla',['KeyV'],[]], ['photo','Fotoğraf modu',['KeyH'],[]], ['invert','Yukarı-aşağı ters çevir',['KeyY'],[]], ['mute','Sesi aç / kapat',['KeyU'],[]]]},
+    ['resetView','Kamerayı sıfırla',['KeyV'],[]], ['photo','Fotoğraf modu',['KeyH'],[]], ['invert','Yukarı-aşağı ters çevir',['KeyY'],[]], ['mute','Sesi aç / kapat',['KeyU'],[]], ['radio','Telsiz menüsü (hazır mesajlar)',['KeyO'],[]], ['ptt','Bas-konuş (çok oyunculu)',['KeyI'],[]]]},
   air:{name:'Hava aracı', acts:[
     ['noseDown','Burun aşağı',['KeyW','ArrowUp'],['a1-']], ['noseUp','Burun yukarı',['KeyS','ArrowDown'],['a1+']],
     ['rollL','Sola yat / yerde sola dön',['KeyA','ArrowLeft'],['a0-']], ['rollR','Sağa yat / yerde sağa dön',['KeyD','ArrowRight'],['a0+']],
@@ -6373,7 +6391,7 @@ const PADNAME={b0:'A / ✕',b1:'B / ○',b2:'X / □',b3:'Y / △',b4:'LB',b5:'R
   'a0-':'Sol çubuk ←','a0+':'Sol çubuk →','a1-':'Sol çubuk ↑','a1+':'Sol çubuk ↓','a2-':'Sağ çubuk ←','a2+':'Sağ çubuk →','a3-':'Sağ çubuk ↑','a3+':'Sağ çubuk ↓'};
 function padName(sp){ return PADNAME[sp]||(sp[0]==='b'?'Tuş '+sp.slice(1):'Eksen '+sp.slice(1)); }
 /* conflicts: the same key / button on two actions of one scheme (or a scheme and Genel) */
-const GEN_GROUND=['pause','map','mute'];   /* on foot / in a car only these general actions are live */
+const GEN_GROUND=['pause','map','mute','radio','ptt'];   /* on foot / in a car only these general actions are live */
 function ctrlConflicts(dev,s){ const seen={}, out={}; [s].concat(s==='gen'?[]:['gen']).forEach(function(sc){ CTRL_DEF[sc].acts.forEach(function(a){ if(sc==='gen'&&(s==='land'||s==='foot')&&GEN_GROUND.indexOf(a[0])<0) return; (CTRL[dev][sc][a[0]]||[]).forEach(function(c){ (seen[c]=seen[c]||[]).push(sc+'.'+a[0]); }); }); });
   for(const c in seen) if(seen[c].length>1) seen[c].forEach(function(k){ (out[k]=out[k]||[]).push(c); }); return out; }
 /* ---- help modal: generated from the current bindings */
@@ -6787,6 +6805,7 @@ function syncSettingsUI(){
   $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
+  $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
   $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
@@ -6870,6 +6889,10 @@ $('setUiSnd').addEventListener('change',function(e){ SETTINGS.uiSnd=e.target.che
     sndPlay(b.classList.contains('back')||/^(←|Geri)/.test((b.textContent||'').trim())?'ui_back':(b.classList.contains('primary')?'ui_ok':'ui_click')); },true);
   document.addEventListener('pointerover',function(e){ if(e.pointerType!=='mouse'||SETTINGS.uiSnd===false||typeof sndPlay!=='function') return; const b=e.target.closest('button,.btn'); if(!b||b===last||b.disabled) return;
     last=b; const now=performance.now(); if(now-lastT<70) return; lastT=now; sndPlay('ui_hover'); },true); })();
+$('setRadioTts').addEventListener('change',function(e){ SETTINGS.radioTts=e.target.checked; saveSettings(); });
+$('setRadioSub').addEventListener('change',function(e){ SETTINGS.radioSub=e.target.checked; saveSettings(); });
+$('setCallsign').addEventListener('change',function(e){ SETTINGS.callsign=String(e.target.value||'').trim().slice(0,20); saveSettings(); });
+['netVoice','netVoice2'].forEach(function(id){ const el=$(id); if(!el) return; el.checked=!!SETTINGS.voice; el.addEventListener('change',function(e){ const on=e.target.checked; ['netVoice','netVoice2'].forEach(function(k){ $(k).checked=on; }); voiceEnable(on).then(function(ok){ if(on&&!ok){ ['netVoice','netVoice2'].forEach(function(k){ $(k).checked=false; }); } }); }); });
 /* ------------------------------------------------------------------ shared toggles + gamepad */
 function toggleCam(){ camMode^=1; camSnap=true; CAMU.yaw=0; CAMU.pitch=0; }
 function toggleInvert(){ invertY=!invertY; SETTINGS.invert=invertY; saveSettings(); if($('setInv')) $('setInv').checked=invertY; toast(invertY?'Pitch kontrolü: ters':'Pitch kontrolü: normal'); }
@@ -7515,6 +7538,7 @@ function netHandle(msg,from){
     case 'end': netEnd(msg.text); break;
     case 'lobby': netBackToLobby(true); break;
     case 'spawnRed': netSpawnRed(msg.r); break;
+    case 'radio': if(NET.host&&from!==NET.myId) netBroadcast(msg,from); if(msg.from!==NET.myId) radioRecv(msg); break;
   }
 }
 function spawnPoint(sp){
@@ -7647,6 +7671,7 @@ function netBackToLobby(fromHost){
 }
 function netReset(){ try{ if(NET.peer) NET.peer.destroy(); }catch(e){} NET.peer=null; NET.conns={}; NET.hconn=null; NET.roster=[]; NET.score={}; NET.last={}; NET.started=false; NET.ended=false; NET.myId='ME'; NET.seq=0; }
 function netLeave(silent){
+  if(typeof voiceStop==='function'&&VOICE.on){ voiceStop(); VOICE.hooked=false; }
   const was=NET.on; NET.on=false; netReset(); aiClear(); if(missionId==='net') missionId=NET.prevMission||'free';
   $('btnMRetry').disabled=false; $('btnMRetry').textContent='Tekrar dene'; $('btnMHangar').textContent='Hangara dön';
   if(was&&state!=='menu'){ $('missionEnd').classList.add('hidden'); enterTitle(); }
@@ -7660,6 +7685,7 @@ function closeNet(){ $('netUI').classList.add('hidden'); }
 function netShowHome(){ $('netHome').classList.remove('hidden'); $('netLobby').classList.add('hidden'); }
 function netShowLobby(){ $('netUI').classList.remove('hidden'); $('netHome').classList.add('hidden'); $('netLobby').classList.remove('hidden'); netRenderLobby(); }
 function netRenderLobby(){
+  if(typeof voiceConnect==='function') voiceConnect();
   if(!$('netLobby')) return;
   $('netRoom').textContent=NET.room||'—';
   $('netModeTxt').textContent=(NET_MODES[NET.mode]||NET_MODES.coop).name+' · '+(NET.bots?'boş yerler botla dolar':'bot yok')+' · en fazla '+NET_MAX+' oyuncu';
@@ -7697,6 +7723,160 @@ function netPick(ac,team){
 // clients learn about new red waves in co-op
 function netSpawnRed(r){ if(actById(r.id)) return; const a=makeActor({id:r.id,name:r.name,team:'red',ac:r.ac,ai:true,remote:true,human:false}); a.alive=false; a.g.visible=false; a.nT=-1; }
 
+/* ------------------------------------------------------------------ radio: tower, wingman and AWACS calls, quick radio messages, push-to-talk
+   Calls are spoken with the browser's Turkish voice (speechSynthesis) under a squelch click and static, with subtitles.
+   Every phrase is also a Sound Library entry (Telsiz): a recorded file replaces the synthetic voice and is played through a
+   radio band-pass filter. Multiplayer: quick messages over the data channel, voice chat through PeerJS media calls (star:
+   every client calls the host; the host answers each with a personal mix of everybody else). */
+const RADIO={q:[], busy:false, endT:0, sub:null, subT:0, last:{}, st:{}, voices:null, menu:false, staticG:null};
+const RADIO_WHO={kule:{n:'Kule',p:0.92,r:1.06,c:'#9fe3ff'},kanat:{n:'Kılıç 2',p:1.12,r:1.12,c:'#7dffb0'},awacs:{n:'Kartal Gözü',p:0.82,r:1.02,c:'#ffd27a'},sen:{n:'Sen',p:1,r:1.1,c:'#ffffff'},oyuncu:{n:'',p:1.05,r:1.1,c:'#ffffff'}};
+const PHR={
+  tw_hello:{w:'kule',t:'{cs}, Ay Yıldız Kule. Pist {rw}, rüzgâr {wind}. Kalkış serbest.'},
+  tw_takeoff:{w:'kule',t:'{cs}, kalkışınız görüldü. Sağ salim dönün.'},
+  tw_appr:{w:'kule',t:'{cs}, pist {rw} iniş serbest. Rüzgâr {wind}.'},
+  tw_landed:{w:'kule',t:'{cs}, inişiniz görüldü. Apronda park edin.'},
+  tw_low:{w:'kule',t:'Dikkat {cs}, irtifanız çok düşük.'},
+  aw_contact:{w:'awacs',t:'{cs}, Kartal Gözü. {n} düşman, saat {clk} yönünde, {km} kilometre.'},
+  aw_clear:{w:'awacs',t:'{cs}, Kartal Gözü. Hava sahası temiz.'},
+  aw_done:{w:'awacs',t:'Görev tamam {cs}. Üsse dönebilirsin.'},
+  wg_join:{w:'kanat',t:'Kılıç 2 sol arkanda, emrindeyim.'},
+  wg_missile:{w:'kanat',t:'Füze! Füze! Kır, kır!'},
+  wg_goodkill:{w:'kanat',t:'Güzel atış! Bir düşman düştü.'},
+  wg_kill:{w:'kanat',t:'Bir düşmanı indirdim!'},
+  wg_ack:{w:'kanat',t:'Anlaşıldı, lider.'},
+  wg_cover:{w:'kanat',t:'Geliyorum, arkanı kolluyorum!'}
+};
+const QUICK=[['Anlaşıldı','ack'],['Yardım lazım!','help'],['Arkamda düşman var!','six'],['Hedef vuruldu','hit'],['Beni takip et','follow'],['Füze attım','fox'],['Üsse dönüyorum','rtb'],['Teşekkürler','thx']];
+/* Sound Library: each phrase can be replaced with a recording */
+Object.keys(PHR).forEach(function(k){ const P=PHR[k], d={id:'r_'+k,cat:'telsiz',n:RADIO_WHO[P.w].n+': '+P.t.replace(/\{cs\}, ?/,'').replace(/\{[a-z]+\}/g,'…').slice(0,46),d:'Telsiz konuşması — kendi kaydınla değiştirebilirsin',bus:'radio',phrase:k}; SND_DEFS.push(d); SNDI[d.id]=d; });
+function callsign(){ return (SETTINGS.callsign||'Hilal 1').slice(0,20); }
+function rwName(){ const f=fwdOf(S.q,new THREE.Vector3()); return f.z<0?'36':'18'; }
+function windTxt(){ const d=270+Math.round(Math.sin(T*0.01)*3)*10, k=6+Math.round(Math.abs(Math.sin(T*0.007))*8); return String(d).padStart(3,'0')+' derece, '+k+' knot'; }
+function radioFill(t,v){ v=v||{}; return t.replace(/\{(\w+)\}/g,function(m,k){ if(k==='cs') return callsign(); if(k==='wind') return v.wind||windTxt(); if(k==='rw') return v.rw||'36'; return v[k]!=null?v[k]:m; }); }
+function trVoice(){ if(RADIO.voices) return RADIO.voices; try{ const L=speechSynthesis.getVoices(); RADIO.voices=L.filter(function(v){ return /^tr/i.test(v.lang); }); if(!L.length) RADIO.voices=null; }catch(e){} return RADIO.voices||[]; }
+try{ speechSynthesis.onvoiceschanged=function(){ RADIO.voices=null; trVoice(); }; }catch(e){}
+/* queue a call; key = PHR id, or {who,text} for free text (quick messages, other players) */
+function radioSay(key,vars,o){
+  o=o||{}; const P=typeof key==='string'?PHR[key]:key; if(!P) return;
+  const id=typeof key==='string'?key:null, now=performance.now()/1000;
+  if(id&&!o.force&&now-(RADIO.last[id]!=null?RADIO.last[id]:-99)<(o.gap||12)) return; if(id) RADIO.last[id]=now;
+  if(RADIO.q.length>=3&&!o.force) return;
+  RADIO.q.push({id:id, who:P.w, name:o.name, text:radioFill(P.t,vars)});
+}
+function radioSub(who,name,text){ const W=RADIO_WHO[who]||RADIO_WHO.oyuncu, el=$('radioSub'); if(SETTINGS.radioSub===false){ el.classList.add('hidden'); return; }
+  el.innerHTML='<b style="color:'+W.c+'">'+(name||W.n)+':</b> '+text.replace(/</g,'&lt;'); el.classList.remove('hidden'); }
+function radioStatic(on){ if(!AC||!noiseBuf) return; if(!RADIO.staticG){ const s=AC.createBufferSource(); s.buffer=noiseBuf; s.loop=true; const f=AC.createBiquadFilter(); f.type='bandpass'; f.frequency.value=2600; f.Q.value=0.7; const g=AC.createGain(); g.gain.value=0; s.connect(f); f.connect(g); g.connect(sndOut('radio')); s.start(); RADIO.staticG=g; }
+  RADIO.staticG.gain.setTargetAtTime(on&&!muted?0.022*sndVol('radio_static'):0,AC.currentTime,0.05); }
+function radioNext(){
+  if(RADIO.busy||!RADIO.q.length) return; const m=RADIO.q.shift(), W=RADIO_WHO[m.who]||RADIO_WHO.oyuncu; RADIO.busy=true;
+  radioSub(m.who,m.name,m.text); sndPlay('radio_on'); radioStatic(true);
+  const done=function(){ if(!RADIO.busy) return; RADIO.busy=false; radioStatic(false); sndPlay('radio_off'); RADIO.subT=performance.now()/1000+1.6; };
+  const est=1.2+m.text.length*0.065; RADIO.endT=performance.now()/1000+est+4;   /* safety timeout */
+  const buf=m.id&&SND.buf['r_'+m.id];
+  if(buf&&AC){ const s=AC.createBufferSource(), f=AC.createBiquadFilter(), f2=AC.createBiquadFilter(), g=AC.createGain(); s.buffer=buf; f.type='highpass'; f.frequency.value=380; f2.type='lowpass'; f2.frequency.value=3200; g.gain.value=1.6*sndVol('r_'+m.id);
+    s.playbackRate.value=sndPitch('r_'+m.id); s.connect(f); f.connect(f2); f2.connect(g); g.connect(sndOut('radio')); s.onended=done; s.start(AC.currentTime+0.12); RADIO.endT=performance.now()/1000+buf.duration+2; return; }
+  if(SETTINGS.radioTts!==false&&!muted&&typeof speechSynthesis!=='undefined'&&typeof SpeechSynthesisUtterance!=='undefined'){
+    try{ const u=new SpeechSynthesisUtterance(m.text), vs=trVoice(); u.lang='tr-TR'; if(vs.length) u.voice=vs[(m.who==='kanat'?1:0)%vs.length];
+      u.pitch=W.p; u.rate=W.r; u.volume=clamp(SETTINGS.volume*busVol('radio'),0,1); u.onend=done; u.onerror=done; setTimeout(function(){ try{ speechSynthesis.speak(u); }catch(e){ done(); } },120); return; }catch(e){}
+  }
+  setTimeout(done,est*1000);
+}
+function radioClockOf(p){ const f=fwdOf(S.q,new THREE.Vector3()); const a=Math.atan2(p.x-S.pos.x,p.z-S.pos.z)-Math.atan2(f.x,f.z); let c=Math.round(((a*-1)/(Math.PI*2))*12); c=((c%12)+12)%12; return String(c===0?12:c); }
+/* ---- automatic calls from the flight state */
+function radioStep(dt){
+  const now=performance.now()/1000;
+  if(RADIO.busy&&now>RADIO.endT){ RADIO.busy=false; radioStatic(false); }
+  if(!RADIO.busy&&RADIO.subT&&now>RADIO.subT){ RADIO.subT=0; $('radioSub').classList.add('hidden'); }
+  radioNext();
+  const R=RADIO.st, st=state;
+  if(st!=='play'||NET.on&&!NET.started){ R.prev=st; return; }
+  if(R.prev!=='play'&&R.prev!=='paused'&&R.prev!=='map'){ R.air=!S.onGround; R.appr=false; R.reds=0; R.msl=0; R.wing=wingSpawned;
+    if(S.onGround&&landZone(S.pos.x,S.pos.z,50)) setTimeout(function(){ if(state==='play') radioSay('tw_hello',{rw:rwName()},{force:true}); },1500); }
+  R.prev=st;
+  if(S.crashed) return;
+  const zone=landZone(S.pos.x,S.pos.z,0), agl=S.pos.y-Math.max(0,groundH(S.pos.x,S.pos.z));
+  if(!S.onGround&&!R.air&&agl>40){ R.air=true; R.appr=false; if(landZone(S.pos.x,S.pos.z,2500)) radioSay('tw_takeoff'); }
+  if(S.onGround&&R.air){ R.air=false; if(zone) radioSay('tw_landed'); }
+  if(R.air&&S.gear&&!R.appr&&agl<700&&landZone(S.pos.x,S.pos.z,5000)){ R.appr=true; radioSay('tw_appr',{rw:rwName()}); }
+  if(R.air&&agl<55&&S.speed>90&&!landZone(S.pos.x,S.pos.z,1500)) radioSay('tw_low',null,{gap:25});
+  /* AWACS picture when new enemies appear */
+  const reds=ACT.filter(function(a){ return a.team==='red'&&a.alive; });
+  if(reds.length>R.reds){ let near=reds[0]; reds.forEach(function(a){ if(a.pos.distanceToSquared(S.pos)<near.pos.distanceToSquared(S.pos)) near=a; });
+    radioSay('aw_contact',{n:reds.length,clk:radioClockOf(near.pos),km:Math.max(1,Math.round(near.pos.distanceTo(S.pos)/1000))},{gap:20}); }
+  else if(reds.length===0&&R.reds>0) radioSay('aw_clear',null,{gap:30});
+  R.reds=reds.length;
+  if(RWR.msl>0&&!R.msl){ if(wingSpawned) radioSay('wg_missile',null,{gap:6,force:true}); }
+  R.msl=RWR.msl>0;
+  if(wingSpawned&&!R.wing) radioSay('wg_join'); R.wing=wingSpawned;
+}
+/* kills → wingman calls */
+(function(){ const D=actorDown; actorDown=function(a,byId){ const r=D.apply(this,arguments); try{ if(a.team==='red'&&wingSpawned&&state==='play'){ if(byId===NET.myId) radioSay('wg_goodkill',null,{gap:8}); else { const k=actById(byId); if(k&&k.wing) radioSay('wg_kill',null,{gap:8}); } } }catch(e){} return r; }; })();
+(function(){ const E=endMission; endMission=function(ok){ const r=E.apply(this,arguments); if(ok) radioSay('aw_done',null,{force:true}); return r; }; })();
+/* ---- quick radio menu (O, then 1–8) */
+function radioMenu(open){ RADIO.menu=open==null?!RADIO.menu:open; const el=$('radioMenu');
+  if(RADIO.menu) el.innerHTML='<b>TELSİZ</b>'+QUICK.map(function(q,i){ return '<button type="button" data-q="'+i+'"><kbd>'+(i+1)+'</kbd>'+q[0]+'</button>'; }).join('')+(NET.on?'<small>'+(VOICE.on?'Bas-konuş: '+ctrlKeyName('gen','ptt'):'Sesli sohbet kapalı')+'</small>':'');
+  el.classList.toggle('hidden',!RADIO.menu); }
+function ctrlKeyName(s,a){ const k=(CTRL.kb[s]&&CTRL.kb[s][a]||[])[0]; return k?k.replace(/^Key/,'').replace(/^Digit/,''):'—'; }
+function radioQuick(i){
+  const q=QUICK[i]; if(!q) return; radioMenu(false);
+  if(NET.on){ const msg={t:'radio',k:q[1],text:q[0],name:NET.name||'Pilot',from:NET.myId}; if(NET.host) netBroadcast(msg); else netSendTo('H',msg); radioSay({w:'sen',t:q[0]},null,{force:true}); return; }
+  radioSay({w:'sen',t:q[0]},null,{force:true});
+  if(wingSpawned){ const rep={ack:'wg_ack',help:'wg_cover',six:'wg_cover',follow:'wg_ack',fox:'wg_ack',rtb:'wg_ack',hit:'wg_goodkill',thx:'wg_ack'}[q[1]]; setTimeout(function(){ radioSay(rep,null,{force:true}); },900); }
+}
+function radioRecv(msg){ radioSay({w:'oyuncu',t:String(msg.text||'').slice(0,80)},null,{force:true,name:String(msg.name||'Pilot').slice(0,16)}); }
+$('radioMenu').addEventListener('click',function(e){ const b=e.target.closest('button[data-q]'); if(b) radioQuick(+b.dataset.q); });
+window.addEventListener('keydown',function(e){
+  if(state!=='play'&&state!=='walk') return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  if(isKey(e,'gen','radio')){ radioMenu(); e.preventDefault(); return; }
+  if(RADIO.menu&&/^Digit[1-8]$/.test(e.code)){ radioQuick(+e.code.slice(5)-1); e.preventDefault(); e.stopImmediatePropagation(); return; }
+  if(RADIO.menu&&e.code==='Escape'){ radioMenu(false); e.stopImmediatePropagation(); return; }
+  if(isKey(e,'gen','ptt')&&!e.repeat) voicePTT(true);
+},true);
+window.addEventListener('keyup',function(e){ if(isKey(e,'gen','ptt')) voicePTT(false); },true);
+
+/* ---- voice chat (multiplayer) */
+const VOICE={on:false, mic:null, micSrc:null, talk:false, calls:[], inc:{}, mixes:{}, els:[]};
+function voiceEnable(on){
+  if(!on){ voiceStop(); SETTINGS.voice=false; saveSettings(); return Promise.resolve(false); }
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ toast('Bu tarayıcıda mikrofon kullanılamıyor','#ffc24a'); return Promise.resolve(false); }
+  initAudio();
+  return navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}).then(function(s){
+    VOICE.mic=s; VOICE.mic.getAudioTracks().forEach(function(t){ t.enabled=false; }); VOICE.on=true; SETTINGS.voice=true; saveSettings();
+    if(AC) VOICE.micSrc=AC.createMediaStreamSource(s);
+    toast('Mikrofon hazır — konuşmak için '+ctrlKeyName('gen','ptt')+' tuşunu basılı tut','#7dffb0'); voiceConnect(); return true;
+  }).catch(function(){ toast('Mikrofon izni verilmedi','#ffc24a'); return false; });
+}
+function voiceStop(){ VOICE.calls.forEach(function(c){ try{ c.close(); }catch(e){} }); VOICE.calls=[]; if(VOICE.mic) VOICE.mic.getTracks().forEach(function(t){ t.stop(); });
+  VOICE.mic=null; VOICE.micSrc=null; VOICE.on=false; VOICE.inc={}; VOICE.mixes={}; VOICE.els.forEach(function(a){ a.srcObject=null; a.remove(); }); VOICE.els=[]; }
+function voicePTT(on){ if(!VOICE.on||!VOICE.mic) return; if(VOICE.talk===on) return; VOICE.talk=on; VOICE.mic.getAudioTracks().forEach(function(t){ t.enabled=on; }); sndPlay(on?'radio_on':'radio_off');
+  $('pttInd').classList.toggle('hidden',!on); }
+/* incoming voice → radio filter → radio bus (a muted <audio> keeps Chrome pulling the remote stream) */
+function voicePlay(id,stream){
+  const a=document.createElement('audio'); a.muted=true; a.autoplay=true; a.srcObject=stream; a.style.display='none'; document.body.appendChild(a); VOICE.els.push(a);
+  if(!AC) return null; const src=AC.createMediaStreamSource(stream), f=AC.createBiquadFilter(), f2=AC.createBiquadFilter(), g=AC.createGain(); f.type='highpass'; f.frequency.value=300; f2.type='lowpass'; f2.frequency.value=3400; g.gain.value=1.4;
+  src.connect(f); f.connect(f2); f2.connect(g); g.connect(sndOut('radio')); VOICE.inc[id]=src; return src;
+}
+function voiceConnect(){
+  if(!VOICE.on||!NET.on||!NET.peer||!VOICE.mic) return;
+  if(NET.host){ if(VOICE.hooked) return; VOICE.hooked=true;
+    NET.peer.on('call',function(call){
+      if(!VOICE.on){ call.close(); return; }
+      /* personal mix for this caller: host mic + every other caller */
+      const dst=AC.createMediaStreamDestination(); VOICE.mixes[call.peer]=dst; if(VOICE.micSrc) VOICE.micSrc.connect(dst);
+      Object.keys(VOICE.inc).forEach(function(k){ if(k!==call.peer) VOICE.inc[k].connect(dst); });
+      call.answer(dst.stream); VOICE.calls.push(call);
+      call.on('stream',function(rs){ const src=voicePlay(call.peer,rs); if(src) Object.keys(VOICE.mixes).forEach(function(k){ if(k!==call.peer) src.connect(VOICE.mixes[k]); }); });
+      call.on('close',function(){ delete VOICE.inc[call.peer]; delete VOICE.mixes[call.peer]; });
+    });
+  } else {
+    if(VOICE.calls.length) return; const call=NET.peer.call(NET_PREFIX+NET.room,VOICE.mic); if(!call) return; VOICE.calls.push(call);
+    call.on('stream',function(rs){ voicePlay('H',rs); }); call.on('close',function(){ VOICE.calls=[]; });
+  }
+}
+/* touch push-to-talk and radio buttons */
+(function(){ const p=$('tPtt'), r=$('tRadio'); if(p){ p.addEventListener('pointerdown',function(e){ e.preventDefault(); voicePTT(true); }); ['pointerup','pointercancel','pointerleave'].forEach(function(ev){ p.addEventListener(ev,function(){ voicePTT(false); }); }); }
+  if(r) r.addEventListener('pointerdown',function(e){ e.preventDefault(); radioMenu(); }); })();
+setInterval(function(){ const p=$('tPtt'); if(p) p.classList.toggle('hidden',!(NET.on&&VOICE.on)); },1000);
 /* ------------------------------------------------------------------ on foot (first person) and driving a car around the base */
 const WALK={mode:'foot', pos:new THREE.Vector3(), yaw:Math.PI, pitch:0, run:false, camD:1, cy:0, fp:false, boxes:null, near:null, nearId:null, sx:0, sy:0,
   car:{x:0,z:0,h:0,v:0,steer:0,mesh:null}, from:'play', bob:0, hint:6};
@@ -8497,7 +8677,7 @@ function frame(now){
   sky.position.copy(camera.position); shadowFollow(); if(state!=='library') cullStep(dt);
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
   renderFrame(dt);
-  drawHUD(); miniStep(dt); audioUpdate(); updateTouchUI(); updateWalkTouch();
+  drawHUD(); miniStep(dt); audioUpdate(); radioStep(dt); updateTouchUI(); updateWalkTouch();
 }
 requestAnimationFrame(frame);
 })();

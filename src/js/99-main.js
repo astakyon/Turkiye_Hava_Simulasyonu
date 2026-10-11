@@ -17,6 +17,6 @@ function frame(now){
   sky.position.copy(camera.position); shadowFollow(); if(state!=='library') cullStep(dt);
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
   renderFrame(dt);
-  drawHUD(); miniStep(dt); audioUpdate(); updateTouchUI(); updateWalkTouch();
+  drawHUD(); miniStep(dt); audioUpdate(); radioStep(dt); updateTouchUI(); updateWalkTouch();
 }
 requestAnimationFrame(frame);

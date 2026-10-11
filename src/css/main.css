@@ -481,3 +481,12 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .sndctl input[type=range]{ width:90px; } .sndctl output{ min-width:34px; } .sndctl .btn{ padding:6px 10px; font-size:12px; }
 .sndempty{ color:var(--dim); padding:18px; text-align:center; }
 @media (max-width:700px){ .sndcard{ grid-template-columns:1fr; } .sndctl{ justify-content:flex-start; } }
+
+/* radio */
+.radiosub{ position:fixed; left:50%; top:calc(max(10px,env(safe-area-inset-top)) + 58px); transform:translateX(-50%); z-index:5; max-width:min(720px,92vw); padding:8px 14px; border-radius:8px; background:rgba(4,9,18,.72); border:1px solid rgba(160,200,230,.25); font-size:14px; line-height:1.35; text-align:center; pointer-events:none; }
+.radiosub.hidden,.radiomenu.hidden,.pttind.hidden{ display:none; }
+.radiomenu{ position:fixed; left:max(14px,env(safe-area-inset-left)); top:50%; transform:translateY(-50%); z-index:6; display:flex; flex-direction:column; gap:4px; padding:10px; min-width:200px; border-radius:10px; background:rgba(4,9,18,.86); border:1px solid var(--line); }
+.radiomenu b{ font-size:11px; letter-spacing:.2em; color:#ff8a8a; margin:0 4px 4px; } .radiomenu small{ color:var(--dim); font-size:11px; margin:4px; }
+.radiomenu button{ display:flex; gap:8px; align-items:center; text-align:left; padding:7px 8px; border-radius:6px; border:1px solid transparent; background:none; color:var(--ink); font-size:13px; }
+.radiomenu button:hover{ border-color:var(--line); background:rgba(255,255,255,.05); } .radiomenu kbd{ min-width:20px; text-align:center; padding:1px 4px; border-radius:4px; background:rgba(255,255,255,.12); font:700 11px ui-monospace,monospace; }
+.pttind{ position:fixed; right:max(14px,env(safe-area-inset-right)); top:calc(max(10px,env(safe-area-inset-top)) + 58px); z-index:6; padding:6px 12px; border-radius:16px; background:#c8141c; color:#fff; font-weight:700; font-size:12px; letter-spacing:.06em; }

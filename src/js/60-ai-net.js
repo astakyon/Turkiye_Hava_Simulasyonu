@@ -397,6 +397,7 @@ function netHandle(msg,from){
     case 'end': netEnd(msg.text); break;
     case 'lobby': netBackToLobby(true); break;
     case 'spawnRed': netSpawnRed(msg.r); break;
+    case 'radio': if(NET.host&&from!==NET.myId) netBroadcast(msg,from); if(msg.from!==NET.myId) radioRecv(msg); break;
   }
 }
 function spawnPoint(sp){
@@ -529,6 +530,7 @@ function netBackToLobby(fromHost){
 }
 function netReset(){ try{ if(NET.peer) NET.peer.destroy(); }catch(e){} NET.peer=null; NET.conns={}; NET.hconn=null; NET.roster=[]; NET.score={}; NET.last={}; NET.started=false; NET.ended=false; NET.myId='ME'; NET.seq=0; }
 function netLeave(silent){
+  if(typeof voiceStop==='function'&&VOICE.on){ voiceStop(); VOICE.hooked=false; }
   const was=NET.on; NET.on=false; netReset(); aiClear(); if(missionId==='net') missionId=NET.prevMission||'free';
   $('btnMRetry').disabled=false; $('btnMRetry').textContent='Tekrar dene'; $('btnMHangar').textContent='Hangara dön';
   if(was&&state!=='menu'){ $('missionEnd').classList.add('hidden'); enterTitle(); }
@@ -542,6 +544,7 @@ function closeNet(){ $('netUI').classList.add('hidden'); }
 function netShowHome(){ $('netHome').classList.remove('hidden'); $('netLobby').classList.add('hidden'); }
 function netShowLobby(){ $('netUI').classList.remove('hidden'); $('netHome').classList.add('hidden'); $('netLobby').classList.remove('hidden'); netRenderLobby(); }
 function netRenderLobby(){
+  if(typeof voiceConnect==='function') voiceConnect();
   if(!$('netLobby')) return;
   $('netRoom').textContent=NET.room||'—';
   $('netModeTxt').textContent=(NET_MODES[NET.mode]||NET_MODES.coop).name+' · '+(NET.bots?'boş yerler botla dolar':'bot yok')+' · en fazla '+NET_MAX+' oyuncu';

@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.62 — 2026-10-11
+- **Kule konuşmaları:** pistte başlarken kalkış izni (pist ve rüzgâr bilgisiyle), kalkış sonrası "kalkışınız görüldü", takım inik yaklaşırken iniş izni, inince "apronda park edin". Pist dışında çok alçak uçarken uyarı.
+- **AWACS (Kartal Gözü):** yeni düşmanlar belirince sayısını, saat yönünü ve uzaklığını bildiriyor. Hava sahası temizlenince ve görev bitince haber veriyor.
+- **Kanat adamı (Kılıç 2):** katılınca, füze uyarısında ("Füze! Kır!"), senin ya da kendi düşürdüğü düşmanlarda konuşuyor.
+- Konuşmalar tarayıcının Türkçe sesiyle okunuyor: konuşanlara göre ton farkı, telsiz açılış ve kapanış sesi, arkada cızırtı. **Altyazılar** konuşanın adıyla renkli gösteriliyor.
+- **Ses Kütüphanesi → Telsiz:** her cümle dinlenebiliyor ve **kendi kaydınla değiştirilebiliyor**. Kayıt telsiz filtresinden geçirilerek çalınıyor.
+- **Telsiz menüsü (O):** 8 hazır mesaj, 1–8 tuşlarıyla seçiliyor. Tek oyunculuda kanat adamı cevap veriyor. Çok oyunculuda mesaj tüm oyunculara gidiyor; ekranda isimle görünüyor ve okunuyor. Dokunmatikte TELSİZ düğmesi var.
+- **Sesli sohbet (çok oyunculu):** lobide "Sesli sohbet" kutusu ve bas-konuş (I; dokunmatikte 🎙). Her oyuncu odayı kurana bağlanıyor; oda kurucusu herkese kendi dışındaki oyuncuların sesini gönderiyor. Sesler telsiz filtresinden geçiyor, konuşurken "KONUŞUYORSUN" göstergesi çıkıyor.
+- Ayarlar → Ses: telsiz konuşmaları ve altyazılar açılıp kapatılabiliyor, **çağrı adın** değiştirilebiliyor (varsayılan "Hilal 1").
+
 ## V1.61 — 2026-10-11
 - **Oyunun kendi müziği.** Parçalar tarayıcıda canlı üretiliyor, telifsiz:
   - **Ana menü teması:** Re minör, savaş davulları, Hicaz havasında yaylı ezgi.

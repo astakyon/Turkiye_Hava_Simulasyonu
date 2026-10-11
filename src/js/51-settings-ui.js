@@ -19,6 +19,7 @@ function syncSettingsUI(){
   $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
+  $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
   $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
@@ -102,3 +103,7 @@ $('setUiSnd').addEventListener('change',function(e){ SETTINGS.uiSnd=e.target.che
     sndPlay(b.classList.contains('back')||/^(←|Geri)/.test((b.textContent||'').trim())?'ui_back':(b.classList.contains('primary')?'ui_ok':'ui_click')); },true);
   document.addEventListener('pointerover',function(e){ if(e.pointerType!=='mouse'||SETTINGS.uiSnd===false||typeof sndPlay!=='function') return; const b=e.target.closest('button,.btn'); if(!b||b===last||b.disabled) return;
     last=b; const now=performance.now(); if(now-lastT<70) return; lastT=now; sndPlay('ui_hover'); },true); })();
+$('setRadioTts').addEventListener('change',function(e){ SETTINGS.radioTts=e.target.checked; saveSettings(); });
+$('setRadioSub').addEventListener('change',function(e){ SETTINGS.radioSub=e.target.checked; saveSettings(); });
+$('setCallsign').addEventListener('change',function(e){ SETTINGS.callsign=String(e.target.value||'').trim().slice(0,20); saveSettings(); });
+['netVoice','netVoice2'].forEach(function(id){ const el=$(id); if(!el) return; el.checked=!!SETTINGS.voice; el.addEventListener('change',function(e){ const on=e.target.checked; ['netVoice','netVoice2'].forEach(function(k){ $(k).checked=on; }); voiceEnable(on).then(function(ok){ if(on&&!ok){ ['netVoice','netVoice2'].forEach(function(k){ $(k).checked=false; }); } }); }); });

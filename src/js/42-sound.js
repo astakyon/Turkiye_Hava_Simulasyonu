@@ -77,6 +77,7 @@ function sndMixStep(){
 function sndPlay(id,o){
   if(!AC||muted) return; const d=SNDI[id]; if(!d) return; o=o||{};
   if(d.music){ if(typeof musPreview==='function') musPreview(d.music); return; }
+  if(d.phrase&&!o.raw){ if(typeof radioSay==='function') radioSay(d.phrase,null,{force:true}); return; }
   const v=sndVol(id)*(o.vol==null?1:o.vol), p=sndPitch(id)*(o.pitch==null?1:o.pitch), dest=o.dest||sndOut(d.bus);
   if(SND.buf[id]){ const s=AC.createBufferSource(), g=AC.createGain(); s.buffer=SND.buf[id]; s.playbackRate.value=p; g.gain.value=v; s.connect(g); g.connect(dest); s.start();
     if(d.loop) s.stop(AC.currentTime+Math.min(4,s.buffer.duration/p)); return s; }
