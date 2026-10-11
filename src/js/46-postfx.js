@@ -33,10 +33,10 @@ function applyFX(){
 function fxBuild(){
   const gl=renderer.getContext(), w2=!!renderer.capabilities.isWebGL2;
   const halfOK=w2?!!(gl.getExtension('EXT_color_buffer_float')||gl.getExtension('EXT_color_buffer_half_float')):!!(gl.getExtension('OES_texture_half_float')&&gl.getExtension('EXT_color_buffer_half_float'));
-  FX.hdr=halfOK&&FX.level>=2;
+  FX.hdr=halfOK&&FX.level>=2&&!DEV.mobile&&!DEV.safe;   /* half-float targets misbehave on some phone GPUs */
   const pr=renderer.getPixelRatio(), W=Math.max(1,Math.round(HW*pr)), H=Math.max(1,Math.round(HH*pr));
   const opts={minFilter:THREE.LinearFilter, magFilter:THREE.LinearFilter, format:THREE.RGBAFormat, type:FX.hdr?THREE.HalfFloatType:THREE.UnsignedByteType, depthBuffer:true, stencilBuffer:true /* r128: stencil yoksa derinlik 16 bit → uzakta z-fighting çizgileri; DEPTH24_STENCIL8 */};
-  let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget;
+  let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget&&!DEV.mobile;
   if(FX.msaa){ rt=new THREE.WebGLMultisampleRenderTarget(W,H,opts); rt.samples=4; } else rt=new THREE.WebGLRenderTarget(W,H,opts);
   if(FX.composer){ FX.composer.renderTarget1.dispose(); FX.composer.renderTarget2.dispose(); }
   const c=new THREE.EffectComposer(renderer,rt); c.setPixelRatio(pr); c.setSize(HW,HH);
@@ -70,7 +70,22 @@ function fxUniforms(dt){
   else if(state==='walk'&&WALK.mode==='car') sp=clamp((Math.abs(WALK.car.v)-14)/16,0,1)*0.5;
   const u=FX.grade.uniforms.uSpeed; u.value+=(sp-u.value)*Math.min(1,dt*(sp<u.value?6:2));
 }
+/* without a logarithmic depth buffer, move the near plane out as the camera climbs (depth precision follows near/far) */
+let nearFocus=null;
+function nearPlane(){
+  if(DEV.logDepth) return;
+  const cp=camera.position, agl=Math.max(0.5,cp.y-Math.max(0,groundH(cp.x,cp.z)));
+  let focusD=1e9;
+  if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')){ if(WALK.mode==='foot') focusD=0.6; else if(WALK.mode==='car') focusD=WALK.fp?0.6:camera.position.distanceTo(nearV.set(WALK.car.x,WALK.car.y||cp.y,WALK.car.z)); else if(HELI.cur) focusD=HELI.fp?0.6:camera.position.distanceTo(nearV.set(HELI.cur.x,HELI.cur.y,HELI.cur.z)); }
+  else if(state==='play'||state==='paused'||state==='map'||state==='mend') focusD=camera.position.distanceTo(S.pos);
+  else if(state==='library') return;
+  else focusD=Math.max(2,agl*0.6);
+  const n=clamp(Math.min(agl*0.06,focusD*0.35),0.25,9);
+  if(Math.abs(n-camera.near)>camera.near*0.12){ camera.near=n; camera.updateProjectionMatrix(); }
+}
+const nearV=new THREE.Vector3();
 function renderFrame(dt){
+  nearPlane();
   if(FX.on&&FX.composer){ fxUniforms(dt||0); FX.composer.render(dt||0); }
   else renderer.render(scene,camera);
 }

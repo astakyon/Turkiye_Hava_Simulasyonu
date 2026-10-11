@@ -172,6 +172,10 @@
       <div class="srow"><div class="sl"><b>Model kütüphanesi</b><small>Bütün modelleri 3B incele, renk ve kamuflaj değiştir, kendi modelini (.glb, .fbx, .obj, .stl, .dae) yükle</small></div><button class="btn" id="btnLibOpen" type="button">Aç</button></div>
       <div class="srow"><div class="sl"><b>Otomatik performans</b><small>FPS 38’in altına düşerse çözünürlük kademeli düşer</small></div><label class="tgl"><input type="checkbox" id="setAuto"><i></i></label></div>
       <div class="srow"><div class="sl"><b>FPS göstergesi</b><small>Ekranın altında kare hızı</small></div><label class="tgl"><input type="checkbox" id="setFps"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Derinlik hassasiyeti</b><small>Otomatik: bilgisayarda logaritmik (uzakta titreme yok), telefonda standart (siyah dalgalanma yok). Değişiklik sayfa yenilenince uygulanır</small></div><div class="seg" id="setDepth"><button type="button" data-d="auto">Otomatik</button><button type="button" data-d="log">Logaritmik</button><button type="button" data-d="std">Standart</button></div></div>
+      <div class="srow"><div class="sl"><b>Güvenli grafik modu</b><small>Görüntü bozuluyorsa: efektler, gölgeler, kenar yumuşatma kapanır, kalite düşük olur (sayfa yenilenir)</small></div><button class="btn" id="btnSafe" type="button">Güvenli mod</button></div>
+      <div class="srow"><div class="sl"><b>Grafik tanılama</b><small>Cihaz, ekran kartı ve çizim bilgileri — sorun bildirirken ekran görüntüsünü paylaş</small></div><button class="btn" id="btnDiag" type="button">Göster</button></div>
+      <div id="gdiag" class="gdiag hidden"></div>
       <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
     </section>
     <section data-tab="k" class="hidden">

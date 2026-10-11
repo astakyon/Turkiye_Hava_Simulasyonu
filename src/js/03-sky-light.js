@@ -1,9 +1,9 @@
 /* ------------------------------------------------------------------ sky + light */
 const SUN = new THREE.Vector3(0.55,0.5,-0.55).normalize();
 const sky = new THREE.Mesh(
-  new THREE.SphereGeometry(40000,24,16),
+  new THREE.SphereGeometry(20000,24,16),   /* well inside the camera far plane: a dome near 'far' got clipped in bands (black waves on phones) */
   new THREE.ShaderMaterial({
-    side:THREE.BackSide, depthWrite:false, fog:false,
+    side:THREE.BackSide, depthWrite:false, depthTest:false, fog:false,
     uniforms:{ top:{value:new THREE.Color(0x2c68a8)}, mid:{value:new THREE.Color(0x87b6de)}, hor:{value:HORIZON}, sun:{value:SUN}, sunK:{value:1} },
     vertexShader:'varying vec3 vP; void main(){ vP=normalize(position); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
     fragmentShader:'uniform float sunK; uniform vec3 top; uniform vec3 mid; uniform vec3 hor; uniform vec3 sun; varying vec3 vP;'+
@@ -13,15 +13,18 @@ const sky = new THREE.Mesh(
       'if(d.y<0.0) c=hor; gl_FragColor=vec4(c,1.0); }'
   })
 );
-scene.add(sky);
+sky.renderOrder=-1000; sky.frustumCulled=false; scene.add(sky);
+renderer.setClearColor(HORIZON,1);   /* any uncovered pixel shows haze, never black */
 const sunLight = new THREE.DirectionalLight(0xfff0d6, 1.25);
 sunLight.position.copy(SUN).multiplyScalar(1000);
 scene.add(sunLight); scene.add(sunLight.target);
 const HEMI=new THREE.HemisphereLight(0xc4e0ff, 0x56653f, 0.72); scene.add(HEMI);
 /* sun shadows that follow the camera's subject (quality setting) */
 renderer.toneMapping=THREE.NoToneMapping;   /* filmic curves washed out the stylized palette; keep colours vivid */
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-(function(){ const c=sunLight.shadow.camera; c.left=-75; c.right=75; c.top=75; c.bottom=-75; c.near=10; c.far=4200; sunLight.shadow.bias=-0.0006; if('normalBias' in sunLight.shadow) sunLight.shadow.normalBias=0.04; })();
+renderer.shadowMap.type=DEV.mobile?THREE.PCFShadowMap:THREE.PCFSoftShadowMap;
+(function(){ const c=sunLight.shadow.camera; c.left=-75; c.right=75; c.top=75; c.bottom=-75;
+  /* light sits 1800 m from the focus: a tight 1200–2400 m depth range keeps shadow-map precision high (acne showed as dark moving bands) */
+  c.near=1200; c.far=2400; sunLight.shadow.bias=DEV.mobile?-0.0012:-0.0008; if('normalBias' in sunLight.shadow) sunLight.shadow.normalBias=DEV.mobile?0.08:0.05; })();
 /* image-based reflections for aircraft paint, metal and canopies, rendered from a small copy of the sky */
 let ENVMAP=null;
 try{ /* small hand-painted sky/ground cube (no PMREM: cheaper and safe on every mobile GPU) */

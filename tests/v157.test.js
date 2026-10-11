@@ -1,0 +1,9 @@
+let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
+T('device profile',DEV&&typeof DEV.mobile==='boolean'&&DEV.kind);
+T('sky never depth-clipped',sky.renderOrder<0&&sky.frustumCulled===false);
+T('shadow depth range tight',sunLight.shadow.camera.far-sunLight.shadow.camera.near<=1500);
+startGame('runway'); aiClear(); camera.position.set(S.pos.x,S.pos.y+800,S.pos.z+40); DEV.logDepth=false; camera.near=1; nearPlane();
+T('near plane grows with altitude',camera.near>1,camera.near);
+camera.position.set(S.pos.x,S.pos.y+3,S.pos.z+12); nearPlane(); T('near plane small next to the aircraft',camera.near<=4.2,camera.near);
+gfxDiag(); T('diagnostics rows',/Ekran kartı/.test($('gdiag').innerHTML));
+console.log('pass',ok,'fail',bad);

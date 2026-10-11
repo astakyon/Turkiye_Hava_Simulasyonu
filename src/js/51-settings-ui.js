@@ -11,6 +11,8 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
   Array.prototype.forEach.call($('setTod').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.tod||'day'))); });
   Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); });
+  Array.prototype.forEach.call($('setDepth').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.d===(SETTINGS.depth||'auto'))); });
+  $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
@@ -60,3 +62,24 @@ $('btnShot').addEventListener('click',takePhoto);
 $('btnPhotoExit').addEventListener('click',exitPhoto);
 $('btnPhotoClose').addEventListener('click',closeModals);
 
+
+/* ---- graphics diagnostics */
+function gfxDiag(){
+  const i=renderer.info, on=function(b){ return b?'açık':'kapalı'; }, sc=Math.round(renderer.getPixelRatio()*100)/100;
+  const rows=[['Cihaz',DEV.kind+(DEV.ios?' · iOS':DEV.android?' · Android':'')],['Ekran kartı',DEV.gpu],['WebGL',DEV.webgl+' · hassasiyet '+(DEV.hp||'?')+' · derinlik '+(DEV.depthBits||'?')+' bit'],
+    ['Ekran',innerWidth+'×'+innerHeight+' · cihaz oranı '+(window.devicePixelRatio||1)],['Çizim ölçeği',sc+'x'+(PERF.scale<1?' (otomatik düşürüldü)':'')],
+    ['FPS',Math.round(PERF.fps)],['Çizim çağrısı',i.render.calls],['Üçgen',i.render.triangles.toLocaleString('tr-TR')],['Doku / geometri',i.memory.textures+' / '+i.memory.geometries],
+    ['Derinlik',DEV.logDepth?'logaritmik':'standart (yakın düzlem '+(camera.near||0).toFixed(2)+' m)'],['Gölgeler',on(renderer.shadowMap.enabled)+(renderer.shadowMap.enabled?' · '+sunLight.shadow.mapSize.x+' px':'')],
+    ['Efektler',FX.on?('seviye '+FX.level+(FX.hdr?' · HDR':'')+(FX.msaa?' · MSAA':FX.fxaa?' · FXAA':'')):'kapalı'],['Kenar yumuşatma',on(!DEV.safe)],['Güvenli mod',on(DEV.safe)]];
+  $('gdiag').innerHTML=rows.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('');
+}
+let gdiagT=null;
+$('btnDiag').addEventListener('click',function(){ const el=$('gdiag'), show=el.classList.contains('hidden'); el.classList.toggle('hidden',!show); this.textContent=show?'Gizle':'Göster';
+  clearInterval(gdiagT); if(show){ gfxDiag(); gdiagT=setInterval(function(){ if(el.classList.contains('hidden')||$('settings').classList.contains('hidden')){ clearInterval(gdiagT); return; } gfxDiag(); },700); } });
+$('setDepth').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const v=b.dataset.d; if(v===(SETTINGS.depth||'auto')) return;
+  SETTINGS.depth=v; saveSettings(); syncSettingsUI(); toast('Derinlik ayarı sayfa yenilenince uygulanacak','#ffc24a'); if(confirmReload('Derinlik ayarı için sayfa şimdi yenilensin mi?')) location.reload(); });
+$('btnSafe').addEventListener('click',function(){
+  if(SETTINGS.safeMode){ SETTINGS.safeMode=false; delete SETTINGS.depth; SETTINGS.fx=null; SETTINGS.shadows=null; }
+  else { SETTINGS.safeMode=true; SETTINGS.depth='std'; SETTINGS.fx=0; SETTINGS.shadows=false; SETTINGS.quality=0; }
+  saveSettings(); location.reload(); });
+function confirmReload(q){ try{ return window.confirm(q); }catch(e){ return false; } }

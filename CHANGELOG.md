@@ -1,6 +1,17 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.57 — 2026-10-11
+- **Telefondaki siyah dalgalanma düzeltildi.** Gökyüzü küresi kameranın görüş sınırına çok yakın duruyordu; derinlik hassasiyeti düşük telefon ekran kartlarında gökyüzü bant bant kırpılıyor ve arkadaki siyah ekran görünüyordu. Gökyüzü artık her zaman en arkada, derinlik testine girmeden çiziliyor. Boş kalan her piksel siyah yerine ufuk rengiyle doluyor.
+- **Cihaz profili:** oyun Telefon / Tablet / Bilgisayar ayrımını kendisi yapıyor.
+  - Telefon ve tablette logaritmik derinlik yerine standart derinlik kullanılıyor. Uzaktaki titremeyi önlemek için yakın görüş sınırı irtifaya ve takip edilen araca göre kendini ayarlıyor.
+  - Telefonda HDR ve çok örnekli tampon kapalı, yerine FXAA kenar yumuşatma kullanılıyor.
+- **Gölgeler:** gölge derinlik aralığı yaklaşık 4 kat daraltıldı, bu sayede hassasiyet yükseldi. Gölge sapma ayarları yenilendi, telefonda daha hafif gölge filtresi kullanılıyor. Kayan koyu bantlar (gölge lekesi) gidiyor.
+- **Ayarlar → Grafik** bölümüne yeni seçenekler eklendi:
+  - **Derinlik hassasiyeti:** Otomatik / Logaritmik / Standart.
+  - **Güvenli grafik modu:** tek dokunuşla efektler, gölgeler ve kenar yumuşatma kapanır.
+  - **Grafik tanılama:** cihaz, ekran kartı, WebGL, hassasiyet, derinlik bitleri, çizim ölçeği, FPS, çizim çağrısı, üçgen, açık özellikler.
+
 ## V1.56 — 2026-10-11
 - **Model havuzu:** model kütüphanesinde artık **Hava / Helikopter / Deniz / Kara / Sivil** sekmeleri var.
   - **Helikopter:** T129 ATAK, T625 GÖKBEY. "Döndür" testinde rotorlar dönüyor.
