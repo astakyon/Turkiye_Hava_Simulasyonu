@@ -541,3 +541,20 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   .c-hint{ bottom:8px; } }
 @media (max-width:640px) and (min-height:521px){ .c-nav{ width:auto; right:16px; bottom:auto; max-height:52vh; } .c-det{ left:16px; width:auto; bottom:44px; } .tt-c{ background:linear-gradient(0deg,rgba(4,9,18,.95) 0%,rgba(4,9,18,.6) 60%,rgba(4,9,18,.85) 100%); } }
 @media (max-height:820px) and (min-height:521px){ .mc{ min-height:44px; padding:5px 14px; } .c-nav .mg{ margin:10px 0 4px 2px; } .mc .mt small{ font-size:10px; } }
+
+/* hangar: performance bars, compare, helicopter tab */
+.hperf{ display:grid; grid-template-columns:auto 1fr auto; gap:3px 10px; align-items:center; margin-top:10px; max-width:420px; font-size:11px; letter-spacing:.08em; color:#8ea4b8; }
+.hperf .bar{ position:relative; height:6px; border-radius:3px; background:rgba(255,255,255,.1); overflow:hidden; }
+.hperf .bar i{ position:absolute; left:0; top:0; bottom:0; border-radius:3px; background:linear-gradient(90deg,#e30a17,#ff5a63); transition:width .35s var(--ease); }
+.hperf .bar i.c{ top:auto; height:2px; bottom:0; background:var(--amber); } .hperf b{ color:#fff; font-size:11px; min-width:58px; text-align:right; } .hperf .cmpl{ grid-column:1/-1; color:var(--amber); margin-top:2px; }
+.hcmp{ margin-top:8px; padding:6px 12px; font-size:12px; } .hcmp[aria-pressed="true"]{ border-color:var(--amber); color:var(--amber); }
+@media (max-height:560px){ .hperf{ display:none; } .hcmp{ display:none; } }
+/* loadout: presets, pylon diagram, weight */
+.lpre{ display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 10px; } .lpre button{ padding:6px 11px; border-radius:16px; border:1px solid var(--edge); background:rgba(255,255,255,.05); color:var(--ink); font-size:12px; font-weight:700; }
+.lpre button:hover{ border-color:var(--red); }
+.lpyl{ position:relative; height:74px; margin:0 0 8px; } .lpyl svg.ac{ position:absolute; inset:0; width:100%; height:100%; color:rgba(190,220,245,.18); }
+.lpyl .pd{ position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px; border-radius:50%; border:2px solid rgba(255,255,255,.35); background:rgba(4,9,18,.8); display:grid; place-items:center; font-size:8px; font-weight:800; color:#fff; }
+.lwt{ margin-top:10px; } .lwtbar{ height:6px; border-radius:3px; background:rgba(255,255,255,.1); overflow:hidden; } .lwtbar i{ display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,#7dffb0,#ffc24a 70%,#ff6a5a); transition:width .3s var(--ease); }
+.lwt small{ display:block; margin-top:4px; font-size:11px; color:var(--dim); }
+
+.setup{ max-height:calc(100vh - 24px); overflow-y:auto; }

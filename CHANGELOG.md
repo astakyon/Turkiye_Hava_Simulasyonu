@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.64 — 2026-10-11
+- **Hangarda helikopter:** sınıf filtresinde yeni **Helikopter** sekmesi (T129 ATAK, T625 GÖKBEY). Seçilen helikopter, kamera Hava Üssü helipadine giderek 3B gösteriliyor. Rotor çapı, azami hız, tırmanma ve mürettebat bilgisi var. **"Helikopterle uç"** ile doğrudan pilot koltuğunda başlıyorsun.
+- **Performans çubukları:** her araç için hız (km/sa), manevra, itki ve silah yeri.
+- **Karşılaştırma:** "⇄ Karşılaştır" ile bir aracı sabitleyip başka bir araç seçiyorsun. Sabitlenen aracın değerleri sarı çizgiyle yan yana görünüyor.
+- **Mühimmat yükleme yenilendi:**
+  - **Hazır yükler:** Hava-hava, Kara taarruzu, Sığınak / zırh, Keşif (hafif), Boşalt. Uçağın taşıyabildiği silahlara göre doluyor.
+  - **İstasyon şeması:** uçağın üstten görünümünde silah istasyonları, silah türüne göre renkli.
+  - **Toplam yük göstergesi:** kg ve sürükleme düzeyi; ağır yükte hız ve manevra uyarısı.
+- Telefonda mühimmat paneli artık kaydırılabiliyor.
+
 ## V1.63 — 2026-10-11
 - **Yeni ana menü.** Bölümler gruplandı:
   - **OYNA:** Serbest Uçuş, Görevler, Kariyer (yakında), Çok Oyunculu, Üssü Gez.

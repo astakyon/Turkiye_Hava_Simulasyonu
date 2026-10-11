@@ -59,7 +59,9 @@ function menuCam(dt){
   }
   CINE.init=false;
   const wide=(menuMode==='title'), d=displays[selectedId], def=AIRCRAFT[selectedId];
-  if(wide) mcGoal.set(HANGAR.cx,AIRFIELD_Y+6,HANGAR.z-6); else mcGoal.set(d.x+(d.ox||0),AIRFIELD_Y+def.cam[0]*0.45,HANGAR.z+(d.oz||0));
+  const hs=menuMode==='hangar'&&typeof HSEL!=='undefined'&&HSEL&&HELI.list.find(function(h){ return h.id===HSEL&&h.at==='Ay Yıldız Hava Üssü'; });
+  if(hs){ mcGoal.set(hs.x,hs.y+2.2,hs.z); if(!MENUV.init){ MENUV.tgt.copy(mcGoal); MENUV.dist=24; MENUV.init=true; } }
+  else if(wide) mcGoal.set(HANGAR.cx,AIRFIELD_Y+6,HANGAR.z-6); else mcGoal.set(d.x+(d.ox||0),AIRFIELD_Y+def.cam[0]*0.45,HANGAR.z+(d.oz||0));
   if(!MENUV.init){ MENUV.tgt.copy(mcGoal); MENUV.dist=wide?330:VIEW_D[selectedId]; MENUV.init=true; }
   const k=1-Math.exp(-4*dt);
   MENUV.tgt.lerp(mcGoal,k);
@@ -68,14 +70,15 @@ function menuCam(dt){
     MENUV.pitch+=(0.13-MENUV.pitch)*k; MENUV.dist+=(330-MENUV.dist)*k;
   } else {
     MENUV.idle+=dt; if(menuMode==='loadout') MENUV.yaw+=dt*(MENUV.idle>2?0.32:0); else if(MENUV.idle>3) MENUV.yaw+=dt*0.12;
-    MENUV.dist+=(VIEW_D[selectedId]*MENUV.zoom-MENUV.dist)*k;
+    MENUV.dist+=((hs?24:VIEW_D[selectedId])*MENUV.zoom-MENUV.dist)*k;
   }
   const cp=Math.cos(MENUV.pitch), sp=Math.sin(MENUV.pitch);
   camera.position.set(MENUV.tgt.x+Math.sin(MENUV.yaw)*cp*MENUV.dist, MENUV.tgt.y+sp*MENUV.dist, MENUV.tgt.z+Math.cos(MENUV.yaw)*cp*MENUV.dist);
   if(camera.position.y<AIRFIELD_Y+1.5) camera.position.y=AIRFIELD_Y+1.5;
+  if(hs){ const gy=groundH(camera.position.x,camera.position.z)+1.2; if(camera.position.y<gy) camera.position.y=gy; }
   camera.lookAt(MENUV.tgt);
   if(wide) camera.rotateY(window.innerWidth>760?0.2:0); else if(menuMode==='loadout'){ const W=window.innerWidth, pr=$('setupUI').firstElementChild.getBoundingClientRect(); if(W>760&&pr.width>0){ const ndc=((W-pr.width-16)/2)/W*2-1; camera.rotateY(Math.atan(ndc*Math.tan(25*D2R)*camera.aspect)); camera.rotateX(-0.08); } else camera.rotateX(-0.28); } else camera.rotateX(-0.11);
   if(Math.abs(50-lastFov)>0.05){ camera.fov=50; lastFov=50; camera.updateProjectionMatrix(); }
-  camera.updateMatrixWorld(); planeGroup.visible=(menuMode!=='title'&&activeId===selectedId);
+  camera.updateMatrixWorld(); planeGroup.visible=(menuMode!=='title'&&activeId===selectedId&&!hs);
 }
 
