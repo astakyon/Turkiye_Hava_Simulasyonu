@@ -37,7 +37,7 @@
 | V1.55 | Helikopterler (T129 ATAK, T625 GÖKBEY) | ✅ |
 | V1.56 | Model havuzu: gemiler, kara araçları, helikopterler, sivil araçlar | ✅ |
 
-## Kalite, ses, görev ve arayüz yol haritası (V1.57+) — modellemelerden önce
+## Kalite, ses, görev ve arayüz yol haritası (V1.57–V1.70) — modellemelerden önce
 | Sürüm | İçerik | Durum |
 |---|---|---|
 | V1.57 | Telefonda siyah dalgalanma düzeltmesi: cihaz profili (Telefon/PC), mobilde logaritmik derinlik yerine güvenli derinlik, gölge sapması ve hassasiyet ayarı, sorunlu efektleri mobilde kapatma; Ayarlar'da "Grafik tanılama" (GPU, çözünürlük, FPS, etkin özellikler) | |
@@ -46,11 +46,14 @@
 | V1.60 | Ses altyapısı + **Ses Kütüphanesi**: kanallar (Ana, Müzik, Efekt, Arayüz, Telsiz, Ortam) ayrı ses düzeyleri; duruma göre karışım (menüde motor/rüzgâr sesi susar); kategoriler: Motor, Silah, Çevre, Arayüz, Müzik, Telsiz; dinle, değiştir, kendi ses dosyanı yükle (cihazda saklanır) | |
 | V1.61 | Müzik ve arayüz sesleri: ana menü müziği, oyunda duruma göre değişen müzik (sakin / çatışma / zafer), düğme, geçiş, bildirim sesleri | |
 | V1.62 | Telsiz: kule konuşmaları (kalkış/iniş izni, rüzgâr, pist), kanat adamı ve AWACS anonsları, telsiz filtresi; çok oyunculu bas-konuş sesli sohbet ve hazır telsiz mesajları | |
-| V1.63 | **Görev ekranı**: görev panosu (liste, brifing, harita, hedefler, ödül, zorluk), oyun içi hedef takibi ve görev günlüğü (J) | |
-| V1.64 | Dinamik görevler: yerlere göre üretilen görevler (devriye, önleme, yakın hava desteği, refakat, keşif İHA, T625 ile arama-kurtarma/yük, deniz devriyesi); görev ortasında olaylar, çok aşamalı hedefler, yıldız/puan, kariyer ilerlemesi | |
-| V1.65 | Arayüz tasarım sistemi + **yeni ana menü**: tek görsel dil (renk, yazı, düğme, kart, ikon), büyük ana ekran (Kariyer / Görevler / Serbest Uçuş / Çok Oyunculu / Hangar / Kütüphaneler / Ayarlar), gamepad ve klavyeyle gezinme, geçiş animasyonları | |
-| V1.66 | Hangar ve mühimmat yükleme: uçak seçimi kart/karusel, performans çubukları, karşılaştırma; silah istasyonlarını gösteren yükleme ekranı, hazır yükler (Hava-hava / Kara taarruz / Keşif), ağırlık ve uyum göstergesi | |
-| V1.67 | Ayarlar menüsü: sekmeler (Grafik, Ses, Kontroller, Oynanış, Arayüz, Erişilebilirlik), arama, açıklama ve önizleme, uygula / geri al, hazır ayarlar | |
+| V1.63 | Tüm araçlara binme: askerî kamyon, itfaiye (su topu), otobüs, yakıt tankeri, uçak çekici (uçağı çekebilme), Altay/Pars/Kirpi/Fırtına (taret döndürme ve atış), hücumbot ve gemiler (deniz şeması); her araca özgü sürüş, kamera ve HUD | |
+| V1.64 | Araç çağırma: "Araç çağır" menüsünden (klavye, gamepad, dokunmatik) istenen aracı bulunduğun yere ya da haritadaki bir noktaya getir; suda bot, havalimanında uçak çekici gibi yere uygun öneriler | |
+| V1.65 | Helikopterler hangarda: T129 ve T625 hangarda seçilebilir; görevlerde ve serbest uçuşta helikopterle oynama, T129 silahları (20 mm top, roket, UMTAS), T625 ile yük ve asker taşıma | |
+| V1.66 | **Görev ekranı**: görev panosu (liste, brifing, harita, hedefler, ödül, zorluk), oyun içi hedef takibi ve görev günlüğü (J) | |
+| V1.67 | Dinamik görevler: yerlere göre üretilen görevler (devriye, önleme, yakın hava desteği, refakat, keşif İHA, T625 ile arama-kurtarma/yük, deniz devriyesi); görev ortasında olaylar, çok aşamalı hedefler, yıldız/puan, kariyer ilerlemesi | |
+| V1.68 | Arayüz tasarım sistemi + **yeni ana menü**: tek görsel dil (renk, yazı, düğme, kart, ikon), büyük ana ekran (Kariyer / Görevler / Serbest Uçuş / Çok Oyunculu / Hangar / Kütüphaneler / Ayarlar), gamepad ve klavyeyle gezinme, geçiş animasyonları | |
+| V1.69 | Hangar ve mühimmat yükleme: uçak seçimi kart/karusel, performans çubukları, karşılaştırma; silah istasyonlarını gösteren yükleme ekranı, hazır yükler (Hava-hava / Kara taarruz / Keşif), ağırlık ve uyum göstergesi | |
+| V1.70 | Ayarlar menüsü: sekmeler (Grafik, Ses, Kontroller, Oynanış, Arayüz, Erişilebilirlik), arama, açıklama ve önizleme, uygula / geri al, hazır ayarlar | |
 | sonra | Uçak modellerini yenileme serisi (KAAN → ANKA-3 → …), her modelden sonra onay | |
 
 ### Android yolu
