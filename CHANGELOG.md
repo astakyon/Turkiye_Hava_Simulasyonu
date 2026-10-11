@@ -1,6 +1,23 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.66 — 2026-10-11
+- **Hesap ve profil ekranı:** ana menüdeki profil kartına dokununca açılıyor.
+  - Google ya da e-posta/şifre ile giriş, kayıt, şifre yenileme.
+  - "Misafir olarak devam et" seçeneği var; internetsiz de çalışıyor.
+- **Profil:** çağrı adı, birlik (Hilal Kanatlar / Mavi Kanatlar / Bozkurtlar) ve arma (6 seçenek).
+- **Aynı cihazda birden çok profil:** misafir profiller arasında geçiş ve yeni profil ekleme.
+- **Bulut eşitleme:** ayarlar, kontrol tuşları, boyalar, mühimmat yükleri, rekorlar ve ses ayarları hesaba kaydediliyor.
+  - Bir değişiklikten 4 saniye sonra gönderiliyor. Girişte en yeni kopya alınıyor, iki cihazda da aynı kayıt görünüyor.
+  - İnternet yokken bu cihazda saklanıyor, bağlantı gelince gönderiliyor.
+  - İlk girişte bu cihazdaki kayıtlar hesaba aktarılıyor.
+- **Duyurular:** yöneticinin yayınladığı son duyuru ana menüde görünüyor.
+- **Sunucu tarafı (Supabase):** `supabase/schema.sql` profil, kayıt, içerik, duyuru ve yönetici kaydı tablolarını kuruyor.
+  - Güvenlik kuralları: oyuncu kendi rolünü ve uzaklaştırma durumunu değiştiremez, rütbesini düşüremez. İçerik ve duyuruyu yalnız yönetici yazar.
+  - Kurulum adımları `supabase/KURULUM.md` dosyasında.
+- Bağlantı için anahtarlar ya `src/js/79-account-config.js` dosyasına yazılıyor (herkes için) ya da Ayarlar → Arayüz → Gelişmiş → **Bulut bağlantısı** satırından giriliyor (yalnız o cihaz için).
+- Bulut bağlantısı kurulmadan önce oyun eskisi gibi misafir modunda çalışıyor.
+
 ## V1.65 — 2026-10-11
 - **Ayarlar menüsü yenilendi.**
   - **Arama:** yazdıkça tüm sekmelerdeki uyan ayarlar gösteriliyor.

@@ -571,3 +571,19 @@ html.hc .srow small,html.hc .mc .mt small{ color:#d4e0ec; }
 html.rm *,html.rm *::before{ animation:none!important; transition:none!important; }
 html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ filter:url(#cbd); } html.cb-t #gl,html.cb-t #hud{ filter:url(#cbt); }
 #settings.searching section.nomatchsec{ display:none!important; }
+
+/* account screen */
+.accwrap{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; max-width:900px; margin:0 auto; padding:clamp(60px,12vh,84px) 16px 24px; zoom:var(--uiz,1); }
+.accp{ padding:18px; border:1px solid var(--edge); border-radius:var(--r3); background:var(--surf); display:flex; flex-direction:column; gap:10px; animation:dsIn .26s var(--ease); }
+.accp .k{ margin:0; font-size:var(--t-xs); letter-spacing:.3em; font-weight:800; color:#ff6b74; } .accst b{ display:block; font-size:var(--t-l); } .accst small{ color:var(--dim); font-size:var(--t-s); }
+.accp .inp{ width:100%; box-sizing:border-box; } .accrow{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; } .accp .or{ margin:2px 0; text-align:center; color:var(--dim); font-size:12px; }
+.gbtn{ display:flex; gap:10px; align-items:center; justify-content:center; background:#fff; color:#1b1f24; border-color:#fff; } .gbtn b{ color:#4285f4; font-size:18px; } .gbtn:hover{ background:#e9eef3; }
+.accmsg{ min-height:1em; margin:0; font-size:13px; color:var(--ok); } .accmsg.err{ color:#ff6a5a; } .accmsg:empty{ display:none; }
+.accp .fl{ display:flex; flex-direction:column; gap:6px; margin:4px 0 0; font-size:12px; color:var(--dim); }
+.accem{ display:flex; flex-wrap:wrap; gap:8px; } .accem button{ width:44px; height:44px; border-radius:50%; border:1px solid var(--edge); background:rgba(255,255,255,.05); font-size:20px; }
+.accem button[aria-pressed="true"],.accprofs button[aria-pressed="true"]{ border-color:var(--red); background:rgba(227,10,23,.2); }
+.accprofs{ display:flex; flex-direction:column; gap:6px; } .accprofs button{ display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--r2); border:1px solid var(--edge); background:none; color:var(--ink); text-align:left; font-weight:700; }
+.accprofs button small{ margin-left:auto; color:var(--dim); font-weight:600; font-size:11px; }
+.supa{ display:flex; flex-wrap:wrap; gap:6px; max-width:420px; } .supa .inp{ flex:1 1 180px; padding:7px 10px; font-size:12px; }
+.c-news{ position:absolute; right:max(clamp(16px,3vw,44px),env(safe-area-inset-right)); top:calc(max(16px,env(safe-area-inset-top)) + 58px); max-width:min(440px,40vw); padding:10px 14px; border-radius:var(--r2); border:1px solid rgba(255,194,74,.4); background:rgba(40,28,4,.75); font-size:13px; line-height:1.4; }
+.c-news b{ color:var(--amber); letter-spacing:.2em; font-size:10px; margin-right:6px; }

@@ -35,3 +35,4 @@ node harness.js /tmp/sim.js v157.test.js
 node harness.js /tmp/sim.js sound.test.js
 node harness.js /tmp/sim.js radio.test.js
 node harness.js /tmp/sim.js settings.test.js
+node harness.js /tmp/sim.js account.test.js

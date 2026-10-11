@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ settings / records / photo UI */
-const MODALS=['controls','settings','records','photoResult','netUI','sndLib'];
+const MODALS=['controls','settings','records','photoResult','netUI','sndLib','acctUI'];
 function openModal(id){ $(id).classList.remove('hidden'); if(id==='settings') setSnapshot(); }
 function closeModals(){ MODALS.forEach(function(id){ $(id).classList.add('hidden'); }); }
 function anyModalOpen(){ return MODALS.some(function(id){ return !$(id).classList.contains('hidden'); }); }
@@ -23,6 +23,7 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setCb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.c===(SETTINGS.cb||'off'))); });
   $('setHc').checked=!!SETTINGS.hc; $('setRm').checked=!!SETTINGS.rm; $('setRadioSub2').checked=SETTINGS.radioSub!==false; $('setRumble2').checked=SETTINGS.rumble;
   $('setAdv').checked=!!SETTINGS.advUi; $('settings').classList.toggle('basic',!SETTINGS.advUi); $('btnSetUndo').disabled=!setChanged();
+  { const c=(typeof accCfg==='function')&&accCfg(); $('setSupaUrl').value=c?c.url:''; $('setSupaKey').value=c&&!ACCOUNT_CFG.key?c.key:''; }
   $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
   $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
@@ -128,7 +129,7 @@ function setSearch(q){ q=(q||'').trim().toLocaleLowerCase('tr-TR'); const st=$('
 $('setSearch').addEventListener('input',function(e){ setSearch(e.target.value); });
 $('setAdv').addEventListener('change',function(e){ SETTINGS.advUi=e.target.checked; saveSettings(); syncSettingsUI(); });
 /* rows only shown in the advanced view */
-['setDepth','btnSafe','btnDiag','setAA','setRes','setAuto','setFps','btnLibOpen'].forEach(function(id){ const el=$(id), r=el&&el.closest&&el.closest('.srow'); if(r&&r.classList) r.classList.add('adv'); });
+['setDepth','btnSafe','btnDiag','setAA','setRes','setAuto','setFps','btnLibOpen','btnSupa'].forEach(function(id){ const el=$(id), r=el&&el.closest&&el.closest('.srow'); if(r&&r.classList) r.classList.add('adv'); });
 function uiApply(){ const h=document.documentElement; if(!h||!h.classList) return; try{ h.style.setProperty('--uiz',String(SETTINGS.uiz||1)); }catch(e){} h.classList.toggle('hc',!!SETTINGS.hc); h.classList.toggle('rm',!!SETTINGS.rm);
   ['p','d','t'].forEach(function(c){ h.classList.toggle('cb-'+c,SETTINGS.cb===c); }); }
 $('setUiz').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.uiz=+b.dataset.z; uiApply(); saveSettings(); syncSettingsUI(); });

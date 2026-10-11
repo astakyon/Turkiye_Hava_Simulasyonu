@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.65">
+<meta name="game-version" content="V1.66">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -588,6 +588,22 @@ html.hc .srow small,html.hc .mc .mt small{ color:#d4e0ec; }
 html.rm *,html.rm *::before{ animation:none!important; transition:none!important; }
 html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ filter:url(#cbd); } html.cb-t #gl,html.cb-t #hud{ filter:url(#cbt); }
 #settings.searching section.nomatchsec{ display:none!important; }
+
+/* account screen */
+.accwrap{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; max-width:900px; margin:0 auto; padding:clamp(60px,12vh,84px) 16px 24px; zoom:var(--uiz,1); }
+.accp{ padding:18px; border:1px solid var(--edge); border-radius:var(--r3); background:var(--surf); display:flex; flex-direction:column; gap:10px; animation:dsIn .26s var(--ease); }
+.accp .k{ margin:0; font-size:var(--t-xs); letter-spacing:.3em; font-weight:800; color:#ff6b74; } .accst b{ display:block; font-size:var(--t-l); } .accst small{ color:var(--dim); font-size:var(--t-s); }
+.accp .inp{ width:100%; box-sizing:border-box; } .accrow{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; } .accp .or{ margin:2px 0; text-align:center; color:var(--dim); font-size:12px; }
+.gbtn{ display:flex; gap:10px; align-items:center; justify-content:center; background:#fff; color:#1b1f24; border-color:#fff; } .gbtn b{ color:#4285f4; font-size:18px; } .gbtn:hover{ background:#e9eef3; }
+.accmsg{ min-height:1em; margin:0; font-size:13px; color:var(--ok); } .accmsg.err{ color:#ff6a5a; } .accmsg:empty{ display:none; }
+.accp .fl{ display:flex; flex-direction:column; gap:6px; margin:4px 0 0; font-size:12px; color:var(--dim); }
+.accem{ display:flex; flex-wrap:wrap; gap:8px; } .accem button{ width:44px; height:44px; border-radius:50%; border:1px solid var(--edge); background:rgba(255,255,255,.05); font-size:20px; }
+.accem button[aria-pressed="true"],.accprofs button[aria-pressed="true"]{ border-color:var(--red); background:rgba(227,10,23,.2); }
+.accprofs{ display:flex; flex-direction:column; gap:6px; } .accprofs button{ display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--r2); border:1px solid var(--edge); background:none; color:var(--ink); text-align:left; font-weight:700; }
+.accprofs button small{ margin-left:auto; color:var(--dim); font-weight:600; font-size:11px; }
+.supa{ display:flex; flex-wrap:wrap; gap:6px; max-width:420px; } .supa .inp{ flex:1 1 180px; padding:7px 10px; font-size:12px; }
+.c-news{ position:absolute; right:max(clamp(16px,3vw,44px),env(safe-area-inset-right)); top:calc(max(16px,env(safe-area-inset-top)) + 58px); max-width:min(440px,40vw); padding:10px 14px; border-radius:var(--r2); border:1px solid rgba(255,194,74,.4); background:rgba(40,28,4,.75); font-size:13px; line-height:1.4; }
+.c-news b{ color:var(--amber); letter-spacing:.2em; font-size:10px; margin-right:6px; }
 </style>
 </head>
 <body>
@@ -615,6 +631,7 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
     <header class="c-top"><div class="c-brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM3"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM3)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div></div>
       <button class="c-prof ui" type="button" id="cProf" title="Profil"><span class="rk" id="cRank">ER</span><span class="pn"><b id="cName">Misafir pilot</b><small id="cSub">Hilal Kanatlar</small></span></button></header>
     <nav class="c-nav ui" id="cNav" aria-label="Ana menü"><p class="mg">OYNA</p><button class="mitem mc" type="button" data-act="free"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 5l12 7-12 7z"/></svg><span class="mt"><b>Serbest Uçuş</b><small id="mc_free">Süresiz, düşmansız</small></span></button><button class="mitem mc" type="button" data-act="missions"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg><span class="mt"><b>Görevler</b><small id="mc_missions"></small></span></button><button class="mitem mc" type="button" data-act="career" disabled aria-disabled="true"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span class="mt"><b>Kariyer</b><small id="mc_career">Yakında</small></span><i class="soon">YAKINDA</i></button><button class="mitem mc" type="button" data-act="net"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></svg><span class="mt"><b>Çok Oyunculu</b><small id="mc_net">4 kişi · sesli sohbet</small></span></button><button class="mitem mc" type="button" data-act="walk"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="13" cy="4.5" r="2"/><path d="M10 21l2-6-3-3 1-5 4 3 3 1M12 15l3 6"/></svg><span class="mt"><b>Üssü Gez</b><small id="mc_walk">Yürü, sür, helikoptere bin</small></span></button><p class="mg">ÜS</p><button class="mitem mc" type="button" data-act="hangar"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M3 20V10l9-6 9 6v10"/><path d="M7 20v-6h10v6"/></svg><span class="mt"><b>Hangar</b><small id="mc_hangar">Uçak, boya, mühimmat</small></span></button><button class="mitem mc" type="button" data-act="library"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg><span class="mt"><b>Model Kütüphanesi</b><small id="mc_library">Hava · deniz · kara</small></span></button><button class="mitem mc" type="button" data-act="sounds"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12"/></svg><span class="mt"><b>Ses Kütüphanesi</b><small id="mc_sounds">Sesler ve müzikler</small></span></button><p class="mg">SİSTEM</p><button class="mitem mc" type="button" data-act="settings"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg><span class="mt"><b>Ayarlar</b><small id="mc_settings">Grafik, kontroller, ses</small></span></button><button class="mitem mc" type="button" data-act="records"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8"/></svg><span class="mt"><b>Rekorlar</b><small id="mc_records">En iyi süreler</small></span></button></nav>
+    <div class="c-news hidden ui" id="cNews"></div>
     <section class="c-det ui" id="cDet" aria-live="polite"><p class="k" id="cdK"></p><h2 id="cdT"></h2><p class="d" id="cdD"></p><div class="chips" id="cdC"></div><button class="btn primary" type="button" id="cdGo">Başlat</button></section>
     <footer class="c-hint" id="cHint"></footer>
   </div>
@@ -847,6 +864,7 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
     <section data-tab="a" class="hidden">
       <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Yeni: gruplanmış menü ve ayrıntı paneli (klavye, gamepad, dokunmatik). Eski tasarımlar da seçilebilir</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Yeni (önerilen)</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
       <div class="srow"><div class="sl"><b>Köşe haritası</b><small>Uçarken ve gezerken sağ üstte küçük harita</small></div><label class="tgl"><input type="checkbox" id="setMini"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Bulut bağlantısı</b><small>Supabase proje adresi ve "anon public" anahtarı (supabase/KURULUM.md). Boş bırakıp Bağlan'a basınca bağlantı kaldırılır</small></div><div class="supa"><input id="setSupaUrl" class="inp" placeholder="https://xxxx.supabase.co" autocomplete="off"><input id="setSupaKey" class="inp" placeholder="anon public anahtar" autocomplete="off"><button class="btn" id="btnSupa" type="button">Bağlan</button></div></div>
       <div class="srow"><div class="sl"><b>Sürüm</b><small>Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır; gerçek verileri yansıtmaz.</small></div><span id="setVer"></span></div>
     </section>
   </div>
@@ -860,6 +878,36 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
     <div class="sndmix" id="sndMix"></div>
     <div class="sndcats" id="sndCats" role="tablist"></div>
     <div class="sndlist" id="sndList"></div>
+  </div>
+</div>
+<div id="acctUI" class="modal fs hidden">
+  <button class="btn back" id="btnAccBack" type="button">← Geri</button>
+  <div class="shdr"><span>■</span> HESAP VE PROFİL</div>
+  <div class="accwrap">
+    <section class="accp">
+      <p class="k">HESAP</p>
+      <div class="accst" id="accState"></div>
+      <div id="accLogin">
+        <button class="btn wide gbtn" id="accGoogle" type="button"><b>G</b> Google ile giriş</button>
+        <p class="or">ya da e-posta ile</p>
+        <input id="accMail" class="inp" type="email" placeholder="E-posta" autocomplete="email">
+        <input id="accPass" class="inp" type="password" placeholder="Şifre (en az 6 karakter)" autocomplete="current-password">
+        <div class="accrow"><button class="btn primary" id="accIn" type="button">Giriş yap</button><button class="btn" id="accUp" type="button">Kayıt ol</button><button class="btn link" id="accReset" type="button">Şifremi unuttum</button></div>
+      </div>
+      <p class="ninfo hidden" id="accNoCloud">Bulut hesapları için oyunun yöneticisinin Supabase bağlantısını kurması gerekiyor (supabase/KURULUM.md). O zamana kadar misafir profilleriyle oynayabilirsin.</p>
+      <p class="accmsg" id="accMsg"></p>
+      <div class="accrow"><button class="btn" id="accOut" type="button">Çıkış yap</button><button class="btn link" id="accGuest" type="button">Misafir olarak devam et</button></div>
+    </section>
+    <section class="accp">
+      <p class="k" id="accProfTitle">Profil</p>
+      <label class="fl">Çağrı adı<input id="accCs" class="inp" maxlength="20" placeholder="Hilal 1"></label>
+      <p class="fl">Birlik</p>
+      <div class="seg wrap" id="accUnit"><button type="button" data-u="hava">Hilal Kanatlar</button><button type="button" data-u="deniz">Mavi Kanatlar</button><button type="button" data-u="kara">Bozkurtlar</button></div>
+      <p class="fl">Arma</p>
+      <div class="accem" id="accEm"></div>
+      <button class="btn primary wide" id="accSave" type="button">Kaydet</button>
+      <div id="accLocal"><p class="fl">Bu cihazdaki profiller</p><div class="accprofs" id="accProfList"></div></div>
+    </section>
   </div>
 </div>
 <div id="records" class="modal hidden">
@@ -985,7 +1033,7 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.65', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.66', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -6988,7 +7036,7 @@ function refreshStartPlace(){ const el=$('startPlace'); if(!el) return; if(!el.d
 $('startPlace').addEventListener('change',function(e){ const p=placeById(e.target.value); if(p){ SETTINGS.startPlace=p.id==='base'?null:p.id; saveSettings(); } });
 refreshStartPlace();
 /* ------------------------------------------------------------------ settings / records / photo UI */
-const MODALS=['controls','settings','records','photoResult','netUI','sndLib'];
+const MODALS=['controls','settings','records','photoResult','netUI','sndLib','acctUI'];
 function openModal(id){ $(id).classList.remove('hidden'); if(id==='settings') setSnapshot(); }
 function closeModals(){ MODALS.forEach(function(id){ $(id).classList.add('hidden'); }); }
 function anyModalOpen(){ return MODALS.some(function(id){ return !$(id).classList.contains('hidden'); }); }
@@ -7012,6 +7060,7 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setCb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.c===(SETTINGS.cb||'off'))); });
   $('setHc').checked=!!SETTINGS.hc; $('setRm').checked=!!SETTINGS.rm; $('setRadioSub2').checked=SETTINGS.radioSub!==false; $('setRumble2').checked=SETTINGS.rumble;
   $('setAdv').checked=!!SETTINGS.advUi; $('settings').classList.toggle('basic',!SETTINGS.advUi); $('btnSetUndo').disabled=!setChanged();
+  { const c=(typeof accCfg==='function')&&accCfg(); $('setSupaUrl').value=c?c.url:''; $('setSupaKey').value=c&&!ACCOUNT_CFG.key?c.key:''; }
   $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
   $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
@@ -7117,7 +7166,7 @@ function setSearch(q){ q=(q||'').trim().toLocaleLowerCase('tr-TR'); const st=$('
 $('setSearch').addEventListener('input',function(e){ setSearch(e.target.value); });
 $('setAdv').addEventListener('change',function(e){ SETTINGS.advUi=e.target.checked; saveSettings(); syncSettingsUI(); });
 /* rows only shown in the advanced view */
-['setDepth','btnSafe','btnDiag','setAA','setRes','setAuto','setFps','btnLibOpen'].forEach(function(id){ const el=$(id), r=el&&el.closest&&el.closest('.srow'); if(r&&r.classList) r.classList.add('adv'); });
+['setDepth','btnSafe','btnDiag','setAA','setRes','setAuto','setFps','btnLibOpen','btnSupa'].forEach(function(id){ const el=$(id), r=el&&el.closest&&el.closest('.srow'); if(r&&r.classList) r.classList.add('adv'); });
 function uiApply(){ const h=document.documentElement; if(!h||!h.classList) return; try{ h.style.setProperty('--uiz',String(SETTINGS.uiz||1)); }catch(e){} h.classList.toggle('hc',!!SETTINGS.hc); h.classList.toggle('rm',!!SETTINGS.rm);
   ['p','d','t'].forEach(function(c){ h.classList.toggle('cb-'+c,SETTINGS.cb===c); }); }
 $('setUiz').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.uiz=+b.dataset.z; uiApply(); saveSettings(); syncSettingsUI(); });
@@ -8913,8 +8962,161 @@ $('libRemove').addEventListener('click',libRemoveSkin);
 $('btnLibOpen').addEventListener('click',function(){ if(state==='menu') openLibrary(); else toast('Model kütüphanesi ana menüden açılır','#ffc24a'); });
 window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
 window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files; if(!f||!f.length) return; e.preventDefault(); if(state==='menu'&&!LIB.on) openLibrary('ac:'+selectedId); if(LIB.on) importFiles(f); });
+/* ------------------------------------------------------------------ cloud account configuration (Supabase)
+   Fill in the project URL and the *anon public* key (Project Settings → API) to turn on accounts for every player.
+   Both are meant to be public; the database rules in supabase/schema.sql do the protecting. Never put the service_role key here.
+   Left empty, the game runs in guest mode; a device can still connect from Ayarlar → Arayüz → Gelişmiş → Bulut bağlantısı. */
+const ACCOUNT_CFG={url:'', key:''};
+/* ------------------------------------------------------------------ accounts, profiles and cloud saves (Supabase)
+   Guest mode (no account): local profiles on this device (call sign, unit, emblem, rank/XP), saves in localStorage.
+   Signed in: profile row + one JSON save per user, synced both ways (newest wins), pushed a few seconds after any change,
+   cached offline and pushed again when the connection comes back. The supabase-js library is loaded only when needed. */
+const ACC={cfg:null, sb:null, user:null, prof:null, role:'player', status:'guest', dirtyT:0, lastPush:0, pulling:false, err:''};
+const UNITS={hava:'Hilal Kanatlar',deniz:'Mavi Kanatlar',kara:'Bozkurtlar'};
+const EMBLEMS=[['hilal','☾'],['kurt','🐺'],['kartal','🦅'],['yildiz','★'],['kalkan','🛡'],['simsek','⚡']];
+function accCfg(){ if(ACCOUNT_CFG.url&&ACCOUNT_CFG.key) return ACCOUNT_CFG; try{ const c=JSON.parse(localStorage.getItem('ayy-supa')||'null'); if(c&&c.url&&c.key) return c; }catch(e){} return null; }
+/* ---- local (guest) profiles */
+function lpAll(){ try{ const L=JSON.parse(localStorage.getItem('ayy-profiles')||'null'); if(Array.isArray(L)&&L.length) return L; }catch(e){} return [{id:'g1',callsign:SETTINGS.callsign||'Hilal 1',unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}]; }
+function lpSave(L){ try{ localStorage.setItem('ayy-profiles',JSON.stringify(L)); }catch(e){} }
+function lpCurId(){ try{ return localStorage.getItem('ayy-prof-cur')||'g1'; }catch(e){ return 'g1'; } }
+function lpCur(){ const L=lpAll(); return L.find(function(p){ return p.id===lpCurId(); })||L[0]; }
+function accProfile(){ return ACC.prof||lpCur(); }
+function accSetProfile(patch){
+  if(ACC.prof){ Object.assign(ACC.prof,patch); accPushProfile(); }
+  else { const L=lpAll(), p=L.find(function(x){ return x.id===lpCurId(); })||L[0]; Object.assign(p,patch); lpSave(L); }
+  if(patch.callsign){ SETTINGS.callsign=patch.callsign; saveSettings(); }
+  accChip();
+}
+/* ---- library loader */
+function accLib(){ if(window.supabase&&window.supabase.createClient) return Promise.resolve();
+  return new Promise(function(res,rej){ const urls=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js','https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'];
+    (function next(i){ if(i>=urls.length){ rej(new Error('Bulut kitaplığı yüklenemedi')); return; } const s=document.createElement('script'); s.src=urls[i]; s.onload=function(){ window.supabase?res():next(i+1); }; s.onerror=function(){ next(i+1); }; document.head.appendChild(s); })(0); }); }
+function accInit(){
+  ACC.cfg=accCfg(); accChip(); if(!ACC.cfg) return Promise.resolve(false);
+  ACC.status='connecting'; accChip();
+  return accLib().then(function(){
+    ACC.sb=window.supabase.createClient(ACC.cfg.url,ACC.cfg.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    ACC.sb.auth.onAuthStateChange(function(ev,session){ const u=session&&session.user; if(u&&(!ACC.user||ACC.user.id!==u.id)){ ACC.user=u; accAfterLogin(); } else if(!u&&ACC.user){ ACC.user=null; ACC.prof=null; ACC.role='player'; ACC.status='guest'; accChip(); accRoleApply(); } });
+    return ACC.sb.auth.getSession();
+  }).then(function(r){ const s=r&&r.data&&r.data.session; if(s&&s.user){ ACC.user=s.user; return accAfterLogin(); } ACC.status='guest'; accChip(); accAnnouncements(); return false; })
+  .catch(function(e){ ACC.status='offline'; ACC.err=e&&e.message||String(e); accChip(); return false; });
+}
+function accAfterLogin(){
+  ACC.status='syncing'; accChip();
+  return ACC.sb.from('profiles').select('*').eq('id',ACC.user.id).maybeSingle().then(function(r){
+    if(r.error) throw r.error;
+    if(!r.data){ ACC.prof=null; ACC.status='newprofile'; accChip(); accOpen('profile'); return false; }
+    ACC.prof=r.data; ACC.role=r.data.role||'player';
+    if(r.data.banned){ toast('Hesabın yönetici tarafından uzaklaştırıldı','#ff6a5a'); }
+    SETTINGS.callsign=r.data.callsign; saveSettings();
+    return accPull().then(function(){ ACC.status='online'; accChip(); accRoleApply(); accAnnouncements(); toast('Hoş geldin, '+r.data.callsign,'#7dffb0'); return true; });
+  }).catch(function(e){ ACC.status='offline'; ACC.err=e&&e.message||String(e); accChip(); toast('Bulut bağlantısı kurulamadı: '+ACC.err,'#ffc24a'); return false; });
+}
+function accCreateProfile(callsign,unit,emblem){
+  if(!ACC.sb||!ACC.user){ accSetProfile({callsign:callsign,unit:unit,emblem:emblem}); return Promise.resolve(true); }
+  const lp=lpCur(), row={id:ACC.user.id,callsign:callsign,unit:unit,emblem:emblem,xp:lp.xp||0,rank:lp.rank||0,stats:lp.stats||{}};
+  return ACC.sb.from('profiles').insert(row).select().single().then(function(r){ if(r.error) throw r.error; ACC.prof=r.data; ACC.role=r.data.role; SETTINGS.callsign=callsign; saveSettings();
+    return accPush(true); }).then(function(){ ACC.status='online'; accChip(); accRoleApply(); toast('Profil oluşturuldu — bu cihazdaki kayıtların hesabına aktarıldı','#7dffb0'); return true; })
+    .catch(function(e){ toast('Profil oluşturulamadı: '+(e&&e.message||e),'#ff6a5a'); return false; });
+}
+function accPushProfile(){ if(!ACC.sb||!ACC.prof) return; const p=ACC.prof; ACC.sb.from('profiles').update({callsign:p.callsign,unit:p.unit,emblem:p.emblem,xp:p.xp,rank:p.rank,stats:p.stats}).eq('id',p.id).then(function(r){ if(r.error) console.warn(r.error); }); }
+/* ---- save payload */
+function accPayload(){ return {v:1, t:Date.now(), settings:SETTINGS, ctrl:{kb:CTRL.kb,pad:CTRL.pad}, liv:(typeof LIV!=='undefined'?LIV.data:{}), load:LOADOUTS, rec:RECORDS, snd:SND.user}; }
+function accApply(d){
+  if(!d) return;
+  if(d.settings){ const keep={safeMode:SETTINGS.safeMode,depth:SETTINGS.depth}; Object.assign(SETTINGS,d.settings,DEV.mobile?keep:{}); saveSettings(); }
+  if(d.ctrl){ if(d.ctrl.kb) CTRL.kb=d.ctrl.kb; if(d.ctrl.pad) CTRL.pad=d.ctrl.pad; ctrlSave(); }
+  if(d.liv&&typeof LIV!=='undefined'){ LIV.data=d.liv; livSave(); }
+  if(d.load){ Object.keys(LOADOUTS).forEach(function(k){ delete LOADOUTS[k]; }); Object.assign(LOADOUTS,d.load); saveLoadouts(); }
+  if(d.rec){ RECORDS=d.rec; saveRecords(); }
+  if(d.snd){ SND.user=d.snd; sndSave(); }
+  try{ localStorage.setItem('ayy-save-t',String(d.t||Date.now())); }catch(e){}
+  try{ if(typeof settingsApplyAll==='function') settingsApplyAll(); }catch(e){}
+}
+function accLocalT(){ try{ return +localStorage.getItem('ayy-save-t')||0; }catch(e){ return 0; } }
+function accPull(){
+  if(!ACC.sb||!ACC.user) return Promise.resolve(); ACC.pulling=true;
+  return ACC.sb.from('saves').select('data,updated_at').eq('user_id',ACC.user.id).maybeSingle().then(function(r){ ACC.pulling=false;
+    if(r.error) throw r.error; const d=r.data&&r.data.data;
+    if(d&&d.t>accLocalT()) accApply(d); else if(!d||d.t<accLocalT()) return accPush(true);
+  }).catch(function(e){ ACC.pulling=false; console.warn('çekme',e); });
+}
+function accPush(now){
+  if(!ACC.sb||!ACC.user||!ACC.prof) return Promise.resolve(false);
+  if(!now&&typeof navigator!=='undefined'&&navigator.onLine===false) return Promise.resolve(false);
+  const p=accPayload(); try{ localStorage.setItem('ayy-save-t',String(p.t)); }catch(e){}
+  return ACC.sb.from('saves').upsert({user_id:ACC.user.id,data:p,updated_at:new Date().toISOString()}).then(function(r){ if(r.error) throw r.error; ACC.lastPush=Date.now(); ACC.dirtyT=0; ACC.status='online'; accChip(); return true; })
+    .catch(function(e){ ACC.status='offline'; ACC.err=e&&e.message||String(e); accChip(); return false; });
+}
+function accDirty(){ try{ localStorage.setItem('ayy-save-t',String(Date.now())); }catch(e){} if(ACC.user&&ACC.prof&&!ACC.dirtyT){ ACC.dirtyT=Date.now(); ACC.status='pending'; accChip(); } }
+setInterval(function(){ if(ACC.dirtyT&&Date.now()-ACC.dirtyT>4000) accPush(); },1500);
+window.addEventListener('online',function(){ if(ACC.user&&ACC.prof) accPush(true); });
+/* any local save marks the cloud copy dirty */
+const accWrap=function(f){ return function(){ const r=f.apply(this,arguments); accDirty(); return r; }; };
+saveSettings=accWrap(saveSettings); saveRecords=accWrap(saveRecords); saveLoadouts=accWrap(saveLoadouts); ctrlSave=accWrap(ctrlSave); livSave=accWrap(livSave); sndSave=accWrap(sndSave);
+/* ---- sign in / out */
+function accSignInGoogle(){ if(!ACC.sb) return; ACC.sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}}).then(function(r){ if(r.error) toast('Google ile giriş açılmadı: '+r.error.message,'#ff6a5a'); }); }
+function accEmail(mode,email,pass){
+  if(!ACC.sb) return Promise.resolve();
+  const A=ACC.sb.auth, p=mode==='up'?A.signUp({email:email,password:pass}):mode==='reset'?A.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname}):A.signInWithPassword({email:email,password:pass});
+  return p.then(function(r){ if(r.error){ accMsg(r.error.message.replace('Invalid login credentials','E-posta ya da şifre hatalı'),true); return; }
+    if(mode==='up'&&!(r.data&&r.data.session)) accMsg('Kayıt alındı. E-postana gelen bağlantıyla hesabını onayla, sonra giriş yap.');
+    else if(mode==='reset') accMsg('Şifre yenileme bağlantısı e-postana gönderildi.');
+    else accMsg(''); });
+}
+function accSignOut(){ if(!ACC.sb) return; accPush(true).finally(function(){ ACC.sb.auth.signOut().then(function(){ ACC.user=null; ACC.prof=null; ACC.role='player'; ACC.status='guest'; accChip(); accRoleApply(); accRender(); toast('Çıkış yapıldı — misafir profiline geçildi','#b8ecff'); }); }); }
+/* ---- announcements (shown on the main menu) */
+function accAnnouncements(){ if(!ACC.sb) return; ACC.sb.from('announcements').select('id,text,created_at').eq('active',true).order('created_at',{ascending:false}).limit(1).then(function(r){
+  const a=r.data&&r.data[0], el=$('cNews'); if(!el) return; if(!a){ el.classList.add('hidden'); return; } el.innerHTML='<b>DUYURU</b> '+String(a.text).replace(/</g,'&lt;'); el.classList.remove('hidden'); }); }
+/* role-dependent UI (admin section arrives in V1.68) */
+function accRoleApply(){ document.documentElement.classList.toggle('is-admin',accIsAdmin()); }
+function accIsAdmin(){ if(ACC.cfg) return ACC.role==='admin'&&!(ACC.prof&&ACC.prof.banned); return true; /* no cloud configured: this device owns the game (development) */ }
+/* ---- UI: profile chip on the main menu and the account screen */
+const ACC_ST={guest:'Misafir',connecting:'Bağlanıyor…',syncing:'Eşitleniyor…',online:'Bulutta',pending:'Kaydedilecek…',offline:'Çevrimdışı',newprofile:'Profil oluştur'};
+function accChip(){ const p=accProfile(), em=(EMBLEMS.find(function(e){ return e[0]===p.emblem; })||EMBLEMS[0])[1];
+  const n=$('cName'), sub=$('cSub'), rk=$('cRank'); if(!n) return; n.textContent=p.callsign||'Misafir pilot';
+  sub.textContent=(UNITS[p.unit]||'Hilal Kanatlar')+' · '+(ACC.user?ACC_ST[ACC.status]||'':(ACC.cfg?'Misafir · giriş yap':'Misafir'));
+  rk.textContent=typeof rankShort==='function'?rankShort(p.rank||0):em; rk.title=em; }
+function accMsg(t,err){ const el=$('accMsg'); if(!el) return; el.textContent=t||''; el.classList.toggle('err',!!err); }
+function accOpen(tab){ closeModals(); $('acctUI').classList.remove('hidden'); ACC.tab=tab||(ACC.user&&!ACC.prof?'profile':'acct'); accRender(); }
+function accClose(){ $('acctUI').classList.add('hidden'); }
+function accRender(){
+  const p=accProfile(), cfg=!!ACC.cfg, L=lpAll();
+  $('accState').innerHTML=ACC.user?('<b>'+(ACC.user.email||'Hesap')+'</b><small>'+(ACC_ST[ACC.status]||'')+(ACC.lastPush?' · son kayıt '+new Date(ACC.lastPush).toLocaleTimeString('tr-TR'):'')+(ACC.role==='admin'?' · YÖNETİCİ':'')+'</small>')
+    :(cfg?'<b>Misafir</b><small>Giriş yaparsan kayıtların her cihazda seninle olur</small>':'<b>Misafir (çevrimdışı mod)</b><small>Bulut hesapları henüz açılmadı; kayıtlar bu cihazda kalır</small>');
+  $('accLogin').classList.toggle('hidden',!cfg||!!ACC.user); $('accOut').classList.toggle('hidden',!ACC.user); $('accNoCloud').classList.toggle('hidden',cfg);
+  $('accLocal').classList.toggle('hidden',!!ACC.user);
+  $('accProfList').innerHTML=L.map(function(x){ const em=(EMBLEMS.find(function(e){ return e[0]===x.emblem; })||EMBLEMS[0])[1]; return '<button type="button" data-p="'+x.id+'"'+(x.id===lpCurId()?' aria-pressed="true"':'')+'><span>'+em+'</span>'+x.callsign+'<small>'+(UNITS[x.unit]||'')+'</small></button>'; }).join('')+'<button type="button" data-p="new">+ Yeni profil</button>';
+  $('accCs').value=p.callsign||''; $('accUnit').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(p.unit||'hava'))); });
+  $('accEm').innerHTML=EMBLEMS.map(function(e){ return '<button type="button" data-e="'+e[0]+'"'+(e[0]===(p.emblem||'hilal')?' aria-pressed="true"':'')+'>'+e[1]+'</button>'; }).join('');
+  $('accProfTitle').textContent=ACC.user&&!ACC.prof?'Profilini oluştur':'Profil';
+}
+(function(){
+  $('btnAccBack').addEventListener('click',function(){ accClose(); if(state==='menu') refreshTitle(); });
+  { const o=$('cProf'); if(o.replaceWith&&o.cloneNode){ const c=o.cloneNode(true); o.replaceWith(c); } $('cProf').addEventListener('click',function(){ accOpen(); }); }
+  $('accGoogle').addEventListener('click',accSignInGoogle);
+  $('accIn').addEventListener('click',function(){ accEmail('in',$('accMail').value.trim(),$('accPass').value); });
+  $('accUp').addEventListener('click',function(){ if(($('accPass').value||'').length<6){ accMsg('Şifre en az 6 karakter olmalı',true); return; } accEmail('up',$('accMail').value.trim(),$('accPass').value); });
+  $('accReset').addEventListener('click',function(){ if(!$('accMail').value.trim()){ accMsg('Önce e-posta adresini yaz',true); return; } accEmail('reset',$('accMail').value.trim()); });
+  $('accOut').addEventListener('click',accSignOut);
+  $('accGuest').addEventListener('click',function(){ SETTINGS.accPrompted=true; saveSettings(); accClose(); if(state==='menu') refreshTitle(); });
+  $('accUnit').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b){ $('accUnit').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); }); } });
+  $('accEm').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b){ $('accEm').querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); }); } });
+  $('accSave').addEventListener('click',function(){ const cs=($('accCs').value||'').trim().slice(0,20); if(cs.length<2){ accMsg('Çağrı adı en az 2 karakter olmalı',true); return; }
+    const u=($('accUnit').querySelector('[aria-pressed="true"]')||{}).dataset, e=($('accEm').querySelector('[aria-pressed="true"]')||{}).dataset, unit=u&&u.u||'hava', em=e&&e.e||'hilal';
+    if(ACC.user&&!ACC.prof) accCreateProfile(cs,unit,em).then(function(ok){ if(ok) accRender(); }); else { accSetProfile({callsign:cs,unit:unit,emblem:em}); accMsg('Kaydedildi'); accRender(); } });
+  $('accProfList').addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(!b) return; const L=lpAll();
+    if(b.dataset.p==='new'){ const id='g'+Date.now().toString(36); L.push({id:id,callsign:'Pilot '+(L.length+1),unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}); lpSave(L); try{ localStorage.setItem('ayy-prof-cur',id); }catch(err){} }
+    else { lpSave(L); try{ localStorage.setItem('ayy-prof-cur',b.dataset.p); }catch(err){} }
+    const p=lpCur(); SETTINGS.callsign=p.callsign; saveSettings(); accChip(); accRender(); toast('Profil: '+p.callsign,'#b8ecff'); });
+  /* cloud connection from the settings (advanced) */
+  $('btnSupa').addEventListener('click',function(){ const url=($('setSupaUrl').value||'').trim(), key=($('setSupaKey').value||'').trim();
+    if(!url&&!key){ try{ localStorage.removeItem('ayy-supa'); }catch(e){} toast('Bulut bağlantısı kaldırıldı — sayfa yenileniyor','#ffc24a'); setTimeout(function(){ location.reload(); },900); return; }
+    if(!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url)||key.length<40){ toast('Adres https://xxxx.supabase.co biçiminde, anahtar "anon public" olmalı','#ff6a5a'); return; }
+    try{ localStorage.setItem('ayy-supa',JSON.stringify({url:url.replace(/\/$/,''),key:key})); }catch(e){} toast('Bağlanılıyor…','#b8ecff'); accInit().then(function(){ accOpen(); }); });
+})();
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) accOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
