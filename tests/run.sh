@@ -47,3 +47,4 @@ node harness.js /tmp/sim.js airlife.test.js
 node harness.js /tmp/sim.js board.test.js
 node harness.js /tmp/sim.js dynamic.test.js
 node harness.js /tmp/sim.js school.test.js
+node harness.js /tmp/sim.js progress.test.js

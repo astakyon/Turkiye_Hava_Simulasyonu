@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.79 — 2026-10-11
+- **Boyalar:** Hangarda uçak bilgilerinin altında "Boya" seçimi var: Standart, Deniz grisi, Çöl kamuflajı, Orman kamuflajı, Dijital kamuflaj, Gece, Kızıl Elma ve Altın. Boyalar rütbeyle açılıyor (Onbaşı'dan Albay'a kadar). Seçim her uçak için ayrı kaydediliyor.
+- **Başarımlar:** 16 başarım var: 10 saat uçuş, 100 iniş, 25 düşman uçağı, 100 yer hedefi, 25 görev, 10 dinamik görev, 30 yıldız, uçuş okulunu bitirmek, gemi inişleri, gece uçuşu, fırtınada iniş, 1000 km, 20 yer, fırlatıp sağ kurtulmak ve diğerleri. Her birinin ilerleme çubuğu ve tecrübe puanı ödülü var.
+- **Günlük ve haftalık görevler:** Her gün 3, her hafta 2 görev tarihe göre seçiliyor (örneğin "2 iniş yap", "50 km uç"). İlerleme Kariyer sayfasında görünüyor; görev tamamlanınca ödül kendiliğinden veriliyor.
+- **İstatistikler:** Uçulan mesafe, gece uçuşu, gemi güvertesine iniş, fırtınada iniş, fırlatmalar, toplam yıldız, dersler, başarımlar ve daha fazlası Kariyer → İstatistikler'de listeleniyor.
+- **Rütbeyle açılanlar:** Kariyer sayfasında hangi uçağın, aracın ve boyanın hangi rütbede açıldığı listeleniyor. Kilitler bulut hesaplarda geçerli; bulut bağlanmadan önce her şey açık kalıyor.
+
 ## V1.78 — 2026-10-11
 - **Uçuş okulu:** Ana menüye "Uçuş Okulu" eklendi; dersler görev panosunda "Okul" kategorisinde de var. Sekiz ders: Kalkış, Trafik turu, İniş, Rüzgârlı iniş (Hürkuş), Havada asılı kalma, Askı yükü (T625), Silah kullanımı (Hürjet), Gemiye iniş (T625: önce rıhtımdaki fırkateyn, sonra seyir hâlindeki korvet).
 - **Adım adım ilerleme:** Her derste HUD'da bir kontrol listesi var; yapılan adımlar işaretleniyor, süre isteyen adımlarda (ör. 10 m'de 5 saniye sabit dur) sayaç görünüyor. Trafik turunda dönüş noktaları gökyüzünde halka olarak işaretli.

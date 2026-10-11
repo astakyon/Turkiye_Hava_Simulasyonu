@@ -689,3 +689,16 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 @media (max-width:640px){ #missionsUI .mlist.mis{ max-height:24vh; } #missionsUI .misdet{ top:calc(clamp(54px,12vh,84px) + 124px + 24vh); bottom:30px; max-height:none; overflow:auto; } .bseg button{ padding:3px 7px; font-size:10.5px; } }
 .misdet .mrow2{ position:sticky; bottom:-14px; background:linear-gradient(180deg,rgba(6,12,22,0),rgba(6,12,22,.96) 30%); padding:10px 0 4px; margin-bottom:-4px; z-index:1; }
 .mlist.mis .bt{ min-width:0; } .mlist.mis .bt, .mlist.mis .mitem{ white-space:normal; } .mlist.mis .bt{ line-height:1.15; }
+/* V1.79 paint, tasks, achievements, stats */
+.hpaint{ margin-top:8px; } .hpaint .hmh{ margin:0 0 4px; font:700 11px "Chakra Petch",system-ui,sans-serif; letter-spacing:.12em; color:var(--amber,#ffb25a); } .hpaint .hmh small{ font-weight:500; letter-spacing:0; opacity:.7; }
+.pchips{ display:flex; flex-wrap:wrap; gap:5px; max-width:460px; }
+.pchips button{ display:flex; align-items:center; gap:6px; padding:4px 9px 4px 4px; border-radius:999px; border:1px solid rgba(184,236,255,.22); background:rgba(8,15,28,.62); color:#dfe9f1; font:600 11px "Chakra Petch",system-ui,sans-serif; }
+.pchips button i{ width:18px; height:18px; border-radius:50%; border:1px solid rgba(255,255,255,.35); overflow:hidden; } .pchips button.on{ border-color:#ffb25a; color:#ffb25a; } .pchips button.lock{ opacity:.5; }
+@media (max-width:760px){ .pchips button span{ display:none; } .pchips button{ padding:4px; } }
+.pbar{ height:5px; border-radius:3px; background:rgba(255,255,255,.08); overflow:hidden; margin:4px 0 2px; } .pbar i{ display:block; height:100%; background:linear-gradient(90deg,#ffb25a,#ffd27a); }
+.cartasks{ display:grid; grid-template-columns:1fr 1fr; gap:10px; } .cartasks .tcol p{ margin:0 0 4px; font-size:10px; letter-spacing:.16em; opacity:.6; }
+.tk{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:6px 9px; margin-bottom:5px; } .tk b{ font-size:12.5px; } .tk small{ font-size:10.5px; opacity:.7; } .tk.on{ border-color:rgba(125,255,176,.4); } .tk.on .pbar i{ background:#7dffb0; }
+.carach{ display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:6px; } .ach{ display:flex; gap:8px; background:rgba(255,255,255,.04); border-radius:8px; padding:6px 9px; opacity:.75; } .ach.on{ opacity:1; border:1px solid rgba(255,210,122,.35); } .ach span{ font-size:18px; } .ach>div{ flex:1; } .ach b{ font-size:12.5px; display:block; } .ach small{ font-size:10.5px; opacity:.7; display:block; }
+.carst2 table{ width:100%; border-collapse:collapse; font-size:12.5px; } .carst2 td{ padding:4px 6px; border-bottom:1px solid rgba(255,255,255,.06); } .carst2 td:last-child{ text-align:right; font-weight:700; }
+.carunl{ display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:5px; } .carunl .ul{ display:flex; align-items:center; gap:7px; padding:4px 7px; border-radius:6px; background:rgba(255,255,255,.03); opacity:.55; } .carunl .ul.on{ opacity:1; } .carunl b{ font-size:12px; flex:1; } .carunl small{ font-size:10px; opacity:.7; } .carunl .note{ grid-column:1/-1; font-size:11.5px; color:#ffd27a; margin:0 0 4px; }
+@media (max-width:640px){ .cartasks{ grid-template-columns:1fr; } }
