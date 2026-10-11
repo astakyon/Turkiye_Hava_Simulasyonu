@@ -28,6 +28,7 @@ function syncSettingsUI(){
   $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
   $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
+  if($('setFuel')) Array.prototype.forEach.call($('setFuel').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.f===(SETTINGS.fuel||'on'))); });
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
   Array.prototype.forEach.call($('setTouch').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===SETTINGS.touch)); });
 }
@@ -47,6 +48,7 @@ $('setSens').addEventListener('input',function(e){ SETTINGS.sens=+e.target.value
 $('setQ').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.quality=+b.dataset.q;
   /* a preset clears the individual overrides so its own defaults apply */
   SETTINGS.fx=null; SETTINGS.shadows=null; SETTINGS.aa='auto'; SETTINGS.res='auto'; PERF.scale=1; FX.failed=false; applyQuality(); saveSettings(); syncSettingsUI(); });
+if($('setFuel')) $('setFuel').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.fuel=b.dataset.f; saveSettings(); syncSettingsUI(); });
 $('setBomb').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.bombAssist=b.dataset.b; saveSettings(); syncSettingsUI(); });
 $('setTouch').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.touch=b.dataset.t; saveSettings(); syncSettingsUI(); });
 $('btnFull').addEventListener('click',function(){ try{ const el=document.documentElement; (el.requestFullscreen||el.webkitRequestFullscreen).call(el); }catch(err){} });

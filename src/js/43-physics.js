@@ -41,7 +41,7 @@ function update(dt){
 
   const sp=S.speed, stallS=smooth(CUR.stall[0],CUR.stall[1],sp);
   const thr=S.ab?1:S.throttle;
-  const thrust=(CUR.idle+thr*CUR.thrust+(S.ab?CUR.abT:0))*(S.hp<30?0.65:1);
+  const thrust=(CUR.idle+thr*CUR.thrust+(S.ab?CUR.abT:0))*(typeof dmgThrust==='function'?dmgThrust():(S.hp<30?0.65:1));
   const kD=CUR.kD*(1+(S.gear?0.55:0)+(S.brake&&!S.onGround?1.0:0)+Math.abs(S.pitchIn)*0.22);
   fwdOf(S.q,vF);
   let acc=thrust-kD*sp*sp-9.81*vF.y*0.85;

@@ -653,3 +653,6 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .hmend h2{ margin:0 0 8px; font:700 24px "Chakra Petch",system-ui,sans-serif; letter-spacing:.06em; } .hmend h2.ok{ color:#7dffb0; } .hmend h2.bad{ color:#ff6a5a; }
 .hmend p{ display:flex; flex-direction:column; gap:4px; color:#dfe9f1; margin:0 0 16px; } .hmend p b{ font-size:17px; } .hmend p span{ font-size:13px; opacity:.85; }
 .hmend .row{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; } .hmend .back{ position:static; }
+/* V1.73 eject touch button */
+.ttop button.warn{ border-color:#ff5a4a; background:rgba(120,16,10,.6); color:#fff; animation:ejPulse 1s infinite; }
+@keyframes ejPulse{ 50%{ background:rgba(200,30,20,.75); } }

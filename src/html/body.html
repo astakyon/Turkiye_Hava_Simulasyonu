@@ -243,6 +243,7 @@
       <div class="srow"><div class="sl"><b>Ses kütüphanesi</b><small>Kanal karışımı (müzik, efekt, arayüz, telsiz, ortam), her sesi dinle, ayarla ya da kendi ses dosyanla değiştir</small></div><button class="btn" id="btnSndOpen" type="button">Aç</button></div>
     </section>
     <section data-tab="o" class="hidden">
+      <div class="srow"><div class="sl"><b>Yakıt tüketimi</b><small>Gerçekçi: iki kat hızlı tükenir · Kapalı: yakıt sınırsız</small></div><div class="seg" id="setFuel"><button type="button" data-f="off">Kapalı</button><button type="button" data-f="on">Normal</button><button type="button" data-f="real">Gerçekçi</button></div></div>
       <div class="srow"><div class="sl"><b>Bomba yardımı</b><small>Güdümlü: kilitli hedefe yönelir</small></div><div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
       <div class="srow"><div class="sl"><b>Otomatik hedef kilidi</b><small>Uyarı panosu ile (K tuşu)</small></div><label class="tgl"><input type="checkbox" id="setLock"><i></i></label></div>
     </section>
@@ -422,7 +423,7 @@
 <div id="radioMenu" class="radiomenu hidden"></div>
 <div id="pttInd" class="pttind hidden">🎙 KONUŞUYORSUN</div>
 <div id="touch" class="touch hidden">
-  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
+  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tEject" class="hidden warn">FIRLAT</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
   <div class="ttaxi"><button type="button" id="tAuto" class="hidden">OTO TAKSİ</button><button type="button" id="tSkip" class="hidden">PİSTE GEÇ</button></div>
   <div class="tstick" id="tStick"><div class="tknob" id="tKnob"></div></div>
   <div class="tright" id="tRight">

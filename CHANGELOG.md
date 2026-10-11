@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.73 — 2026-10-11
+- **Yakıt:** Gaz arttıkça yakıt daha hızlı biter; art yakıcı çok daha fazla yakar, İHA'lar çok daha uzun uçar. HUD'da yakıt göstergesi, %20'de "YAKIT AZ", %8'de "YAKIT KRİTİK" uyarısı ve kule anonsu var. Yakıt bitince motor durur ve süzülerek inmen gerekir.
+- **İkmal ve onarım:** Herhangi bir pistte gazı kesip durursan yakıt dolar. Bakım hangarında hem tam onarım hem tam yakıt yapılır. Ayarlar → Oynanış'tan yakıt tüketimini Kapalı, Normal ya da Gerçekçi (2 kat hızlı) yapabilirsin.
+- **Hasar modeli:** İsabetler motora (itki düşer, motor yangını çıkabilir, yangın sonunda motor durur), yakıt deposuna (sızıntı, beyaz iz) ya da kanada (uçak o yöne yatar, parçalar kopup düşer) gelebilir. HUD'da uyarı listesi ve uyarı sesi var.
+- **Fırlatma koltuğu:** J tuşuna iki kez bas (telefonda hasar alınca beliren FIRLAT düğmesine iki kez dokun). Kanopi uçar, koltuk yükselir, paraşüt açılır. A/D ile dön, W ile hızlan, S ile yavaşla.
+- **Yere iniş:** İndiğin yerde yürüyerek devam edersin; G ile araç çağırabilirsin. Denize düşersen kurtarma ekibi seni en yakın kıyıya bırakır. Pilotsuz kalan uçak bir süre uçup düşer. İHA'larda fırlatma koltuğu yoktur; görev sırasında fırlatırsan görev başarısız sayılır.
+
 ## V1.72 — 2026-10-11
 - **Helikopter görevleri:** Hangarın Helikopter sekmesinde artık görev listesi var. T129 için "Poligon Atışı" ve "Konvoy Avı", T625 için "Asker İntikali" ve "Askı Yükü". Görev sırasında HUD'da hedef, kalan süre, yön oku ve mesafe görünür. Sonunda rekor süre ve XP veren sonuç ekranı açılır.
 - **T129 silahları:** 20 mm top (Boşluk; nişangâhtaki hedefe kendiliğinden döner), CİRİT güdümlü roket ve UMTAS tanksavar füzesi (X ateşler, Tab değiştirir; UMTAS için hedefe kilitlenmek gerekir). HUD'da cephane, nişangâh ve hedef kutuları gösterilir. Helipada inince mühimmat yenilenir.

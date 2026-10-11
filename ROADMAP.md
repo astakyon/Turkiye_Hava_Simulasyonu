@@ -78,7 +78,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.70 | **Deniz araçları ve gemi operasyonları.** Hücumbot, römorkör, balıkçı teknesi, yelkenli ve fırkateyn sürme (deniz kontrol şeması). Dalga ve iz efekti. Helikopterle TCG Anadolu ve fırkateyn güvertesine iniş ve kalkış (hareket eden güverte). | Gemiye iniş yapılabiliyor. | ✅ |
 | V1.71 | **Araç çağırma.** Radyal "Araç çağır" menüsü (klavye, gamepad, dokunmatik). Araç bulunduğun yere ya da haritadan seçilen noktaya gelir. Yere uygun öneriler: suda bot, havalimanında çekici, düz alanda helikopter. Teslimat animasyonu (yolda sürerek gelir ya da T625 ile askıda bırakılır). | Her yerde araç çağrılabiliyor. | ✅ |
 | V1.72 | **Helikopterler tam oyunda.** Görev ve serbest uçuşta helikopter. T129: 20 mm top, CİRİT roketi, UMTAS (kilit, atış). T625: asker ve yük taşıma, **askı halatıyla araç taşıma**, kapı silahı. Helikopter HUD'u ve otomatik havada asılı kalma (hover) yardımı. | Görevlerde helikopterle hedef vurulabiliyor. | ✅ |
-| V1.73 | **Fırlatma koltuğu, paraşüt ve hasar.** Uçaktan fırlama, paraşütle süzülme, yere inince yürüme veya araç çağırma. Yakıt tüketimi ve uyarısı. Hasar modeli: duman, alev, parça kopması, motor arızası. Üste ikmal ve tamir (servis hangarı ile bağlantılı). | Vurulunca atlanabiliyor; yakıt bitiyor ve ikmal yapılıyor. | |
+| V1.73 | **Fırlatma koltuğu, paraşüt ve hasar.** Uçaktan fırlama, paraşütle süzülme, yere inince yürüme veya araç çağırma. Yakıt tüketimi ve uyarısı. Hasar modeli: duman, alev, parça kopması, motor arızası. Üste ikmal ve tamir (servis hangarı ile bağlantılı). | Vurulunca atlanabiliyor; yakıt bitiyor ve ikmal yapılıyor. | ✅ |
 
 ### Faz 6 — Dünya ve atmosfer
 | Sürüm | İçerik | Kabul ölçütü | Durum |
@@ -89,7 +89,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 ### Faz 7 — Görevler ve oyun modları
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.76 | **Görev ekranı.** Görev panosunda kategori, zorluk, süre ve ödül filtreleri. Brifing ekranı: harita, hedefler, tehditler, önerilen yük. Oyun içinde hedef takibi (HUD işaretleri, mesafe) ve görev günlüğü (**J**). Görev sonu raporunda yıldız, puan ve istatistik. | Görev panodan seçilip brifingle başlıyor. | |
+| V1.76 | **Görev ekranı.** Görev panosunda kategori, zorluk, süre ve ödül filtreleri. Brifing ekranı: harita, hedefler, tehditler, önerilen yük. Oyun içinde hedef takibi (HUD işaretleri, mesafe) ve görev günlüğü (**J**). Görev sonu raporunda yıldız, puan ve istatistik. Helikopter görevleri bu ekrana taşınır, serbest uçuşta helikopter seçimi ve T625 kapı silahı eklenir (V1.72'den kalanlar). | Görev panodan seçilip brifingle başlıyor. | |
 | V1.77 | **Dinamik görevler.** Yerlere göre üretilen görevler: devriye, önleme, yakın hava desteği, refakat, İHA keşfi, deniz devriyesi, T625 ile arama-kurtarma ve yük taşıma, kara araçlarıyla konvoy. Görev ortasında olaylar (yeni tehdit, hava değişimi, arıza). Çok aşamalı hedefler, süre sınırı, isteğe bağlı ek hedefler. | Her girişte farklı görev seti. | |
 | V1.78 | **Uçuş okulu.** Dersler: kalkış, tur, iniş, rüzgârlı iniş, helikopterde havada asılı kalma, sapan yükü, silah kullanımı, gemiye iniş. Eğitmen telsiz anlatımı. Lisans ve madalya. | Dersler adım adım tamamlanıyor. | |
 | V1.79 | **Kariyer ve başarımlar.** Rütbe sistemine (V1.67) bağlı kariyer: görevlerden tecrübe puanı, puanla yeni uçak, araç ve boya açma. Başarımlar, günlük ve haftalık görevler, istatistik sayfası. | İlerleme kaydediliyor. | |

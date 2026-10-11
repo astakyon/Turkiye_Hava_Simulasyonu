@@ -14,7 +14,7 @@ const CTRL_DEF={
     ['ab','Art yakıcı',['ShiftLeft','ShiftRight'],['b5']], ['brake','Fren / hava freni',['KeyB'],['b4']],
     ['gun','Top / mühimmat ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['nextWpn','Sıradaki silah',['KeyN'],['b8']],
     ['lock','Hedef kilidi aç / kapat',['KeyK'],[]], ['nextTarget','Hedef kilidini değiştir',['Tab'],[]], ['flares','Flare bırak',['KeyZ'],['b10']],
-    ['gear','İniş takımı',['KeyG'],['b1']], ['autoTaxi','Otomatik taksi',['KeyT'],[]], ['skipTaxi','Taksiyi atla',['KeyL'],['b3']]]},
+    ['gear','İniş takımı',['KeyG'],['b1']], ['autoTaxi','Otomatik taksi',['KeyT'],[]], ['skipTaxi','Taksiyi atla',['KeyL'],['b3']], ['eject','Fırlatma koltuğu (iki kez bas)',['KeyJ'],[]]]},
   heli:{name:'Helikopter', acts:[
     ['cycF','İleri (cyclic)',['KeyW','ArrowUp'],['a1-']], ['cycB','Geri (cyclic)',['KeyS','ArrowDown'],['a1+']],
     ['cycL','Sola kay (cyclic)',['KeyA','ArrowLeft'],['a0-']], ['cycR','Sağa kay (cyclic)',['KeyD','ArrowRight'],['a0+']],
