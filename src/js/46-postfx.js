@@ -35,7 +35,7 @@ function fxBuild(){
   const halfOK=w2?!!(gl.getExtension('EXT_color_buffer_float')||gl.getExtension('EXT_color_buffer_half_float')):!!(gl.getExtension('OES_texture_half_float')&&gl.getExtension('EXT_color_buffer_half_float'));
   FX.hdr=halfOK&&FX.level>=2;
   const pr=renderer.getPixelRatio(), W=Math.max(1,Math.round(HW*pr)), H=Math.max(1,Math.round(HH*pr));
-  const opts={minFilter:THREE.LinearFilter, magFilter:THREE.LinearFilter, format:THREE.RGBAFormat, type:FX.hdr?THREE.HalfFloatType:THREE.UnsignedByteType, depthBuffer:true, stencilBuffer:false};
+  const opts={minFilter:THREE.LinearFilter, magFilter:THREE.LinearFilter, format:THREE.RGBAFormat, type:FX.hdr?THREE.HalfFloatType:THREE.UnsignedByteType, depthBuffer:true, stencilBuffer:true /* r128: stencil yoksa derinlik 16 bit → uzakta z-fighting çizgileri; DEPTH24_STENCIL8 */};
   let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget;
   if(FX.msaa){ rt=new THREE.WebGLMultisampleRenderTarget(W,H,opts); rt.samples=4; } else rt=new THREE.WebGLRenderTarget(W,H,opts);
   if(FX.composer){ FX.composer.renderTarget1.dispose(); FX.composer.renderTarget2.dispose(); }

@@ -48,7 +48,7 @@ function walkUpdate(dt){
     let mx=(-sy*inp.f+cy*inp.r), mz=(-cy*inp.f-sy*inp.r); const m=Math.hypot(mx,mz); if(m>1){ mx/=m; mz/=m; }
     WALK.pos.x+=mx*sp*dt; WALK.pos.z+=mz*sp*dt;
     pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes());
-    const R=Math.hypot(WALK.pos.x,WALK.pos.z); if(R>1760){ WALK.pos.x*=1760/R; WALK.pos.z*=1760/R; }
+    if(Math.abs(WALK.pos.x)>4600||Math.abs(WALK.pos.z)>4600||terrainH(WALK.pos.x,WALK.pos.z)<0.8){ WALK.pos.x-=mx*sp*dt; WALK.pos.z-=mz*sp*dt; }
     WALK.bob+=m*sp*dt*1.7; WALK.pos.y=Math.max(gy,terrainH(WALK.pos.x,WALK.pos.z))+1.7+Math.sin(WALK.bob)*0.035*Math.min(1,m);
     /* what can I interact with? */
     WALK.near=null; WALK.nearId=null;
@@ -68,7 +68,7 @@ function walkUpdate(dt){
     /* three circles along the car body */
     let hit=false; for(const o of [1.5,0,-1.5]){ const p={x:c.x-Math.sin(c.h)*o, z:c.z-Math.cos(c.h)*o}, ox=p.x, oz=p.z; if(pushCircle(p,1.0,WALK.boxes)){ hit=true; c.x+=p.x-ox; c.z+=p.z-oz; } }
     if(hit) c.v*=0.35;
-    const R=Math.hypot(c.x,c.z); if(R>1760){ c.x*=1760/R; c.z*=1760/R; c.v*=0.5; }
+    if(Math.abs(c.x)>4600||Math.abs(c.z)>4600||terrainH(c.x,c.z)<0.8){ c.x-=-Math.sin(c.h)*c.v*dt; c.z-=-Math.cos(c.h)*c.v*dt; c.v*=-0.2; }
     placeCar(); WALK.near='car';
     WALK.cy*=Math.exp(-dt*(Math.abs(c.v)>2?1.2:0.15));
   }

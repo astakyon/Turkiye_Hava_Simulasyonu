@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.39 — 2026-10-11
+### Yeni — Aşama 4: üs çevresi
+- **Çevre çiti:** üssü saran tel örgü çit (direkler, tel, üst dikenli tel). Çimler çit sınırına kadar biçilmiş.
+- **Nizamiye:** kuzey girişte nöbetçi kulübesi, saçak, iki yönde "AY YILDIZ HAVA ÜSSÜ" tabelası, bariyerler, bayraklar, kasis.
+- **Köy:** nizamiyeden çıkan yolun ucunda ~34 ev, cami (kubbe, minare, hilal), dükkânlar ve sokaklar.
+- **Arazi:** arazinin şeklini izleyen tarlalar, üssü çevreleyen ~2600 ağaçlık orman kuşağı, yol kenarı ağaç sıraları, kayalar.
+- **Kıyı:** hareket eden köpük şeridi; güney burnunda dönen ışıklı **deniz feneri**.
+- **Havacılık ekipmanı:** ILS süzülüş vericisi direkleri, meteoroloji istasyonu.
+- **Araba:** nizamiyeden çıkıp köye kadar gidebilirsin. Çit ve binalar artık katı.
+### Düzeltildi
+- Masaüstünde (yüksek grafik/efekt) havadan bakınca karada ve denizde görülen yatay çizgiler giderildi. Efekt katmanı 16 bit derinlik kullanıyordu, artık 24 bit.
+
 ## V1.38 — 2026-10-10
 ### Değişti — KAAN, fotoğraflara göre düzeltildi
 Ölçüler fotoğraflardan alındı (üstten görünüş 14 m açıklığa, yandan görünüş 21 m boya ölçeklendi).
