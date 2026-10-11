@@ -21,10 +21,35 @@ function pushCircle(p,r,boxes,skipAc){
   return hit;
 }
 function buildCar(){
-  if(WALK.car.mesh) return; const g=bakeGroup(vehCar('follow')); scene.add(g); WALK.car.mesh=g;
-  WALK.car.x=HG.X0+7; WALK.car.z=896; WALK.car.h=0; WALK.car.v=0; placeCar();
+  const c=WALK.car; if(c.mesh) return;
+  if(c.ki==null){ c.ki=0; try{ const v=+localStorage.getItem('ayy-car'); if(v>=0&&v<CAR_KINDS.length) c.ki=v; }catch(e){} }
+  carMake(); c.x=HG.X0+7; c.z=896; c.h=0; c.v=0; c._v=0; c.vx=c.vz=0; c.yr=0; placeCar(0);
 }
-function placeCar(){ const c=WALK.car, gy=groundH(c.x,c.z); c.mesh.position.set(c.x,gy+0.22,c.z); c.mesh.rotation.set(0,c.h,0); c.mesh.rotateZ(clamp(-c.steer*c.v*0.012,-0.06,0.06)); }
+function carMake(){
+  const c=WALK.car; if(c.mesh) scene.remove(c.mesh);
+  const m=carBuild(CAR_KINDS[c.ki].id); c.m=m; c.K=m.kind; c.mesh=m.g; scene.add(m.g);
+  c.pitch=c.roll=c.bp=c.br=0; c.y=null;
+}
+function carSwap(){
+  const c=WALK.car; c.ki=(c.ki+1)%CAR_KINDS.length; try{ localStorage.setItem('ayy-car',c.ki); }catch(e){}
+  carMake(); c.v=0; c._v=0; c.vx=c.vz=0; c.yr=0; placeCar(0); toast('🚙 '+c.K.n,'#b8ecff');
+}
+/* place the car on the terrain: height and tilt from the four wheel contact points, plus body squat/dive/roll from the motion */
+function placeCar(dt){
+  const c=WALK.car, m=c.m; if(!m) return;
+  const sh=Math.sin(c.h), ch=Math.cos(c.h), hw=m.tw/2, hl=m.wb/2;
+  const H=function(lx,lz){ return groundH(c.x+lx*ch+lz*sh, c.z-lx*sh+lz*ch); };
+  const fl=H(-hw,-hl), fr=H(hw,-hl), rl=H(-hw,hl), rr=H(hw,hl);
+  const y=(fl+fr+rl+rr)/4, tp=Math.atan2((fl+fr)-(rl+rr),2*m.wb), tr=Math.atan2((fr+rr)-(fl+rl),2*m.tw);
+  const k=dt>0?1-Math.exp(-dt*10):1;
+  c.pitch+=(tp-c.pitch)*k; c.roll+=(tr-c.roll)*k; c.y=(c.y==null||!dt)?y:c.y+(y-c.y)*Math.min(1,dt*18);
+  m.g.position.set(c.x,c.y,c.z); m.g.rotation.set(c.pitch,c.h,c.roll,'YXZ');
+  /* body: spring towards the load-transfer pose */
+  const bp=clamp((c.acc||0)*0.0045,-0.05,0.04), br=clamp(-(c.v||0)*(c.yr||0)*0.0035,-0.06,0.06), kb=dt>0?1-Math.exp(-dt*6):1;
+  c.bp+=(bp-c.bp)*kb; c.br+=(br-c.br)*kb;
+  m.body.rotation.set(c.bp,0,c.br); m.body.position.y=m.ride+Math.sin(T*23+c.x*0.3)*Math.min(0.012,Math.abs(c.v||0)*0.0004);
+  for(let i=0;i<m.wheels.length;i++){ const w=m.wheels[i]; w.spin.rotation.x-=(c.v||0)/w.r*(dt||0); if(w.front) w.pivot.rotation.y=-(c.steer||0); }
+}
 function startWalk(){
   if(NET.on){ toast('Yürüyüş modu çok oyunculu oyunda kullanılamaz','#ffc24a'); return; }
   initAudio(); aiClear(); clearThreats(); setPrep(false,[],'');
@@ -58,43 +83,66 @@ function walkUpdate(dt){
     const c=WALK.car; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
     else { let best=9; AC_ORDER.forEach(function(id){ const d=displays[id]; if(!d||!d.g.visible) return; const dd=Math.hypot(d.x+(d.ox||0)-WALK.pos.x,HANGAR.z+(d.oz||0)-WALK.pos.z); if(dd<best){ best=dd; WALK.nearId=id; } }); if(WALK.nearId) WALK.near='plane'; }
   } else {
-    const c=WALK.car, brk=act('land','handbrake')>0.5, turbo=act('land','turbo')>0.5;
-    let thr=Math.max(0,inp.f), rev=Math.max(0,-inp.f);
-    if(thr>0){ c.v+=(c.v<0?14:5.5)*thr*dt; }
-    else if(rev>0){ c.v-=(c.v>0.3?14:3.5)*rev*dt; c.v=Math.max(c.v,-7); }
-    else { const dec=1.6*dt; c.v=Math.abs(c.v)<dec?0:c.v-Math.sign(c.v)*dec; }
-    if(brk){ const dec=18*dt; c.v=Math.abs(c.v)<dec?0:c.v-Math.sign(c.v)*dec; }
-    if(turbo&&thr>0) c.v+=4*dt; c.v=clamp(c.v-c.v*0.04*dt,-7,turbo?42:30);
-    const tgt=inp.r*0.55*(1-Math.min(0.65,Math.abs(c.v)/38)); c.steer+=(tgt-c.steer)*Math.min(1,dt*6);
-    c.h-=(c.v/2.7)*Math.tan(c.steer)*dt;
-    c.x+=-Math.sin(c.h)*c.v*dt; c.z+=-Math.cos(c.h)*c.v*dt;
-    /* three circles along the car body */
-    let hit=false; for(const o of [1.5,0,-1.5]){ const p={x:c.x-Math.sin(c.h)*o, z:c.z-Math.cos(c.h)*o}, ox=p.x, oz=p.z; if(pushCircle(p,1.0,WALK.boxes)){ hit=true; c.x+=p.x-ox; c.z+=p.z-oz; } }
-    if(hit) c.v*=0.35;
-    if(Math.abs(c.x)>14500||Math.abs(c.z)>14500||groundH(c.x,c.z)<0.8){ c.x-=-Math.sin(c.h)*c.v*dt; c.z-=-Math.cos(c.h)*c.v*dt; c.v*=-0.2; }
-    placeCar(); WALK.near='car';
-    WALK.cy*=Math.exp(-dt*(Math.abs(c.v)>2?1.2:0.15));
+    carStep(dt,inp);
+    placeCar(dt); WALK.near='car';
+    WALK.cy*=Math.exp(-dt*(Math.abs(WALK.car.v)>2?1.2:0.15));
   }
 }
-function carBoxes(){ const c=WALK.car, hw=1.0, hl=2.35, s=Math.abs(Math.sin(c.h)), co=Math.abs(Math.cos(c.h)), ex=hw*co+hl*s, ez=hl*co+hw*s; return [{x0:c.x-ex*0.8,x1:c.x+ex*0.8,z0:c.z-ez*0.8,z1:c.z+ez*0.8}]; }
+function carStep(dt,inp){
+  const c=WALK.car, K=c.K, brk=act('land','handbrake')>0.5, turbo=act('land','turbo')>0.5;
+  const fx=-Math.sin(c.h), fz=-Math.cos(c.h), rx=Math.cos(c.h), rz=-Math.sin(c.h);
+  if(c.v!==c._v||c.vx==null){ c.vx=fx*c.v; c.vz=fz*c.v; }          // speed set from outside (teleport, tests)
+  let vf=c.vx*fx+c.vz*fz, vr=c.vx*rx+c.vz*rz;
+  const thr=Math.max(0,inp.f), rev=Math.max(0,-inp.f), top=K.top*(turbo?1.3:1), sg=Math.sign(vf);
+  let a=0;
+  if(thr>0) a=vf<-0.5?16*thr:K.acc*(turbo?1.4:1)*thr*Math.max(0,1-Math.pow(Math.max(0,vf)/top,2))-(vf>top?(vf-top)*0.8:0);
+  else if(rev>0) a=vf>0.5?-16*rev:(vf>-11?-5.5*rev:0);
+  else a=-sg*(0.9+0.0005*vf*vf);
+  a-=9.8*Math.sin(c.pitch||0)*K.slope;                              // hills
+  if(brk) a-=sg*7.5;
+  if(thr===0&&rev===0&&Math.abs(vf)<Math.abs(a)*dt&&Math.abs(c.pitch||0)<0.12) { a=0; vf=0; }
+  vf+=a*dt; c.acc=a; c.thr=thr; c.turbo=turbo&&thr>0;
+  /* steering: less lock at speed; rear grip drops on the handbrake -> drift */
+  const smax=0.62/(1+Math.abs(vf)/15); c.steer+=(inp.r*smax-c.steer)*Math.min(1,dt*7);
+  const yt=(vf/c.m.wb)*Math.tan(c.steer)*(brk?1.7:1);
+  c.yr=(c.yr||0)+(yt-(c.yr||0))*Math.min(1,dt*(brk?3:9));
+  c.h-=c.yr*dt;
+  const G=brk?1.3:K.grip*(groundH(c.x,c.z)>AIRFIELD_Y+40&&!K.mil?0.75:1);
+  vr*=Math.exp(-G*dt); vf*=Math.exp(-Math.abs(vr)*0.03*dt);
+  c.vx=fx*vf+rx*vr; c.vz=fz*vf+rz*vr; c.slip=Math.abs(vr);
+  c.x+=c.vx*dt; c.z+=c.vz*dt;
+  /* three circles along the car body */
+  const o1=c.m.wb*0.55, rad=c.m.tw*0.62;
+  let hit=false; for(const o of [o1,0,-o1]){ const p={x:c.x-Math.sin(c.h)*o, z:c.z-Math.cos(c.h)*o}, ox=p.x, oz=p.z; if(pushCircle(p,rad,WALK.boxes)){ hit=true; c.x+=p.x-ox; c.z+=p.z-oz; } }
+  if(hit){ c.vx*=0.35; c.vz*=0.35; vf*=0.35; }
+  if(Math.abs(c.x)>14500||Math.abs(c.z)>14500||groundH(c.x,c.z)<0.8){ c.x-=c.vx*dt; c.z-=c.vz*dt; c.vx*=-0.2; c.vz*=-0.2; vf*=-0.2; }
+  c.v=vf; c._v=vf;
+}
+/* simulated gearbox for the HUD and the engine note: [gear, rpm 0..1] */
+function carGear(v){ const t=[0,9,17,25,34,44,99], a=Math.abs(v); let g=1; while(g<6&&a>t[g]) g++; const lo=t[g-1], hi=g===6?62:t[g]; return [g, clamp(0.22+0.78*(a-lo)/(hi-lo+(g===1?0:4)),0.18,1)]; }
+function carBoxes(){ const c=WALK.car, hw=c.m?c.m.tw/2+0.15:1.0, hl=c.m?c.m.wb/2+0.9:2.35, s=Math.abs(Math.sin(c.h)), co=Math.abs(Math.cos(c.h)), ex=hw*co+hl*s, ez=hl*co+hw*s; return [{x0:c.x-ex*0.8,x1:c.x+ex*0.8,z0:c.z-ez*0.8,z1:c.z+ez*0.8}]; }
 function walkInteract(){
   if(state!=='walk') return;
-  if(WALK.mode==='car'){ const c=WALK.car; WALK.mode='foot'; c.v=0; WALK.pos.set(c.x-Math.cos(c.h)*2.3,0,c.z+Math.sin(c.h)*2.3); WALK.yaw=c.h; WALK.pitch=0;
+  if(WALK.mode==='car'){ const c=WALK.car; WALK.mode='foot'; c.v=0; WALK.pos.set(c.x-Math.cos(c.h)*(c.m.tw/2+1.3),0,c.z+Math.sin(c.h)*(c.m.tw/2+1.3)); WALK.yaw=c.h; WALK.pitch=0;
     WALK.pos.y=groundH(WALK.pos.x,WALK.pos.z)+1.7; pushCircle(WALK.pos,0.35,WALK.boxes); return; }
-  if(WALK.near==='car'){ WALK.mode='car'; WALK.cy=0; toast('W/S gaz-fren · A/D direksiyon · Space el freni · C kamera · E in','#b8ecff'); return; }
+  if(WALK.near==='car'){ const c0=WALK.car; WALK.mode='car'; WALK.cy=0; toast(c0.K.n+' — W/S gaz-fren · A/D direksiyon · Space el freni (drift) · Shift turbo · T araç değiştir · C kamera · E in','#b8ecff'); return; }
   if(WALK.near==='plane'&&WALK.nearId){ const id=WALK.nearId; walkLeave(); selectedId=id; if(activeId!==id) setAircraft(id); startGame('hangar'); }
 }
 const wE=new THREE.Euler(0,0,0,'YXZ'), wV=new THREE.Vector3(), wV2=new THREE.Vector3();
 function walkCam(dt){
   if(Math.abs(lastFov-70)>0.05){ camera.fov=70; lastFov=70; camera.updateProjectionMatrix(); }
   if(WALK.mode==='foot'){ camera.position.copy(WALK.pos); wE.set(WALK.pitch,WALK.yaw,0); camera.quaternion.setFromEuler(wE); camera.updateMatrixWorld(); return; }
-  const c=WALK.car, gy=groundH(c.x,c.z);
-  if(WALK.fp){ wV.set(-0.4,1.35,0.25).applyAxisAngle(UP,c.h); camera.position.set(c.x+wV.x,gy+wV.y,c.z+wV.z); wE.set(WALK.pitch,c.h+WALK.cy,0); camera.quaternion.setFromEuler(wE); camera.updateMatrixWorld(); return; }
-  const a=c.h+WALK.cy, D=7.5*WALK.camD;
-  wV.set(c.x+Math.sin(a)*D, gy+2.4+D*0.22+WALK.pitch*-4, c.z+Math.cos(a)*D);
-  if(dt>0&&camera.position.distanceTo(wV)<40) camera.position.lerp(wV,1-Math.exp(-dt*8)); else camera.position.copy(wV);
-  if(camera.position.y<gy+0.8) camera.position.y=gy+0.8;
-  camera.lookAt(wV2.set(c.x,gy+1.2,c.z)); camera.updateMatrixWorld();
+  const c=WALK.car, m=c.m, gy=c.y==null?groundH(c.x,c.z):c.y, big=c.K&&c.K.mil?1.18:1, sp=Math.abs(c.v);
+  const fov=70+clamp((sp-12)*0.33,0,15); if(Math.abs(lastFov-fov)>0.05){ camera.fov=fov; lastFov=fov; camera.updateProjectionMatrix(); }
+  if(WALK.fp){ wV.set(-0.4*big,(c.K&&c.K.mil?1.78:1.3),0.15).applyAxisAngle(UP,c.h); camera.position.set(c.x+wV.x,gy+wV.y,c.z+wV.z); wE.set(WALK.pitch+(c.pitch||0),c.h+WALK.cy,-(c.roll||0)*0.6); camera.quaternion.setFromEuler(wE); camera.updateMatrixWorld(); return; }
+  /* chase camera: pulls back with speed, swings a little into drifts */
+  const vh=sp>3?Math.atan2(-c.vx,-c.vz):c.h, a=c.h+WALK.cy+clamp(Math.atan2(Math.sin(vh-c.h),Math.cos(vh-c.h)),-0.5,0.5)*0.45, D=(6.6+sp*0.045)*big*WALK.camD;
+  wV.set(c.x+Math.sin(a)*D, gy+1.9*big+D*0.2+WALK.pitch*-4, c.z+Math.cos(a)*D);
+  const gc=groundH(wV.x,wV.z)+0.8; if(wV.y<gc) wV.y=gc;
+  if(dt>0&&camera.position.distanceTo(wV)<40) camera.position.lerp(wV,1-Math.exp(-dt*7)); else camera.position.copy(wV);
+  camera.lookAt(wV2.set(c.x,gy+1.3*big,c.z));
+  if(sp>30){ const j=(sp-30)*0.00025; camera.rotation.z+=(Math.random()-0.5)*j; }
+  camera.updateMatrixWorld();
 }
 function drawWalkHUD(){
   const w=HW, h=HH, s=clamp(Math.min(w,h)/760,0.7,1.5), foot=WALK.mode==='foot';
@@ -102,8 +150,10 @@ function drawWalkHUD(){
   if(foot){ hx.fillStyle='rgba(255,255,255,0.85)'; hx.beginPath(); hx.arc(w/2,h/2,2.2*s,0,Math.PI*2); hx.fill(); }
   hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.textAlign='left'; hx.fillStyle='#b8ecff';
   const top=Math.round(20*s); hx.textAlign=WALK.tvis?'center':'left';
-  hx.fillText(foot?(WALK.run||act('foot','run')>0.5?'YAYA · KOŞU':'YAYA'):'ARAÇ · BENİ İZLE', WALK.tvis?w/2:Math.round(16*s), top);
-  if(!foot){ hx.font='700 '+Math.round(30*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff'; hx.fillText(Math.round(Math.abs(WALK.car.v)*3.6)+' km/sa', WALK.tvis?w/2:Math.round(16*s), top+Math.round(30*s)); }
+  hx.fillText(foot?(WALK.run||act('foot','run')>0.5?'YAYA · KOŞU':'YAYA'):'ARAÇ · '+WALK.car.K.n.toLocaleUpperCase('tr-TR'), WALK.tvis?w/2:Math.round(16*s), top);
+  if(!foot){ hx.font='700 '+Math.round(30*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff'; hx.fillText(Math.round(Math.abs(WALK.car.v)*3.6)+' km/sa', WALK.tvis?w/2:Math.round(16*s), top+Math.round(30*s));
+    const c=WALK.car, gr=c.v<-0.5?'R':(Math.abs(c.v)<0.5?'N':String(carGear(c.v)[0])); hx.font='700 '+Math.round(14*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#b8ecff';
+    hx.fillText('VİTES '+gr+(c.turbo?'  ·  TURBO':'')+(c.slip>3.5?'  ·  DRİFT':''), WALK.tvis?w/2:Math.round(16*s), top+Math.round(56*s)); }
   let msg='';
   if(foot&&WALK.near==='car') msg=(WALK.tvis?'BİN':'E')+' — araca bin';
   else if(foot&&WALK.near==='plane'&&WALK.nearId) msg=(WALK.tvis?'UÇAĞA BİN':'E')+' — '+AIRCRAFT[WALK.nearId].name+' ile uç';
@@ -111,7 +161,7 @@ function drawWalkHUD(){
   if(msg){ hx.textAlign='center'; hx.font='700 '+Math.round(16*s)+'px "Chakra Petch",system-ui,sans-serif'; const tw=hx.measureText(msg).width+28*s, y=h*0.72;
     hx.fillStyle='rgba(8,15,28,0.6)'; hx.fillRect(w/2-tw/2,y-16*s,tw,32*s); hx.fillStyle='#fff'; hx.fillText(msg,w/2,y); }
   if(WALK.hint>0&&!WALK.tvis){ hx.textAlign='center'; hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.globalAlpha=Math.min(1,WALK.hint); hx.fillStyle='#dfe9f1';
-    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · Boşluk zıpla · E etkileşim · M yerler · Esc menü':'W/S gaz-fren · A/D direksiyon · Space el freni · C kamera · E in · M yerler', w/2, h-24*s); hx.globalAlpha=1; }
+    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · Boşluk zıpla · E etkileşim · M yerler · Esc menü':'W/S gaz-fren · A/D direksiyon · Space el freni · Shift turbo · T araç değiştir · C kamera · E in · M harita', w/2, h-24*s); hx.globalAlpha=1; }
   hx.restore();
 }
 function walkLook(dx,dy){ const s=SETTINGS.sens||1;
@@ -122,6 +172,7 @@ function walkKey(e){
   const foot=WALK.mode==='foot';
   if(foot?isKey(e,'foot','use'):isKey(e,'land','exit')){ walkInteract(); return; }
   if(!foot&&isKey(e,'land','cam')){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
+  if((!foot||WALK.near==='car')&&isKey(e,'land','swap')){ carSwap(); return; }
   if(isKey(e,'gen','map')){ if(typeof openMap==='function') openMap(); else walkWarp(); }
   if(isKey(e,'gen','mute')) toggleMute();
   if(foot&&isKey(e,'foot','jump')) WALK.jumpQ=true;
@@ -137,7 +188,7 @@ function updateWalkTouch(){
   const foot=WALK.mode==='foot', a=$('wAct');
   const lbl=!foot?'İN':(WALK.near==='car'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
   a.innerHTML=lbl; a.classList.toggle('off',!lbl);
-  $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot);
+  $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot); $('wSwap').classList.toggle('hidden',foot);
 }
 (function(){
   const stick=$('wStick'); let sid=null;
@@ -147,7 +198,7 @@ function updateWalkTouch(){
   function sEnd(e){ if(e.pointerId!==sid) return; sid=null; WALK.sx=WALK.sy=0; }
   stick.addEventListener('pointerup',sEnd); stick.addEventListener('pointercancel',sEnd);
   function tap(id,fn){ const el=$(id); el.addEventListener('pointerdown',function(e){ e.preventDefault(); fn(); el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); },130); }); }
-  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',function(){ openMap(); });
+  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',function(){ openMap(); }); tap('wSwap',carSwap);
   const glc=$('gl');
   glc.addEventListener('click',function(){ if(state==='walk'&&!touchWanted()&&glc.requestPointerLock){ try{ glc.requestPointerLock(); }catch(e){} } });
   document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });

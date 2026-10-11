@@ -21,4 +21,14 @@ const d=displays.kaan; WALK.pos.set(d.x+4,AIRFIELD_Y+1.7,HANGAR.z-5); updateHang
 walkInteract(); T('boarded',state==='play'&&activeId==='kaan'&&startMode==='hangar'&&S.onGround);
 // pause from walk returns to walk
 startWalk(); pauseGame(); T('paused',state==='paused'); resumeGame(); T('resumed walk',state==='walk');
+// V1.54 cars: top speed, turbo, drift, swap, terrain tilt
+startWalk(); WALK.mode='car'; const C=WALK.car; C.x=11150; C.z=12200; C.h=0; C.v=0; keys.KeyW=true; for(let i=0;i<500;i++) walkUpdate(0.05);
+T('top speed ~180 km/h',C.v*3.6>165&&C.v*3.6<190,C.v*3.6);
+keys.ShiftLeft=true; for(let i=0;i<300;i++){ C.x=11150; C.z=12200; walkUpdate(0.05); } keys.ShiftLeft=false; T('turbo faster',C.v*3.6>200,C.v*3.6);
+keys.KeyW=false; C.x=11150; C.z=11500; C.h=0; C.v=25; keys.Space=true; keys.KeyD=true; let sl=0; for(let i=0;i<20;i++){ walkUpdate(0.05); sl=Math.max(sl,C.slip); } keys.Space=false; keys.KeyD=false;
+T('handbrake drift slides',sl>3,sl);
+const k0=C.ki; carSwap(); T('swap car',C.ki===(k0+1)%CAR_KINDS.length&&C.m&&C.mesh===C.m.g,C.ki);
+for(let i=0;i<CAR_KINDS.length;i++){ carSwap(); T('model '+C.K.id+' wheels',C.m.wheels.length===4&&C.m.wb>2); }
+C.x=3600; C.z=-2000; for(let q=0;q<60&&Math.abs(groundH(C.x,C.z-2)-groundH(C.x,C.z+2))<0.3;q++){ C.x+=97; C.z-=131; } C.v=0; placeCar(0); T('tilts on slope',Math.abs(C.pitch)+Math.abs(C.roll)>0.01,C.pitch+' '+C.roll);
+T('gear calc',carGear(1)[0]===1&&carGear(48)[0]===6);
 console.log('pass',ok,'fail',bad);

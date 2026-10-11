@@ -19,6 +19,12 @@ function initAudio(){
 }
 function audioUpdate(){
   if(!AC||!eng) return;
+  if(state==='walk'&&WALK.mode==='car'&&WALK.car.K){ const c=WALK.car, t=AC.currentTime, on=!muted, gr=carGear(c.v), rpm=Math.abs(c.v)<0.3?0.16+(c.thr||0)*0.5:gr[1], th=c.thr||0, mil=c.K.mil;
+    if(eng.osc.type!=='sawtooth') eng.osc.type='sawtooth';
+    eng.osc.frequency.setTargetAtTime((mil?32:40)+rpm*(mil?85:120)+(c.turbo?18:0),t,0.05);
+    eng.og.gain.setTargetAtTime(on?(0.03+th*0.05+rpm*0.02):0,t,0.08);
+    eng.g.gain.setTargetAtTime(on?(0.05+th*0.08+Math.min(0.35,Math.max(0,(c.slip||0)-3)*0.05)+Math.abs(c.v)*0.002):0,t,0.08);
+    eng.lp.frequency.setTargetAtTime(220+rpm*700+Math.max(0,(c.slip||0)-3)*260,t,0.08); return; }
   const on=state==='play'&&!S.crashed&&!muted, thr=S.ab?1:S.throttle, t=AC.currentTime;
   const sn=CUR.snd;
   if(eng.osc.type!==sn.type) eng.osc.type=sn.type;

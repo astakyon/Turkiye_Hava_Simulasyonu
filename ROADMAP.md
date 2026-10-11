@@ -33,7 +33,7 @@
 | V1.51 | Uzak titreşim düzeltmesi, serbest modda düşman/SAM varsayılan kapalı, genel pist sistemi (İHA üssüne iniş/kalkış), yürürken zıplama, ses N tuşuna | ✅ |
 | V1.52 | Kontrol sistemi: Klavye/Fare, Gamepad, Dokunmatik sekmeleri; Hava, Helikopter, Kara, Deniz, Yaya, Genel şemaları; tuş atama, çakışma uyarısı, varsayılana dön | ✅ |
 | V1.53 | Harita modu (M), köşe haritası, ışınlanma, başlangıç yeri seçimi (İHA üssü, Kızıl Bölge, her yer) | ✅ |
-| V1.54 | Yeni araç modeli, daha hızlı ve gerçekçi sürüş | |
+| V1.54 | Yeni araç modeli, daha hızlı ve gerçekçi sürüş | ✅ |
 | V1.55 | Helikopterler (T129 ATAK, T625 GÖKBEY) | |
 | V1.56 | Model havuzu: gemiler, kara araçları, helikopterler, sivil araçlar | |
 

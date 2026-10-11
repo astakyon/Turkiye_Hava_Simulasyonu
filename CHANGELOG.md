@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.54 — 2026-10-11
+- **Yeni araçlar:** gezinti aracı baştan modellendi. Çıkarılmış gövde profili, eğimli cam evi, LED far/stop şeritleri, ızgara, ayna, tavan rayı, "TR AY YILDIZ" plakası ve 19" jantlarla modern **Ay Yıldız SUV** (beyaz/kırmızı); yüksek şasili, koruma demirli, stepneli, kamuflajlı **Bozkurtlar 4×4**; tepe lambalı **Beni İzle** aracı.
+- **T tuşu (gamepad Y / dokunmatik ARAÇ):** aracı değiştir; seçim hatırlanır.
+- **Sürüş:** azami hız ~180 km/sa, **Shift turbo** ile ~230 km/sa. Hıza göre azalan direksiyon, **el freniyle drift** (arka tutunma düşer), yokuşta yavaşlama (4×4 daha az etkilenir).
+- Araç dört tekerlek temasına göre arazide eğilir; hızlanma/frende gövde öne-arkaya, virajda yana yatar. Tekerlekler döner, ön tekerlekler yön alır.
+- Hıza göre uzaklaşan takip kamerası ve görüş açısı, yüksek hızda hafif sarsıntı; HUD'da vites, TURBO ve DRİFT göstergesi.
+- Vitese göre devir yapan motor sesi; drift sırasında lastik sesi.
+
 ## V1.53 — 2026-10-11
 ### Yeni — Harita, ışınlanma ve başlangıç yeri
 - **Harita (M tuşu, telefonda HARİTA düğmesi):**
