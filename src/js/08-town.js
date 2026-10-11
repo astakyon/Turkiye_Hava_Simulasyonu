@@ -90,7 +90,7 @@ function carInstances(list,r){ const G=carGeos(), n=list.length, mt=new THREE.Ma
 const TRAFFIC={cars:[], mesh:null, paths:[]};
 function pathOf(pts){ const L=[0]; for(let i=1;i<pts.length;i++) L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1])); return {pts:pts,L:L,len:L[L.length-1]}; }
 function buildTraffic(){
-  const r=mulberry32(808), list=[ENV.road,NAVAL.road,LAND.road,TOWN.road,MARINA.road].concat(TOWN.streets.map(function(s){ return smoothPath(s,20); }));
+  const r=mulberry32(808), list=[ENV.road,NAVAL.road,LAND.road,TOWN.road,MARINA.road,SOUTH.road,[[SOUTH.bx,SOUTH.zN],[SOUTH.bx,SOUTH.zS],[SOUTH.bx,SOUTH.zS+30]]].concat(TOWN.streets.concat(SOUTH.streets).map(function(s){ return smoothPath(s,20); }));
   TRAFFIC.paths=list.filter(function(p){ return p&&p.length>1; }).map(pathOf);
   TRAFFIC.paths.forEach(function(P){ const n=Math.max(1,Math.min(6,Math.round(P.len/900))); for(let k=0;k<n;k++) TRAFFIC.cars.push({P:P,s:r()*P.len,dir:r()<0.5?1:-1,v:11+r()*7,i:0}); });
   TRAFFIC.mesh=carInstances(TRAFFIC.cars.map(function(){ return {x:0,y:-50,z:0,h:0}; }),r);
@@ -103,7 +103,7 @@ function trafficStep(dt){
     while(c.i<P.L.length-2&&P.L[c.i+1]<c.s) c.i++; while(c.i>0&&P.L[c.i]>c.s) c.i--;
     const a=P.pts[c.i], b=P.pts[c.i+1], seg=P.L[c.i+1]-P.L[c.i]||1, u=(c.s-P.L[c.i])/seg, cx=a[0]+(b[0]-a[0])*u, cz=a[1]+(b[1]-a[1])*u;
     let fx=(b[0]-a[0])/seg*c.dir, fz=(b[1]-a[1])/seg*c.dir; const x=cx-fz*2.0, z=cz+fx*2.0;
-    const y=Math.max(terrainH(x,z),terrainH(cx,cz))+0.3;
+    const y=Math.max(groundH(x,z),groundH(cx,cz))+0.3;
     mt.compose(p.set(x,y,z),q.setFromAxisAngle(UP,Math.atan2(-fx,-fz)),s);
     T1.mesh.body.setMatrixAt(k,mt); T1.mesh.glass.setMatrixAt(k,mt); T1.mesh.wheel.setMatrixAt(k,mt); }
   T1.mesh.body.instanceMatrix.needsUpdate=true; T1.mesh.glass.instanceMatrix.needsUpdate=true; T1.mesh.wheel.instanceMatrix.needsUpdate=true;

@@ -1,6 +1,24 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.47 — 2026-10-11
+### Yeni — Hilal Köprüsü ve Anadolukent
+- **Hilal Köprüsü:** üs yarımadasını güney adaya bağlayan asma köprü.
+  - Kırmızı kuleler (250 m), ≈1,85 km orta açıklık, denizden ≈62 m yükseklikte 6 şeritli tabliye.
+  - Ana kablolar, askı halatları, yaklaşma ayakları, aydınlatma direkleri.
+  - Kule tepelerinde yanıp sönen ikaz ışıkları.
+  - **Köprünün altından uçabilirsin:** yalnızca tabliyeye ya da kulelere çarpmak kaza sayılıyor.
+  - Köprüden araçlar geçiyor; arabayla da geçebilirsin.
+- **Anadolukent** (güney adanın kuzey kıyısında, köprünün vardığı yer):
+  - Gökdelenli şehir merkezi, ızgara caddeler ve apartman blokları.
+  - Stadyum, göletli park, büyük cami.
+  - Sahil yürüyüş yolu, park etmiş arabalar, cadde trafiği.
+- **Yol:** marina yolundan köprüye uzanan yeni bağlantı yolu.
+- **Hızlı geçiş (M / GİT ▸):** Hilal Köprüsü ve Anadolukent eklendi.
+### Altyapı
+- Yürünebilir yüzeyler eğimli olabiliyor (köprü rampaları). Engellerin alt yüksekliği tanımlanabiliyor (altından geçilebilen yapılar).
+- Bina cephe dokuları küçültüldü (daha az bellek).
+
 ## V1.46 — 2026-10-11
 ### Yeni — Atmosfer: gün saati, gece ışıkları, sis, ortam sesleri
 - **Gün saati** (Ayarlar → Grafik → Gün saati): **Sabah**, **Öğle**, **Akşam**, **Gece** ya da **Döngü**. Döngüde 20 dakikada bir tam gün geçiyor. Öğle eskisiyle aynı görünüm.

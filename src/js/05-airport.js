@@ -274,7 +274,7 @@ function airportStep(dt){
 function obstacleStep(){
   if(S.crashed||!AP.obst.length) return;
   const p=S.pos; if(AP.topY==null) AP.topY=AP.obst.reduce(function(m,b){ return Math.max(m,b.y1); },0); if(p.y>AP.topY+5) return;
-  for(let k=0;k<AP.obst.length;k++){ const b=AP.obst[k]; if(p.y>b.y1+1) continue;
+  for(let k=0;k<AP.obst.length;k++){ const b=AP.obst[k]; if(p.y>b.y1+1||(b.y0!=null&&p.y<b.y0)) continue;
     if(S.onGround){ if(b.air) continue; if(pushOut([b])) S.speed*=0.5;
     } else if(p.x>b.x0-2&&p.x<b.x1+2&&p.z>b.z0-2&&p.z<b.z1+2){ crash('Binaya çarptın'); return; }
   }

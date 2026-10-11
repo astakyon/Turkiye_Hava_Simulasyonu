@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.46">
+<meta name="game-version" content="V1.47">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -801,7 +801,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.46', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.47', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -910,6 +910,7 @@ const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hard:'w'
   {id:'land',x0:400,x1:1900,z0:-7950,z1:-7250,y:34,f:320},{id:'range',x0:2120,x1:3300,z0:-7800,z1:-7520,y:34,f:260},
   {id:'town',x0:-9300,x1:-7100,z0:-7350,z1:-6760,y:16,f:350},
   {id:'radar',x0:5300,x1:5420,z0:-2730,z1:-2630,y:1148,f:160},
+  {id:'city',x0:-2700,x1:-200,z0:5950,z1:6650,y:32,f:380},
   {id:'lake',x0:1640,x1:1760,z0:-3810,z1:-3690,y:84,f:210},
   {id:'marina',fr:{cx:2350,cz:1250,a:0.536},x0:-260,x1:40,z0:-290,z1:260,y:2.7,f:300,hard:'e'}];
 const DECKS=[];
@@ -925,7 +926,7 @@ function padW(p,x,z){
 function inAnyPad(x,z,m){ return PADS.some(function(p){ const l=frLocal(p.fr,x,z); return l[0]>p.x0-m&&l[0]<p.x1+m&&l[1]>p.z0-m&&l[1]<p.z1+m; }); }
 function inPad(id,x,z,m){ const p=PADS.find(function(q){ return q.id===id; }); m=m||0; const l=frLocal(p.fr,x,z); return l[0]>p.x0-m&&l[0]<p.x1+m&&l[1]>p.z0-m&&l[1]<p.z1+m; }
 /* walkable ground height: terrain, raised by decks (quays, piers; decks may carry a rotated frame) */
-function groundH(x,z){ let h=terrainH(x,z); for(let i=0;i<DECKS.length;i++){ const d=DECKS[i], l=d.fr?frLocal(d.fr,x,z):null, lx=l?l[0]:x, lz=l?l[1]:z; if(lx>d.x0&&lx<d.x1&&lz>d.z0&&lz<d.z1&&d.y>h) h=d.y; } return h; }
+function groundH(x,z){ let h=terrainH(x,z); for(let i=0;i<DECKS.length;i++){ const d=DECKS[i], l=d.fr?frLocal(d.fr,x,z):null, lx=l?l[0]:x, lz=l?l[1]:z; if(lx>d.x0&&lx<d.x1&&lz>d.z0&&lz<d.z1){ const y=d.yf?d.yf(lx,lz):d.y; if(y>h) h=y; } } return h; }
 function terrainH(x,z){
   const n = fbm(x/11000+3.1, z/11000+7.7, 4);
   const land = smooth(0.40,0.58,n);
@@ -1288,7 +1289,7 @@ function airportStep(dt){
 function obstacleStep(){
   if(S.crashed||!AP.obst.length) return;
   const p=S.pos; if(AP.topY==null) AP.topY=AP.obst.reduce(function(m,b){ return Math.max(m,b.y1); },0); if(p.y>AP.topY+5) return;
-  for(let k=0;k<AP.obst.length;k++){ const b=AP.obst[k]; if(p.y>b.y1+1) continue;
+  for(let k=0;k<AP.obst.length;k++){ const b=AP.obst[k]; if(p.y>b.y1+1||(b.y0!=null&&p.y<b.y0)) continue;
     if(S.onGround){ if(b.air) continue; if(pushOut([b])) S.speed*=0.5;
     } else if(p.x>b.x0-2&&p.x<b.x1+2&&p.z>b.z0-2&&p.z<b.z1+2){ crash('Binaya çarptın'); return; }
   }
@@ -1509,7 +1510,7 @@ function rectWorld(g,x,z,w,d){ const xs=[], zs=[], v=new THREE.Vector3();
 /* building with window facades (texture per floors × bays, cached) */
 const FACADE={};
 function facadeMat(floors,bays,wall,win){ const k=floors+'|'+bays+'|'+wall; if(FACADE[k]) return FACADE[k];
-  const W=Math.min(1024,bays*32), H=Math.min(512,floors*48);
+  const W=Math.min(512,bays*16), H=Math.min(256,floors*24);
   const t=apTex(W,H,function(x,w,h){ x.fillStyle=wall; x.fillRect(0,0,w,h); const bw=w/bays, fh=h/floors;
     for(let f=0;f<floors;f++){ x.fillStyle='rgba(0,0,0,0.08)'; x.fillRect(0,f*fh+fh-3,w,3);
       for(let b=0;b<bays;b++){ x.fillStyle=win||'#2a3642'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.48); x.fillStyle='rgba(255,255,255,0.18)'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.08); } } });
@@ -2148,6 +2149,101 @@ function ruralStep(dt){
     R.sheep[0].instanceMatrix.needsUpdate=true; R.sheep[1].instanceMatrix.needsUpdate=true; }
   if(R.smoke){ const a=R.smoke.geometry.attributes.position; R.smokeD.forEach(function(d,i){ d.t=(d.t+dt*0.12)%1; a.setXYZ(i,d.x+d.t*10,d.y+d.t*18,d.z+d.t*4); }); a.needsUpdate=true; }
 }
+/* ------------------------------------------------------------------ the strait bridge and Anadolukent (south island)
+   A suspension bridge (Çanakkale-style red towers, ~1.85 km main span, deck ≈ 62 m above the sea, you can fly under it)
+   joins the base peninsula to the south island, where the city of Anadolukent stands on a terrace above the shore. */
+const SOUTH={bx:-600, zN:2330, zS:5960, t1:3300, t2:5150, deckY:62, towerH:250, road:null, cityRoad:null, streets:[], lights:[], built:false};
+SOUTH.deckAt=function(z){ const S=SOUTH, yN=Math.max(AIRFIELD_Y-10,terrainH(S.bx,S.zN))+0.4, yS=32.4;
+  if(z<3000) return yN+(S.deckY-yN)*smooth(S.zN,3000,z);
+  if(z>5500) return S.deckY+(yS-S.deckY)*smooth(5500,S.zS,z);
+  return S.deckY+6*Math.sin(Math.PI*(z-3000)/2500); };
+/* road: marina road → south of the base → bridge; the bridge itself; then into the city */
+SOUTH.road=smoothPath([[1960,560],[1650,1350],[1100,1950],[300,2250],[SOUTH.bx,2290],[SOUTH.bx,SOUTH.zN]],6);
+EXTRA_ROADS.push(SOUTH.road);
+function buildSouth(){
+  const M=apMats(), S=SOUTH, r=mulberry32(1915), g=new THREE.Group(), red=new THREE.MeshLambertMaterial({color:0xb3261e}), steel=new THREE.MeshLambertMaterial({color:0x8a9096}), W=30;
+  /* ---- deck: road surface + box girder, sampled along z */
+  const pos=[], uv=[], idx=[], gp=[], gidx=[]; let k=0;
+  for(let z=S.zN;z<=S.zS+0.1;z+=10){ const y=S.deckAt(z); [-1,1].forEach(function(s){ pos.push(S.bx+s*W/2,y,z); uv.push(s<0?0:1,(z-S.zN)/14); });
+    gp.push(S.bx-W/2-0.6,y-0.25,z, S.bx+W/2+0.6,y-0.25,z, S.bx+W/2,y-3.2,z, S.bx-W/2,y-3.2,z);
+    if(k>0){ const a=2*(k-1); idx.push(a,a+2,a+1, a+1,a+2,a+3); const b=4*(k-1); [[0,1],[1,2],[2,3],[3,0]].forEach(function(e){ gidx.push(b+e[0],b+4+e[0],b+e[1], b+e[1],b+4+e[0],b+4+e[1]); }); } k++; }
+  const dg=new THREE.BufferGeometry(); dg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); dg.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2)); dg.setIndex(idx); dg.computeVertexNormals();
+  const roadTex=apTex(64,64,function(x,w,h){ x.fillStyle='#4f5358'; x.fillRect(0,0,w,h); x.fillStyle='#e8e8e0'; x.fillRect(w/2-1,0,2,h); [w/6,w/3,w*2/3,w*5/6].forEach(function(px){ x.fillRect(px-0.5,0,1,h*0.45); }); x.fillStyle='#d9d9d0'; x.fillRect(0,0,2,h); x.fillRect(w-2,0,2,h); });
+  roadTex.wrapT=THREE.RepeatWrapping; const deck=new THREE.Mesh(dg,new THREE.MeshLambertMaterial({map:roadTex,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1})); deck.userData.rs=true; deck.userData.cs=false; scene.add(deck);
+  const gg=new THREE.BufferGeometry(); gg.setAttribute('position',new THREE.Float32BufferAttribute(gp,3)); gg.setIndex(gidx); gg.computeVertexNormals();
+  const gird=new THREE.Mesh(gg,new THREE.MeshLambertMaterial({color:0x9aa0a6,side:THREE.DoubleSide})); scene.add(gird);
+  DECKS.push({x0:S.bx-W/2,x1:S.bx+W/2,z0:S.zN,z1:S.zS,yf:function(x,z){ return S.deckAt(z); }});
+  /* railings, lamp posts (they light up at night), approach piers */
+  for(let z=S.zN+10;z<S.zS;z+=40){ const y=S.deckAt(z); [-1,1].forEach(function(s){ apCyl(g,steel,S.bx+s*(W/2+0.2),y,z,0.12,0.15,10,6); const l=apBox(g,M.lamp,S.bx+s*(W/2-1),y+10,z,1.6,0.2,0.5); }); }
+  for(let z=S.zN+60;z<S.zS-30;z+=60){ if(z>3060&&z<5440) continue; const y=S.deckAt(z), gb=Math.min(terrainH(S.bx,z),0)-4; [-1,1].forEach(function(s){ apBox(g,M.conc,S.bx+s*9,gb,z,4,y-3.2-gb,4); }); }
+  /* ---- towers: two tapered legs, cross beams, caissons */
+  const legG=function(h){ const b=new THREE.BoxGeometry(7,h,9), p=b.attributes.position; for(let i=0;i<p.count;i++){ if(p.getY(i)>0){ p.setX(i,p.getX(i)*0.62); p.setZ(i,p.getZ(i)*0.7); } } b.computeVertexNormals(); b.translate(0,h/2,0); return b; };
+  [S.t1,S.t2].forEach(function(tz){ apCyl(g,M.conc,S.bx,-30,tz,26,28,36,24);
+    [-1,1].forEach(function(s){ const leg=new THREE.Mesh(legG(S.towerH),red); leg.position.set(S.bx+s*20,6,tz); leg.rotation.z=-s*0.022; g.add(leg); });
+    [S.deckY-8,S.deckY+70,S.deckY+150,S.towerH-8].forEach(function(y,i){ apBox(g,i===0?M.conc:red,S.bx,y,tz,40-y*0.03,i===3?10:6,7); });
+    apBox(g,M.white,S.bx,S.towerH+2,tz,30,4,6);
+    [-1,1].forEach(function(s){ const lt=new THREE.Mesh(new THREE.SphereGeometry(1.2,8,6),M.redL); lt.position.set(S.bx+s*15,S.towerH+5,tz); scene.add(lt); S.lights.push(lt); });
+    navObst(S.bx-26,S.bx+26,tz-8,tz+8,S.towerH+6); });
+  /* ---- main cables (parabolic between tower tops, straight back-stays to the anchorages) and hangers */
+  const top=S.towerH-4, sagY=S.deckY+12, mid=(S.t1+S.t2)/2, half=(S.t2-S.t1)/2, cab=[], hang=[], anchN=S.zN+260, anchS=S.zS-180;
+  const cableY=function(z){ if(z<S.t1) return S.deckAt(anchN)+(top-S.deckAt(anchN))*(z-anchN)/(S.t1-anchN); if(z>S.t2) return top+(S.deckAt(anchS)-top)*(z-S.t2)/(anchS-S.t2); const u=(z-mid)/half; return sagY+(top-sagY)*u*u; };
+  [-1,1].forEach(function(s){ const x=S.bx+s*17; let prev=null; for(let z=anchN;z<=anchS;z+=20){ const p=[x,cableY(z),z]; if(prev) cab.push(prev[0],prev[1],prev[2],p[0],p[1],p[2]); prev=p;
+      if(z>S.t1+10&&z<S.t2-10||(z<S.t1-10&&z>anchN+30)||(z>S.t2+10&&z<anchS-30)) hang.push(x,cableY(z),z, x,S.deckAt(z)+0.5,z); } });
+  [-1,1].forEach(function(s){ for(let z=anchN;z<anchS;z+=20){ const a=[S.bx+s*17,cableY(z),z], b=[S.bx+s*17,cableY(z+20),z+20]; beam(g,steel,a,b,0.7); } });
+  const hg=new THREE.BufferGeometry(); hg.setAttribute('position',new THREE.Float32BufferAttribute(hang,3)); scene.add(new THREE.LineSegments(hg,new THREE.LineBasicMaterial({color:0x8a9096,transparent:true,opacity:0.8})));
+  [anchN,anchS].forEach(function(z){ const y=S.deckAt(z); apBox(g,M.conc,S.bx,Math.min(terrainH(S.bx,z),y)-6,z,52,y-Math.min(terrainH(S.bx,z),y)+8,30); });
+  /* deck as a thin slab obstacle (you can fly under it) */
+  for(let z=S.zN;z<S.zS;z+=100){ const y=Math.max(S.deckAt(z),S.deckAt(z+100)); AP.obst.push({x0:S.bx-W/2-1,x1:S.bx+W/2+1,z0:z,z1:z+100,y0:Math.min(S.deckAt(z),S.deckAt(z+100))-4,y1:y+3,air:true}); }
+  AP.topY=null;
+  const sg=new THREE.Mesh(new THREE.PlaneGeometry(18,2.6),new THREE.MeshLambertMaterial({map:signTex('HİLAL KÖPRÜSÜ','#b3261e','#ffffff',1024,128),side:THREE.DoubleSide}));
+  sg.position.set(S.bx,S.deckY+78,S.t1); g.add(sg); const sg2=sg.clone(); sg2.position.z=S.t2; g.add(sg2);
+  bakeInto(g);
+  /* approach road on the base peninsula */
+  const roadMat=new THREE.MeshLambertMaterial({map:apTex(32,64,function(x,W2,H){ x.fillStyle='#55595e'; x.fillRect(0,0,W2,H); x.fillStyle='rgba(235,235,225,0.9)'; x.fillRect(W2/2-1,0,2,H*0.5); x.fillRect(0,0,1,H); x.fillRect(W2-1,0,1,H); })});
+  roadMat.map.wrapT=THREE.RepeatWrapping; roadMat.userData.flat=true; terrainRibbon(S.road,10,0.3,roadMat); clearTreesNear(S.road,16);
+  buildCity();
+  S.built=true;
+}
+/* ---- Anadolukent: downtown towers, apartment blocks on a grid, a stadium, a park with a pond, a mosque, a seafront */
+function buildCity(){
+  const M=apMats(), S=SOUTH, P=PADS.find(function(p){ return p.id==='city'; }), Y=P.y, r=mulberry32(2023), g=new THREE.Group();
+  const asph=new THREE.MeshLambertMaterial({color:0x4d5156,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}); asph.userData.flat=true;
+  const walk=new THREE.MeshLambertMaterial({color:0xb4b0a6,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}); walk.userData.flat=true;
+  const xs=[], zs=[]; for(let x=P.x0+40;x<=P.x1-20;x+=180) xs.push(x); for(let z=P.z0+30;z<=P.z1-20;z+=140) zs.push(z);
+  zs.forEach(function(z){ apRect(g,walk,xs[0]-8,xs[xs.length-1]+8,z-10,z+10,Y+0.04); apRect(g,asph,xs[0]-6,xs[xs.length-1]+6,z-7,z+7,Y+0.06); S.streets.push([[xs[0],z],[xs[xs.length-1],z]]); });
+  xs.forEach(function(x){ apRect(g,walk,x-8,x+8,zs[0]-10,zs[zs.length-1]+10,Y+0.045); apRect(g,asph,x-6,x+6,zs[0],zs[zs.length-1],Y+0.065); });
+  S.streets.push([[S.bx,zs[0]],[S.bx,zs[zs.length-1]]]);
+  apRect(g,asph,S.bx-15,S.bx+15,S.zS-5,zs[0]+7,Y+0.06);    /* boulevard from the bridge */
+  const walls=['#e9e4da','#dfe6ea','#efe3cf','#d9dde2','#f1e9d8','#e3d9e8'], glass=['#9fb8cc','#7d9bb4','#a8c4d6','#6f8ea8'];
+  const cx0=(P.x0+P.x1)/2;
+  for(let i=0;i<xs.length-1;i++) for(let j=0;j<zs.length-1;j++){
+    const cx=(xs[i]+xs[i+1])/2, cz=(zs[j]+zs[j+1])/2, bw=180-20, bd=140-24, dc=Math.abs(cx-(-1300))/1200;
+    if(i===3&&j===2){ /* stadium */ const st=new THREE.MeshLambertMaterial({color:0xd8dde2}); const ring=new THREE.Mesh(new THREE.CylinderGeometry(70,62,18,40,1,true),st); ring.scale.set(1,1,0.72); ring.position.set(cx,Y+9,cz); g.add(ring);
+      const pitch=new THREE.Mesh(new THREE.CircleGeometry(60,40),new THREE.MeshLambertMaterial({color:0x4f8f37})); pitch.rotation.x=-Math.PI/2; pitch.scale.set(1,0.72,1); pitch.position.set(cx,Y+0.3,cz); g.add(pitch);
+      const rf=new THREE.Mesh(new THREE.TorusGeometry(66,6,6,40),new THREE.MeshLambertMaterial({color:0xb3261e})); rf.rotation.x=Math.PI/2; rf.scale.set(1,0.72,1); rf.position.set(cx,Y+18,cz); g.add(rf);
+      for(let k=0;k<4;k++){ const a=k*Math.PI/2+Math.PI/4; apCyl(g,M.metal,cx+Math.cos(a)*72,Y,cz+Math.sin(a)*52,0.6,0.8,40,8); apBox(g,M.lamp,cx+Math.cos(a)*72,Y+40,cz+Math.sin(a)*52,5,3,0.6); }
+      navObst(cx-72,cx+72,cz-52,cz+52,Y+20); continue; }
+    if(i===1&&j===1){ /* park with a pond */ const pond=new THREE.Mesh(new THREE.CircleGeometry(32,24),new THREE.MeshPhongMaterial({color:0x2f7d9a,shininess:60})); pond.rotation.x=-Math.PI/2; pond.position.set(cx,Y+0.15,cz); g.add(pond);
+      for(let k=0;k<45;k++){ const a=r()*6.28, d=40+r()*36; TREE_EXTRA.push([cx+Math.cos(a)*d*1.3,Y,cz+Math.sin(a)*d*0.8,0.6+r()*0.5,r()<0.3?0:1]); } continue; }
+    if(i===5&&j===1){ bigMosque(g,M,cx,Y,cz); continue; }
+    const tall=dc<0.35&&j>=1, n=tall?2:4;
+    for(let q=0;q<n;q++){ const ox=(n===2?(q?40:-40):(q%2?45:-45)), oz=(n===2?0:(q<2?-32:32)), x=cx+ox, z=cz+oz;
+      if(tall){ const fl=[20,26,32,38][Math.floor(r()*4)], h=fl*3.4; bldg(g,x,Y,z,30,h,30,{floors:fl,wall:glass[Math.floor(r()*glass.length)],win:'#1f2c3a'});
+        if(r()<0.5){ apCyl(g,M.metal,x,Y+h+0.5,z,0.12,0.12,14,6); apBox(g,M.redL,x,Y+h+14.5,z,0.5,0.5,0.5); } }
+      else { const fl=[5,7,9][Math.floor(r()*3)]; bldg(g,x,Y,z,36,fl*3.1,18,{floors:fl,wall:walls[Math.floor(r()*walls.length)]}); } }
+  }
+  /* seafront: promenade, railing, trees; city sign at the bridge */
+  for(let x=P.x0+20;x<P.x1-20;x+=24){ TREE_EXTRA.push([x,Y,P.z0+8,0.7,1]); lampPost(g,M,x+12,Y,P.z0+10,7); }
+  for(let z=zs[0];z<zs[zs.length-1];z+=40) lampPost(g,M,S.bx+12,Y,z,9);
+  { const s=new THREE.Mesh(new THREE.PlaneGeometry(12,2.4),new THREE.MeshLambertMaterial({map:signTex('ANADOLUKENT','#1d5aa8','#ffffff',1024,128),side:THREE.DoubleSide})); s.position.set(S.bx+20,Y+3.2,S.zS+14); g.add(s);
+    apCyl(g,M.metal,S.bx+14.5,Y,S.zS+14,0.08,0.08,3,6); apCyl(g,M.metal,S.bx+25.5,Y,S.zS+14,0.08,0.08,3,6); }
+  /* parked cars */
+  const park=[]; zs.forEach(function(z){ for(let x=xs[0]+10;x<xs[xs.length-1]-10;x+=7){ if(xs.some(function(sx){ return Math.abs(sx-x)<12; })) continue; [-1,1].forEach(function(s){ if(r()<0.35) park.push({x:x,y:Y+0.06,z:z+s*5,h:s<0?Math.PI/2:-Math.PI/2}); }); } });
+  carInstances(park,r);
+  bakeInto(g);
+  const pts=[]; for(let x=P.x0;x<=P.x1;x+=25) for(let z=P.z0-40;z<=P.z1;z+=25) pts.push([x,z]); clearTreesNear(pts,14);
+}
+function southStep(dt){ if(!SOUTH.built) return; const on=Math.sin(T*3)>0.3; SOUTH.lights.forEach(function(l){ l.visible=on; }); }
 /* ------------------------------------------------------------------ Hilalkent: coastal town on the north-west shore (pad 'town'),
    across the bay from the naval base; road east to the land-base road; road traffic on every island road. */
 const TOWN={x0:-9300,x1:-7100,z0:-7350,z1:-6760,y:16, road:null, streets:[], built:false};
@@ -2240,7 +2336,7 @@ function carInstances(list,r){ const G=carGeos(), n=list.length, mt=new THREE.Ma
 const TRAFFIC={cars:[], mesh:null, paths:[]};
 function pathOf(pts){ const L=[0]; for(let i=1;i<pts.length;i++) L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1])); return {pts:pts,L:L,len:L[L.length-1]}; }
 function buildTraffic(){
-  const r=mulberry32(808), list=[ENV.road,NAVAL.road,LAND.road,TOWN.road,MARINA.road].concat(TOWN.streets.map(function(s){ return smoothPath(s,20); }));
+  const r=mulberry32(808), list=[ENV.road,NAVAL.road,LAND.road,TOWN.road,MARINA.road,SOUTH.road,[[SOUTH.bx,SOUTH.zN],[SOUTH.bx,SOUTH.zS],[SOUTH.bx,SOUTH.zS+30]]].concat(TOWN.streets.concat(SOUTH.streets).map(function(s){ return smoothPath(s,20); }));
   TRAFFIC.paths=list.filter(function(p){ return p&&p.length>1; }).map(pathOf);
   TRAFFIC.paths.forEach(function(P){ const n=Math.max(1,Math.min(6,Math.round(P.len/900))); for(let k=0;k<n;k++) TRAFFIC.cars.push({P:P,s:r()*P.len,dir:r()<0.5?1:-1,v:11+r()*7,i:0}); });
   TRAFFIC.mesh=carInstances(TRAFFIC.cars.map(function(){ return {x:0,y:-50,z:0,h:0}; }),r);
@@ -2253,7 +2349,7 @@ function trafficStep(dt){
     while(c.i<P.L.length-2&&P.L[c.i+1]<c.s) c.i++; while(c.i>0&&P.L[c.i]>c.s) c.i--;
     const a=P.pts[c.i], b=P.pts[c.i+1], seg=P.L[c.i+1]-P.L[c.i]||1, u=(c.s-P.L[c.i])/seg, cx=a[0]+(b[0]-a[0])*u, cz=a[1]+(b[1]-a[1])*u;
     let fx=(b[0]-a[0])/seg*c.dir, fz=(b[1]-a[1])/seg*c.dir; const x=cx-fz*2.0, z=cz+fx*2.0;
-    const y=Math.max(terrainH(x,z),terrainH(cx,cz))+0.3;
+    const y=Math.max(groundH(x,z),groundH(cx,cz))+0.3;
     mt.compose(p.set(x,y,z),q.setFromAxisAngle(UP,Math.atan2(-fx,-fz)),s);
     T1.mesh.body.setMatrixAt(k,mt); T1.mesh.glass.setMatrixAt(k,mt); T1.mesh.wheel.setMatrixAt(k,mt); }
   T1.mesh.body.instanceMatrix.needsUpdate=true; T1.mesh.glass.instanceMatrix.needsUpdate=true; T1.mesh.wheel.instanceMatrix.needsUpdate=true;
@@ -6539,7 +6635,7 @@ function updateWalkTouch(){
 
 
 /* quick travel between the places of the island (on foot or in the car) */
-const WARPS=[{n:'Hangar',x:null},{n:'Nizamiye',x:-150,z:-1700,h:0},{n:'Köy',x:-330,z:-2960,h:0},{n:'Deniz Üssü',x:-1560,z:-3330,h:Math.PI/2},{n:'Deniz Üssü · rıhtım',x:-1940,z:-3780,h:0},{n:'Kara Üssü',x:900,z:-7290,h:0},{n:'Kara Üssü · motorlu birlik',x:1200,z:-7545,h:Math.PI/2},{n:'Atış poligonu',x:2160,z:-7660,h:-Math.PI/2},{n:'Hilalkent',x:-7300,z:-7000,h:Math.PI/2},{n:'Hilalkent · meydan',x:-8150,z:-7000,h:Math.PI/2},{n:'Hilal Marina',x:2190,z:1180,h:-2.1},{n:'Kumsal',x:1200,z:2380,h:2.9},{n:'Gölet',x:1440,z:-3750,h:Math.PI/2},{n:'Köy · çay bahçesi',x:-300,z:-2800,h:Math.PI},{n:'Hava savunma mevzisi',x:600,z:-470,h:-0.5},{n:'Mühimmat deposu',x:-1020,z:-290,h:Math.PI/2},{n:'Radar istasyonu',x:5340,z:-2600,h:0}];
+const WARPS=[{n:'Hangar',x:null},{n:'Nizamiye',x:-150,z:-1700,h:0},{n:'Köy',x:-330,z:-2960,h:0},{n:'Deniz Üssü',x:-1560,z:-3330,h:Math.PI/2},{n:'Deniz Üssü · rıhtım',x:-1940,z:-3780,h:0},{n:'Kara Üssü',x:900,z:-7290,h:0},{n:'Kara Üssü · motorlu birlik',x:1200,z:-7545,h:Math.PI/2},{n:'Atış poligonu',x:2160,z:-7660,h:-Math.PI/2},{n:'Hilalkent',x:-7300,z:-7000,h:Math.PI/2},{n:'Hilalkent · meydan',x:-8150,z:-7000,h:Math.PI/2},{n:'Hilal Marina',x:2190,z:1180,h:-2.1},{n:'Kumsal',x:1200,z:2380,h:2.9},{n:'Gölet',x:1440,z:-3750,h:Math.PI/2},{n:'Köy · çay bahçesi',x:-300,z:-2800,h:Math.PI},{n:'Hava savunma mevzisi',x:600,z:-470,h:-0.5},{n:'Mühimmat deposu',x:-1020,z:-290,h:Math.PI/2},{n:'Radar istasyonu',x:5340,z:-2600,h:0},{n:'Hilal Köprüsü',x:-604,z:3600,h:Math.PI},{n:'Anadolukent',x:-600,z:6100,h:Math.PI}];
 function walkWarp(){
   WALK.warp=((WALK.warp==null?0:WALK.warp)+1)%WARPS.length; const w=WARPS[WALK.warp], c=WALK.car;
   if(w.x==null){ if(WALK.mode==='car'){ c.x=HG.X0+7; c.z=896; c.h=0; } else { const d=displays[selectedId]; WALK.pos.set(d.x+(d.ox||0)+4,AIRFIELD_Y+1.7,HANGAR.z-22); WALK.yaw=Math.PI+0.25; } }
@@ -6923,7 +7019,7 @@ $('btnLibOpen').addEventListener('click',function(){ if(state==='menu') openLibr
 window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
 window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files; if(!f||!f.length) return; e.preventDefault(); if(state==='menu'&&!LIB.on) openLibrary('ac:'+selectedId); if(LIB.on) importFiles(f); });
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); todBuild(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); todBuild(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -6936,7 +7032,7 @@ function frame(now){
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
   netStep(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
-  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); updateTaxiVisuals();
+  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); southStep(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow();
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);

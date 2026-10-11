@@ -21,7 +21,7 @@ function rectWorld(g,x,z,w,d){ const xs=[], zs=[], v=new THREE.Vector3();
 /* building with window facades (texture per floors × bays, cached) */
 const FACADE={};
 function facadeMat(floors,bays,wall,win){ const k=floors+'|'+bays+'|'+wall; if(FACADE[k]) return FACADE[k];
-  const W=Math.min(1024,bays*32), H=Math.min(512,floors*48);
+  const W=Math.min(512,bays*16), H=Math.min(256,floors*24);
   const t=apTex(W,H,function(x,w,h){ x.fillStyle=wall; x.fillRect(0,0,w,h); const bw=w/bays, fh=h/floors;
     for(let f=0;f<floors;f++){ x.fillStyle='rgba(0,0,0,0.08)'; x.fillRect(0,f*fh+fh-3,w,3);
       for(let b=0;b<bays;b++){ x.fillStyle=win||'#2a3642'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.48); x.fillStyle='rgba(255,255,255,0.18)'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.08); } } });

@@ -20,7 +20,7 @@
 | 4e | V1.44 | Kırsal: rüzgâr türbinleri, GES, seralar, zeytinlik, gölet, köye canlılık | ✅ |
 | 4f | V1.45 | Askeri tesisler: dağda radar, hava savunma mevzisi, mühimmat deposu | ✅ |
 | 4g | V1.46 | Atmosfer: gün saati/döngü, gece ışıkları, sabah sisi, ortam sesleri | ✅ |
-| 4h | V1.47 | Güney ada: asma köprü ve şehir | |
+| 4h | V1.47 | Hilal Köprüsü ve Anadolukent (güney ada) | ✅ |
 | 4i | V1.48 | Güneydoğu ada: İHA ve test merkezi | |
 | 4j | V1.49 | Kızıl Bölge (düşman üssü ve hedefler, batı uç) | |
 | 4k | V1.50 | Baraj, kayak merkezi, antik kent, kale, petrol platformu, deniz RES, rasathane | |
