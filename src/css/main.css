@@ -604,3 +604,16 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
 .rankup .ru{ text-align:center; animation:dsIn .5s var(--ease); } .rankup .k{ margin:12px 0 0; letter-spacing:.5em; color:#ffd27a; font-weight:800; font-size:13px; } .rankup h2{ margin:4px 0 8px; font-size:clamp(34px,6vw,64px); letter-spacing:.08em; }
 .rankup p{ color:#d6e0ea; } .rankup .un b{ color:#ffd27a; } .rankup .btn{ margin-top:14px; min-width:180px; }
 .chip .lk{ position:absolute; top:4px; right:6px; font-size:11px; }
+
+/* admin + role gating */
+.mc.adm,.mitem[data-act="library"],.mitem[data-act="sounds"],.srow.libonly{ display:none!important; }
+html.is-admin .mc.adm,html.is-admin .mc[data-act="library"],html.is-admin .mc[data-act="sounds"],html.is-admin .srow.libonly{ display:flex!important; }
+html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="library"]{ display:flex!important; }
+.admwrap{ max-width:980px; margin:0 auto; padding:clamp(60px,12vh,84px) 16px 24px; display:flex; flex-direction:column; gap:12px; zoom:var(--uiz,1); }
+.admsec{ display:flex; flex-direction:column; gap:10px; padding:16px; border:1px solid var(--edge); border-radius:var(--r3); background:var(--surf); animation:dsIn .22s var(--ease); }
+.admtbl{ overflow-x:auto; } .admtbl table{ width:100%; border-collapse:collapse; font-size:13px; } .admtbl th{ text-align:left; color:var(--dim); font-weight:600; padding:6px; border-bottom:1px solid var(--edge); }
+.admtbl td{ padding:6px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:middle; } .admtbl td small{ display:block; color:var(--dim); font-size:11px; } .admtbl select{ background:#0b1626; color:var(--ink); border:1px solid var(--edge); border-radius:6px; padding:4px; }
+.btn.sm{ padding:5px 10px; font-size:12px; } .admlist{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+.admlist li{ display:flex; gap:10px; align-items:center; padding:8px 10px; border:1px solid var(--edge); border-radius:var(--r2); } .admlist li span:not(.tagm){ flex:1; } .admlist li small{ color:var(--dim); font-size:11px; margin-left:auto; }
+.admlist li.off{ opacity:.5; } .admlist .tagm,.admtbl .tagm{ padding:1px 6px; border-radius:3px; font-size:9px; font-weight:800; background:#ffd27a; color:#1a1205; } textarea.inp{ resize:vertical; font:inherit; }
+.mixrow{ flex-wrap:wrap; } .mixrow .sndmix{ flex:1 1 320px; padding:8px; }

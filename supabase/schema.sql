@@ -25,7 +25,7 @@ create table if not exists public.saves(
 -- ---------- yöneticinin yayınladığı içerik: model, ses, müzik, boya (dosyalar 'content' deposunda)
 create table if not exists public.content(
   id text primary key,
-  kind text not null check (kind in ('model','sound','music','livery')),
+  kind text not null check (kind in ('model','sound','music','livery','config')),
   path text,
   meta jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now(),
@@ -112,3 +112,7 @@ create policy "içerik dosyası silme" on storage.objects for delete to authenti
 -- ---------- İLK YÖNETİCİ: oyuna kendi hesabınla bir kez giriş yap, profilini oluştur, sonra aşağıdaki satırda
 -- e-posta adresini kendi adresinle değiştirip yalnız bu satırı çalıştır:
 -- update public.profiles set role = 'admin' where id = (select id from auth.users where email = 'SENIN@EPOSTAN.com');
+
+-- V1.68: uzaktan oyun ayarı için 'config' türü (eski kurulumlar için kısıtı güncelle)
+alter table public.content drop constraint if exists content_kind_check;
+alter table public.content add constraint content_kind_check check (kind in ('model','sound','music','livery','config'));

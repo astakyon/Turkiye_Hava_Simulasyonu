@@ -111,9 +111,10 @@ sndLoad();
 /* ---- Sound Library screen */
 function openSoundLib(){ initAudio(); closeModals(); syncSoundLib(); $('sndLib').classList.remove('hidden'); }
 function closeSoundLib(){ $('sndLib').classList.add('hidden'); }
+function sndMixHTML(master){ return (master?'<div class="sndbus"><b>Ana</b><input type="range" min="0" max="100" data-bus="master" value="'+Math.round(SETTINGS.volume*100)+'"><output>'+Math.round(SETTINGS.volume*100)+'%</output></div>':'')+
+    SND_BUSES.map(function(b){ const v=Math.round(busVol(b[0])*100); return '<div class="sndbus"><b>'+b[1]+'</b><input type="range" min="0" max="100" data-bus="'+b[0]+'" value="'+v+'"><output>'+v+'%</output></div>'; }).join(''); }
 function syncSoundLib(){
-  $('sndMix').innerHTML='<div class="sndbus"><b>Ana</b><input type="range" min="0" max="100" data-bus="master" value="'+Math.round(SETTINGS.volume*100)+'"><output>'+Math.round(SETTINGS.volume*100)+'%</output></div>'+
-    SND_BUSES.map(function(b){ const v=Math.round(busVol(b[0])*100); return '<div class="sndbus"><b>'+b[1]+'</b><input type="range" min="0" max="100" data-bus="'+b[0]+'" value="'+v+'"><output>'+v+'%</output></div>'; }).join('');
+  $('sndMix').innerHTML=sndMixHTML(true);
   $('sndCats').innerHTML=SND_CATS.map(function(c){ const n=SND_DEFS.filter(function(d){ return d.cat===c[0]; }).length; return '<button type="button" data-cat="'+c[0]+'"'+(SND.cat===c[0]?' aria-pressed="true"':'')+'>'+c[1]+'<small>'+n+'</small></button>'; }).join('');
   const L=SND_DEFS.filter(function(d){ return d.cat===SND.cat; });
   $('sndList').innerHTML=L.length?L.map(function(d){ const u=sndU(d.id), v=Math.round(sndVol(d.id)*100), p=Math.round(sndPitch(d.id)*100);
@@ -129,8 +130,9 @@ function syncSoundLib(){
   const lib=$('sndLib');
   $('btnSndBack').addEventListener('click',function(){ closeSoundLib(); if(state==='menu'||state==='paused'){ syncSettingsUI(); openModal('settings'); } });
   $('sndCats').addEventListener('click',function(e){ const b=e.target.closest('button[data-cat]'); if(!b) return; SND.cat=b.dataset.cat; syncSoundLib(); });
-  $('sndMix').addEventListener('input',function(e){ const r=e.target; if(!r.dataset.bus) return; const v=r.value/100; r.nextElementSibling.textContent=r.value+'%';
-    if(r.dataset.bus==='master'){ SETTINGS.volume=v; applyVolume(); } else { SETTINGS.vol=SETTINGS.vol||{}; SETTINGS.vol[r.dataset.bus]=v; } saveSettings(); sndMixStep(); });
+  const mixIn=function(e){ const r=e.target; if(!r.dataset.bus) return; const v=r.value/100; r.nextElementSibling.textContent=r.value+'%';
+    if(r.dataset.bus==='master'){ SETTINGS.volume=v; applyVolume(); } else { SETTINGS.vol=SETTINGS.vol||{}; SETTINGS.vol[r.dataset.bus]=v; } saveSettings(); sndMixStep(); };
+  $('sndMix').addEventListener('input',mixIn); $('setMix').addEventListener('input',mixIn);
   $('sndList').addEventListener('input',function(e){ const r=e.target, c=r.closest('.sndcard'); if(!c||!r.dataset.k) return; const id=c.dataset.id, u=SND.user[id]||(SND.user[id]={});
     u[r.dataset.k]=r.value/100; r.nextElementSibling.textContent=r.value+'%'; sndSave(); c.querySelector('[data-act="reset"]').disabled=false; });
   $('sndList').addEventListener('change',function(e){ const r=e.target, c=r.closest('.sndcard'); if(!c) return; if(r.dataset.k){ sndPlay(c.dataset.id); return; }

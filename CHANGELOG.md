@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.68 — 2026-10-11
+- **Yönetici modu.** Yönetici yetkisi veritabanında tutuluyor ve oyuncular kendilerine veremiyor. Ana menüde yalnız yöneticiye görünen **Yönetim** bölümü var.
+- **Yönetim paneli:**
+  - **Oyuncular:** liste ve arama; rütbe verme veya geri alma; uzaklaştırma ve yasağı kaldırma.
+  - **Duyurular:** yayınla, kaldır, yeniden yayınla. Ana menüde görünür.
+  - **İçerik:** bu cihazdaki modelleri, ses ve müzik dosyalarını ve boyaları tek tuşla herkese yayınla; tek tek yayından kaldır.
+  - **Oyun ayarları:** rütbe kilitlerini aç/kapa, tecrübe puanı çarpanı (1×–3×).
+  - **İşlem kaydı:** kim, neyi, ne zaman yaptı.
+- **Kütüphaneler yalnız yöneticiye görünüyor:** Model Kütüphanesi, Ses Kütüphanesi ve müzikler oyunculardan gizlendi. Yöneticinin yayınladığı içerik oyunculara kendiliğinden iniyor ve kullanılıyor: GLB modeller uçaklara uygulanıyor, ses ve müzik dosyaları çalınıyor, boyalar uçaklara giydiriliyor.
+- Oyuncular ses kanallarını artık Ayarlar → Ses → **Kanal karışımı** bölümünden ayarlıyor.
+- Bulut bağlantısı kurulmamış cihazda oyun geliştirici modunda çalışıyor: kütüphaneler ve yönetim bölümü açık, rütbe kilitleri kapalı.
+- `supabase/schema.sql`'e uzaktan ayar için 'config' içerik türü eklendi. Daha önce kurduysan dosyayı yeniden çalıştırman yeterli.
+
 ## V1.67 — 2026-10-11
 - **Rütbeler:** Er → Onbaşı → Çavuş → Uzman Çavuş → Astsubay → Asteğmen → Teğmen → Üsteğmen → Yüzbaşı → Binbaşı → Yarbay → Albay → Tuğgeneral → Tümgeneral → Korgeneral → Orgeneral.
   - Her rütbenin arması var: erbaşlarda şerit, astsubayda çubuk, subaylarda yıldız, üst subaylarda ay-yıldız, generallerde defne ve yıldızlar.

@@ -1,6 +1,6 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
 /* in-memory fake of the parts of supabase-js the game uses */
-const DB={profiles:{},saves:{},announcements:{1:{id:1,text:'Hoş geldiniz',active:true,created_at:'2026'}}}; let session=null, authCb=null;
+const DB={profiles:{},saves:{},content:{config:{id:'config',kind:'config',meta:{xpMul:2,rankLocks:true}}},admin_log:{},announcements:{1:{id:1,text:'Hoş geldiniz',active:true,created_at:'2026'}}}; let session=null, authCb=null;
 function Q(tbl){ const st={tbl:tbl,f:{},op:'select',row:null};
   const api={select:function(){ return api; },eq:function(k,v){ st.f[k]=v; return api; },order:function(){ return api; },limit:function(){ return api; },
     maybeSingle:function(){ return run(true); },single:function(){ return run(true); },insert:function(r){ st.op='insert'; st.row=r; return api; },upsert:function(r){ st.op='upsert'; st.row=r; return run(); },update:function(r){ st.op='update'; st.row=r; return api; },
@@ -14,7 +14,7 @@ function Q(tbl){ const st={tbl:tbl,f:{},op:'select',row:null};
   return api; }
 window.supabase={createClient:function(){ return {auth:{onAuthStateChange:function(cb){ authCb=cb; },getSession:function(){ return Promise.resolve({data:{session:session}}); },
   signInWithPassword:function(c){ session={user:{id:'u1',email:c.email}}; setTimeout0(function(){ authCb('SIGNED_IN',session); }); return Promise.resolve({data:{session:session},error:null}); },
-  signOut:function(){ session=null; return Promise.resolve({}); }}, from:Q}; }};
+  signOut:function(){ session=null; return Promise.resolve({}); }}, from:Q, storage:{from:function(){ return {getPublicUrl:function(p){ return {data:{publicUrl:'https://x/'+p}}; }}; }}}; }};
 const later=[]; function setTimeout0(f){ later.push(f); }
 localStorage.setItem('ayy-supa',JSON.stringify({url:'https://abc.supabase.co',key:'x'.repeat(60)}));
 (async function(){
@@ -33,5 +33,8 @@ localStorage.setItem('ayy-supa',JSON.stringify({url:'https://abc.supabase.co',ke
   await accSignOut(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); T('signed out',!ACC.user&&ACC.status==='guest');
   /* local profiles */
   const L=lpAll(); L.push({id:'g2',callsign:'Mavi 2',unit:'deniz',emblem:'kartal',xp:0,rank:0,stats:{}}); lpSave(L); localStorage.setItem('ayy-prof-cur','g2'); ACC.local=null; T('local profile switch',accProfile().callsign==='Mavi 2');
+  T('remote config loaded',ADM.cfg&&ADM.cfg.xpMul===2,JSON.stringify(ADM.cfg));
+  const p0=accProfile(), x0=p0.xp||0; careerAdd(10,null); T('xp multiplier',(accProfile().xp||0)-x0===20,(accProfile().xp||0)-x0);
+  enterTitle(); ACC.role='player'; T('player cannot open libraries',(titleAct('library'),state==='menu'&&menuMode==='title'));
   console.log('pass',ok,'fail',bad);
 })();

@@ -9,7 +9,7 @@ function enterTitle(){ if(!NET.on) aiClear(); state='menu'; menuMode='title'; if
 let tFocus=0, startFrom='hangar', misSel=0;
 const START_TXT={hangar:'hangardan',runway:'pistten',air:'havada',walk:'üssü gezerek'};
 function uiStyle(){ const s=SETTINGS.ui||'auto'; if(s==='A'||s==='B') return s; return 'C'; }
-function titleItems(){ const st=uiStyle(); return Array.prototype.slice.call(document.querySelectorAll(st==='A'?'#titleA .mitem':(st==='B'?'#titleB .mitem':'#titleC .mitem:not([disabled])'))); }
+function titleItems(){ const st=uiStyle(), adm=typeof accIsAdmin==='function'&&accIsAdmin(); return Array.prototype.slice.call(document.querySelectorAll(st==='A'?'#titleA .mitem':(st==='B'?'#titleB .mitem':'#titleC .mitem:not([disabled])'))).filter(function(b){ return adm||['library','sounds','admin'].indexOf(b.dataset.act)<0; }); }
 function titleFocus(i){ const L=titleItems(); if(!L.length) return; tFocus=(i+L.length)%L.length; L.forEach(function(b,j){ b.classList.toggle('kf',j===tFocus); });
   if(uiStyle()==='C'){ titleDetail(L[tFocus].dataset.act); try{ L[tFocus].scrollIntoView({block:'nearest'}); }catch(e){} } }
 /* detail panel of the new menu: what the focused item does, live facts, one big action */
@@ -25,7 +25,8 @@ function titleDetail(act){
     library:['ÜS','Model Kütüphanesi','Bütün uçak, helikopter, gemi, kara ve sivil araçları 3B incele; boyut ve parça bilgilerine bak.',[chip('Kategori','5')],'Kütüphaneyi aç'],
     sounds:['ÜS','Ses Kütüphanesi','Motor, silah, çevre, arayüz, telsiz sesleri ve müzikler. Dinle, ayarla ya da kendi dosyanla değiştir.',[chip('Ses',SND_DEFS.length)],'Kütüphaneyi aç'],
     settings:['SİSTEM','Ayarlar','Grafik, kontroller (klavye, gamepad, dokunmatik), ses, oynanış ve arayüz.',[chip('Kalite',['Düşük','Orta','Yüksek','Ultra'][SETTINGS.quality]),chip('Cihaz',DEV.kind)],'Ayarları aç'],
-    records:['SİSTEM','Rekorlar','Uçak ve görev bazında en iyi süreler ve puanlar.',[],'Rekorları aç']};
+    records:['SİSTEM','Rekorlar','Uçak ve görev bazında en iyi süreler ve puanlar.',[],'Rekorları aç'],
+    admin:['SİSTEM','Yönetim','Oyuncular ve rütbeleri, duyurular, model / ses / müzik yayınlama, uzaktan oyun ayarları ve işlem kaydı. Yalnız yöneticiye görünür.',[chip('Rol','Yönetici')],'Paneli aç']};
   const d=D[act]; if(!d) return; const el=$('cDet');
   $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=d[3].join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=false;
   el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim');
@@ -55,9 +56,11 @@ function titleAct(act){
   if(act==='fly'){ startGame(startPick); return; }
   if(act==='free'){ if(missionId!=='free') selectMission('free'); startGame(startPick==='walk'?'hangar':startPick); return; }
   if(act==='walk'){ startGame('walk'); return; }
+  if((act==='sounds'||act==='library')&&!accIsAdmin()) return;
   if(act==='sounds'){ openSoundLib(); return; }
   if(act==='records'){ renderRecords(); openModal('records'); return; }
   if(act==='career'){ accOpen('career'); return; }
+  if(act==='admin'){ admOpen(); return; }
   if(act==='hangar'){ enterHangar(); return; }
   if(act==='missions'){ openMissions(); return; }
   if(act==='net'){ openNet(); return; }
