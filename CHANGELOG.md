@@ -1,6 +1,20 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.48 — 2026-10-11
+### Yeni — AY YILDIZ İHA ve Test Merkezi (güneydoğu ada)
+- **Pist:** 1,8 km'lik İHA pisti; orta hat, eşik çizgileri, 18/36 numaraları, kenar ve eşik ışıkları, emniyet şeritleri. Ada düzleştirildi, piste inilebilir.
+- **Apron:** TB2, TB3, Akıncı, Kızılelma ve ANKA sergide.
+- **Tesisler:** 4 İHA hangarı, kule, işletme binası ve tabelası.
+- **Yer kontrol istasyonları:** dönen uydu çanaklarıyla, telemetri antenleri.
+- **Füze test alanı** (adanın güney ucu):
+  - Rampada denize doğru yönelmiş test füzesi.
+  - Servis kulesi, sığınak, takip çanakları, uyarı tabelası.
+- **Gökyüzü:** adanın üzerinde sürekli tur atan bir Akıncı.
+- **Hızlı geçiş (M / GİT ▸):** İHA ve test merkezi, Füze test alanı eklendi.
+### Düzeltildi
+- Harita kenarına yakın düzleştirilmiş alanlar artık tam düz.
+
 ## V1.47 — 2026-10-11
 ### Yeni — Hilal Köprüsü ve Anadolukent
 - **Hilal Köprüsü:** üs yarımadasını güney adaya bağlayan asma köprü.

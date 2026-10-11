@@ -24,3 +24,4 @@ node harness.js /tmp/sim.js rural.test.js
 node harness.js /tmp/sim.js military.test.js
 node harness.js /tmp/sim.js daynight.test.js
 node harness.js /tmp/sim.js south.test.js
+node harness.js /tmp/sim.js uav.test.js
