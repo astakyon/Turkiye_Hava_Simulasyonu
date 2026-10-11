@@ -90,7 +90,7 @@ function buildFrigate(kind,num){
   [-1,1].forEach(function(s){ const b=new THREE.Mesh(new THREE.CylinderGeometry(1,1,7,10),M.orange); b.rotation.x=Math.PI/2; b.position.set(s*6.1,y0+2.3,z1-2); g.add(b);  // boats
     sPart(g,new THREE.BoxGeometry(0.2,3,0.2),M.supD,s*5.6,y0+1,z1-4); sPart(g,new THREE.BoxGeometry(0.2,3,0.2),M.supD,s*5.6,y0+1,z1); });
   sPart(g,new THREE.CylinderGeometry(0.06,0.06,4,6),M.white,0,F(1)+2,L/2-0.6); shipFlag(g,0,F(1)+3.4,L/2-0.6,1.3);
-  return {group:g, radar:radar, L:L};
+  return {group:g, radar:radar, L:L, deck:{z:(hz1+L/2)/2, z0:hz1, y:hy, r:7.5}, B:B};
 }
 /* TCG Anadolu (L-400): amphibious assault ship / drone carrier with ski-jump and island on the starboard side */
 function buildAnadolu(){

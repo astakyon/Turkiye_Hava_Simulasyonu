@@ -56,7 +56,8 @@ function startWalk(){
   initAudio(); aiClear(); clearThreats(); setPrep(false,[],'');
   if(activeId!==selectedId) setAircraft(selectedId);
   if(HELI.cur){ const H=HELI.cur; HELI.cur=null; if(!H.ground){ H.x=H.home[0]; H.z=H.home[1]; H.h=H.home[2]; H.y=groundH(H.x,H.z); H.ground=true; H.pitch=H.roll=0; heliPlace(H); } }
-  buildCar(); WALK.boxes=walkBoxes(); WALK.mode='foot'; WALK.run=false; WALK.camD=1; WALK.cy=0; WALK.fp=false; WALK.hint=8;
+  if(BOAT.cur){ BOAT.cur=null; }
+  buildCar(); buildBoats(); WALK.boxes=walkBoxes(); WALK.mode='foot'; WALK.run=false; WALK.camD=1; WALK.cy=0; WALK.fp=false; WALK.hint=8;
   const d=displays[selectedId]; WALK.pos.set(d.x+(d.ox||0)+4,AIRFIELD_Y+1.7,HANGAR.z-22); WALK.yaw=Math.PI+0.25; WALK.pitch=-0.05;
   state='walk'; showScreen(''); $('gl').focus(); planeGroup.visible=false;
   if(Math.abs(lastFov-70)>0.05){ camera.fov=70; lastFov=70; camera.updateProjectionMatrix(); }
@@ -82,10 +83,12 @@ function walkUpdate(dt){
     else { WALK.bob+=m*sp*dt*1.7; WALK.pos.y=gh+Math.sin(WALK.bob)*0.035*Math.min(1,m); }
     /* what can I interact with? */
     WALK.near=null; WALK.nearId=null;
-    const vn=vehNear(WALK.pos), hn=heliNear(WALK.pos); WALK.nearHeli=hn; WALK.nearCar=vn; if(vn) WALK.near='car';
+    const vn=vehNear(WALK.pos), hn=heliNear(WALK.pos), bn=(vn||hn)?null:boatNear(WALK.pos); WALK.nearHeli=hn; WALK.nearCar=vn; WALK.nearBoat=bn; if(vn) WALK.near='car';
+    else if(bn) WALK.near='boat';
     else if(hn) WALK.near='heli';
     else { let best=9; AC_ORDER.forEach(function(id){ const d=displays[id]; if(!d||!d.g.visible) return; const dd=Math.hypot(d.x+(d.ox||0)-WALK.pos.x,HANGAR.z+(d.oz||0)-WALK.pos.z); if(dd<best){ best=dd; WALK.nearId=id; } }); if(WALK.nearId) WALK.near='plane'; }
   } else if(WALK.mode==='heli'){ heliStep(dt); WALK.near=null; }
+  else if(WALK.mode==='boat'){ boatStep(dt); }
   else {
     carStep(dt,inp);
     placeCar(dt); WALK.near='car';
@@ -129,6 +132,8 @@ function carBoxes(){ const c=WALK.car, hw=c.m?c.m.tw/2+0.15:1.0, hl=c.m?c.m.wb/2
 function walkInteract(){
   if(state!=='walk') return;
   if(WALK.mode==='heli'){ heliExit(); return; }
+  if(WALK.mode==='boat'){ boatExit(); return; }
+  if(WALK.near==='boat'&&WALK.nearBoat){ boatBoard(WALK.nearBoat); return; }
   if(WALK.near==='heli'&&WALK.nearHeli){ heliBoard(WALK.nearHeli); return; }
   if(WALK.mode==='car'){ const c=WALK.car; WALK.mode='foot'; c.v=0; WALK.pos.set(c.x-Math.cos(c.h)*(c.m.tw/2+1.3),0,c.z+Math.sin(c.h)*(c.m.tw/2+1.3)); WALK.yaw=c.h; WALK.pitch=0;
     WALK.pos.y=groundH(WALK.pos.x,WALK.pos.z)+1.7; pushCircle(WALK.pos,0.35,WALK.boxes); return; }
@@ -138,6 +143,7 @@ function walkInteract(){
 const wE=new THREE.Euler(0,0,0,'YXZ'), wV=new THREE.Vector3(), wV2=new THREE.Vector3();
 function walkCam(dt){
   if(WALK.mode==='heli'&&HELI.cur){ heliCam(dt); return; }
+  if(WALK.mode==='boat'&&BOAT.cur){ boatCam(dt); return; }
   if(Math.abs(lastFov-70)>0.05){ camera.fov=70; lastFov=70; camera.updateProjectionMatrix(); }
   if(WALK.mode==='foot'){ camera.position.copy(WALK.pos); wE.set(WALK.pitch,WALK.yaw,0); camera.quaternion.setFromEuler(wE); camera.updateMatrixWorld(); return; }
   const c=WALK.car, m=c.m, gy=c.y==null?groundH(c.x,c.z):c.y, big=c.K&&c.K.mil?1.18:1, sp=Math.abs(c.v);
@@ -155,6 +161,7 @@ function walkCam(dt){
 function drawWalkHUD(){
   const w=HW, h=HH, s=clamp(Math.min(w,h)/760,0.7,1.5), foot=WALK.mode==='foot';
   hx.save(); hx.textAlign='center'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,0.7)'; hx.shadowBlur=4;
+  if(WALK.mode==='boat'&&BOAT.cur){ boatHUD(w,h,s); hx.restore(); return; }
   if(WALK.mode==='heli'&&HELI.cur){ heliHUD(w,h,s);
     if(WALK.hint>0&&!WALK.tvis){ hx.textAlign='center'; hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.globalAlpha=Math.min(1,WALK.hint); hx.fillStyle='#dfe9f1';
       hx.fillText('R/Shift yüksel · F/Ctrl alçal · W/S ileri-geri · A/D yana · Q/E dön · C kamera · G in (yerdeyken) · M harita', w/2, h-24*s); hx.globalAlpha=1; }
@@ -170,6 +177,7 @@ function drawWalkHUD(){
       if(c.m.turret&&!WALK.tvis){ hx.strokeStyle='rgba(255,210,122,.8)'; hx.lineWidth=1.5; hx.beginPath(); hx.arc(w/2,h*0.42,9*s,0,Math.PI*2); hx.moveTo(w/2-16*s,h*0.42); hx.lineTo(w/2-5*s,h*0.42); hx.moveTo(w/2+5*s,h*0.42); hx.lineTo(w/2+16*s,h*0.42); hx.stroke(); } } }
   let msg='';
   if(foot&&WALK.near==='car') msg=(WALK.tvis?'BİN':'E')+' — araca bin';
+  else if(foot&&WALK.near==='boat'&&WALK.nearBoat) msg=(WALK.tvis?'BİN':'E')+' — '+WALK.nearBoat.K.n+' teknesine bin';
   else if(foot&&WALK.near==='heli'&&WALK.nearHeli) msg=(WALK.tvis?'BİN':'E')+' — '+WALK.nearHeli.D.name+' helikopterine bin';
   else if(foot&&WALK.near==='plane'&&WALK.nearId) msg=(WALK.tvis?'UÇAĞA BİN':'E')+' — '+AIRCRAFT[WALK.nearId].name+' ile uç';
   else if(!foot) msg=(WALK.tvis?'İN':'E')+' — araçtan in';
@@ -206,7 +214,7 @@ function updateWalkTouch(){
   if(!vis){ WALK.sx=WALK.sy=0; return; }
   $('wKnob').style.transform='translate('+(WALK.sx*60)+'%,'+(WALK.sy*60)+'%)';
   const foot=WALK.mode==='foot', a=$('wAct');
-  const lbl=!foot?'İN':(WALK.near==='car'||WALK.near==='heli'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
+  const lbl=!foot?'İN':(WALK.near==='car'||WALK.near==='heli'||WALK.near==='boat'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
   a.innerHTML=lbl; a.classList.toggle('off',!lbl);
   $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); const heli=WALK.mode==='heli'; $('wCam').classList.toggle('hidden',foot); $('wSwap').classList.toggle('hidden',foot||heli); $('wheli').classList.toggle('hidden',!heli);
 }

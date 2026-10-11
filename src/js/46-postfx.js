@@ -77,7 +77,7 @@ function nearPlane(){
   if(DEV.logDepth) return;
   const cp=camera.position, agl=Math.max(0.5,cp.y-Math.max(0,groundH(cp.x,cp.z)));
   let focusD=1e9;
-  if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')){ if(WALK.mode==='foot') focusD=0.6; else if(WALK.mode==='car') focusD=WALK.fp?0.6:camera.position.distanceTo(nearV.set(WALK.car.x,WALK.car.y||cp.y,WALK.car.z)); else if(HELI.cur) focusD=HELI.fp?0.6:camera.position.distanceTo(nearV.set(HELI.cur.x,HELI.cur.y,HELI.cur.z)); }
+  if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')){ if(WALK.mode==='foot') focusD=0.6; else if(WALK.mode==='car') focusD=WALK.fp?0.6:camera.position.distanceTo(nearV.set(WALK.car.x,WALK.car.y||cp.y,WALK.car.z)); else if(WALK.mode==='boat'&&BOAT.cur) focusD=WALK.fp?0.6:camera.position.distanceTo(nearV.set(BOAT.cur.x,2,BOAT.cur.z))*0.5; else if(HELI.cur) focusD=HELI.fp?0.6:camera.position.distanceTo(nearV.set(HELI.cur.x,HELI.cur.y,HELI.cur.z)); }
   else if(state==='play'||state==='paused'||state==='map'||state==='mend') focusD=camera.position.distanceTo(S.pos);
   else if(state==='library') return;
   else focusD=Math.max(2,agl*0.6);

@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.70 — 2026-10-11
+- **Deniz araçları:** Mendirek yanında sürülebilir Hücumbot, Römorkör ve Korvet; marinada balıkçı teknesi ve yelkenli. Binmek için yanaşıp E.
+- **Makine telgrafı ve dümen:** W/S kademeli makine (TAM GERİ … TAM YOL), A/D dümen, knot göstergesi, dalga izi ve sprey.
+- **Gemi topları:** Hücumbot ve korvette Boşluk/X ile top atışı.
+- **Kıyıya yanaşma:** Kıyıya, iskeleye ya da güverteye yakınken E ile in.
+- **Helikopter güverteleri:** İskeledeki fırkateynlerin helikopter platformlarına iniş yapılabilir.
+- **Devriye korveti:** Körfezde devriye gezen korvetin hareketli güvertesine inen helikopter gemiyle birlikte taşınır.
+
 ## V1.69 — 2026-10-11
 - **Tüm kara araçlarına binilebiliyor.** Gezintide araca yürüyüp E'ye basman yeterli.
   - Hava Üssü apronu: itfaiye, yakıt tankeri, personel otobüsü, uçak çekici.

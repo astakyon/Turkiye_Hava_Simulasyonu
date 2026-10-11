@@ -80,6 +80,13 @@ function fenceLine(pts,skip){
 const FENCE_MAT={};
 function lampPost(g,M,x,y,z,h){ apCyl(g,M.metal,x,y,z,0.12,0.18,h||12,8); apBox(g,M.dark,x,y+(h||12),z,1.4,0.3,0.6); apBox(g,M.lamp,x,y+(h||12)-0.05,z,1.2,0.06,0.45); }
 function placeShip(ship,x,z,ang,y){ const g=ship.group; g.position.set(x,y||0,z); g.rotation.y=ang; g.updateMatrixWorld(true); return g; }
+/* frigates: superstructure box up to the mast, but the stern helideck only up to the deck (helicopters can land on it) */
+const SHIPDECKS=[];
+function shipObstDeck(sh,mover){ const g=sh.group, L=sh.L, hb=(sh.B||14)/2, d=sh.deck, v=new THREE.Vector3(); g.updateMatrixWorld(true);
+  const box=function(z0,z1,top){ const xs=[], zs=[]; [[-hb,z0],[hb,z0],[-hb,z1],[hb,z1]].forEach(function(c){ v.set(c[0],0,c[1]); g.localToWorld(v); xs.push(v.x); zs.push(v.z); });
+    navObst(Math.min.apply(null,xs),Math.max.apply(null,xs),Math.min.apply(null,zs),Math.max.apply(null,zs),top,true); };
+  if(!mover){ const bb=new THREE.Box3().setFromObject(g); box(-L/2,d.z0,bb.max.y); box(d.z0,L/2,g.position.y+d.y+0.1); }
+  v.set(0,d.y,d.z); g.localToWorld(v); SHIPDECKS.push({x:v.x,z:v.z,y:v.y,r:d.r,local:new THREE.Vector3(0,d.y,d.z),g:g,mover:mover||null,name:'Fırkateyn helikopter güvertesi'}); }
 function shipObst(g,top){ const b=new THREE.Box3().setFromObject(g); navObst(b.min.x,b.max.x,b.min.z,b.max.z,top==null?b.max.y:top,true); }
 
 function buildNaval(){
@@ -156,7 +163,7 @@ function buildNaval(){
   fl.push([buildPatrol('P-1201'),quayX-90,P[1]+8+4.5+1.5]);
   fl.push([buildTug(),quayX-60,P[2]-8-5-1.5]);
   fl.push([buildFrigate('ada','F-513'),quayX-100,P[2]+8+7.2+2]);
-  fl.forEach(function(f){ fleet.add(placeShip(f[0],f[1],f[2],Math.PI/2)); shipObst(f[0].group); });
+  fl.forEach(function(f){ fleet.add(placeShip(f[0],f[1],f[2],Math.PI/2)); if(f[0].deck) shipObstDeck(f[0]); else shipObst(f[0].group); });
   const an=buildAnadolu(); placeShip(an,quayX-175,N.mole+10+16+2,Math.PI/2);
   const deckG=new THREE.Group(); deckG.position.copy(an.group.position); deckG.rotation.copy(an.group.rotation); const tbs=[];
   ['tb3','tb3','tb3'].forEach(function(id,k){ try{ const m=buildModel(id); if(m.flames) m.flames.forEach(function(f){ f.visible=false; }); if(m.strobe) m.strobe.visible=false;
