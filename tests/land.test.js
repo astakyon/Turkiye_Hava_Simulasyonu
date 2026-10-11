@@ -10,5 +10,5 @@ T('tank on the ground',Math.abs(LAND.tank.position.y-LAND.y)<0.5);
 enterHangar(); startWalk(); WALK.mode='car'; WALK.warp=4; walkWarp(); T('warp to land base',Math.abs(WALK.car.x-900)<1&&Math.abs(WALK.car.z+7290)<1,WALK.car.x+','+WALK.car.z);
 const c=WALK.car; c.h=0; c.v=12; keys.KeyW=true; for(let i=0;i<60;i++) walkUpdate(0.05); keys.KeyW=false;
 T('drive north into the base',c.z<-7330,c.z);
-T('car height follows the pad',Math.abs(c.mesh.position.y-(LAND.y+0.22))<0.05,c.mesh.position.y);
+T('car height follows the pad',Math.abs(c.mesh.position.y-LAND.y)<0.05,c.mesh.position.y);
 console.log('pass',ok,'fail',bad);

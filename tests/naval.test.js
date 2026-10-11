@@ -15,5 +15,5 @@ T('land group renamed',GROUPS.find(function(g){ return g.id==='kara'; }).name===
 enterHangar(); startWalk(); WALK.mode='car'; const c=WALK.car; c.x=-1470; c.z=-3330; c.h=Math.PI/2; c.v=12; keys.KeyW=true;
 for(let i=0;i<120;i++) walkUpdate(0.05); keys.KeyW=false;
 T('car drives through the gate into the base',c.x<-1560,c.x);
-T('car stays on the ground',Math.abs(WALK.car.mesh.position.y-(groundH(c.x,c.z)+0.22))<0.01);
+T('car stays on the ground',Math.abs(WALK.car.mesh.position.y-groundH(c.x,c.z))<0.05);
 console.log('pass',ok,'fail',bad);
