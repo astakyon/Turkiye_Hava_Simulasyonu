@@ -87,3 +87,29 @@ function buildArmyTruck(){
   lPart(g,new THREE.BoxGeometry(2.5,0.75,5.6),M.canvas,0,1.95,1.2);
   return {group:g, len:8.6};
 }
+/* HİSAR-O style air-defence launcher on a 6×6 truck (canister box elevates and slews) */
+function buildHisar(){
+  const M=landMats(), g=new THREE.Group();
+  [-3.2,1.2,2.6].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.1,0.55,z,0.55,0.4); }); });
+  lPart(g,new THREE.BoxGeometry(2.1,0.4,9),M.dark,0,0.75,0); lPart(g,hullBox(2.5,1.7,2.4,0.95,0.2,0),M.camo,0,0.95,-3.4); lPart(g,new THREE.BoxGeometry(2.1,0.6,0.06),M.glass,0,2.2,-4.6);
+  const t=new THREE.Group(); t.position.set(0,1.5,1.4); g.add(t); lPart(t,new THREE.CylinderGeometry(0.9,1.0,0.5,12),M.olive,0,0,0);
+  const el=new THREE.Group(); el.position.set(0,0.6,0.6); t.add(el); const box=lPart(el,new THREE.BoxGeometry(2.0,1.4,4.6),M.camo,0,0.7,-1.8);
+  for(let i=0;i<3;i++) for(let j=0;j<2;j++) lPart(el,new THREE.CylinderGeometry(0.28,0.28,0.06,10),M.dark,-0.6+i*0.6,0.38+j*0.66,-4.13).rotation.x=Math.PI/2;
+  el.rotation.x=0.55; return {group:g, turret:t, elev:el, len:9};
+}
+/* KORKUT self-propelled 35 mm air-defence gun */
+function buildKorkut(){
+  const M=landMats(), g=new THREE.Group();
+  trackSet(g,M,1.3,6.2,6,0.33,0.55,0); lPart(g,hullBox(2.8,1.2,6.6,0.94,0.7,0.1),M.camo,0,0.5,0);
+  const t=new THREE.Group(); t.position.set(0,1.75,0.6); g.add(t); lPart(t,hullBox(2.2,1.0,2.6,0.85,0.3,0.1),M.camo,0,0,0);
+  [-1,1].forEach(function(s){ lPart(t,MK.cyl(0.07,0.1,3.2,8),M.dark,s*1.25,0.55,-2.4); lPart(t,new THREE.BoxGeometry(0.4,0.5,1.0),M.olive,s*1.2,0.55,-0.6); });
+  const rd=lPart(t,new THREE.BoxGeometry(1.2,0.7,0.12),M.dark,0,1.45,0.6); return {group:g, turret:t, radar:rd, len:6.6};
+}
+/* fire-control / search radar on a truck */
+function buildRadarTruck(){
+  const M=landMats(), g=new THREE.Group();
+  [-2.6,1.0,2.4].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.05,0.55,z,0.55,0.4); }); });
+  lPart(g,new THREE.BoxGeometry(2.1,0.4,8),M.dark,0,0.75,0); lPart(g,hullBox(2.5,1.7,2.3,0.95,0.2,0),M.camo,0,0.95,-2.8); lPart(g,new THREE.BoxGeometry(2.5,2.2,4.6),M.camo,0,1.0,1.4);
+  const t=new THREE.Group(); t.position.set(0,3.3,1.4); g.add(t); lPart(t,new THREE.CylinderGeometry(0.15,0.2,1.4,8),M.olive,0,0.7,0);
+  const a=lPart(t,new THREE.BoxGeometry(3.6,1.8,0.25),M.dark,0,2.0,0); a.rotation.x=-0.25; return {group:g, turret:t, len:8};
+}

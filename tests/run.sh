@@ -21,3 +21,4 @@ node harness.js /tmp/sim.js land.test.js
 node harness.js /tmp/sim.js town.test.js
 node harness.js /tmp/sim.js marina.test.js
 node harness.js /tmp/sim.js rural.test.js
+node harness.js /tmp/sim.js military.test.js

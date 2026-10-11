@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.44">
+<meta name="game-version" content="V1.45">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -800,7 +800,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.44', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.45', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -908,6 +908,7 @@ const AIRFIELD_Y = 22;
 const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hard:'w'},
   {id:'land',x0:400,x1:1900,z0:-7950,z1:-7250,y:34,f:320},{id:'range',x0:2120,x1:3300,z0:-7800,z1:-7520,y:34,f:260},
   {id:'town',x0:-9300,x1:-7100,z0:-7350,z1:-6760,y:16,f:350},
+  {id:'radar',x0:5300,x1:5420,z0:-2730,z1:-2630,y:1148,f:160},
   {id:'lake',x0:1640,x1:1760,z0:-3810,z1:-3690,y:84,f:210},
   {id:'marina',fr:{cx:2350,cz:1250,a:0.536},x0:-260,x1:40,z0:-290,z1:260,y:2.7,f:300,hard:'e'}];
 const DECKS=[];
@@ -954,7 +955,7 @@ function terrainH(x,z){
     const x=p.getX(i), h=p.getY(i), z=p.getZ(i), ny=nrm.getY(i);
     const n1=fbm(x/310+5, z/310+9, 3);
     let pw=0; for(let k=0;k<PADS.length;k++) pw=Math.max(pw,padW(PADS[k],x,z));
-    if(pw>0.25&&h>0.5){ A.copy(cGA).lerp(cGB,n1*0.6); }
+    if(pw>0.25&&h>0.5&&h<600){ A.copy(cGA).lerp(cGB,n1*0.6); }
     else if(h<1.2){ A.copy(cDeep).lerp(cShallow, smooth(-40,0,h)); }
     else if(h<9){ A.copy(cSand).lerp(cGA, smooth(5,9,h)); }
     else{
@@ -1998,6 +1999,51 @@ function marinaStep(dt){
     m.g.rotation.set(Math.sin(T*0.6+m.bob)*0.012,Math.atan2(-fx,-fz),Math.sin(T*0.7+m.bob)*0.02);
     if(m.g.userData.wake) m.g.userData.wake.visible=m.pause<=0; });
   gullStep(dt);
+}
+/* ------------------------------------------------------------------ military sites: air-defence positions around the air base
+   (revetments, HİSAR-O launchers, KORKUT guns, radars), an ammunition depot west of the base, and an early-warning radar
+   station on the peak of the eastern mountains. */
+const MIL={turrets:[], radars:[], depot:{x:-1150,z:-300}, peak:{x:5360,z:-2680}, built:false};
+function berm(g,x,z,y,ang,w,d,h){ const gm=new THREE.MeshLambertMaterial({color:0x6f8a4a}), b=new THREE.Group(); b.position.set(x,y,z); b.rotation.y=ang; g.add(b);
+  [[0,-d/2,w+8,0],[-w/2,0,d,Math.PI/2],[w/2,0,d,Math.PI/2]].forEach(function(s){ const m=new THREE.Mesh(taperBoxZ(s[2],h,6,0.25),gm); m.position.set(s[0],h/2,s[1]); m.rotation.y=s[3]; b.add(m); }); }
+function buildMilitary(){
+  const M=apMats(), gy=AIRFIELD_Y, g=new THREE.Group(), live=new THREE.Group(), r=mulberry32(5555);
+  /* ---- air defence: revetments around each existing battery, plus launchers, guns and radars */
+  const sites=[[640,-500,0.3],[-850,620,Math.PI+0.3],[640,1150,0.1],[-900,-1050,Math.PI-0.2]];
+  sites.forEach(function(s,i){ const x=s[0], z=s[1], a=s[2];
+    berm(g,x,z,gy,a,26,18,3.4);
+    const v=i%2?buildKorkut():buildHisar(); v.group.position.set(x,gy,z); v.group.rotation.y=a+Math.PI; live.add(v.group); MIL.turrets.push({t:v.turret,base:r()*6,sp:0.15+r()*0.1,el:v.elev||null});
+    const rt=buildRadarTruck(); const rx=x+Math.cos(a)*22, rz=z-Math.sin(a)*22; rt.group.position.set(rx,gy,rz); rt.group.rotation.y=a; live.add(rt.group); MIL.radars.push(rt.turret);
+    apBox(g,M.olive,x-Math.cos(a)*20,gy,z+Math.sin(a)*20,6,2.6,2.5); navObst(x-16,x+16,z-16,z+16,gy+5); });
+  /* ---- ammunition depot: fenced compound with earth-covered igloos and a guard tower */
+  { const c=MIL.depot, y=terrainH(c.x,c.z), x0=c.x-110, x1=c.x+110, z0=c.z-80, z1=c.z+80;
+    for(let k=0;k<4;k++){ igloo(g,M,x0+30+k*52,y,c.z-30,24); igloo(g,M,x0+30+k*52,y,c.z+40,24); }
+    fenceLine([[x0,z0],[x1,z0],[x1,z1],[x0,z1],[x0,z0]],function(x,z){ return Math.abs(x-x1)<1&&Math.abs(z-c.z)<6; });
+    watchTower(g,M,x0+6,y,z0+6); watchTower(g,M,x1-6,y,z1-6);
+    const sg=new THREE.Mesh(new THREE.PlaneGeometry(8,1.6),new THREE.MeshLambertMaterial({map:signTex('MÜHİMMAT DEPOSU — YASAK BÖLGE','#c01818','#ffffff',1024,128),side:THREE.DoubleSide}));
+    sg.position.set(x1+2,y+2,c.z+12); sg.rotation.y=Math.PI/2; g.add(sg); apCyl(g,M.metal,x1+2,y,c.z+8.2,0.06,0.06,2.2,6); apCyl(g,M.metal,x1+2,y,c.z+15.8,0.06,0.06,2.2,6);
+    const asp=new THREE.MeshLambertMaterial({color:0x7a7466,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}); asp.userData.flat=true; apRect(g,asp,x0+10,x1,c.z-4,c.z+4,y+0.05); }
+  /* ---- early-warning radar station on the eastern peak */
+  { const c=MIL.peak, y=terrainH(c.x,c.z), wm=new THREE.MeshLambertMaterial({color:0xf2f2ee});
+    [[-35,-10,9],[0,-28,11],[32,-8,8]].forEach(function(d){ const x=c.x+d[0], z=c.z+d[1]; apCyl(g,M.conc,x,y,z,d[2]*0.8,d[2]*0.9,d[2]*0.9,16);
+      const dm=new THREE.Mesh(new THREE.SphereGeometry(d[2],24,16),wm); dm.position.set(x,y+d[2]*0.9+d[2]*0.8,z); g.add(dm); navObst(x-d[2],x+d[2],z-d[2],z+d[2],y+d[2]*2.7); });
+    bldg(g,c.x+10,y,c.z+25,34,7,14,{floors:2,wall:'#e8eaec'});
+    const H=28, mx=c.x-20, mz=c.z+28; [[-2,-2],[2,-2],[2,2],[-2,2]].forEach(function(p){ beam(g,M.metal,[mx+p[0],y,mz+p[1]],[mx+p[0]*0.4,y+H,mz+p[1]*0.4],0.15); });
+    for(let h=0;h<H;h+=5) beam(g,M.metal,[mx-2+h*0.04,y+h,mz],[mx+2-h*0.04,y+h,mz],0.06);
+    apBox(g,M.white,mx,y+H,mz,2.4,0.4,2.4); const rd=new THREE.Group(); rd.position.set(mx,y+H+0.4,mz); apBox(rd,M.dark,0,0.6,0,9,2.2,0.4); apCyl(rd,M.metal,0,0,0,0.3,0.3,0.6,8); scene.add(rd); MIL.radars.push(rd);
+    for(let k=0;k<2;k++){ const ax=c.x+30+k*14, az=c.z+30; apCyl(g,k?M.red:M.white,ax,y,az,0.18,0.3,36,8); apBox(g,M.redL,ax,y+36,az,0.5,0.5,0.5); navObst(ax-1,ax+1,az-1,az+1,y+37); }
+    const pad=new THREE.Mesh(new THREE.CircleGeometry(12,32),new THREE.MeshLambertMaterial({color:0x5c6166,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1})); pad.rotation.x=-Math.PI/2; pad.position.set(c.x-30,y+0.06,c.z+52); g.add(pad);
+    const hr=new THREE.Mesh(new THREE.RingGeometry(9,9.8,32),M.markY); hr.rotation.x=-Math.PI/2; hr.position.set(c.x-30,y+0.08,c.z+52); g.add(hr);
+    fenceLine([[c.x-60,c.z-50],[c.x+60,c.z-50],[c.x+60,c.z+70],[c.x-60,c.z+70],[c.x-60,c.z-50]],function(){ return false; });
+    navObst(mx-3,mx+3,mz-3,mz+3,y+H+3); }
+  bakeInto(g); scene.add(live); MIL.live=live; MIL.built=true;
+  const pts=[]; for(let x=MIL.depot.x-130;x<=MIL.depot.x+130;x+=20) for(let z=MIL.depot.z-100;z<=MIL.depot.z+100;z+=20) pts.push([x,z]); clearTreesNear(pts,12);
+  const pk=[]; for(let x=MIL.peak.x-80;x<=MIL.peak.x+80;x+=20) for(let z=MIL.peak.z-70;z<=MIL.peak.z+90;z+=20) pk.push([x,z]); clearTreesNear(pk,12);
+}
+function militaryStep(dt){
+  if(!MIL.built) return;
+  MIL.turrets.forEach(function(t){ t.t.rotation.y=Math.sin(T*t.sp+t.base)*1.2; if(t.el) t.el.rotation.x=0.45+Math.sin(T*0.2+t.base)*0.15; });
+  MIL.radars.forEach(function(r){ r.rotation.y+=dt*1.6; });
 }
 /* ------------------------------------------------------------------ countryside: wind farm on the eastern ridge, solar farm, greenhouses,
    olive grove, a small lake with an earth dam, and village life (tea garden, school, tractor, sheep, chimney smoke). */
@@ -3360,6 +3406,32 @@ function buildArmyTruck(){
   const c=lPart(g,new THREE.CylinderGeometry(1.25,1.25,5.6,14,1,false,-Math.PI/2,Math.PI),M.canvas,0,2.3,1.2); c.rotation.x=-Math.PI/2; c.scale.set(1,1,0.6);
   lPart(g,new THREE.BoxGeometry(2.5,0.75,5.6),M.canvas,0,1.95,1.2);
   return {group:g, len:8.6};
+}
+/* HİSAR-O style air-defence launcher on a 6×6 truck (canister box elevates and slews) */
+function buildHisar(){
+  const M=landMats(), g=new THREE.Group();
+  [-3.2,1.2,2.6].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.1,0.55,z,0.55,0.4); }); });
+  lPart(g,new THREE.BoxGeometry(2.1,0.4,9),M.dark,0,0.75,0); lPart(g,hullBox(2.5,1.7,2.4,0.95,0.2,0),M.camo,0,0.95,-3.4); lPart(g,new THREE.BoxGeometry(2.1,0.6,0.06),M.glass,0,2.2,-4.6);
+  const t=new THREE.Group(); t.position.set(0,1.5,1.4); g.add(t); lPart(t,new THREE.CylinderGeometry(0.9,1.0,0.5,12),M.olive,0,0,0);
+  const el=new THREE.Group(); el.position.set(0,0.6,0.6); t.add(el); const box=lPart(el,new THREE.BoxGeometry(2.0,1.4,4.6),M.camo,0,0.7,-1.8);
+  for(let i=0;i<3;i++) for(let j=0;j<2;j++) lPart(el,new THREE.CylinderGeometry(0.28,0.28,0.06,10),M.dark,-0.6+i*0.6,0.38+j*0.66,-4.13).rotation.x=Math.PI/2;
+  el.rotation.x=0.55; return {group:g, turret:t, elev:el, len:9};
+}
+/* KORKUT self-propelled 35 mm air-defence gun */
+function buildKorkut(){
+  const M=landMats(), g=new THREE.Group();
+  trackSet(g,M,1.3,6.2,6,0.33,0.55,0); lPart(g,hullBox(2.8,1.2,6.6,0.94,0.7,0.1),M.camo,0,0.5,0);
+  const t=new THREE.Group(); t.position.set(0,1.75,0.6); g.add(t); lPart(t,hullBox(2.2,1.0,2.6,0.85,0.3,0.1),M.camo,0,0,0);
+  [-1,1].forEach(function(s){ lPart(t,MK.cyl(0.07,0.1,3.2,8),M.dark,s*1.25,0.55,-2.4); lPart(t,new THREE.BoxGeometry(0.4,0.5,1.0),M.olive,s*1.2,0.55,-0.6); });
+  const rd=lPart(t,new THREE.BoxGeometry(1.2,0.7,0.12),M.dark,0,1.45,0.6); return {group:g, turret:t, radar:rd, len:6.6};
+}
+/* fire-control / search radar on a truck */
+function buildRadarTruck(){
+  const M=landMats(), g=new THREE.Group();
+  [-2.6,1.0,2.4].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.05,0.55,z,0.55,0.4); }); });
+  lPart(g,new THREE.BoxGeometry(2.1,0.4,8),M.dark,0,0.75,0); lPart(g,hullBox(2.5,1.7,2.3,0.95,0.2,0),M.camo,0,0.95,-2.8); lPart(g,new THREE.BoxGeometry(2.5,2.2,4.6),M.camo,0,1.0,1.4);
+  const t=new THREE.Group(); t.position.set(0,3.3,1.4); g.add(t); lPart(t,new THREE.CylinderGeometry(0.15,0.2,1.4,8),M.olive,0,0.7,0);
+  const a=lPart(t,new THREE.BoxGeometry(3.6,1.8,0.25),M.dark,0,2.0,0); a.rotation.x=-0.25; return {group:g, turret:t, len:8};
 }
 /* ------------------------------------------------------------------ hangar waiting area (all aircraft parked, camera flies to the selected one) */
 const HANGAR={cx:-278, z:900, step:36};
@@ -6385,7 +6457,7 @@ function updateWalkTouch(){
 
 
 /* quick travel between the places of the island (on foot or in the car) */
-const WARPS=[{n:'Hangar',x:null},{n:'Nizamiye',x:-150,z:-1700,h:0},{n:'Köy',x:-330,z:-2960,h:0},{n:'Deniz Üssü',x:-1560,z:-3330,h:Math.PI/2},{n:'Deniz Üssü · rıhtım',x:-1940,z:-3780,h:0},{n:'Kara Üssü',x:900,z:-7290,h:0},{n:'Kara Üssü · motorlu birlik',x:1200,z:-7545,h:Math.PI/2},{n:'Atış poligonu',x:2160,z:-7660,h:-Math.PI/2},{n:'Hilalkent',x:-7300,z:-7000,h:Math.PI/2},{n:'Hilalkent · meydan',x:-8150,z:-7000,h:Math.PI/2},{n:'Hilal Marina',x:2190,z:1180,h:-2.1},{n:'Kumsal',x:1200,z:2380,h:2.9},{n:'Gölet',x:1440,z:-3750,h:Math.PI/2},{n:'Köy · çay bahçesi',x:-300,z:-2800,h:Math.PI}];
+const WARPS=[{n:'Hangar',x:null},{n:'Nizamiye',x:-150,z:-1700,h:0},{n:'Köy',x:-330,z:-2960,h:0},{n:'Deniz Üssü',x:-1560,z:-3330,h:Math.PI/2},{n:'Deniz Üssü · rıhtım',x:-1940,z:-3780,h:0},{n:'Kara Üssü',x:900,z:-7290,h:0},{n:'Kara Üssü · motorlu birlik',x:1200,z:-7545,h:Math.PI/2},{n:'Atış poligonu',x:2160,z:-7660,h:-Math.PI/2},{n:'Hilalkent',x:-7300,z:-7000,h:Math.PI/2},{n:'Hilalkent · meydan',x:-8150,z:-7000,h:Math.PI/2},{n:'Hilal Marina',x:2190,z:1180,h:-2.1},{n:'Kumsal',x:1200,z:2380,h:2.9},{n:'Gölet',x:1440,z:-3750,h:Math.PI/2},{n:'Köy · çay bahçesi',x:-300,z:-2800,h:Math.PI},{n:'Hava savunma mevzisi',x:600,z:-470,h:-0.5},{n:'Mühimmat deposu',x:-1020,z:-290,h:Math.PI/2},{n:'Radar istasyonu',x:5340,z:-2600,h:0}];
 function walkWarp(){
   WALK.warp=((WALK.warp==null?0:WALK.warp)+1)%WARPS.length; const w=WARPS[WALK.warp], c=WALK.car;
   if(w.x==null){ if(WALK.mode==='car'){ c.x=HG.X0+7; c.z=896; c.h=0; } else { const d=displays[selectedId]; WALK.pos.set(d.x+(d.ox||0)+4,AIRFIELD_Y+1.7,HANGAR.z-22); WALK.yaw=Math.PI+0.25; } }
@@ -6769,7 +6841,7 @@ $('btnLibOpen').addEventListener('click',function(){ if(state==='menu') openLibr
 window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
 window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files; if(!f||!f.length) return; e.preventDefault(); if(state==='menu'&&!LIB.on) openLibrary('ac:'+selectedId); if(LIB.on) importFiles(f); });
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSurroundings(); buildRural(); buildTraffic(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -6782,7 +6854,7 @@ function frame(now){
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
   netStep(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
-  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); updateTaxiVisuals();
+  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow();
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);

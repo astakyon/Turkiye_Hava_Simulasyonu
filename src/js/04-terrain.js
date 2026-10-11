@@ -10,6 +10,7 @@ const AIRFIELD_Y = 22;
 const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hard:'w'},
   {id:'land',x0:400,x1:1900,z0:-7950,z1:-7250,y:34,f:320},{id:'range',x0:2120,x1:3300,z0:-7800,z1:-7520,y:34,f:260},
   {id:'town',x0:-9300,x1:-7100,z0:-7350,z1:-6760,y:16,f:350},
+  {id:'radar',x0:5300,x1:5420,z0:-2730,z1:-2630,y:1148,f:160},
   {id:'lake',x0:1640,x1:1760,z0:-3810,z1:-3690,y:84,f:210},
   {id:'marina',fr:{cx:2350,cz:1250,a:0.536},x0:-260,x1:40,z0:-290,z1:260,y:2.7,f:300,hard:'e'}];
 const DECKS=[];
@@ -56,7 +57,7 @@ function terrainH(x,z){
     const x=p.getX(i), h=p.getY(i), z=p.getZ(i), ny=nrm.getY(i);
     const n1=fbm(x/310+5, z/310+9, 3);
     let pw=0; for(let k=0;k<PADS.length;k++) pw=Math.max(pw,padW(PADS[k],x,z));
-    if(pw>0.25&&h>0.5){ A.copy(cGA).lerp(cGB,n1*0.6); }
+    if(pw>0.25&&h>0.5&&h<600){ A.copy(cGA).lerp(cGB,n1*0.6); }
     else if(h<1.2){ A.copy(cDeep).lerp(cShallow, smooth(-40,0,h)); }
     else if(h<9){ A.copy(cSand).lerp(cGA, smooth(5,9,h)); }
     else{

@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.45 — 2026-10-11
+### Yeni — Askeri tesisler
+- **Hava savunma mevzileri:** havalimanının dört yanında toprak setli mevziler.
+  - Her mevzide ya bir **HİSAR-O** fırlatıcısı (kızak yükselip dönüyor) ya da bir **KORKUT** 35 mm uçaksavar.
+  - Dönen radarlı ateş kontrol aracı ve komuta kabini.
+- **Mühimmat deposu:** havalimanının batısında, çitle çevrili sekiz toprak örtülü cephanelik, iki gözetleme kulesi, "YASAK BÖLGE" tabelası.
+- **Erken ihbar radar istasyonu:** doğu dağlarının zirvesinde (≈1150 m).
+  - Üç radar kubbesi, dönen arama radarı, işletme binası.
+  - İkaz ışıklı anten direkleri, helikopter pisti, çit.
+- Yeni modeller (yer tutucu): HİSAR-O fırlatıcı aracı, KORKUT, radar aracı.
+- **Hızlı geçiş (M / GİT ▸):** Hava savunma mevzisi, Mühimmat deposu, Radar istasyonu eklendi.
+
 ## V1.44 — 2026-10-11
 ### Yeni — Kırsal alan
 - **Rüzgâr santrali:** marinanın doğusundaki tepelerde dönen 11 rüzgâr türbini. Uçaklar çarpabilir.
