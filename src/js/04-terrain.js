@@ -11,6 +11,7 @@ const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hard:'w'
   {id:'land',x0:400,x1:1900,z0:-7950,z1:-7250,y:34,f:320},{id:'range',x0:2120,x1:3300,z0:-7800,z1:-7520,y:34,f:260},
   {id:'town',x0:-9300,x1:-7100,z0:-7350,z1:-6760,y:16,f:350},
   {id:'radar',x0:5300,x1:5420,z0:-2730,z1:-2630,y:1148,f:160},
+  {id:'enemy',enemy:true,x0:-10500,x1:-8700,z0:9300,z1:9900,y:132,f:420},
   {id:'uav',x0:10900,x1:11800,z0:10150,z1:12650,y:45,f:360},
   {id:'city',x0:-2700,x1:-200,z0:5950,z1:6650,y:32,f:380},
   {id:'lake',x0:1640,x1:1760,z0:-3810,z1:-3690,y:84,f:210},
@@ -25,6 +26,7 @@ function padW(p,x,z){
   const dz=z<p.z0?p.z0-z:(z>p.z1?z-p.z1:0); if(dx>=p.f||dz>=p.f) return 0;
   return (1-smooth(0,p.f,dx))*(1-smooth(0,p.f,dz));
 }
+function inFriendlyPad(x,z,m){ return PADS.some(function(p){ if(p.enemy) return false; const l=frLocal(p.fr,x,z); return l[0]>p.x0-m&&l[0]<p.x1+m&&l[1]>p.z0-m&&l[1]<p.z1+m; }); }
 function inAnyPad(x,z,m){ return PADS.some(function(p){ const l=frLocal(p.fr,x,z); return l[0]>p.x0-m&&l[0]<p.x1+m&&l[1]>p.z0-m&&l[1]<p.z1+m; }); }
 function inPad(id,x,z,m){ const p=PADS.find(function(q){ return q.id===id; }); m=m||0; const l=frLocal(p.fr,x,z); return l[0]>p.x0-m&&l[0]<p.x1+m&&l[1]>p.z0-m&&l[1]<p.z1+m; }
 /* walkable ground height: terrain, raised by decks (quays, piers; decks may carry a rotated frame) */

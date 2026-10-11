@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.49 — 2026-10-11
+### Yeni — Kızıl Bölge (düşman bölgesi)
+- **Konum:** güney adanın batı yarısı düşman toprağı. Sınırda kırmızı-beyaz direkler var.
+- **Uyarı:** sınırı geçince "⚠ KIZIL BÖLGE — düşman hava sahasına girdin" uyarısı çıkıyor.
+- **Düşman hava üssü:**
+  - Pist, taksi yolu, 8 sertleştirilmiş uçak sığınağı.
+  - Yakıt tankları, koğuşlar, kule, radar, flamalar.
+- **Bölge geneli:** beton sığınaklar ve tank engelleri (ejder dişleri).
+- **Oynanış:** görevlerdeki düşman yer hedefleri artık öncelikle Kızıl Bölge'de çıkıyor. SAM'lar, radarlar, depolar, sığınaklar ve konvoylar burada. Oyunun adındaki "Hedef Kızıl Elma" artık haritada bir yer.
+### Test
+- Yapay zekâ testi, rastgeleliğe bağlı ara sıra yaşanan başarısızlığa karşı sağlamlaştırıldı.
+
 ## V1.48 — 2026-10-11
 ### Yeni — AY YILDIZ İHA ve Test Merkezi (güneydoğu ada)
 - **Pist:** 1,8 km'lik İHA pisti; orta hat, eşik çizgileri, 18/36 numaraları, kenar ve eşik ışıkları, emniyet şeritleri. Ada düzleştirildi, piste inilebilir.
