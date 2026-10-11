@@ -179,7 +179,7 @@ const HMIS=[
    setup:function(){ const s=callSpot(-1680,-3330,3)||[-1680,-3330]; HM.crate=crateAdd(s[0],s[1],'mis'); },
    obj:[{t:'hook',n:'Sandığın üstünde asılı dur, B ile kancaya al'},{t:'deliver',n:'Sandığı radar istasyonuna indir',x:5320,z:-2660,r:22}]}];
 const HM={on:false};
-function hmById(id){ return HMIS.find(function(m){ return m.id===id; }); }
+function hmById(id){ return HMIS.find(function(m){ return m.id===id; })||(typeof DYN!=='undefined'?DYN.heli.find(function(m){ return m.id===id; }):null); }
 function hmClean(){ htClear(); for(let i=TROOPS.length-1;i>=0;i--){ if(TROOPS[i].tag){ scene.remove(TROOPS[i].g); TROOPS.splice(i,1); } } for(let i=CRATES.length-1;i>=0;i--){ if(CRATES[i].tag){ const c=CRATES[i]; HELI.list.forEach(function(H){ if(H.sling&&H.sling.o===c){ scene.remove(H.sling.line); H.sling=null; } }); scene.remove(c.g); CRATES.splice(i,1); } }
   if(HM.beacon){ scene.remove(HM.beacon); HM.beacon=null; } HO.pj.forEach(function(P){ scene.remove(P.m); }); HO.pj.length=0; }
 function hmStart(id){
@@ -193,7 +193,7 @@ function hmStart(id){
 }
 function hmCur(){ return HM.on&&!HM.ended?HM.M.obj[HM.i]:null; }
 function hmTarget(){ const o=hmCur(); if(!o) return null; if(o.t==='hook'&&HM.crate) return [HM.crate.x,HM.crate.z];
-  if(o.t==='kill'){ const L=HTGT.filter(function(t){ return t.alive; }); if(L.length){ let b=L[0], bd=1e9; const H=HM.H; L.forEach(function(t){ const d=Math.hypot(t.x-H.x,t.z-H.z); if(d<bd){ bd=d; b=t; } }); return [b.x,b.z]; } }
+  if(o.t==='kill'){ const L=HTGT.filter(function(t){ return t.alive; }); if(L.length){ let b=L[0], bd=1e9; const H=HM.H||(WALK.mode==='car'?WALK.car:WALK.pos); L.forEach(function(t){ const d=Math.hypot(t.x-H.x,t.z-H.z); if(d<bd){ bd=d; b=t; } }); return [b.x,b.z]; } }
   return o.x!=null?[o.x,o.z]:null; }
 function hmBeacon(){ if(HM.beacon){ scene.remove(HM.beacon); HM.beacon=null; } const o=hmCur(); if(!o||o.t==='kill'||o.x==null) return; HM.beacon=callBeacon(o.x,o.z); }
 function hmNext(){ HM.i++; if(HM.i>=HM.M.obj.length){ hmEnd(true); return; } hmBeacon(); const o=hmCur(); toast('Yeni hedef: '+o.n,'#b8ecff'); if(typeof radioSay==='function') radioSay({w:'kule',t:o.n+'.'},null,{force:true}); }
@@ -203,12 +203,13 @@ function hmEvent(ev,arg){ const o=hmCur(); if(!o) return; const H=HM.H;
 function hmStep(dt){
   if(!HM.on||HM.ended) return; HM.t+=dt; const o=hmCur(), H=HM.H;
   if(HM.beacon) HM.beacon.material.opacity=0.16+0.1*Math.sin(HM.t*5);
-  if(H.crashT>0){ hmEnd(false,'Helikopter kaybedildi'); return; }
+  if(H&&H.crashT>0){ hmEnd(false,'Helikopter kaybedildi'); return; }
+  if(o&&o.t==='cp'&&WALK.mode==='car'&&WALK.car&&Math.hypot(WALK.car.x-o.x,WALK.car.z-o.z)<(o.r||25)){ hmNext(); return; }
   if(HM.M.lim&&HM.t>HM.M.lim){ hmEnd(false,'Süre doldu'); return; }
   if(o.t==='kill'&&!HTGT.some(function(t){ return t.alive; })) hmNext();
-  else if(o.t==='board'&&H.troops>0&&!TROOPS.some(function(t){ return t.tag==='mis'&&!t.go; })) hmNext();
-  else if(o.t==='unload'&&H.unloadAt&&H.troops===0&&Math.hypot(H.unloadAt[0]-o.x,H.unloadAt[1]-o.z)<o.r) hmNext();
-  else if(o.t==='hook'&&H.sling&&H.sling.o===HM.crate) hmNext();
+  else if(o.t==='board'&&H&&H.troops>0&&!TROOPS.some(function(t){ return t.tag==='mis'&&!t.go; })) hmNext();
+  else if(o.t==='unload'&&H&&H.unloadAt&&H.troops===0&&Math.hypot(H.unloadAt[0]-o.x,H.unloadAt[1]-o.z)<o.r) hmNext();
+  else if(o.t==='hook'&&H&&H.sling&&H.sling.o===HM.crate) hmNext();
   else if(o.t==='deliver'&&HM.crate&&HM.crate.broken) hmEnd(false,'Sandık hasar gördü');
 }
 function hmEnd(win,why){
@@ -273,14 +274,15 @@ const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; 
     if(!H.ground&&!H.sling){ const L2=slingables(); let near=null, bd=40; L2.forEach(function(o){ const d=Math.hypot(o.x-H.x,o.z-H.z); if(d<bd){ bd=d; near=o; } });
       if(near){ const oy=near.crate?near.y:(near.y==null?groundH(near.x,near.z):near.y), up=H.y-oy, ok=bd<10&&up>4&&up<26; hx.textAlign='center'; hx.fillStyle=ok?'#7dffb0':'#ffd27a';
         hx.fillText(ok?'KANCA HAZIR — B':'YÜK '+Math.round(bd)+' m · '+Math.round(up)+' m altında', w/2, h*0.62); } } }
-  /* mission objective */
-  if(HM.on&&!HM.ended){ const o=hmCur(), tp=hmTarget(); hx.textAlign='center'; hx.font='700 '+Math.round(14*s)+'px "Chakra Petch",system-ui,sans-serif'; const rem=Math.max(0,Math.round(HM.M.lim-HM.t));
+  hmDrawObj(w,h,s,H.x,H.z,H.h);
+};
+/* mission objective (helicopter HUD and vehicle HUD) */
+function hmDrawObj(w,h,s,px,pz,hd){ if(!HM.on||HM.ended) return; { const o=hmCur(), tp=hmTarget(); hx.textAlign='center'; hx.font='700 '+Math.round(14*s)+'px "Chakra Petch",system-ui,sans-serif'; const rem=Math.max(0,Math.round(HM.M.lim-HM.t));
     hx.fillStyle='#ffb25a'; hx.fillText('GÖREV · '+HM.M.n.toLocaleUpperCase('tr-TR')+'  ·  '+Math.floor(rem/60)+':'+String(rem%60).padStart(2,'0'), w/2, Math.round((WALK.tvis?60:22)*s));
     hx.font='600 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff';
     let line=o.n; if(o.t==='kill') line+=' ('+HTGT.filter(function(t){ return !t.alive; }).length+'/'+HTGT.length+')';
-    if(tp){ const d=Math.hypot(tp[0]-H.x,tp[1]-H.z), b=Math.atan2(tp[0]-H.x,tp[1]-H.z), rel=Math.atan2(Math.sin(b-H.h-Math.PI),Math.cos(b-H.h-Math.PI)); line+='  ·  '+(d>1000?(d/1000).toFixed(1)+' km':Math.round(d)+' m');
+    if(tp){ const d=Math.hypot(tp[0]-px,tp[1]-pz), b=Math.atan2(tp[0]-px,tp[1]-pz), rel=Math.atan2(Math.sin(b-hd-Math.PI),Math.cos(b-hd-Math.PI)); line+='  ·  '+(d>1000?(d/1000).toFixed(1)+' km':Math.round(d)+' m');
       const cx=w/2, cy=Math.round((WALK.tvis?100:62)*s); hx.save(); hx.translate(cx,cy); hx.rotate(-rel); hx.fillStyle='#ffb25a'; hx.beginPath(); hx.moveTo(0,-11*s); hx.lineTo(7*s,6*s); hx.lineTo(0,2*s); hx.lineTo(-7*s,6*s); hx.closePath(); hx.fill(); hx.restore(); }
-    hx.fillText(line, w/2, Math.round((WALK.tvis?80:42)*s)); }
-};
+    hx.fillText(line, w/2, Math.round((WALK.tvis?80:42)*s)); } }
 /* ---- controls hint */
 const _hoBoard=heliBoard; heliBoard=function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · J askı yardımı · G in':' — Space sağ kapı silahı · B asker bindir/indir ya da yük kancası · J askı yardımı · G in'),'#b8ecff'); };

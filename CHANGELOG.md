@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.77 — 2026-10-11
+- **Dinamik görevler:** Görev panosunda yeni "Dinamik" kategorisi var. Her oyun açılışında adadaki yerlere göre altı görev üretiliyor: üç uçak görevi, iki helikopter görevi ve bir kara konvoyu. "↻ Yeni görevler" ile istediğin an yeni set alabilirsin.
+- **Uçak görevleri:** Devriye (sırayla yerlerin üzerinden geç), Önleme (üsse gelen kamikaze İHA'ları 2 km'den önce düşür), Yakın hava desteği (dost mevziye saldıran araçları imha et), Refakat (nakliye uçağını düşman avcılarından koru), İHA keşfi (İHA ile bölgeleri tara; insanlı uçak seçiliyse Aksungur verilir), Deniz devriyesi (deniz noktaları ve gemi tanımlama).
+- **Helikopter görevleri:** T625 ile arama-kurtarma (yaralıları bul, bindir, hastane helipadine götür) ve askıda yük taşıma; T129 ile bölge temizliği.
+- **Kara konvoyu:** Askerî kamyonla Kara Üssü'nden çıkıp kontrol noktalarından geçiyorsun.
+- **Çok aşamalı hedefler:** Görevler adım adım ilerliyor. Süre sınırı var. Çoğu görevde bir de isteğe bağlı bonus hedef var (şüpheli konvoyu imha et, 4 dakikada bitir, hasar alma, yakıtın yarısı kalsın gibi). Bonusu tamamlamak yıldız ve ek XP getiriyor.
+- **Görev ortası olaylar:** Görevin üçte biri geçince yeni bir SAM bataryası çıkabilir, hava fırtınaya ya da sise dönebilir (görev sonunda eski hâline gelir) ya da yakıt sızıntısı veya motor arızası olabilir.
+
 ## V1.76 — 2026-10-11
 - **Görev panosu:** Uçak ve helikopter görevleri tek listede. Kategori (Eğitim, Hava, Taarruz, Keşif, Helikopter), zorluk ve süreye göre filtreleyebilir, ödüle göre sıralayabilirsin. Her görevin yanında zorluk, süre, XP ödülü ve kazandığın yıldızlar yazar.
 - **Brifing:** Görev bölgesini gösteren harita, hedefler, tehditler ve önerilen yük listelenir. Önerilen yükü tek dokunuşla uygulayabilirsin. Serbest uçuşta uçak yerine T129 ya da T625 seçilebiliyor.

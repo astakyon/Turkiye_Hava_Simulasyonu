@@ -688,3 +688,4 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 @media (max-width:640px){ .bfilt{ width:calc(100vw - 32px); } #missionsUI .mlist.mis{ width:calc(100vw - 32px); max-height:30vh; } .bcols{ grid-template-columns:1fr; } .bmap{ height:110px; } }
 @media (max-width:640px){ #missionsUI .mlist.mis{ max-height:24vh; } #missionsUI .misdet{ top:calc(clamp(54px,12vh,84px) + 124px + 24vh); bottom:30px; max-height:none; overflow:auto; } .bseg button{ padding:3px 7px; font-size:10.5px; } }
 .misdet .mrow2{ position:sticky; bottom:-14px; background:linear-gradient(180deg,rgba(6,12,22,0),rgba(6,12,22,.96) 30%); padding:10px 0 4px; margin-bottom:-4px; z-index:1; }
+.mlist.mis .bt{ min-width:0; } .mlist.mis .bt, .mlist.mis .mitem{ white-space:normal; } .mlist.mis .bt{ line-height:1.15; }

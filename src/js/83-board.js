@@ -33,7 +33,7 @@ renderMissions=function(){
   $('misK').textContent=BCAT[m.cat].toLocaleUpperCase('tr-TR')+' · '+['','KOLAY','ORTA','ZOR'][m.diff]+(m.dur?' · '+m.dur+' DK':' · SÜRESİZ')+(m.xp?' · '+m.xp+' XP':'');
   $('misName').textContent=e.name; $('misDesc').textContent=e.desc;
   const ch=[]; if(e.kind==='air'){ if(e.id==='dogfight') ch.push('<span><b>3</b> dalga</span>'); else if(c.enemies) ch.push('<span><b>'+c.enemies+'</b> düşman uçağı</span>'); ch.push('<span>Kanat adamı: '+(c.wing?'açık':'kapalı')+'</span>','<span>Zorluk: '+SKILL[c.skill].name+'</span>'); }
-  else ch.push('<span>'+HELI_DEF[e.M.heli].name+'</span>'); if(e.id!=='free') ch.push('<span>'+starsHTML(bStars(e.id))+'</span>');
+  else if(e.kind==='heli') ch.push('<span>'+HELI_DEF[e.M.heli].name+'</span>'); if(e.id!=='free') ch.push('<span>'+starsHTML(bStars(e.id))+'</span>');
   $('misChips').innerHTML=ch.join('');
   const P=m.load?LPRESETS.find(function(p){ return p.id===m.load; }):null, canLoad=P&&(SLOTS[selectedId]||0)>0&&P.f(selectedId);
   let veh=''; if(e.id==='free') veh='<div class="bveh"><b>Araç</b><div class="bseg" data-k="veh">'+[['plane','Uçak: '+AIRCRAFT[selectedId].short],['t129','T129 ATAK'],['t625','T625 GÖKBEY']].map(function(o){ return '<button type="button" data-v="'+o[0]+'" aria-pressed="'+(BVEH.v===o[0])+'">'+o[1]+'</button>'; }).join('')+'</div></div>';
