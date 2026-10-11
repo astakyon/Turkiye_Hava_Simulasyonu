@@ -6,9 +6,9 @@ Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (
 - **T129 silahları:** 20 mm top (Boşluk; nişangâhtaki hedefe kendiliğinden döner), CİRİT güdümlü roket ve UMTAS tanksavar füzesi (X ateşler, Tab değiştirir; UMTAS için hedefe kilitlenmek gerekir). HUD'da cephane, nişangâh ve hedef kutuları gösterilir. Helipada inince mühimmat yenilenir.
 - **T625 asker taşıma:** Yerdeyken B'ye basınca yakındaki askerler biner ya da içerideki tim iner. Askerler kapıdan yürüyerek çıkar.
 - **Askı yükü:** Havada, bir sandığın ya da hafif bir aracın üstünde asılı dururken B ile kancaya alırsın; yük halatla sallanarak taşınır. Yere değince B ile bırakılır, yüksekten bırakılan yük düşer ve hasar görebilir.
-- **Askı yardımı (hover assist):** H ile açılıp kapanır. Açıkken cyclic bırakıldığında helikopter kendiliğinden yavaşlayıp havada asılı kalır.
+- **Askı yardımı (hover assist):** J ile açılıp kapanır. Açıkken cyclic bırakıldığında helikopter kendiliğinden yavaşlayıp havada asılı kalır.
 - **Araç çağırma · Hava ve Deniz sekmesi:** T625 ya da T129 uçarak gelip yanına iner. Hücumbot en yakın denizden kıyıya yanaşır. Bozkurtlar 4×4'ü bir T625 askıda getirip bırakır.
-- Yeni tuşlar (Ayarlar → Kontroller → Helikopter): Tab silah değiştir, B kanca/asker, H askı yardımı.
+- Yeni tuşlar (Ayarlar → Kontroller → Helikopter): Tab silah değiştir, B kanca/asker, J askı yardımı.
 
 ## V1.71 — 2026-10-11
 - **Araç çağırma menüsü:** Yürürken **G** (kumandada Y, telefonda ÇAĞIR) ile dairesel menü açılır. İki sekme var: Sivil · Hizmet (SUV'lar, Bozkurtlar 4×4, kamyon, yakıt tankeri, itfaiye, otobüs, uçak çekici) ve Askerî (Kirpi, Pars, Korkut, Hisar, Fırtına, Altay).

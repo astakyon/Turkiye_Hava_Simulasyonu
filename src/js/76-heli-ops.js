@@ -258,7 +258,7 @@ function hoScreen(p,w,h){ hoP.copy(p).project(camera); if(!(hoP.z<1)) return nul
 const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; if(!H) return;
   const L=WALK.tvis?w/2:Math.round(16*s), top=Math.round(20*s)+Math.round(76*s);
   hx.textAlign=WALK.tvis?'center':'left'; hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif';
-  hx.fillStyle=HO.assist?'#7dffb0':'#8899aa'; hx.fillText('ASKI YARDIMI '+(HO.assist?'AÇIK':'KAPALI')+' (H)', L, top);
+  hx.fillStyle=HO.assist?'#7dffb0':'#8899aa'; hx.fillText('ASKI YARDIMI '+(HO.assist?'AÇIK':'KAPALI')+' (J)', L, top);
   if(H.id==='t129'){ const A=hoAmmo(H); hx.fillStyle='#ffd27a';
     hx.fillText('20MM '+A.gun+'  ·  '+(H.sel==='cirit'?'▶ ':'')+'CİRİT '+A.cirit+'  ·  '+(H.sel==='umtas'?'▶ ':'')+'UMTAS '+A.umtas, L, top+Math.round(20*s));
     if(!H.ground){ /* gun cross and target boxes */
@@ -281,4 +281,4 @@ const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; 
     hx.fillText(line, w/2, Math.round((WALK.tvis?80:42)*s)); }
 };
 /* ---- controls hint */
-const _hoBoard=heliBoard; heliBoard=function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · H askı yardımı · G in':' — B asker bindir/indir ya da yük kancası · H askı yardımı · G in'),'#b8ecff'); };
+const _hoBoard=heliBoard; heliBoard=function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · J askı yardımı · G in':' — B asker bindir/indir ya da yük kancası · J askı yardımı · G in'),'#b8ecff'); };

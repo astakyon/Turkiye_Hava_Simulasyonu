@@ -6643,7 +6643,7 @@ const CTRL_DEF={
     ['cycL','Sola kay (cyclic)',['KeyA','ArrowLeft'],['a0-']], ['cycR','Sağa kay (cyclic)',['KeyD','ArrowRight'],['a0+']],
     ['collUp','Yüksel (collective)',['KeyR','ShiftLeft'],['b7','a3-']], ['collDn','Alçal (collective)',['KeyF','ControlLeft'],['b6','a3+']],
     ['yawL','Sola dön (pedal)',['KeyQ'],['a2-','b14']], ['yawR','Sağa dön (pedal)',['KeyE'],['a2+','b15']],
-    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['flares','Flare bırak',['KeyZ'],['b10']], ['nextWpn','Silah değiştir (CİRİT / UMTAS)',['Tab'],['b3']], ['hook','Yük kancası / asker bindir-indir',['KeyB'],['b4']], ['assist','Askı yardımı (hover assist) aç/kapat',['KeyH'],['b5']], ['exit','İn',['KeyG'],['b1']]]},
+    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['flares','Flare bırak',['KeyZ'],['b10']], ['nextWpn','Silah değiştir (CİRİT / UMTAS)',['Tab'],['b3']], ['hook','Yük kancası / asker bindir-indir',['KeyB'],['b4']], ['assist','Askı yardımı (hover assist) aç/kapat',['KeyJ'],['b5']], ['exit','İn',['KeyG'],['b1']]]},
   land:{name:'Kara aracı', acts:[
     ['gas','Gaz',['KeyW','ArrowUp'],['b7','a1-']], ['brake','Fren / geri',['KeyS','ArrowDown'],['b6','a1+']],
     ['left','Sola dön',['KeyA','ArrowLeft'],['a0-']], ['right','Sağa dön',['KeyD','ArrowRight'],['a0+']],
@@ -9727,7 +9727,7 @@ function hoScreen(p,w,h){ hoP.copy(p).project(camera); if(!(hoP.z<1)) return nul
 const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; if(!H) return;
   const L=WALK.tvis?w/2:Math.round(16*s), top=Math.round(20*s)+Math.round(76*s);
   hx.textAlign=WALK.tvis?'center':'left'; hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif';
-  hx.fillStyle=HO.assist?'#7dffb0':'#8899aa'; hx.fillText('ASKI YARDIMI '+(HO.assist?'AÇIK':'KAPALI')+' (H)', L, top);
+  hx.fillStyle=HO.assist?'#7dffb0':'#8899aa'; hx.fillText('ASKI YARDIMI '+(HO.assist?'AÇIK':'KAPALI')+' (J)', L, top);
   if(H.id==='t129'){ const A=hoAmmo(H); hx.fillStyle='#ffd27a';
     hx.fillText('20MM '+A.gun+'  ·  '+(H.sel==='cirit'?'▶ ':'')+'CİRİT '+A.cirit+'  ·  '+(H.sel==='umtas'?'▶ ':'')+'UMTAS '+A.umtas, L, top+Math.round(20*s));
     if(!H.ground){ /* gun cross and target boxes */
@@ -9750,7 +9750,7 @@ const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; 
     hx.fillText(line, w/2, Math.round((WALK.tvis?80:42)*s)); }
 };
 /* ---- controls hint */
-const _hoBoard=heliBoard; heliBoard=function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · H askı yardımı · G in':' — B asker bindir/indir ya da yük kancası · H askı yardımı · G in'),'#b8ecff'); };
+const _hoBoard=heliBoard; heliBoard=function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · J askı yardımı · G in':' — B asker bindir/indir ya da yük kancası · J askı yardımı · G in'),'#b8ecff'); };
 /* ------------------------------------------------------------------ calling helicopters and boats (V1.72)
    'Hava · Deniz' tab of the call menu: a T625 / T129 flies in and lands next to you (or on the map point);
    a patrol boat comes in from the sea to the nearest water. The Bozkurtlar 4×4 is brought hanging under a T625. */
