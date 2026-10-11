@@ -1,6 +1,23 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.69 — 2026-10-11
+- **Tüm kara araçlarına binilebiliyor.** Gezintide araca yürüyüp E'ye basman yeterli.
+  - Hava Üssü apronu: itfaiye, yakıt tankeri, personel otobüsü, uçak çekici.
+  - Kara Üssü araç filosu (haritada "Kara Üssü · araç filosu"): Altay, Fırtına, Pars, Korkut, Hisar, Kirpi, askerî kamyon, Bozkurtlar 4×4.
+  - Hilalkent: otobüs ve kırmızı SUV.
+- **Her aracın kendi sürüşü:** azami hız, ivme, yol tutuşu ve yokuş davranışı araca göre değişiyor. Kamera büyük araçlarda uzaklaşıyor. Ağır araçların motor sesi daha kalın.
+  - Altay, Fırtına, Korkut ve Hisar paletli: yerinde dönebiliyor.
+- **Tank ve zırhlılar:** taret fareyle ya da sağ çubukla döndürülüyor, ekranda nişangâh var.
+  - Altay ve Fırtına ağır top atıyor: balistik mermi, 2,4 sn dolum, geri tepme.
+  - Pars ve Korkut otomatik top atıyor (X basılı tut).
+  - Mermiler yer hedeflerine hasar veriyor ve onları yok edebiliyor.
+- **İtfaiye:** X ile su topu; su kamera yönüne fışkırıyor.
+- **Uçak çekici:** apronda park etmiş Hürjet'in burnuna yanaşıp X ile bağlanıyor, sonra uçağı çekip istediğin yere götürebiliyorsun. X ile bırakılıyor.
+- Araçlar birbirine ve yürüyen oyuncuya çarpıyor.
+- T ile değiştirme yalnız binek araçlarda (SUV, 4×4, Beni İzle).
+- Yeni tuş: **Ateş / su topu / uçak çek:** X (gamepad LB, fareyle sol tık).
+
 ## V1.68 — 2026-10-11
 - **Yönetici modu.** Yönetici yetkisi veritabanında tutuluyor ve oyuncular kendilerine veremiyor. Ana menüde yalnız yöneticiye görünen **Yönetim** bölümü var.
 - **Yönetim paneli:**

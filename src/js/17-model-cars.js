@@ -121,6 +121,29 @@ function carModel(kind){
   return {g:g, body:body, wheels:wheels, wb:wb, tw:tw, r:r, ride:ride, kind:K};
 }
 /* bake the static body into a few meshes (phones); wheels stay separate for animation */
+/* every other drivable vehicle reuses an existing model builder; specs drive the physics (tracked = turns on the spot) */
+const CAR_SWAP=4;   /* T cycles the first four (cars); the rest are boarded where they stand or called (V1.71) */
+CAR_KINDS.push(
+  {id:'truck',  n:'Askerî kamyon',    top:25,acc:4.0,grip:7,  slope:0.7, cam:1.5,heavy:true,build:function(){ return buildArmyTruck(); }},
+  {id:'fuel',   n:'Yakıt tankeri',    top:22,acc:3.4,grip:7,  slope:0.9, cam:1.6,heavy:true,build:function(){ return {group:vehTruck('fuel')}; }},
+  {id:'fire',   n:'İtfaiye aracı',    top:28,acc:4.2,grip:7.5,slope:0.9, cam:1.6,heavy:true,weapon:'water',build:function(){ return {group:vehTruck('fire')}; }},
+  {id:'bus',    n:'Personel otobüsü', top:24,acc:3.2,grip:6.5,slope:1.0, cam:1.8,heavy:true,build:function(){ return {group:vehBus()}; }},
+  {id:'tug',    n:'Uçak çekici',      top:12,acc:3.0,grip:8,  slope:1.0, cam:1.2,heavy:true,weapon:'tow',build:function(){ return {group:vehTug()}; }},
+  {id:'altay',  n:'Altay tankı',      top:19,acc:3.4,grip:12, slope:0.4, cam:1.7,heavy:true,tracked:true,weapon:'cannon',build:function(){ return buildAltay(); }},
+  {id:'firtina',n:'Fırtına obüsü',    top:18,acc:3.0,grip:12, slope:0.45,cam:1.8,heavy:true,tracked:true,weapon:'cannon',build:function(){ return buildFirtina(); }},
+  {id:'pars',   n:'Pars 8×8',         top:28,acc:4.5,grip:10, slope:0.5, cam:1.5,heavy:true,weapon:'auto',build:function(){ return buildPars(); }},
+  {id:'kirpi',  n:'Kirpi',            top:28,acc:4.2,grip:9,  slope:0.55,cam:1.5,heavy:true,build:function(){ return buildKirpi(); }},
+  {id:'korkut', n:'Korkut',           top:18,acc:3.2,grip:12, slope:0.45,cam:1.6,heavy:true,tracked:true,weapon:'auto',build:function(){ return buildKorkut(); }},
+  {id:'hisar',  n:'Hisar',            top:18,acc:3.2,grip:12, slope:0.45,cam:1.6,heavy:true,tracked:true,build:function(){ return buildHisar(); }});
+function vehWrap(K){
+  const r=K.build(), grp=r.group||r, tur=r.turret||null, g=new THREE.Group();
+  if(tur&&tur.parent) tur.parent.remove(tur);
+  grp.updateMatrixWorld(true); const bb=new THREE.Box3().setFromObject(grp); if(tur){ const tb=new THREE.Box3().setFromObject(tur); }
+  const L=Math.max(3,(bb.max.z-bb.min.z)||5), W=Math.max(1.6,(bb.max.x-bb.min.x)||2.2), H=Math.max(1.5,(bb.max.y-bb.min.y)||2);
+  const body=bakeGroup(grp); g.add(body); if(tur) g.add(tur);
+  return {g:g, body:body, wheels:[], wb:Math.max(2.2,L*0.62), tw:Math.max(1.6,W*0.86), r:0.5, ride:0, kind:K, turret:tur, len:L, wid:W, hgt:H};
+}
 function carBuild(kind){
+  const K0=CAR_KINDS.find(function(k){ return k.id===kind; }); if(K0&&K0.build) return vehWrap(K0);
   const m=carModel(kind); m.body.position.y=0; const b=bakeGroup(m.body); m.g.remove(m.body); b.position.y=m.ride; m.g.add(b); m.body=b; return m;
 }

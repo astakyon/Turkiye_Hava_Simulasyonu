@@ -25,7 +25,7 @@ function audioUpdate(){
   /* procedural engine targets (noise gain, tone gain, tone freq, filter) + the matching Sound Library loop */
   let gN=0, gO=0, fO=80, fL=400, type='sawtooth', id=null, lg=0, lr=1;
   if(heli){ /* rotor has its own voice */ }
-  else if(state==='walk'&&WALK.mode==='car'&&WALK.car.K){ const c=WALK.car, on=!muted, gr=carGear(c.v), rpm=Math.abs(c.v)<0.3?0.16+(c.thr||0)*0.5:gr[1], th=c.thr||0, mil=c.K.mil;
+  else if(state==='walk'&&WALK.mode==='car'&&WALK.car.K){ const c=WALK.car, on=!muted, gr=carGear(c.v), rpm=Math.abs(c.v)<0.3?0.16+(c.thr||0)*0.5:gr[1], th=c.thr||0, mil=c.K.mil||c.K.heavy;
     fO=(mil?32:40)+rpm*(mil?85:120)+(c.turbo?18:0); gO=on?(0.03+th*0.05+rpm*0.02):0;
     gN=on?(0.05+th*0.08+Math.min(0.35,Math.max(0,(c.slip||0)-3)*0.05)+Math.abs(c.v)*0.002):0; fL=220+rpm*700+Math.max(0,(c.slip||0)-3)*260;
     id='eng_car'; lg=on?0.25+th*0.35:0; lr=0.55+rpm*0.95; }

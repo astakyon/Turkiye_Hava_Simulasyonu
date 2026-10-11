@@ -5,6 +5,7 @@ const PLACES=[
   {id:'uav',n:'İHA ve Test Merkezi',k:'air',x:11300,z:11400,g:[11560,11400,Math.PI/2],rw:'uav'},
   {id:'naval',n:'Deniz Üssü',k:'navy',x:-1750,z:-3800,g:[-1560,-3330,Math.PI/2]},
   {id:'land',n:'Kara Üssü',k:'army',x:1150,z:-7600,g:[900,-7290,0]},
+  {id:'fleet',n:'Kara Üssü · araç filosu',k:'army',x:945,z:-7530,g:[905,-7530,-Math.PI/2]},
   {id:'range',n:'Atış poligonu',k:'army',x:2700,z:-7660,g:[2160,-7660,-Math.PI/2]},
   {id:'village',n:'Köy',k:'town',x:-330,z:-2880,g:[-300,-2800,Math.PI]},
   {id:'hilalkent',n:'Hilalkent',k:'city',x:-8200,z:-7050,g:[-7300,-7000,Math.PI/2]},

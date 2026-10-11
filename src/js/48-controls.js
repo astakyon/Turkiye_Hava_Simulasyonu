@@ -24,7 +24,7 @@ const CTRL_DEF={
   land:{name:'Kara aracı', acts:[
     ['gas','Gaz',['KeyW','ArrowUp'],['b7','a1-']], ['brake','Fren / geri',['KeyS','ArrowDown'],['b6','a1+']],
     ['left','Sola dön',['KeyA','ArrowLeft'],['a0-']], ['right','Sağa dön',['KeyD','ArrowRight'],['a0+']],
-    ['handbrake','El freni',['Space'],['b0']], ['turbo','Turbo',['ShiftLeft','ShiftRight'],['b5']], ['cam','Araç kamerası',['KeyC'],['b2']], ['swap','Aracı değiştir',['KeyT'],['b3']], ['exit','Araçtan in',['KeyE','KeyF','Enter'],['b1']]]},
+    ['handbrake','El freni',['Space'],['b0']], ['turbo','Turbo',['ShiftLeft','ShiftRight'],['b5']], ['cam','Araç kamerası',['KeyC'],['b2']], ['swap','Aracı değiştir',['KeyT'],['b3']], ['fire','Ateş / su topu / uçak çek',['KeyX'],['b4']], ['exit','Araçtan in',['KeyE','KeyF','Enter'],['b1']]]},
   sea:{name:'Deniz aracı', acts:[
     ['thrUp','Hız artır',['KeyW','ArrowUp'],['b7','a1-']], ['thrDown','Hız azalt / geri',['KeyS','ArrowDown'],['b6','a1+']],
     ['rudL','Dümen sola',['KeyA','ArrowLeft'],['a0-']], ['rudR','Dümen sağa',['KeyD','ArrowRight'],['a0+']],
