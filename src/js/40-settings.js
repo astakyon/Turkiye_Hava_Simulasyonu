@@ -1,5 +1,6 @@
 /* ------------------------------------------------------------------ settings + records (saved in this browser) */
 const SETTINGS={volume:0.8,quality:2,sens:1,rumble:true,invert:false,touch:'auto',bombAssist:'guided',lockOn:true,autoPerf:true,fps:false};
+const SETTINGS_DEF=JSON.parse(JSON.stringify(SETTINGS));
 let RECORDS={};
 function loadStore(){
   try{ if(!localStorage.getItem('kaan-sim-settings') && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) SETTINGS.quality=1; }catch(e){}

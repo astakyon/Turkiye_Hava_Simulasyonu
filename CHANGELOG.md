@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.65 — 2026-10-11
+- **Ayarlar menüsü yenilendi.**
+  - **Arama:** yazdıkça tüm sekmelerdeki uyan ayarlar gösteriliyor.
+  - **Basit / Gelişmiş görünüm:** varsayılan basit. Çözünürlük, kenar yumuşatma, derinlik, güvenli mod, tanılama, FPS ve otomatik performans "Gelişmiş" altında.
+  - **↶ Geri al:** pencere açıldığından beri yapılan tüm değişiklikleri geri alıyor.
+  - **Varsayılanlar:** iki kez basınca tüm ayarları sıfırlıyor; kontrol tuşları, çağrı adı ve başlangıç yeri korunuyor.
+- **Yeni sekme: Erişilebilirlik.**
+  - **Yazı ve arayüz boyutu:** Küçük / Normal / Büyük / Çok büyük. Menüler, ayarlar, hangar, mühimmat, kütüphaneler ve telsiz yazıları büyüyor.
+  - **Renk körlüğü düzeltmesi:** Protanopi / Döteranopi / Tritanopi. Oyun görüntüsü ve göstergelerin renkleri ayırt edilebilir biçimde kaydırılıyor (daltonizasyon).
+  - **Yüksek karşıtlık:** daha koyu paneller, daha belirgin yazı ve çerçeveler.
+  - **Hareketi azalt:** menü animasyonları, hız bulanıklığı ve kamera sarsıntısı kapanıyor.
+  - Telsiz altyazıları ve kumanda titreşimi de buradan açılıp kapatılabiliyor.
+
 ## V1.64 — 2026-10-11
 - **Hangarda helikopter:** sınıf filtresinde yeni **Helikopter** sekmesi (T129 ATAK, T625 GÖKBEY). Seçilen helikopter, kamera Hava Üssü helipadine giderek 3B gösteriliyor. Rotor çapı, azami hız, tırmanma ve mürettebat bilgisi var. **"Helikopterle uç"** ile doğrudan pilot koltuğunda başlıyorsun.
 - **Performans çubukları:** her araç için hız (km/sa), manevra, itki ve silah yeri.

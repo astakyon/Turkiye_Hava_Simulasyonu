@@ -68,6 +68,7 @@ function fxUniforms(dt){
   if(FX.glowOn){ FX.scanT-=dt; if(FX.scanT<=0){ FX.scanT=2; glowScan(); } }
   let sp=0; if(state==='play'&&!S.crashed&&!S.onGround){ sp=clamp((S.speed/Math.max(1,CUR.vTop)-0.5)/0.5,0,1)*0.8+(S.ab?0.25:0); }
   else if(state==='walk'&&WALK.mode==='car') sp=clamp((Math.abs(WALK.car.v)-14)/16,0,1)*0.5;
+  if(SETTINGS.rm) sp=0;
   const u=FX.grade.uniforms.uSpeed; u.value+=(sp-u.value)*Math.min(1,dt*(sp<u.value?6:2));
 }
 /* without a logarithmic depth buffer, move the near plane out as the camera climbs (depth precision follows near/far) */

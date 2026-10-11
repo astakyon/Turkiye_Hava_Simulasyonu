@@ -1,3 +1,7 @@
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="cbp" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0.4789 0.4769 0.0442 0 0  0.5973 -0.6887 1.0914 0 0  0 0 0 1 0"/></filter>
+  <filter id="cbd" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0.1628 0.725 0.1122 0 0  0.4547 -0.6454 1.1907 0 0  0 0 0 1 0"/></filter>
+  <filter id="cbt" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0.7412 -0.4072 0.666 0 0  0.0751 0.5852 0.3397 0 0  0 0 1 0 0  0 0 0 1 0"/></filter></defs></svg>
 <canvas id="gl" tabindex="0"></canvas>
 <canvas id="hud"></canvas>
 
@@ -175,8 +179,10 @@
 <div id="settings" class="modal fs hidden">
   <button class="btn back" id="btnSetClose" type="button">← Geri</button>
   <div class="shdr"><span>■</span> AYARLAR</div>
-  <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="o" aria-selected="false">Oynanış</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button></div>
+  <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="o" aria-selected="false">Oynanış</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button><button type="button" data-tab="e" aria-selected="false">Erişilebilirlik</button></div>
   <div class="spanel">
+    <div class="stool"><input type="search" id="setSearch" class="inp" placeholder="Ayar ara…" autocomplete="off" aria-label="Ayar ara"><label class="chk"><input type="checkbox" id="setAdv"> Gelişmiş</label><button type="button" class="btn" id="btnSetUndo" disabled title="Bu pencere açıldığından beri yapılan değişiklikleri geri al">↶ Geri al</button><button type="button" class="btn" id="btnSetDef" title="Tüm ayarları varsayılana döndür (kontrol tuşları ve çağrı adı korunur)">Varsayılanlar</button></div>
+    <p class="snores hidden" id="setNoRes">Aramana uyan ayar yok.</p>
     <section data-tab="g">
       <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small id="setQInfo">Hazır ayar: çözünürlük, ağaç ve bulut yoğunluğu, gölge, efektler, kenar yumuşatma ve uzak nesne ayrıntısını birlikte ayarlar</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button><button type="button" data-q="3">Ultra</button></div></div>
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
@@ -236,6 +242,14 @@
     <section data-tab="o" class="hidden">
       <div class="srow"><div class="sl"><b>Bomba yardımı</b><small>Güdümlü: kilitli hedefe yönelir</small></div><div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
       <div class="srow"><div class="sl"><b>Otomatik hedef kilidi</b><small>Uyarı panosu ile (K tuşu)</small></div><label class="tgl"><input type="checkbox" id="setLock"><i></i></label></div>
+    </section>
+    <section data-tab="e" class="hidden">
+      <div class="srow"><div class="sl"><b>Yazı ve arayüz boyutu</b><small>Menü, ayar ve bilgi panellerinin büyüklüğü</small></div><div class="seg" id="setUiz"><button type="button" data-z="0.9">Küçük</button><button type="button" data-z="1">Normal</button><button type="button" data-z="1.15">Büyük</button><button type="button" data-z="1.3">Çok büyük</button></div></div>
+      <div class="srow"><div class="sl"><b>Renk körlüğü düzeltmesi</b><small>Görüntünün renklerini ayırt etmesi kolay olacak biçimde kaydırır (oyun ve gösterge)</small></div><div class="seg" id="setCb"><button type="button" data-c="off">Kapalı</button><button type="button" data-c="p">Protanopi</button><button type="button" data-c="d">Döteranopi</button><button type="button" data-c="t">Tritanopi</button></div></div>
+      <div class="srow"><div class="sl"><b>Yüksek karşıtlık</b><small>Paneller daha koyu, yazılar ve çerçeveler daha belirgin</small></div><label class="tgl"><input type="checkbox" id="setHc"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Hareketi azalt</b><small>Menü animasyonları, kamera sarsıntısı ve hız bulanıklığı kapanır</small></div><label class="tgl"><input type="checkbox" id="setRm"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Telsiz altyazıları</b><small>Konuşmaları ekranda yazıyla da göster</small></div><label class="tgl"><input type="checkbox" id="setRadioSub2"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Gamepad ve telefonda titreşim</small></div><label class="tgl"><input type="checkbox" id="setRumble2"><i></i></label></div>
     </section>
     <section data-tab="a" class="hidden">
       <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Yeni: gruplanmış menü ve ayrıntı paneli (klavye, gamepad, dokunmatik). Eski tasarımlar da seçilebilir</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Yeni (önerilen)</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>

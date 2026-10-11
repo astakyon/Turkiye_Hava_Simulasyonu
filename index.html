@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.64">
+<meta name="game-version" content="V1.65">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -575,9 +575,26 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .lwt small{ display:block; margin-top:4px; font-size:11px; color:var(--dim); }
 
 .setup{ max-height:calc(100vh - 24px); overflow-y:auto; }
+
+/* settings toolbar, basic/advanced, accessibility */
+.stool{ position:sticky; top:0; z-index:2; display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:8px 0 10px; margin-bottom:6px; background:linear-gradient(180deg,rgba(6,11,20,.98) 70%,rgba(6,11,20,0)); }
+.stool .inp{ flex:1 1 180px; min-width:140px; padding:8px 12px; font-size:13px; } .stool .btn{ padding:8px 12px; font-size:12px; } .stool .btn[disabled]{ opacity:.4; cursor:default; }
+.stool .chk{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--dim); } .snores{ color:var(--dim); font-size:13px; padding:12px 4px; }
+#settings.basic .srow.adv,#settings.basic #gdiag{ display:none; } #settings.searching section{ display:block!important; } #settings.searching .srow.nomatch{ display:none; }
+#settings.searching .stabs button{ opacity:.45; } .srow mark{ background:rgba(255,194,74,.35); color:inherit; border-radius:2px; }
+.modal .spanel,.tt-c,.setup,#hangarUI .dock2,.sndwrap,.radiosub,.radiomenu,.np2,#missionsUI,#startUI .box{ zoom:var(--uiz,1); }
+html.hc{ --line:rgba(220,235,250,.45); --edge:rgba(220,235,250,.4); --dim:#c6d4e2; --surf:rgba(2,5,10,.94); --glass:rgba(2,5,10,.94); }
+html.hc .srow small,html.hc .mc .mt small{ color:#d4e0ec; }
+html.rm *,html.rm *::before{ animation:none!important; transition:none!important; }
+html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ filter:url(#cbd); } html.cb-t #gl,html.cb-t #hud{ filter:url(#cbt); }
+#settings.searching section.nomatchsec{ display:none!important; }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="cbp" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0.4789 0.4769 0.0442 0 0  0.5973 -0.6887 1.0914 0 0  0 0 0 1 0"/></filter>
+  <filter id="cbd" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0.1628 0.725 0.1122 0 0  0.4547 -0.6454 1.1907 0 0  0 0 0 1 0"/></filter>
+  <filter id="cbt" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0.7412 -0.4072 0.666 0 0  0.0751 0.5852 0.3397 0 0  0 0 1 0 0  0 0 0 1 0"/></filter></defs></svg>
 <canvas id="gl" tabindex="0"></canvas>
 <canvas id="hud"></canvas>
 
@@ -755,8 +772,10 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <div id="settings" class="modal fs hidden">
   <button class="btn back" id="btnSetClose" type="button">← Geri</button>
   <div class="shdr"><span>■</span> AYARLAR</div>
-  <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="o" aria-selected="false">Oynanış</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button></div>
+  <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="o" aria-selected="false">Oynanış</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button><button type="button" data-tab="e" aria-selected="false">Erişilebilirlik</button></div>
   <div class="spanel">
+    <div class="stool"><input type="search" id="setSearch" class="inp" placeholder="Ayar ara…" autocomplete="off" aria-label="Ayar ara"><label class="chk"><input type="checkbox" id="setAdv"> Gelişmiş</label><button type="button" class="btn" id="btnSetUndo" disabled title="Bu pencere açıldığından beri yapılan değişiklikleri geri al">↶ Geri al</button><button type="button" class="btn" id="btnSetDef" title="Tüm ayarları varsayılana döndür (kontrol tuşları ve çağrı adı korunur)">Varsayılanlar</button></div>
+    <p class="snores hidden" id="setNoRes">Aramana uyan ayar yok.</p>
     <section data-tab="g">
       <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small id="setQInfo">Hazır ayar: çözünürlük, ağaç ve bulut yoğunluğu, gölge, efektler, kenar yumuşatma ve uzak nesne ayrıntısını birlikte ayarlar</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button><button type="button" data-q="3">Ultra</button></div></div>
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
@@ -816,6 +835,14 @@ input[type=range]{ width:100%; accent-color:var(--red); }
     <section data-tab="o" class="hidden">
       <div class="srow"><div class="sl"><b>Bomba yardımı</b><small>Güdümlü: kilitli hedefe yönelir</small></div><div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
       <div class="srow"><div class="sl"><b>Otomatik hedef kilidi</b><small>Uyarı panosu ile (K tuşu)</small></div><label class="tgl"><input type="checkbox" id="setLock"><i></i></label></div>
+    </section>
+    <section data-tab="e" class="hidden">
+      <div class="srow"><div class="sl"><b>Yazı ve arayüz boyutu</b><small>Menü, ayar ve bilgi panellerinin büyüklüğü</small></div><div class="seg" id="setUiz"><button type="button" data-z="0.9">Küçük</button><button type="button" data-z="1">Normal</button><button type="button" data-z="1.15">Büyük</button><button type="button" data-z="1.3">Çok büyük</button></div></div>
+      <div class="srow"><div class="sl"><b>Renk körlüğü düzeltmesi</b><small>Görüntünün renklerini ayırt etmesi kolay olacak biçimde kaydırır (oyun ve gösterge)</small></div><div class="seg" id="setCb"><button type="button" data-c="off">Kapalı</button><button type="button" data-c="p">Protanopi</button><button type="button" data-c="d">Döteranopi</button><button type="button" data-c="t">Tritanopi</button></div></div>
+      <div class="srow"><div class="sl"><b>Yüksek karşıtlık</b><small>Paneller daha koyu, yazılar ve çerçeveler daha belirgin</small></div><label class="tgl"><input type="checkbox" id="setHc"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Hareketi azalt</b><small>Menü animasyonları, kamera sarsıntısı ve hız bulanıklığı kapanır</small></div><label class="tgl"><input type="checkbox" id="setRm"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Telsiz altyazıları</b><small>Konuşmaları ekranda yazıyla da göster</small></div><label class="tgl"><input type="checkbox" id="setRadioSub2"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Gamepad ve telefonda titreşim</small></div><label class="tgl"><input type="checkbox" id="setRumble2"><i></i></label></div>
     </section>
     <section data-tab="a" class="hidden">
       <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Yeni: gruplanmış menü ve ayrıntı paneli (klavye, gamepad, dokunmatik). Eski tasarımlar da seçilebilir</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Yeni (önerilen)</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
@@ -958,7 +985,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.64', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.65', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -5293,6 +5320,7 @@ function updateThreats(dt){
 
 /* ------------------------------------------------------------------ settings + records (saved in this browser) */
 const SETTINGS={volume:0.8,quality:2,sens:1,rumble:true,invert:false,touch:'auto',bombAssist:'guided',lockOn:true,autoPerf:true,fps:false};
+const SETTINGS_DEF=JSON.parse(JSON.stringify(SETTINGS));
 let RECORDS={};
 function loadStore(){
   try{ if(!localStorage.getItem('kaan-sim-settings') && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) SETTINGS.quality=1; }catch(e){}
@@ -6312,6 +6340,7 @@ function fxUniforms(dt){
   if(FX.glowOn){ FX.scanT-=dt; if(FX.scanT<=0){ FX.scanT=2; glowScan(); } }
   let sp=0; if(state==='play'&&!S.crashed&&!S.onGround){ sp=clamp((S.speed/Math.max(1,CUR.vTop)-0.5)/0.5,0,1)*0.8+(S.ab?0.25:0); }
   else if(state==='walk'&&WALK.mode==='car') sp=clamp((Math.abs(WALK.car.v)-14)/16,0,1)*0.5;
+  if(SETTINGS.rm) sp=0;
   const u=FX.grade.uniforms.uSpeed; u.value+=(sp-u.value)*Math.min(1,dt*(sp<u.value?6:2));
 }
 /* without a logarithmic depth buffer, move the near plane out as the camera climbs (depth precision follows near/far) */
@@ -6960,7 +6989,7 @@ $('startPlace').addEventListener('change',function(e){ const p=placeById(e.targe
 refreshStartPlace();
 /* ------------------------------------------------------------------ settings / records / photo UI */
 const MODALS=['controls','settings','records','photoResult','netUI','sndLib'];
-function openModal(id){ $(id).classList.remove('hidden'); }
+function openModal(id){ $(id).classList.remove('hidden'); if(id==='settings') setSnapshot(); }
 function closeModals(){ MODALS.forEach(function(id){ $(id).classList.add('hidden'); }); }
 function anyModalOpen(){ return MODALS.some(function(id){ return !$(id).classList.contains('hidden'); }); }
 function syncSettingsUI(){
@@ -6979,6 +7008,10 @@ function syncSettingsUI(){
   $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
+  Array.prototype.forEach.call($('setUiz').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.z===(SETTINGS.uiz||1))); });
+  Array.prototype.forEach.call($('setCb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.c===(SETTINGS.cb||'off'))); });
+  $('setHc').checked=!!SETTINGS.hc; $('setRm').checked=!!SETTINGS.rm; $('setRadioSub2').checked=SETTINGS.radioSub!==false; $('setRumble2').checked=SETTINGS.rumble;
+  $('setAdv').checked=!!SETTINGS.advUi; $('settings').classList.toggle('basic',!SETTINGS.advUi); $('btnSetUndo').disabled=!setChanged();
   $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
   $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
@@ -7067,6 +7100,36 @@ $('setRadioTts').addEventListener('change',function(e){ SETTINGS.radioTts=e.targ
 $('setRadioSub').addEventListener('change',function(e){ SETTINGS.radioSub=e.target.checked; saveSettings(); });
 $('setCallsign').addEventListener('change',function(e){ SETTINGS.callsign=String(e.target.value||'').trim().slice(0,20); saveSettings(); });
 ['netVoice','netVoice2'].forEach(function(id){ const el=$(id); if(!el) return; el.checked=!!SETTINGS.voice; el.addEventListener('change',function(e){ const on=e.target.checked; ['netVoice','netVoice2'].forEach(function(k){ $(k).checked=on; }); voiceEnable(on).then(function(ok){ if(on&&!ok){ ['netVoice','netVoice2'].forEach(function(k){ $(k).checked=false; }); } }); }); });
+
+/* ---- settings: undo since opening, defaults, search, basic/advanced, accessibility (V1.65) */
+let SETSNAP=null;
+function setSnapshot(){ SETSNAP=JSON.stringify(SETTINGS); $('setSearch').value=''; setSearch(''); $('btnSetUndo').disabled=true; }
+function setChanged(){ return SETSNAP!=null&&SETSNAP!==JSON.stringify(SETTINGS); }
+function settingsApplyAll(){ invertY=SETTINGS.invert; PERF.scale=1; FX.failed=false; applyQuality(); applyVolume(); if(typeof applyTouchOpt==='function') applyTouchOpt(); uiApply(); if(typeof todApply==='function') try{ todApply(); }catch(e){} saveSettings(); syncSettingsUI(); }
+$('btnSetUndo').addEventListener('click',function(){ if(!SETSNAP) return; const o=JSON.parse(SETSNAP); Object.keys(SETTINGS).forEach(function(k){ if(!(k in o)) delete SETTINGS[k]; }); Object.assign(SETTINGS,o); settingsApplyAll(); toast('Değişiklikler geri alındı','#b8ecff'); });
+$('btnSetDef').addEventListener('click',function(){ const b=this; if(!b.dataset.sure){ b.dataset.sure='1'; b.textContent='Emin misin? Tekrar bas'; setTimeout(function(){ delete b.dataset.sure; b.textContent='Varsayılanlar'; },3500); return; }
+  delete b.dataset.sure; b.textContent='Varsayılanlar'; const keep={callsign:SETTINGS.callsign,startPlace:SETTINGS.startPlace,ai:SETTINGS.ai};
+  Object.keys(SETTINGS).forEach(function(k){ delete SETTINGS[k]; }); Object.assign(SETTINGS,JSON.parse(JSON.stringify(SETTINGS_DEF)),keep); if(DEV.mobile) SETTINGS.quality=1; settingsApplyAll(); toast('Ayarlar varsayılana döndü','#7dffb0'); });
+function setSearch(q){ q=(q||'').trim().toLocaleLowerCase('tr-TR'); const st=$('settings'); st.classList.toggle('searching',!!q); let n=0;
+  Array.prototype.forEach.call(st.querySelectorAll('.srow'),function(r){ const hit=!q||r.textContent.toLocaleLowerCase('tr-TR').indexOf(q)>=0; r.classList.toggle('nomatch',!hit); if(hit&&q) n++; });
+  Array.prototype.forEach.call(st.querySelectorAll('.spanel section'),function(sec){ const k=sec.querySelectorAll('.srow:not(.nomatch)').length; sec.classList.toggle('nomatchsec',!!q&&k===0&&!(sec.dataset.tab==='k'&&/kontrol|tuş|tus|gamepad|klavye|dokun|kumanda/.test(q))); });
+  $('setNoRes').classList.toggle('hidden',!q||n>0); if(q&&n>0&&!SETTINGS.advUi) st.classList.remove('basic'); else if(!SETTINGS.advUi) st.classList.add('basic'); }
+$('setSearch').addEventListener('input',function(e){ setSearch(e.target.value); });
+$('setAdv').addEventListener('change',function(e){ SETTINGS.advUi=e.target.checked; saveSettings(); syncSettingsUI(); });
+/* rows only shown in the advanced view */
+['setDepth','btnSafe','btnDiag','setAA','setRes','setAuto','setFps','btnLibOpen'].forEach(function(id){ const el=$(id), r=el&&el.closest&&el.closest('.srow'); if(r&&r.classList) r.classList.add('adv'); });
+function uiApply(){ const h=document.documentElement; if(!h||!h.classList) return; try{ h.style.setProperty('--uiz',String(SETTINGS.uiz||1)); }catch(e){} h.classList.toggle('hc',!!SETTINGS.hc); h.classList.toggle('rm',!!SETTINGS.rm);
+  ['p','d','t'].forEach(function(c){ h.classList.toggle('cb-'+c,SETTINGS.cb===c); }); }
+$('setUiz').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.uiz=+b.dataset.z; uiApply(); saveSettings(); syncSettingsUI(); });
+$('setCb').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.cb=b.dataset.c; uiApply(); saveSettings(); syncSettingsUI(); });
+$('setHc').addEventListener('change',function(e){ SETTINGS.hc=e.target.checked; uiApply(); saveSettings(); syncSettingsUI(); });
+$('setRm').addEventListener('change',function(e){ SETTINGS.rm=e.target.checked; uiApply(); saveSettings(); syncSettingsUI(); });
+$('setRadioSub2').addEventListener('change',function(e){ SETTINGS.radioSub=e.target.checked; saveSettings(); syncSettingsUI(); });
+$('setRumble2').addEventListener('change',function(e){ SETTINGS.rumble=e.target.checked; saveSettings(); syncSettingsUI(); });
+/* any change inside the dialog enables "Geri al" */
+$('settings').addEventListener('change',function(){ setTimeout(function(){ $('btnSetUndo').disabled=!setChanged(); },0); });
+$('settings').addEventListener('click',function(){ setTimeout(function(){ $('btnSetUndo').disabled=!setChanged(); },0); });
+uiApply();
 /* ------------------------------------------------------------------ shared toggles + gamepad */
 function toggleCam(){ camMode^=1; camSnap=true; CAMU.yaw=0; CAMU.pitch=0; }
 function toggleInvert(){ invertY=!invertY; SETTINGS.invert=invertY; saveSettings(); if($('setInv')) $('setInv').checked=invertY; toast(invertY?'Pitch kontrolü: ters':'Pitch kontrolü: normal'); }
@@ -8218,7 +8281,7 @@ function walkCam(dt){
   const gc=groundH(wV.x,wV.z)+0.8; if(wV.y<gc) wV.y=gc;
   if(dt>0&&camera.position.distanceTo(wV)<40) camera.position.lerp(wV,1-Math.exp(-dt*7)); else camera.position.copy(wV);
   camera.lookAt(wV2.set(c.x,gy+1.3*big,c.z));
-  if(sp>30){ const j=(sp-30)*0.00025; camera.rotation.z+=(Math.random()-0.5)*j; }
+  if(sp>30&&!SETTINGS.rm){ const j=(sp-30)*0.00025; camera.rotation.z+=(Math.random()-0.5)*j; }
   camera.updateMatrixWorld();
 }
 function drawWalkHUD(){

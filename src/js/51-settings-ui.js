@@ -1,6 +1,6 @@
 /* ------------------------------------------------------------------ settings / records / photo UI */
 const MODALS=['controls','settings','records','photoResult','netUI','sndLib'];
-function openModal(id){ $(id).classList.remove('hidden'); }
+function openModal(id){ $(id).classList.remove('hidden'); if(id==='settings') setSnapshot(); }
 function closeModals(){ MODALS.forEach(function(id){ $(id).classList.add('hidden'); }); }
 function anyModalOpen(){ return MODALS.some(function(id){ return !$(id).classList.contains('hidden'); }); }
 function syncSettingsUI(){
@@ -19,6 +19,10 @@ function syncSettingsUI(){
   $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
+  Array.prototype.forEach.call($('setUiz').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.z===(SETTINGS.uiz||1))); });
+  Array.prototype.forEach.call($('setCb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.c===(SETTINGS.cb||'off'))); });
+  $('setHc').checked=!!SETTINGS.hc; $('setRm').checked=!!SETTINGS.rm; $('setRadioSub2').checked=SETTINGS.radioSub!==false; $('setRumble2').checked=SETTINGS.rumble;
+  $('setAdv').checked=!!SETTINGS.advUi; $('settings').classList.toggle('basic',!SETTINGS.advUi); $('btnSetUndo').disabled=!setChanged();
   $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
   $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
@@ -107,3 +111,33 @@ $('setRadioTts').addEventListener('change',function(e){ SETTINGS.radioTts=e.targ
 $('setRadioSub').addEventListener('change',function(e){ SETTINGS.radioSub=e.target.checked; saveSettings(); });
 $('setCallsign').addEventListener('change',function(e){ SETTINGS.callsign=String(e.target.value||'').trim().slice(0,20); saveSettings(); });
 ['netVoice','netVoice2'].forEach(function(id){ const el=$(id); if(!el) return; el.checked=!!SETTINGS.voice; el.addEventListener('change',function(e){ const on=e.target.checked; ['netVoice','netVoice2'].forEach(function(k){ $(k).checked=on; }); voiceEnable(on).then(function(ok){ if(on&&!ok){ ['netVoice','netVoice2'].forEach(function(k){ $(k).checked=false; }); } }); }); });
+
+/* ---- settings: undo since opening, defaults, search, basic/advanced, accessibility (V1.65) */
+let SETSNAP=null;
+function setSnapshot(){ SETSNAP=JSON.stringify(SETTINGS); $('setSearch').value=''; setSearch(''); $('btnSetUndo').disabled=true; }
+function setChanged(){ return SETSNAP!=null&&SETSNAP!==JSON.stringify(SETTINGS); }
+function settingsApplyAll(){ invertY=SETTINGS.invert; PERF.scale=1; FX.failed=false; applyQuality(); applyVolume(); if(typeof applyTouchOpt==='function') applyTouchOpt(); uiApply(); if(typeof todApply==='function') try{ todApply(); }catch(e){} saveSettings(); syncSettingsUI(); }
+$('btnSetUndo').addEventListener('click',function(){ if(!SETSNAP) return; const o=JSON.parse(SETSNAP); Object.keys(SETTINGS).forEach(function(k){ if(!(k in o)) delete SETTINGS[k]; }); Object.assign(SETTINGS,o); settingsApplyAll(); toast('Değişiklikler geri alındı','#b8ecff'); });
+$('btnSetDef').addEventListener('click',function(){ const b=this; if(!b.dataset.sure){ b.dataset.sure='1'; b.textContent='Emin misin? Tekrar bas'; setTimeout(function(){ delete b.dataset.sure; b.textContent='Varsayılanlar'; },3500); return; }
+  delete b.dataset.sure; b.textContent='Varsayılanlar'; const keep={callsign:SETTINGS.callsign,startPlace:SETTINGS.startPlace,ai:SETTINGS.ai};
+  Object.keys(SETTINGS).forEach(function(k){ delete SETTINGS[k]; }); Object.assign(SETTINGS,JSON.parse(JSON.stringify(SETTINGS_DEF)),keep); if(DEV.mobile) SETTINGS.quality=1; settingsApplyAll(); toast('Ayarlar varsayılana döndü','#7dffb0'); });
+function setSearch(q){ q=(q||'').trim().toLocaleLowerCase('tr-TR'); const st=$('settings'); st.classList.toggle('searching',!!q); let n=0;
+  Array.prototype.forEach.call(st.querySelectorAll('.srow'),function(r){ const hit=!q||r.textContent.toLocaleLowerCase('tr-TR').indexOf(q)>=0; r.classList.toggle('nomatch',!hit); if(hit&&q) n++; });
+  Array.prototype.forEach.call(st.querySelectorAll('.spanel section'),function(sec){ const k=sec.querySelectorAll('.srow:not(.nomatch)').length; sec.classList.toggle('nomatchsec',!!q&&k===0&&!(sec.dataset.tab==='k'&&/kontrol|tuş|tus|gamepad|klavye|dokun|kumanda/.test(q))); });
+  $('setNoRes').classList.toggle('hidden',!q||n>0); if(q&&n>0&&!SETTINGS.advUi) st.classList.remove('basic'); else if(!SETTINGS.advUi) st.classList.add('basic'); }
+$('setSearch').addEventListener('input',function(e){ setSearch(e.target.value); });
+$('setAdv').addEventListener('change',function(e){ SETTINGS.advUi=e.target.checked; saveSettings(); syncSettingsUI(); });
+/* rows only shown in the advanced view */
+['setDepth','btnSafe','btnDiag','setAA','setRes','setAuto','setFps','btnLibOpen'].forEach(function(id){ const el=$(id), r=el&&el.closest&&el.closest('.srow'); if(r&&r.classList) r.classList.add('adv'); });
+function uiApply(){ const h=document.documentElement; if(!h||!h.classList) return; try{ h.style.setProperty('--uiz',String(SETTINGS.uiz||1)); }catch(e){} h.classList.toggle('hc',!!SETTINGS.hc); h.classList.toggle('rm',!!SETTINGS.rm);
+  ['p','d','t'].forEach(function(c){ h.classList.toggle('cb-'+c,SETTINGS.cb===c); }); }
+$('setUiz').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.uiz=+b.dataset.z; uiApply(); saveSettings(); syncSettingsUI(); });
+$('setCb').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.cb=b.dataset.c; uiApply(); saveSettings(); syncSettingsUI(); });
+$('setHc').addEventListener('change',function(e){ SETTINGS.hc=e.target.checked; uiApply(); saveSettings(); syncSettingsUI(); });
+$('setRm').addEventListener('change',function(e){ SETTINGS.rm=e.target.checked; uiApply(); saveSettings(); syncSettingsUI(); });
+$('setRadioSub2').addEventListener('change',function(e){ SETTINGS.radioSub=e.target.checked; saveSettings(); syncSettingsUI(); });
+$('setRumble2').addEventListener('change',function(e){ SETTINGS.rumble=e.target.checked; saveSettings(); syncSettingsUI(); });
+/* any change inside the dialog enables "Geri al" */
+$('settings').addEventListener('change',function(){ setTimeout(function(){ $('btnSetUndo').disabled=!setChanged(); },0); });
+$('settings').addEventListener('click',function(){ setTimeout(function(){ $('btnSetUndo').disabled=!setChanged(); },0); });
+uiApply();

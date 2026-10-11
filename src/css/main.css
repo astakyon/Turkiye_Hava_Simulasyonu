@@ -558,3 +558,16 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .lwt small{ display:block; margin-top:4px; font-size:11px; color:var(--dim); }
 
 .setup{ max-height:calc(100vh - 24px); overflow-y:auto; }
+
+/* settings toolbar, basic/advanced, accessibility */
+.stool{ position:sticky; top:0; z-index:2; display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:8px 0 10px; margin-bottom:6px; background:linear-gradient(180deg,rgba(6,11,20,.98) 70%,rgba(6,11,20,0)); }
+.stool .inp{ flex:1 1 180px; min-width:140px; padding:8px 12px; font-size:13px; } .stool .btn{ padding:8px 12px; font-size:12px; } .stool .btn[disabled]{ opacity:.4; cursor:default; }
+.stool .chk{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--dim); } .snores{ color:var(--dim); font-size:13px; padding:12px 4px; }
+#settings.basic .srow.adv,#settings.basic #gdiag{ display:none; } #settings.searching section{ display:block!important; } #settings.searching .srow.nomatch{ display:none; }
+#settings.searching .stabs button{ opacity:.45; } .srow mark{ background:rgba(255,194,74,.35); color:inherit; border-radius:2px; }
+.modal .spanel,.tt-c,.setup,#hangarUI .dock2,.sndwrap,.radiosub,.radiomenu,.np2,#missionsUI,#startUI .box{ zoom:var(--uiz,1); }
+html.hc{ --line:rgba(220,235,250,.45); --edge:rgba(220,235,250,.4); --dim:#c6d4e2; --surf:rgba(2,5,10,.94); --glass:rgba(2,5,10,.94); }
+html.hc .srow small,html.hc .mc .mt small{ color:#d4e0ec; }
+html.rm *,html.rm *::before{ animation:none!important; transition:none!important; }
+html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ filter:url(#cbd); } html.cb-t #gl,html.cb-t #hud{ filter:url(#cbt); }
+#settings.searching section.nomatchsec{ display:none!important; }

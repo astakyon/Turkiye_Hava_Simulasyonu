@@ -147,7 +147,7 @@ function walkCam(dt){
   const gc=groundH(wV.x,wV.z)+0.8; if(wV.y<gc) wV.y=gc;
   if(dt>0&&camera.position.distanceTo(wV)<40) camera.position.lerp(wV,1-Math.exp(-dt*7)); else camera.position.copy(wV);
   camera.lookAt(wV2.set(c.x,gy+1.3*big,c.z));
-  if(sp>30){ const j=(sp-30)*0.00025; camera.rotation.z+=(Math.random()-0.5)*j; }
+  if(sp>30&&!SETTINGS.rm){ const j=(sp-30)*0.00025; camera.rotation.z+=(Math.random()-0.5)*j; }
   camera.updateMatrixWorld();
 }
 function drawWalkHUD(){
