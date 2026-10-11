@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.80 — 2026-10-11
+- **Yarışlar:** Görev panosuna "Yarış" kategorisi eklendi, dört yarış var: Ada halka yarışı (Hürjet, adanın çevresinde 12 halka), Helikopter slalomu (T129, pistin doğusunda 15 metrede 11 kapı), Ada rallisi (SUV, Kara Üssü'nden köye dağ yolu) ve Körfez tekne yarışı (Hücumbot, şamandıraların çevresinde iki tur).
+- **Süre ve kapılar:** Süre ilk kapıdan geçince başlıyor. Sıradaki kapı yeşil, sonraki üç kapı turuncu görünüyor. HUD'da kapı sayısı, süre, en iyi derece, sıradaki kapının yönü, mesafesi ve yükseklik farkı yazıyor.
+- **Hayalet:** En iyi koşun kaydediliyor. Sonraki denemelerde yarı saydam mavi bir kopya ("hayalet") o çizgide seninle birlikte uçuyor ya da sürüyor. Her kapıda en iyi dereceye göre önde (yeşil) ya da geride (kırmızı) olduğun saniye cinsinden gösteriliyor.
+- **Sıralama tablosu:** Her yarışın ilk 5 derecesi çağrı adı ve tarihle cihazda saklanıyor; bitişte tablo gösteriliyor, panoda en iyi süre yazıyor.
+- **Ödül:** Rekor kırınca 120, normal bitişte 40 tecrübe puanı.
+- Yarışlarda ve uçuş okulu derslerinde kanat adamı ve düşman uçağı çıkmıyor.
+
 ## V1.79 — 2026-10-11
 - **Boyalar:** Hangarda uçak bilgilerinin altında "Boya" seçimi var: Standart, Deniz grisi, Çöl kamuflajı, Orman kamuflajı, Dijital kamuflaj, Gece, Kızıl Elma ve Altın. Boyalar rütbeyle açılıyor (Onbaşı'dan Albay'a kadar). Seçim her uçak için ayrı kaydediliyor.
 - **Başarımlar:** 16 başarım var: 10 saat uçuş, 100 iniş, 25 düşman uçağı, 100 yer hedefi, 25 görev, 10 dinamik görev, 30 yıldız, uçuş okulunu bitirmek, gemi inişleri, gece uçuşu, fırtınada iniş, 1000 km, 20 yer, fırlatıp sağ kurtulmak ve diğerleri. Her birinin ilerleme çubuğu ve tecrübe puanı ödülü var.
