@@ -31,7 +31,7 @@ const CTRL_DEF={
     ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['cam','Kamera',['KeyC'],['b2']]]},
   foot:{name:'Yaya', acts:[
     ['fwd','İleri',['KeyW','ArrowUp'],['a1-']], ['back','Geri',['KeyS','ArrowDown'],['a1+']], ['left','Sola',['KeyA','ArrowLeft'],['a0-']], ['right','Sağa',['KeyD','ArrowRight'],['a0+']],
-    ['run','Koş (basılı tut)',['ShiftLeft','ShiftRight'],['b10']], ['runToggle','Sürekli koş aç / kapat',['CapsLock'],[]], ['jump','Zıpla',['Space'],['b0']], ['use','Araca / uçağa bin',['KeyE','KeyF','Enter'],['b2']],
+    ['run','Koş (basılı tut)',['ShiftLeft','ShiftRight'],['b10']], ['runToggle','Sürekli koş aç / kapat',['CapsLock'],[]], ['jump','Zıpla',['Space'],['b0']], ['use','Araca / uçağa bin',['KeyE','KeyF','Enter'],['b2']], ['call','Araç çağır',['KeyG'],['b3']],
     ['lookL','Sola bak',[],['a2-']], ['lookR','Sağa bak',[],['a2+']], ['lookU','Yukarı bak',[],['a3-']], ['lookD','Aşağı bak',[],['a3+']]]}
 };
 const CTRL_ORDER=['air','heli','land','sea','foot','gen'];

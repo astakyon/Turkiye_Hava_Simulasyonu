@@ -263,6 +263,12 @@
   <div class="sbar"><span>Değişiklikler otomatik kaydedilir</span><span class="v">Esc: geri</span></div>
 </div>
 
+<div id="callUI" class="modal callui hidden" role="dialog" aria-label="Araç çağır">
+  <div class="cwrap"><div class="ctabs" id="callTabs"></div>
+    <div class="cring" id="callRing"></div><div class="chub" id="callHub"></div>
+    <p class="chint">1–8 seç · Q/E sekme · W/S teslimat yeri · Enter çağır · Esc kapat</p>
+    <button type="button" class="btn back" id="callClose">Kapat</button></div>
+</div>
 <div id="sndLib" class="modal fs hidden">
   <button class="btn back" id="btnSndBack" type="button">← Geri</button>
   <div class="shdr"><span>■</span> SES KÜTÜPHANESİ</div>
@@ -423,7 +429,7 @@
   <div class="twpn" id="tWpn"></div>
 </div>
 <div id="wtouch" class="touch hidden">
-  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wSwap" class="hidden">ARAÇ</button><button type="button" id="wWarp">HARİTA</button></div>
+  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wSwap" class="hidden">ARAÇ</button><button type="button" id="wWarp">HARİTA</button><button type="button" id="wCall">ÇAĞIR</button></div>
   <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
   <div id="wheli" class="hidden"><button type="button" id="hYL" class="tb">◀ DÖN</button><button type="button" id="hYR" class="tb">DÖN ▶</button><button type="button" id="hDn" class="tb">ALÇAL</button><button type="button" id="hUp" class="tb">YÜKSEL</button></div>
   <div class="tright wright"><button type="button" id="wJump" class="tb">ZIPLA</button><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>

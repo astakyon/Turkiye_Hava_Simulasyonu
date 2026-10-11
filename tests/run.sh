@@ -39,3 +39,4 @@ node harness.js /tmp/sim.js account.test.js
 node harness.js /tmp/sim.js career.test.js
 node harness.js /tmp/sim.js vehicles.test.js
 node harness.js /tmp/sim.js boats.test.js
+node harness.js /tmp/sim.js call.test.js

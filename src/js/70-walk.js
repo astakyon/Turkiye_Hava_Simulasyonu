@@ -184,7 +184,7 @@ function drawWalkHUD(){
   if(msg){ hx.textAlign='center'; hx.font='700 '+Math.round(16*s)+'px "Chakra Petch",system-ui,sans-serif'; const tw=hx.measureText(msg).width+28*s, y=h*0.72;
     hx.fillStyle='rgba(8,15,28,0.6)'; hx.fillRect(w/2-tw/2,y-16*s,tw,32*s); hx.fillStyle='#fff'; hx.fillText(msg,w/2,y); }
   if(WALK.hint>0&&!WALK.tvis){ hx.textAlign='center'; hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.globalAlpha=Math.min(1,WALK.hint); hx.fillStyle='#dfe9f1';
-    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · Boşluk zıpla · E etkileşim · M yerler · Esc menü':('W/S gaz-fren · A/D direksiyon · Space el freni · Shift turbo'+(WALK.car.ki<CAR_SWAP?' · T araç değiştir':'')+(WALK.car.K.weapon?' · X '+({cannon:'ateş',auto:'ateş',water:'su topu',tow:'uçağı bağla'}[WALK.car.K.weapon]):'')+' · C kamera · E in · M harita'), w/2, h-24*s); hx.globalAlpha=1; }
+    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · Boşluk zıpla · E etkileşim · G araç çağır · M yerler · Esc menü':('W/S gaz-fren · A/D direksiyon · Space el freni · Shift turbo'+(WALK.car.ki<CAR_SWAP?' · T araç değiştir':'')+(WALK.car.K.weapon?' · X '+({cannon:'ateş',auto:'ateş',water:'su topu',tow:'uçağı bağla'}[WALK.car.K.weapon]):'')+' · C kamera · E in · M harita'), w/2, h-24*s); hx.globalAlpha=1; }
   hx.restore();
 }
 function walkLook(dx,dy){ const s=SETTINGS.sens||1;

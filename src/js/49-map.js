@@ -85,7 +85,7 @@ function closeMap(){ if(!MAPV.open) return; MAPV.open=false; $('mapUI').classLis
 function mapResize(){ const c=$('mapCv'), r=c.getBoundingClientRect(), d=Math.min(2,window.devicePixelRatio||1); c.width=Math.round(r.width*d); c.height=Math.round(r.height*d); }
 function mapDraw(){ if(!MAPV.open) return; const c=$('mapCv'), x=c.getContext('2d'), d=c.width/c.getBoundingClientRect().width; x.setTransform(d,0,0,d,0,0); drawMap(x,c.width/d,c.height/d,false); }
 function mapList(){ $('mapList').innerHTML=PLACES.map(function(p){ return '<button type="button" data-id="'+p.id+'"><i style="background:'+(KCOL[p.k]||'#fff')+'"></i>'+p.n+'</button>'; }).join(''); }
-function mapPanel(){ const p=MAPV.sel, el=$('mapSel'); if(!p){ el.innerHTML='<b>Bir yer seç</b><small>Haritada ya da listede bir yere dokun.'+(NET.on?' Çevrimiçi oyunda ışınlanma kapalı.':'')+'</small>'; return; }
+function mapPanel(){ const p=MAPV.sel, el=$('mapSel'); if(MAPV.pick&&typeof callPickPanel==='function'){ el.innerHTML=callPickPanel(); return; } if(!p){ el.innerHTML='<b>Bir yer seç</b><small>Haritada ya da listede bir yere dokun.'+(NET.on?' Çevrimiçi oyunda ışınlanma kapalı.':'')+'</small>'; return; }
   const fly=MAPV.from==='play'||(MAPV.from==='walk'&&WALK.mode==='heli'), canTp=!NET.on&&(fly||p.g), start=SETTINGS.startPlace===p.id;
   el.innerHTML='<b>'+p.n+'</b><small>'+(fly?'Işınlanınca bu yerin üstünde, havada devam edersin.':(p.g?'Yürüyerek ya da araçla buraya geçersin.':'Bu yere yalnızca uçarken gidilebilir.'))+'</small>'+
     (canTp?'<button type="button" class="btn primary" id="mapTp">Işınlan</button>':'')+
@@ -109,13 +109,14 @@ function setStartPlace(p){ SETTINGS.startPlace=p.id==='base'?null:p.id; saveSett
   cv.addEventListener('pointermove',function(e){ const p=ptr.get(e.pointerId); if(!p) return; const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY; moved+=Math.abs(dx)+Math.abs(dy);
     if(ptr.size===1){ MAPV.cx-=dx/MAPV.scale; MAPV.cz-=dy/MAPV.scale; mapDraw(); }
     else if(ptr.size===2){ const v=Array.from(ptr.values()), d=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y); if(pinch>0) mapZoom(d/pinch); pinch=d; } });
-  const up=function(e){ if(!ptr.has(e.pointerId)) return; if(ptr.size===1&&moved<6){ const r=cv.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top; let best=null, bd=18;
+  const up=function(e){ if(!ptr.has(e.pointerId)) return; if(ptr.size===1&&moved<6&&MAPV.pick){ const r=cv.getBoundingClientRect(), w=mapToWorld(e.clientX-r.left,e.clientY-r.top,r.width,r.height); callPickAt(w[0],w[1]); }
+    else if(ptr.size===1&&moved<6){ const r=cv.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top; let best=null, bd=18;
       PLACES.forEach(function(p){ const q=mapToScreen(p.x,p.z,r.width,r.height), d=Math.hypot(q[0]-px,q[1]-py); if(d<bd){ bd=d; best=p; } }); mapSelect(best); }
     ptr.delete(e.pointerId); pinch=0; };
   cv.addEventListener('pointerup',up); cv.addEventListener('pointercancel',up);
   cv.addEventListener('wheel',function(e){ e.preventDefault(); mapZoom(Math.exp(-clamp(e.deltaY,-120,120)*0.0015)); },{passive:false});
-  $('mapList').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const p=placeById(b.dataset.id); MAPV.cx=p.x; MAPV.cz=p.z; mapSelect(p); });
-  $('mapSel').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b||!MAPV.sel) return; if(b.id==='mapTp') teleportTo(MAPV.sel); else if(b.id==='mapStart') setStartPlace(MAPV.sel); });
+  $('mapList').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const p=placeById(b.dataset.id); MAPV.cx=p.x; MAPV.cz=p.z; if(MAPV.pick){ const g=p.g||[p.x,p.z]; callPickAt(g[0],g[1]); return; } mapSelect(p); });
+  $('mapSel').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; if(b.id==='mapDeliver'){ callPickDone(false); return; } if(b.id==='mapDeliverGo'){ callPickDone(true); return; } if(b.id==='mapPickCancel'){ callPickCancel(); return; } if(!MAPV.sel) return; if(b.id==='mapTp') teleportTo(MAPV.sel); else if(b.id==='mapStart') setStartPlace(MAPV.sel); });
   $('mapClose').addEventListener('click',closeMap); $('mapZin').addEventListener('click',function(){ mapZoom(1.4); }); $('mapZout').addEventListener('click',function(){ mapZoom(1/1.4); });
   $('mapMe').addEventListener('click',function(){ const me=playerPos(); MAPV.cx=me[0]; MAPV.cz=me[1]; mapDraw(); });
   window.addEventListener('keydown',function(e){ if(!MAPV.open) return; if(e.code==='Escape'||isKey(e,'gen','map')){ e.preventDefault(); e.stopImmediatePropagation(); closeMap(); } },true);

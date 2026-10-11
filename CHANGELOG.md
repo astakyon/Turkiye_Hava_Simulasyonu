@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.71 — 2026-10-11
+- **Araç çağırma menüsü:** Yürürken **G** (kumandada Y, telefonda ÇAĞIR) ile dairesel menü açılır. İki sekme var: Sivil · Hizmet (SUV'lar, Bozkurtlar 4×4, kamyon, yakıt tankeri, itfaiye, otobüs, uçak çekici) ve Askerî (Kirpi, Pars, Korkut, Hisar, Fırtına, Altay).
+- **Teslimat yeri:** "Yanıma" seçilirse araç önüne gelir. "Haritadan" seçilirse haritada istediğin noktayı işaretlersin; "Oraya gönder" ya da "Gönder ve oraya git" ile teslim edilir.
+- **Teslimat animasyonu:** Sivil araçlar yaklaşık 110 m öteden kendileri sürüp gelir. Askerî araçlar paraşütle iner. Turuncu işaret ışığı teslimat noktasını gösterir, HUD'da kalan mesafe yazar.
+- **Lojistik telsizi:** Yola çıkış ve teslim anonsları telsizden gelir.
+- **Sınırlar:** Aynı anda en fazla 3 çağrılmış araç bulunur (en eskisi geri gider). Siparişler arasında kısa bekleme süresi var. Askerî araçlar bulut hesaplarda rütbe ister.
+- Çağrılan araçlara normal araçlar gibi binilir, haritada turuncu kare olarak görünürler. "Araç çağır" tuşu Ayarlar → Kontroller → Yaya bölümünden değiştirilebilir.
+
 ## V1.70 — 2026-10-11
 - **Deniz araçları:** Mendirek yanında sürülebilir Hücumbot, Römorkör ve Korvet; marinada balıkçı teknesi ve yelkenli. Binmek için yanaşıp E.
 - **Makine telgrafı ve dümen:** W/S kademeli makine (TAM GERİ … TAM YOL), A/D dümen, knot göstergesi, dalga izi ve sprey.

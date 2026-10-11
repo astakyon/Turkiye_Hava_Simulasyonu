@@ -617,3 +617,28 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .admlist li{ display:flex; gap:10px; align-items:center; padding:8px 10px; border:1px solid var(--edge); border-radius:var(--r2); } .admlist li span:not(.tagm){ flex:1; } .admlist li small{ color:var(--dim); font-size:11px; margin-left:auto; }
 .admlist li.off{ opacity:.5; } .admlist .tagm,.admtbl .tagm{ padding:1px 6px; border-radius:3px; font-size:9px; font-weight:800; background:#ffd27a; color:#1a1205; } textarea.inp{ resize:vertical; font:inherit; }
 .mixrow{ flex-wrap:wrap; } .mixrow .sndmix{ flex:1 1 320px; padding:8px; }
+/* V1.71 vehicle call radial menu */
+.modal.callui{ background:radial-gradient(circle at 50% 50%,rgba(4,9,18,.35) 0,rgba(4,9,18,.78) 70%); }
+.callui .cwrap{ position:relative; width:min(560px,92vw,calc(100vh - 150px)); display:flex; flex-direction:column; align-items:center; gap:10px; zoom:var(--uiz,1); }
+.callui .ctabs{ display:flex; gap:6px; }
+.callui .ctabs button{ font:700 13px "Chakra Petch",system-ui,sans-serif; letter-spacing:.04em; padding:7px 14px; border-radius:999px; border:1px solid rgba(184,236,255,.35); background:rgba(8,15,28,.6); color:#cfe3f0; }
+.callui .ctabs button.on{ background:#ffb25a; color:#1a0e02; border-color:#ffb25a; }
+.callui .cring{ position:relative; width:100%; aspect-ratio:1; border-radius:50%; border:1px solid rgba(255,178,90,.25); background:radial-gradient(circle,rgba(8,15,28,.0) 0 30%,rgba(8,15,28,.55) 31% 62%,rgba(8,15,28,0) 63%); }
+.callui .citem{ position:absolute; transform:translate(-50%,-50%); width:clamp(70px,19%,104px); aspect-ratio:1; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:6px;
+  background:rgba(10,20,34,.88); border:2px solid rgba(184,236,255,.28); color:#dfe9f1; font:600 11px/1.1 "Chakra Petch",system-ui,sans-serif; text-align:center; transition:transform .12s,border-color .12s,background .12s; }
+.callui .citem svg{ width:46%; height:auto; }
+.callui .citem b{ font-weight:700; font-size:clamp(9px,1.9vw,11.5px); }
+.callui .citem small{ font-size:10px; opacity:.6; }
+.callui .citem.sel,.callui .citem:focus-visible{ border-color:#ffb25a; background:rgba(60,34,8,.92); color:#fff; transform:translate(-50%,-50%) scale(1.1); outline:none; }
+.callui .citem.lock{ opacity:.45; }
+.callui .chub{ position:absolute; left:50%; top:calc(50% + 22px); transform:translate(-50%,-50%); width:40%; display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center; color:#fff; }
+.callui .chub b{ font:700 clamp(13px,2.6vw,17px) "Chakra Petch",system-ui,sans-serif; }
+.callui .chub small{ font-size:12px; color:#ffb25a; }
+.callui .cwhere{ display:flex; gap:4px; }
+.callui .cwhere button{ font:600 12px "Chakra Petch",system-ui,sans-serif; padding:5px 10px; border-radius:6px; border:1px solid rgba(184,236,255,.3); background:rgba(8,15,28,.7); color:#cfe3f0; }
+.callui .cwhere button.on{ border-color:#ffb25a; color:#ffb25a; }
+.callui .chint{ font-size:11px; color:#9fb3c4; margin:0; text-align:center; }
+.callui .back{ position:static; }
+@media (pointer:coarse){ .callui .chint{ display:none; } }
+.callui #callGo{ padding:7px 18px; font-size:14px; min-height:0; }
+@media (max-width:520px){ .callui .chub small{ font-size:10.5px; } .callui .cwhere button{ padding:4px 7px; font-size:11px; } .callui #callGo{ padding:5px 14px; font-size:13px; } }
