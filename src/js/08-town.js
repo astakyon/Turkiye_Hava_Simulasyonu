@@ -90,7 +90,7 @@ function carInstances(list,r){ const G=carGeos(), n=list.length, mt=new THREE.Ma
 const TRAFFIC={cars:[], mesh:null, paths:[]};
 function pathOf(pts){ const L=[0]; for(let i=1;i<pts.length;i++) L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1])); return {pts:pts,L:L,len:L[L.length-1]}; }
 function buildTraffic(){
-  const r=mulberry32(808), list=[ENV.road,NAVAL.road,LAND.road,TOWN.road].concat(TOWN.streets.map(function(s){ return smoothPath(s,20); }));
+  const r=mulberry32(808), list=[ENV.road,NAVAL.road,LAND.road,TOWN.road,MARINA.road].concat(TOWN.streets.map(function(s){ return smoothPath(s,20); }));
   TRAFFIC.paths=list.filter(function(p){ return p&&p.length>1; }).map(pathOf);
   TRAFFIC.paths.forEach(function(P){ const n=Math.max(1,Math.min(6,Math.round(P.len/900))); for(let k=0;k<n;k++) TRAFFIC.cars.push({P:P,s:r()*P.len,dir:r()<0.5?1:-1,v:11+r()*7,i:0}); });
   TRAFFIC.mesh=carInstances(TRAFFIC.cars.map(function(){ return {x:0,y:-50,z:0,h:0}; }),r);

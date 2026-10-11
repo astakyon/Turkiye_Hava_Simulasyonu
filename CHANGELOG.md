@@ -1,6 +1,23 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.43 — 2026-10-11
+### Yeni — Hilal Marina, deniz trafiği, kumsal ve martılar
+- **Hilal Marina** (üs yarımadasının doğu kıyısı):
+  - Rıhtım, babalar ve usturmaçalar; dört yüzer iskele ve parmak iskeleler.
+  - Bağlı balıkçı tekneleri ve yelkenliler.
+  - Dalgakıran, kırmızı/yeşil fenerler.
+- **Kara tarafı:** liman başkanlığı ("HİLAL MARİNA"), şemsiyeli "BALIK EVİ" lokantası, deniz otobüsü iskelesi ve bekleme salonu, tekne bakım hangarı ve kızakta bir tekne, otopark.
+- **Yol:** nizamiyeden çitin dışından marinaya inen yeni yol, trafikte de var.
+- **Deniz otobüsü** "HİLAL-1": marina ile Hilalkent'teki yeni iskele arasında, adanın güneyinden ve batı koyundan dolaşarak sefer yapıyor. Her iskelede bekliyor.
+- **Açık deniz:** adanın çevresinde dolaşan iki konteyner gemisi ve bir tanker, kıyıya yakın balıkçı tekneleri ve yelkenliler. Hepsinin arkasında dümen suyu var.
+- **Kumsal** (fenerle marina arasında): şemsiyeler, şezlonglar, havlular, cankurtaran kulesi, büfe, plaj voleybolu filesi.
+- **Martılar:** marina, deniz üssü, Hilalkent kıyısı, kumsal ve fenerin üzerinde kanat çırparak dönen martı sürüleri.
+- **Hızlı geçiş (M / GİT ▸):** Hilal Marina ve Kumsal eklendi.
+### Altyapı
+- Arazi düzleştirme alanları ve yürünebilir yüzeyler artık döndürülmüş olabiliyor (`fr`); marina kıyıya paralel kuruldu.
+- Kayalar hiçbir üs alanının üzerine düşmüyor.
+
 ## V1.42 — 2026-10-11
 ### Yeni — Hilalkent kasabası, yol ağı ve trafik
 - **Hilalkent:** adanın kuzeybatı kıyısında, deniz üssünün karşısında.

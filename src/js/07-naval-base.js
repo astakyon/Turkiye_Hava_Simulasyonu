@@ -14,6 +14,10 @@ function navObst(x0,x1,z0,z1,y1,air){ AP.obst.push({x0:Math.min(x0,x1),x1:Math.m
 function taperBoxZ(w,h,d,ratio){ const g=new THREE.BoxGeometry(w,h,d), p=g.attributes.position; for(let i=0;i<p.count;i++) if(p.getY(i)>0) p.setZ(i,p.getZ(i)*ratio); g.computeVertexNormals(); return g; }
 function beam(g,mat,a,b,r){ const d=new THREE.Vector3(b[0]-a[0],b[1]-a[1],b[2]-a[2]), L=d.length(), m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,L,5),mat);
   m.position.set((a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2); m.quaternion.setFromUnitVectors(UP,d.normalize()); g.add(m); return m; }
+/* world AABB of a w×d rectangle centred at (x,z) in group g's frame */
+function rectWorld(g,x,z,w,d){ const xs=[], zs=[], v=new THREE.Vector3();
+  [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(function(c){ v.set(x+c[0]*w/2,0,z+c[1]*d/2); if(g.matrixWorld) v.applyMatrix4(g.matrixWorld); xs.push(v.x); zs.push(v.z); });
+  return [Math.min.apply(null,xs),Math.max.apply(null,xs),Math.min.apply(null,zs),Math.max.apply(null,zs)]; }
 /* building with window facades (texture per floors × bays, cached) */
 const FACADE={};
 function facadeMat(floors,bays,wall,win){ const k=floors+'|'+bays+'|'+wall; if(FACADE[k]) return FACADE[k];
@@ -28,7 +32,7 @@ function bldg(g,x,y,z,w,h,d,o){ o=o||{}; const M=apMats(), fl=o.floors||Math.max
   [[0,d/2+0.05,0,w,fx],[0,-d/2-0.05,Math.PI,w,fx],[w/2+0.05,0,Math.PI/2,d,fz],[-w/2-0.05,0,-Math.PI/2,d,fz]].forEach(function(f){
     const p=new THREE.Mesh(new THREE.PlaneGeometry(f[3],h),f[4]); p.position.set(x+f[0],y+h/2,z+f[1]); p.rotation.y=f[2]; g.add(p); });
   apBox(g,M.concD,x,y+h,z,w+0.4,0.5,d+0.4);
-  wbAdd(core); navObst(x-w/2,x+w/2,z-d/2,z+d/2,y+h+0.5); return core; }
+  wbAdd(core); const bb=rectWorld(g,x,z,w,d); navObst(bb[0],bb[1],bb[2],bb[3],y+h+0.5); return core; }
 /* arched-roof warehouse along x */
 function shed(g,x,y,z,len,wid,h,col){ const M=apMats(), mat=new THREE.MeshLambertMaterial({color:col||0x7d8b96});
   const wall=apBox(g,M.conc,x,y,z,len,h,wid); const rg=new THREE.CylinderGeometry(wid/2,wid/2,len,18,1,true,0,Math.PI); rg.rotateZ(Math.PI/2); rg.scale(1,0.45,1);
@@ -36,7 +40,7 @@ function shed(g,x,y,z,len,wid,h,col){ const M=apMats(), mat=new THREE.MeshLamber
   [-1,1].forEach(function(s){ const e=new THREE.Mesh(new THREE.CircleGeometry(wid/2,18,0,Math.PI),mat); e.scale.set(1,0.45,1); e.rotation.y=s*Math.PI/2; e.position.set(x+s*len/2,y+h,z); g.add(e);
     apBox(g,M.door,x+s*(len/2+0.05),y,z,0.1,h*0.8,wid*0.45); });
   for(let k=0;k<Math.floor(len/8);k++) apBox(g,M.dark,x-len/2+4+k*8,y+h*0.62,z+wid/2+0.05,3,1,0.1);
-  wbAdd(wall); navObst(x-len/2,x+len/2,z-wid/2,z+wid/2,y+h+wid*0.22); }
+  wbAdd(wall); const bb=rectWorld(g,x,z,len,wid); navObst(bb[0],bb[1],bb[2],bb[3],y+h+wid*0.22); }
 /* generic base gate in local frame: road along local z, outside towards local −z */
 function baseGate(x,z,ang,y,text){
   const M=apMats(), st=new THREE.Group(), g=new THREE.Group(); g.position.set(x,y,z); g.rotation.y=ang; st.add(g);

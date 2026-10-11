@@ -19,3 +19,4 @@ node harness.js /tmp/sim.js library.test.js
 node harness.js /tmp/sim.js naval.test.js
 node harness.js /tmp/sim.js land.test.js
 node harness.js /tmp/sim.js town.test.js
+node harness.js /tmp/sim.js marina.test.js

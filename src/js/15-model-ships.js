@@ -43,7 +43,7 @@ function shipHull(o){
       MK.arc(0,0,0,ww,d,2.6,0,-Math.PI/2,6).slice(1).forEach(function(p){ row.push([s*p[0],p[1],zz(p[1])]); }); half[k].push(row); });
     deck.push([[-wd,Fy,zz(Fy)],[wd,Fy,zz(Fy)]]); }
   const uvS=function(x,z,y){ return [(0.5-z/o.L)*0.5,(y+o.T)/(Fmax+o.T)]; }, uvP=function(x,z,y){ return [0.5+(z/o.L+0.5)*0.5,(y+o.T)/(Fmax+o.T)]; };
-  const ctr=new THREE.Vector3(0,Fmax*0.3,0), sideMat=new THREE.MeshLambertMaterial({map:shipSideTex(Object.assign({Fmax:Fmax},o))});
+  const ctr=new THREE.Vector3(0,Fmax*0.3,0), sideMat=o.plain?shipPlain(o.hull||'#7f8992'):new THREE.MeshLambertMaterial({map:shipSideTex(Object.assign({Fmax:Fmax},o))});
   const g=new THREE.Group();
   g.add(new THREE.Mesh(MK.outward(MK.grid(half[0],false,uvS),ctr),sideMat));
   g.add(new THREE.Mesh(MK.outward(MK.grid(half[1],false,uvP),ctr),sideMat));
@@ -159,3 +159,56 @@ function buildTug(){
   [-1,1].forEach(function(s){ for(let k=0;k<5;k++) sPart(g,MK.cyl(0.45,0.45,0.9,10),M.black,s*4.6,1.6,-10+k*4.5).rotation.z=Math.PI/2; });
   return {group:g, L:L};
 }
+/* ---- civilian craft */
+/* fast passenger ferry ("deniz otobüsü") */
+function buildFerry(){
+  const M=shipMats(), L=42, g=new THREE.Group();
+  g.add(shipHull({L:L,B:11,T:1.8,Fb:3.2,Fs:2.6,rake:2,sw:0.9,ww:0.9,hull:'#f2f4f6',boot:'#1f4f8f',anti:'#7a1f1a',band:'#1f4f8f',bandY:1.2,num:'HİLAL-1',numH:1.2,numY:2.2,numAt:0.2,seed:11}));
+  sPart(g,tbox(9.6,2.6,28,0.95),M.white,0,2.8,0); sPart(g,new THREE.BoxGeometry(9.7,1.1,26),M.glass,0,3.6,0.6);
+  sPart(g,tbox(7.4,2.2,12,0.9),M.white,0,5.4,-4); sPart(g,new THREE.BoxGeometry(7.2,0.8,0.2),M.glass,0,6.5,-10.1).rotation.x=-0.35;
+  sPart(g,new THREE.BoxGeometry(9.8,0.35,27),shipPlain('#1f4f8f'),0,5.3,0.4);
+  sPart(g,new THREE.CylinderGeometry(0.08,0.08,4,6),M.white,0,7.6,-2); shipFlag(g,0,9.2,-2,1.2);
+  return {group:g, L:L};
+}
+/* container ship */
+function buildCargo(col){
+  const M=shipMats(), L=150, g=new THREE.Group();
+  g.add(shipHull({L:L,B:24,T:8,Fb:13,Fs:11,rake:6,sw:0.92,bowFine:0.25,hull:col||'#2f4f6f',anti:'#7a2a24',boot:'#1b1d20',plain:true,seed:31}));
+  const cc=['#b5432f','#2f6aa5','#3f8a4a','#d4a12c','#8a8f96','#e2e2e2','#6a3d8a'], q=mulberry32(L|0);
+  for(let bay=0;bay<9;bay++) for(let row=0;row<4;row++) for(let tier=0;tier<3;tier++){ if(q()<0.12) continue;
+    sPart(g,new THREE.BoxGeometry(2.4,2.5,12),shipPlain(cc[Math.floor(q()*cc.length)]),-8.6+row*5.7/1.0*0.98+ (row>1?0.6:0),11+tier*2.55,-58+bay*13.5); }
+  sPart(g,tbox(20,14,12,0.94),M.white,0,11,L/2-14); sPart(g,new THREE.BoxGeometry(22,1.2,0.2),M.glass,0,23,L/2-20.1);
+  sPart(g,tbox(5,8,6,0.85),shipPlain('#b3241b'),0,25,L/2-8); sPart(g,new THREE.BoxGeometry(5.2,1,6.2),M.black,0,32.5,L/2-8);
+  return {group:g, L:L};
+}
+/* oil/product tanker */
+function buildTanker(){
+  const M=shipMats(), L=170, g=new THREE.Group();
+  g.add(shipHull({L:L,B:28,T:10,Fb:12,Fs:11,rake:5,sw:0.95,bowFine:0.22,hull:'#2b2f33',anti:'#8a2a22',boot:'#b3241b',plain:true,deckMat:shipPlain('#8a3a2a'),seed:41}));
+  sPart(g,new THREE.BoxGeometry(2,1.6,L*0.62),shipPlain('#d8d8d0'),0,11.5,-10); for(let k=0;k<12;k++) sPart(g,MK.cyl(0.35,0.35,18,8),shipPlain('#c8c8c0'),0,12.8,-60+k*9).rotation.y=Math.PI/2;
+  sPart(g,tbox(22,15,14,0.94),M.white,0,11,L/2-16); sPart(g,new THREE.BoxGeometry(24,1.2,0.2),M.glass,0,24,L/2-23.1);
+  sPart(g,tbox(5,8,6,0.85),M.white,0,26,L/2-8); sPart(g,new THREE.BoxGeometry(5.2,1,6.2),M.black,0,33.5,L/2-8);
+  return {group:g, L:L};
+}
+/* fishing boat (trawler) */
+function buildFishing(col){
+  const M=shipMats(), L=16, g=new THREE.Group();
+  g.add(shipHull({L:L,B:5.2,T:1.6,Fb:2.4,Fs:1.6,rake:1.2,sw:0.8,hull:col||'#f2f2ee',band:'#1f4f8f',bandY:1.2,plain:true}));
+  sPart(g,new THREE.BoxGeometry(3.4,2.2,4),M.white,0,1.8,-2.5); sPart(g,new THREE.BoxGeometry(3.5,0.6,4.1),M.glass,0,3.1,-2.5);
+  sPart(g,new THREE.BoxGeometry(3.8,0.2,4.4),shipPlain('#1f4f8f'),0,4.0,-2.5);
+  sPart(g,new THREE.CylinderGeometry(0.08,0.1,6,6),M.white,0,4,-1); beamIn(g,M.dark,[0,8.5,-1],[0,2.4,6],0.04);
+  const d=sPart(g,MK.cyl(0.8,0.8,2.6,12),shipPlain('#d0662a'),0,2.6,4.5); d.rotation.y=Math.PI/2;
+  return {group:g, L:L};
+}
+/* sailing yacht; `sail` true shows the sails up */
+function buildSailboat(sail){
+  const M=shipMats(), L=12, g=new THREE.Group();
+  g.add(shipHull({L:L,B:3.8,T:0.9,Fb:1.4,Fs:1.1,rake:1.5,sw:0.75,hull:'#f6f6f2',boot:'#1f2a44',band:'#1f2a44',bandY:0.9,plain:true}));
+  sPart(g,tbox(2.2,0.6,4,0.85),M.white,0,1.2,0); sPart(g,new THREE.BoxGeometry(2.0,0.3,0.05),M.glass,0,1.6,-2);
+  sPart(g,new THREE.CylinderGeometry(0.06,0.08,15,6),M.white,0,1.2,-1.2).position.y=8.7;
+  if(sail){ const sg=new THREE.BufferGeometry(); sg.setAttribute('position',new THREE.Float32BufferAttribute([0,2.2,-1, 0,15.5,-1, 0,2.2,4.4, 0,2.2,-1.4, 0,14.5,-1.4, 0,1.6,-6],3)); sg.computeVertexNormals();
+    const sm=new THREE.Mesh(sg,shipMats().sail||(SHIPM.sail=new THREE.MeshLambertMaterial({color:0xfafaf5,side:THREE.DoubleSide}))); sm.rotation.y=0.25; g.add(sm); }
+  return {group:g, L:L};
+}
+function beamIn(g,mat,a,b,r){ const d=new THREE.Vector3(b[0]-a[0],b[1]-a[1],b[2]-a[2]), L=d.length(), m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,L,4),mat);
+  m.position.set((a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2); m.quaternion.setFromUnitVectors(UP,d.normalize()); g.add(m); return m; }

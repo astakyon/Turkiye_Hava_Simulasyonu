@@ -7,19 +7,24 @@ function fbm(x,y,oct){ let s=0,a=.5,f=1,n=0; for(let i=0;i<oct;i++){ s+=a*vnoise
 const AIRFIELD_Y = 22;
 /* flat pads cut into the terrain for the bases (x0..x1, z0..z1 fully flat at y; smooth falloff `f` metres; `hardWest`: no
    falloff on the sea side so the quay meets deep water). DECKS: walkable surfaces above the terrain (quays, piers). */
-const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hardWest:true},
+const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hard:'w'},
   {id:'land',x0:400,x1:1900,z0:-7950,z1:-7250,y:34,f:320},{id:'range',x0:2120,x1:3300,z0:-7800,z1:-7520,y:34,f:260},
-  {id:'town',x0:-9300,x1:-7100,z0:-7350,z1:-6760,y:16,f:350}];
+  {id:'town',x0:-9300,x1:-7100,z0:-7350,z1:-6760,y:16,f:350},
+  {id:'marina',fr:{cx:2350,cz:1250,a:0.536},x0:-260,x1:40,z0:-290,z1:260,y:2.7,f:300,hard:'e'}];
 const DECKS=[];
+/* optional rotated frame `fr` {cx,cz,a}: local x = along (cos a, sin a), local z = along (−sin a, cos a) */
+function frLocal(fr,x,z){ if(!fr) return [x,z]; const dx=x-fr.cx, dz=z-fr.cz, c=Math.cos(fr.a), s=Math.sin(fr.a); return [dx*c+dz*s, -dx*s+dz*c]; }
+function frWorld(fr,lx,lz){ const c=Math.cos(fr.a), s=Math.sin(fr.a); return [fr.cx+lx*c-lz*s, fr.cz+lx*s+lz*c]; }
 function padW(p,x,z){
-  let dx=0; if(x<p.x0){ if(p.hardWest){ if(x<p.x0-6) return 0; } else dx=p.x0-x; } else if(x>p.x1) dx=x-p.x1;
+  if(p.fr){ const l=frLocal(p.fr,x,z); x=l[0]; z=l[1]; } const hd=p.hard||'';
+  let dx=0; if(x<p.x0){ if(hd.indexOf('w')>=0){ if(x<p.x0-6) return 0; } else dx=p.x0-x; } else if(x>p.x1){ if(hd.indexOf('e')>=0){ if(x>p.x1+6) return 0; } else dx=x-p.x1; }
   const dz=z<p.z0?p.z0-z:(z>p.z1?z-p.z1:0); if(dx>=p.f||dz>=p.f) return 0;
   return (1-smooth(0,p.f,dx))*(1-smooth(0,p.f,dz));
 }
-function inAnyPad(x,z,m){ return PADS.some(function(p){ return x>p.x0-m&&x<p.x1+m&&z>p.z0-m&&z<p.z1+m; }); }
-function inPad(id,x,z,m){ const p=PADS.find(function(q){ return q.id===id; }); m=m||0; return x>p.x0-m&&x<p.x1+m&&z>p.z0-m&&z<p.z1+m; }
-/* walkable ground height: terrain, raised by decks (quays, piers) */
-function groundH(x,z){ let h=terrainH(x,z); for(let i=0;i<DECKS.length;i++){ const d=DECKS[i]; if(x>d.x0&&x<d.x1&&z>d.z0&&z<d.z1&&d.y>h) h=d.y; } return h; }
+function inAnyPad(x,z,m){ return PADS.some(function(p){ const l=frLocal(p.fr,x,z); return l[0]>p.x0-m&&l[0]<p.x1+m&&l[1]>p.z0-m&&l[1]<p.z1+m; }); }
+function inPad(id,x,z,m){ const p=PADS.find(function(q){ return q.id===id; }); m=m||0; const l=frLocal(p.fr,x,z); return l[0]>p.x0-m&&l[0]<p.x1+m&&l[1]>p.z0-m&&l[1]<p.z1+m; }
+/* walkable ground height: terrain, raised by decks (quays, piers; decks may carry a rotated frame) */
+function groundH(x,z){ let h=terrainH(x,z); for(let i=0;i<DECKS.length;i++){ const d=DECKS[i], l=d.fr?frLocal(d.fr,x,z):null, lx=l?l[0]:x, lz=l?l[1]:z; if(lx>d.x0&&lx<d.x1&&lz>d.z0&&lz<d.z1&&d.y>h) h=d.y; } return h; }
 function terrainH(x,z){
   const n = fbm(x/11000+3.1, z/11000+7.7, 4);
   const land = smooth(0.40,0.58,n);
