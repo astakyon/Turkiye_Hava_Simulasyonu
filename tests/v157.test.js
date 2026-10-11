@@ -11,4 +11,8 @@ DEV.mobile=false; SETTINGS.autoPerf=true; SETTINGS.res='auto'; state='play'; PER
 T('PC autoscale floor 0.85',PERF.scale>=0.85-1e-9&&PERF.scale<1,PERF.scale);
 SETTINGS.res='1.5'; applyQuality(); T('fixed res scale',Math.abs(PERF.base-Math.min(2.5,1.5*(window.devicePixelRatio||1)))<1e-6&&PERF.scale===1,PERF.base);
 SETTINGS.res='auto'; applyQuality();
+// V1.59 presets + culling
+SETTINGS.quality=3; applyQuality(); T('ultra preset cull px',Math.abs(CULL.px-CULL_PX[3]*(DEV.mobile?1.3:1))<1e-9,CULL.px); T('ultra fx default',fxDefault()===(DEV.mobile?1:2));
+SETTINGS.quality=0; applyQuality(); T('low preset: no shadows by default',shadowDefault()===false); SETTINGS.quality=2; applyQuality();
+T('cull functions',typeof chunkInstances==='function'&&typeof cullStep==='function'); cullStep(0.016);
 console.log('pass',ok,'fail',bad);

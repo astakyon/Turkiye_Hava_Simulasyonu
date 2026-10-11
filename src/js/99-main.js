@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -14,7 +14,7 @@ function frame(now){
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
   placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); helisIdle(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')||(state==='map'&&MAPV.from==='walk')) walkCam(dt); else cameraUpdate(dt);
-  sky.position.copy(camera.position); shadowFollow();
+  sky.position.copy(camera.position); shadowFollow(); if(state!=='library') cullStep(dt);
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
   renderFrame(dt);
   drawHUD(); miniStep(dt); audioUpdate(); updateTouchUI(); updateWalkTouch();

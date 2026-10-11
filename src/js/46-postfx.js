@@ -4,7 +4,7 @@
    above the bloom threshold (see GLOW), so white paint and clouds do not smear. */
 var FX={level:0, on:false, composer:null, bloom:null, grade:null, fxaa:null, hdr:false, msaa:false, failed:false, loading:null, glowOn:false, scanT:0};
 var GLOW=new Map();   /* material -> {base colour, factor} */
-function fxDefault(){ let coarse=false; try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){} return (!coarse&&SETTINGS.quality>=1)?2:0; }
+function fxDefault(){ const q=SETTINGS.quality; return DEV.mobile?(q>=2?1:0):(q>=1?2:0); }
 function fxWanted(){ return SETTINGS.fx==null?fxDefault():SETTINGS.fx; }
 const GRADE_SHADER={
   uniforms:{tDiffuse:{value:null}, uSpeed:{value:0}, uVig:{value:0.24}, uHdr:{value:0}, uSat:{value:1.1}, uCon:{value:1.06}},
@@ -36,7 +36,7 @@ function fxBuild(){
   FX.hdr=halfOK&&FX.level>=2&&!DEV.mobile&&!DEV.safe;   /* half-float targets misbehave on some phone GPUs */
   const pr=renderer.getPixelRatio(), W=Math.max(1,Math.round(HW*pr)), H=Math.max(1,Math.round(HH*pr));
   const opts={minFilter:THREE.LinearFilter, magFilter:THREE.LinearFilter, format:THREE.RGBAFormat, type:FX.hdr?THREE.HalfFloatType:THREE.UnsignedByteType, depthBuffer:true, stencilBuffer:true /* r128: stencil yoksa derinlik 16 bit → uzakta z-fighting çizgileri; DEPTH24_STENCIL8 */};
-  const aa=SETTINGS.aa||'auto'; let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget&&(aa==='msaa4'||aa==='msaa8'||(aa==='auto'&&!DEV.mobile));
+  const aa=(SETTINGS.aa&&SETTINGS.aa!=='auto')?SETTINGS.aa:(SETTINGS.quality>=3&&!DEV.mobile?'msaa8':'auto'); let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget&&(aa==='msaa4'||aa==='msaa8'||(aa==='auto'&&!DEV.mobile));
   if(FX.msaa){ rt=new THREE.WebGLMultisampleRenderTarget(W,H,opts); let mx=4; try{ mx=gl.getParameter(gl.MAX_SAMPLES)||4; }catch(e){} rt.samples=Math.min(aa==='msaa8'?8:4,mx); FX.samples=rt.samples; } else rt=new THREE.WebGLRenderTarget(W,H,opts);
   if(FX.composer){ FX.composer.renderTarget1.dispose(); FX.composer.renderTarget2.dispose(); }
   const c=new THREE.EffectComposer(renderer,rt); c.setPixelRatio(pr); c.setSize(HW,HH);

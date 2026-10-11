@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.58">
+<meta name="game-version" content="V1.59">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -652,7 +652,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="o" aria-selected="false">Oynanış</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button></div>
   <div class="spanel">
     <section data-tab="g">
-      <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small>Telefonlarda Orta önerilir</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
+      <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small id="setQInfo">Hazır ayar: çözünürlük, ağaç ve bulut yoğunluğu, gölge, efektler, kenar yumuşatma ve uzak nesne ayrıntısını birlikte ayarlar</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button><button type="button" data-q="3">Ultra</button></div></div>
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
       <div class="srow"><div class="sl"><b>Gün saati</b><small>Döngü: 20 dakikada bir tam gün (sabah, öğle, akşam, gece)</small></div><div class="seg" id="setTod"><button type="button" data-t="dawn">Sabah</button><button type="button" data-t="day">Öğle</button><button type="button" data-t="dusk">Akşam</button><button type="button" data-t="night">Gece</button><button type="button" data-t="cycle">Döngü</button></div></div>
       <div class="srow"><div class="sl"><b>Görsel efektler</b><small>Düşük: renk düzeltme, hız bulanıklığı, kenar yumuşatma. Yüksek: + ışık parlaması (bloom). Telefonda FPS düşürebilir</small></div><div class="seg" id="setFx"><button type="button" data-f="0">Kapalı</button><button type="button" data-f="1">Düşük</button><button type="button" data-f="2">Yüksek</button></div></div>
@@ -832,7 +832,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.58', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.59', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -925,11 +925,11 @@ function upgradeModel(g){
   return g;
 }
 function shadowsOn(){ return SETTINGS.shadows==null?shadowDefault():!!SETTINGS.shadows; }
-function shadowDefault(){ let coarse=false; try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){} return !coarse && SETTINGS.quality>=1; }
+function shadowDefault(){ return DEV.mobile?SETTINGS.quality>=3:SETTINGS.quality>=1; }
 function applyShadows(){
   const on=shadowsOn(), q=SETTINGS.quality;
   renderer.shadowMap.enabled=on; sunLight.castShadow=on;
-  const n=q>=2?2048:1024; if(sunLight.shadow.mapSize.x!==n){ sunLight.shadow.mapSize.set(n,n); if(sunLight.shadow.map){ sunLight.shadow.map.dispose(); sunLight.shadow.map=null; } }
+  const n=q>=3?(DEV.mobile?2048:4096):q>=2?2048:1024; if(sunLight.shadow.mapSize.x!==n){ sunLight.shadow.mapSize.set(n,n); if(sunLight.shadow.map){ sunLight.shadow.map.dispose(); sunLight.shadow.map=null; } }
   scene.traverse(function(o){ if(!o.isMesh&&!o.isInstancedMesh) return; const m=Array.isArray(o.material)?o.material[0]:o.material; if(m) m.needsUpdate=true;
     if(o.userData.rs===undefined){ const big=o.geometry&&(o.geometry.boundingSphere||(o.geometry.computeBoundingSphere&&o.geometry.computeBoundingSphere(),o.geometry.boundingSphere));
       const basic=!m||m.isMeshBasicMaterial||m.isShaderMaterial||m.transparent; o.userData.rs=!basic; o.userData.cs=!basic&&!o.isInstancedMesh&&!(big&&big.radius>600); }
@@ -5192,10 +5192,12 @@ function applyQuality(){
   const q=SETTINGS.quality, dpr=window.devicePixelRatio||1;
   const r=SETTINGS.res&&SETTINGS.res!=='auto'?+SETTINGS.res:0;
   if(r){ PERF.scale=1; PERF.base=Math.min(DEV.mobile?2:2.5,dpr*r); }                 /* fixed resolution scale chosen by the player (can supersample on PC) */
-  else PERF.base=[1,Math.min(1.5,dpr),Math.min(2,dpr)][q];
+  else PERF.base=[1,Math.min(1.5,dpr),Math.min(2,dpr),Math.min(2,dpr)][q];
   PERF.scale=Math.max(PERF.scale,perfMin()); renderer.setPixelRatio(PERF.base*PERF.scale); texQuality();
-  if(GFX.trees) GFX.trees.count=Math.floor(GFX.treeN*[0.35,0.7,1][q]);
-  if(GFX.clouds) GFX.clouds.count=Math.floor(GFX.cloudN*[0.5,0.75,1][q]);
+  const td=[0.35,0.7,1,1][q]; if(GFX.trees) GFX.trees.count=Math.floor(GFX.treeN*td);
+  if(GFX.treeChunks) GFX.treeChunks.forEach(function(m){ m.count=Math.max(0,Math.floor(m.userData.full*td)); });
+  if(GFX.clouds) GFX.clouds.count=Math.floor(GFX.cloudN*[0.5,0.75,1,1][q]);
+  if(typeof CULL!=='undefined'){ CULL.px=CULL_PX[q]*(DEV.mobile?1.3:1); CULL.t=99; }
   resize(); if(typeof applyShadows==='function') applyShadows();
   if(typeof applyFX==='function') applyFX();
 }
@@ -5777,13 +5779,79 @@ function drawHUD(){
   if(state==='paused'){ hx.fillStyle='rgba(4,9,18,0.45)'; hx.fillRect(0,0,w,h); }
 }
 
+/* ------------------------------------------------------------------ distance culling by on-screen size
+   Most of the ~2 800 meshes are small props (benches, lamps, sheds, signs) spread over a 30 km island; they cost a draw call each
+   even when they would cover less than a pixel. Every object whose projected size falls below a quality-dependent threshold is
+   taken off render layer 0 (so .visible, which the game logic uses, stays untouched). The list is refreshed every few seconds
+   and checked a slice per frame. Shadow casting follows automatically (the shadow pass uses the same layer test). */
+const CULL={list:[], i:0, t:99, px:2.5, on:true, hidden:0, cv:new THREE.Vector3()};
+const CULL_PX=[6,4,2.5,1.2];   /* Düşük / Orta / Yüksek / Ultra: hide below this many pixels */
+function cullCollect(){
+  const L=[]; scene.updateMatrixWorld();
+  scene.traverse(function(o){
+    if(!(o.isMesh||o.isPoints||o.isLine)||(o.isInstancedMesh&&!o.userData.full)||o===sky||o.userData.noCull||!o.layers||!o.matrixWorld||!o.matrixWorld.getMaxScaleOnAxis) return;
+    let p=o; while(p){ if(p===planeGroup||p.userData.noCull) return; p=p.parent; }
+    const g=o.geometry; if(!g) return; if(!g.boundingSphere) g.computeBoundingSphere(); const bs=g.boundingSphere; if(!bs||!isFinite(bs.radius)) return;
+    const r=bs.radius*o.matrixWorld.getMaxScaleOnAxis(); if(r>1500) return;   /* terrain, sea, roads network: always drawn */
+    L.push(o);
+  });
+  /* objects dropped from the list must be visible again */
+  CULL.list.forEach(function(o){ if(L.indexOf(o)<0) o.layers.enable(0); });
+  CULL.list=L; CULL.i=0;
+}
+function cullStep(dt){
+  if(!CULL.on){ return; }
+  CULL.t+=dt; if(CULL.t>4){ CULL.t=0; cullCollect(); }
+  const L=CULL.list, n=L.length; if(!n) return;
+  const k=HH/(2*Math.tan(camera.fov*Math.PI/360)), cp=camera.position, px=CULL.px, per=Math.max(60,Math.ceil(n/6)), v=CULL.cv;
+  for(let c=0;c<per;c++){
+    if(CULL.i>=n) CULL.i=0; const o=L[CULL.i++], g=o.geometry, bs=g.boundingSphere; if(!bs) continue;
+    v.copy(bs.center).applyMatrix4(o.matrixWorld);
+    const d=Math.max(1,v.distanceTo(cp)-bs.radius), r=bs.radius*o.matrixWorld.getMaxScaleOnAxis(), show=r*k/d>=px;
+    if(show) o.layers.enable(0); else o.layers.disable(0);
+  }
+}
+function cullSet(on){ CULL.on=on; if(!on) CULL.list.forEach(function(o){ o.layers.enable(0); }); }
+function cullAll(){ const n=CULL.list.length; const old=CULL.i; CULL.i=0; const keep=CULL.list; for(let s=0;s<6;s++) cullStep(0); CULL.i=old; return keep.filter(function(o){ return !o.layers.test(camera.layers); }).length; }
+/* split big static instanced meshes (forests, rocks, fence posts, parked cars …) into 4 km tiles with their own bounding spheres,
+   so the camera frustum and the size cull skip whole tiles behind or far from the camera (they were always drawn in full) */
+function chunkInstances(){
+  if(!scene.children) return 0;
+  const dyn=new Set([GFX.clouds]);
+  try{ if(LMK.rotors) dyn.add(LMK.rotors); if(LMK.cabM) dyn.add(LMK.cabM); }catch(e){}
+  try{ if(RURAL.rotors) dyn.add(RURAL.rotors); if(RURAL.sheep) RURAL.sheep.forEach(function(m){ dyn.add(m); }); }catch(e){}
+  try{ if(MARINA.gulls) dyn.add(MARINA.gulls); if(MARINA.g) dyn.add(MARINA.g); }catch(e){}
+  try{ const t=TRAFFIC; (t.lanes||[t]).forEach(function(L){ if(L&&L.mesh) ['body','glass','wheel'].forEach(function(k){ dyn.add(L.mesh[k]); }); }); }catch(e){}
+  const src=scene.children.filter(function(o){ return o.isInstancedMesh&&o.count>=400&&!dyn.has(o)&&!o.userData.noChunk; });
+  const mt=new THREE.Matrix4(), v=new THREE.Vector3(), TILE=4000; let made=0;
+  src.forEach(function(im){
+    if(!im.geometry.boundingSphere) im.geometry.computeBoundingSphere(); const gr=im.geometry.boundingSphere.radius;
+    const tiles=new Map();
+    for(let i=0;i<im.count;i++){ im.getMatrixAt(i,mt); v.setFromMatrixPosition(mt); const key=Math.floor(v.x/TILE)+','+Math.floor(v.z/TILE);
+      let t=tiles.get(key); if(!t){ t=[]; tiles.set(key,t); } t.push(i); }
+    if(tiles.size<2) return;
+    const col=im.instanceColor, c3=new THREE.Color(), isTrees=GFX.trees===im, chunks=[];
+    tiles.forEach(function(idx){
+      const g=im.geometry.clone(), m=new THREE.InstancedMesh(g,im.material,idx.length); let cx=0,cy=0,cz=0, sMax=1;
+      idx.forEach(function(i,j){ im.getMatrixAt(i,mt); m.setMatrixAt(j,mt); v.setFromMatrixPosition(mt); cx+=v.x; cy+=v.y; cz+=v.z; sMax=Math.max(sMax,mt.getMaxScaleOnAxis()); if(col){ im.getColorAt(i,c3); m.setColorAt(j,c3); } });
+      cx/=idx.length; cy/=idx.length; cz/=idx.length; let R=0;
+      idx.forEach(function(i){ im.getMatrixAt(i,mt); v.setFromMatrixPosition(mt); R=Math.max(R,Math.hypot(v.x-cx,v.y-cy,v.z-cz)); });
+      g.boundingSphere=new THREE.Sphere(new THREE.Vector3(cx,cy,cz),R+gr*sMax);
+      m.instanceMatrix.needsUpdate=true; if(m.instanceColor) m.instanceColor.needsUpdate=true;
+      m.frustumCulled=true; m.castShadow=im.castShadow; m.receiveShadow=im.receiveShadow; m.userData=Object.assign({},im.userData,{full:idx.length}); m.renderOrder=im.renderOrder;
+      scene.add(m); chunks.push(m); made++; });
+    scene.remove(im);
+    if(isTrees){ GFX.treeChunks=chunks; GFX.trees=null; }
+  });
+  return made;
+}
 /* ------------------------------------------------------------------ post-processing: bloom, colour grade, vignette, speed blur, anti-aliasing
    Levels (Ayarlar → Grafik → Görsel efektler): 0 off (plain render), 1 grade + speed blur, 2 + bloom.
    Bloom is selective: the scene is rendered into a high-precision buffer and only lights, flames and the sun are pushed
    above the bloom threshold (see GLOW), so white paint and clouds do not smear. */
 var FX={level:0, on:false, composer:null, bloom:null, grade:null, fxaa:null, hdr:false, msaa:false, failed:false, loading:null, glowOn:false, scanT:0};
 var GLOW=new Map();   /* material -> {base colour, factor} */
-function fxDefault(){ let coarse=false; try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){} return (!coarse&&SETTINGS.quality>=1)?2:0; }
+function fxDefault(){ const q=SETTINGS.quality; return DEV.mobile?(q>=2?1:0):(q>=1?2:0); }
 function fxWanted(){ return SETTINGS.fx==null?fxDefault():SETTINGS.fx; }
 const GRADE_SHADER={
   uniforms:{tDiffuse:{value:null}, uSpeed:{value:0}, uVig:{value:0.24}, uHdr:{value:0}, uSat:{value:1.1}, uCon:{value:1.06}},
@@ -5815,7 +5883,7 @@ function fxBuild(){
   FX.hdr=halfOK&&FX.level>=2&&!DEV.mobile&&!DEV.safe;   /* half-float targets misbehave on some phone GPUs */
   const pr=renderer.getPixelRatio(), W=Math.max(1,Math.round(HW*pr)), H=Math.max(1,Math.round(HH*pr));
   const opts={minFilter:THREE.LinearFilter, magFilter:THREE.LinearFilter, format:THREE.RGBAFormat, type:FX.hdr?THREE.HalfFloatType:THREE.UnsignedByteType, depthBuffer:true, stencilBuffer:true /* r128: stencil yoksa derinlik 16 bit → uzakta z-fighting çizgileri; DEPTH24_STENCIL8 */};
-  const aa=SETTINGS.aa||'auto'; let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget&&(aa==='msaa4'||aa==='msaa8'||(aa==='auto'&&!DEV.mobile));
+  const aa=(SETTINGS.aa&&SETTINGS.aa!=='auto')?SETTINGS.aa:(SETTINGS.quality>=3&&!DEV.mobile?'msaa8':'auto'); let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget&&(aa==='msaa4'||aa==='msaa8'||(aa==='auto'&&!DEV.mobile));
   if(FX.msaa){ rt=new THREE.WebGLMultisampleRenderTarget(W,H,opts); let mx=4; try{ mx=gl.getParameter(gl.MAX_SAMPLES)||4; }catch(e){} rt.samples=Math.min(aa==='msaa8'?8:4,mx); FX.samples=rt.samples; } else rt=new THREE.WebGLRenderTarget(W,H,opts);
   if(FX.composer){ FX.composer.renderTarget1.dispose(); FX.composer.renderTarget2.dispose(); }
   const c=new THREE.EffectComposer(renderer,rt); c.setPixelRatio(pr); c.setSize(HW,HH);
@@ -6416,6 +6484,8 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
   Array.prototype.forEach.call($('setTod').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.tod||'day'))); });
   Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); });
+  { const custom=SETTINGS.fx!=null||SETTINGS.shadows!=null||(SETTINGS.aa&&SETTINGS.aa!=='auto')||(SETTINGS.res&&SETTINGS.res!=='auto');
+    $('setQInfo').textContent=custom?'Özel: hazır ayarın üstüne kendi seçimlerin uygulanıyor (bir hazır ayara dokununca sıfırlanır)':['Düşük: en akıcı, telefonlar için','Orta: dengeli','Yüksek: gölge ve efektler açık','Ultra: güçlü bilgisayarlar için, 4096 gölge, MSAA 8x, en uzak ayrıntı'][SETTINGS.quality]; }
   Array.prototype.forEach.call($('setRes').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.r===String(SETTINGS.res||'auto'))); });
   Array.prototype.forEach.call($('setAA').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.a===(SETTINGS.aa||'auto'))); });
   Array.prototype.forEach.call($('setDepth').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.d===(SETTINGS.depth||'auto'))); });
@@ -6439,7 +6509,9 @@ $('btnPauseSettings').addEventListener('click',function(){ syncSettingsUI(); ope
 $('btnSetClose').addEventListener('click',closeModals);
 $('setVol').addEventListener('input',function(e){ SETTINGS.volume=+e.target.value/100; $('setVolV').textContent=e.target.value+'%'; applyVolume(); saveSettings(); });
 $('setSens').addEventListener('input',function(e){ SETTINGS.sens=+e.target.value/100; $('setSensV').textContent=e.target.value+'%'; saveSettings(); });
-$('setQ').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.quality=+b.dataset.q; applyQuality(); saveSettings(); syncSettingsUI(); });
+$('setQ').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.quality=+b.dataset.q;
+  /* a preset clears the individual overrides so its own defaults apply */
+  SETTINGS.fx=null; SETTINGS.shadows=null; SETTINGS.aa='auto'; SETTINGS.res='auto'; PERF.scale=1; FX.failed=false; applyQuality(); saveSettings(); syncSettingsUI(); });
 $('setBomb').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.bombAssist=b.dataset.b; saveSettings(); syncSettingsUI(); });
 $('setTouch').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.touch=b.dataset.t; saveSettings(); syncSettingsUI(); });
 $('btnFull').addEventListener('click',function(){ try{ const el=document.documentElement; (el.requestFullscreen||el.webkitRequestFullscreen).call(el); }catch(err){} });
@@ -6475,7 +6547,7 @@ function gfxDiag(){
   const i=renderer.info, on=function(b){ return b?'açık':'kapalı'; }, sc=Math.round(renderer.getPixelRatio()*100)/100;
   const rows=[['Cihaz',DEV.kind+(DEV.ios?' · iOS':DEV.android?' · Android':'')],['Ekran kartı',DEV.gpu],['WebGL',DEV.webgl+' · hassasiyet '+(DEV.hp||'?')+' · derinlik '+(DEV.depthBits||'?')+' bit'],
     ['Ekran',innerWidth+'×'+innerHeight+' · cihaz oranı '+(window.devicePixelRatio||1)],['Çizim ölçeği',sc+'x'+(PERF.scale<1?' (otomatik düşürüldü)':'')],
-    ['FPS',Math.round(PERF.fps)],['Çizim çağrısı',i.render.calls],['Üçgen',i.render.triangles.toLocaleString('tr-TR')],['Doku / geometri',i.memory.textures+' / '+i.memory.geometries],
+    ['FPS',Math.round(PERF.fps)],['Çizim çağrısı',i.render.calls+' · gizlenen uzak nesne '+(CULL.list.filter(function(o){ return !o.layers.test(camera.layers); }).length)+'/'+CULL.list.length],['Üçgen',i.render.triangles.toLocaleString('tr-TR')],['Doku / geometri',i.memory.textures+' / '+i.memory.geometries],
     ['Derinlik',DEV.logDepth?'logaritmik':'standart (yakın düzlem '+(camera.near||0).toFixed(2)+' m)'],['Gölgeler',on(renderer.shadowMap.enabled)+(renderer.shadowMap.enabled?' · '+sunLight.shadow.mapSize.x+' px':'')],
     ['Efektler',FX.on?('seviye '+FX.level+(FX.hdr?' · HDR':'')+(FX.msaa?' · MSAA '+(FX.samples||4)+'x':FX.fxaa?' · FXAA':'')):'kapalı'],['Kenar yumuşatma',on(!DEV.safe)],['Güvenli mod',on(DEV.safe)]];
   $('gdiag').innerHTML=rows.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('');
@@ -8100,7 +8172,7 @@ $('btnLibOpen').addEventListener('click',function(){ if(state==='menu') openLibr
 window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
 window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files; if(!f||!f.length) return; e.preventDefault(); if(state==='menu'&&!LIB.on) openLibrary('ac:'+selectedId); if(LIB.on) importFiles(f); });
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -8115,7 +8187,7 @@ function frame(now){
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
   placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); helisIdle(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')||(state==='map'&&MAPV.from==='walk')) walkCam(dt); else cameraUpdate(dt);
-  sky.position.copy(camera.position); shadowFollow();
+  sky.position.copy(camera.position); shadowFollow(); if(state!=='library') cullStep(dt);
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
   renderFrame(dt);
   drawHUD(); miniStep(dt); audioUpdate(); updateTouchUI(); updateWalkTouch();

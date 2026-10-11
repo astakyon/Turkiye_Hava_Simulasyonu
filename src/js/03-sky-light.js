@@ -54,11 +54,11 @@ function upgradeModel(g){
   return g;
 }
 function shadowsOn(){ return SETTINGS.shadows==null?shadowDefault():!!SETTINGS.shadows; }
-function shadowDefault(){ let coarse=false; try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){} return !coarse && SETTINGS.quality>=1; }
+function shadowDefault(){ return DEV.mobile?SETTINGS.quality>=3:SETTINGS.quality>=1; }
 function applyShadows(){
   const on=shadowsOn(), q=SETTINGS.quality;
   renderer.shadowMap.enabled=on; sunLight.castShadow=on;
-  const n=q>=2?2048:1024; if(sunLight.shadow.mapSize.x!==n){ sunLight.shadow.mapSize.set(n,n); if(sunLight.shadow.map){ sunLight.shadow.map.dispose(); sunLight.shadow.map=null; } }
+  const n=q>=3?(DEV.mobile?2048:4096):q>=2?2048:1024; if(sunLight.shadow.mapSize.x!==n){ sunLight.shadow.mapSize.set(n,n); if(sunLight.shadow.map){ sunLight.shadow.map.dispose(); sunLight.shadow.map=null; } }
   scene.traverse(function(o){ if(!o.isMesh&&!o.isInstancedMesh) return; const m=Array.isArray(o.material)?o.material[0]:o.material; if(m) m.needsUpdate=true;
     if(o.userData.rs===undefined){ const big=o.geometry&&(o.geometry.boundingSphere||(o.geometry.computeBoundingSphere&&o.geometry.computeBoundingSphere(),o.geometry.boundingSphere));
       const basic=!m||m.isMeshBasicMaterial||m.isShaderMaterial||m.transparent; o.userData.rs=!basic; o.userData.cs=!basic&&!o.isInstancedMesh&&!(big&&big.radius>600); }

@@ -11,6 +11,8 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
   Array.prototype.forEach.call($('setTod').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.tod||'day'))); });
   Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); });
+  { const custom=SETTINGS.fx!=null||SETTINGS.shadows!=null||(SETTINGS.aa&&SETTINGS.aa!=='auto')||(SETTINGS.res&&SETTINGS.res!=='auto');
+    $('setQInfo').textContent=custom?'Özel: hazır ayarın üstüne kendi seçimlerin uygulanıyor (bir hazır ayara dokununca sıfırlanır)':['Düşük: en akıcı, telefonlar için','Orta: dengeli','Yüksek: gölge ve efektler açık','Ultra: güçlü bilgisayarlar için, 4096 gölge, MSAA 8x, en uzak ayrıntı'][SETTINGS.quality]; }
   Array.prototype.forEach.call($('setRes').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.r===String(SETTINGS.res||'auto'))); });
   Array.prototype.forEach.call($('setAA').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.a===(SETTINGS.aa||'auto'))); });
   Array.prototype.forEach.call($('setDepth').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.d===(SETTINGS.depth||'auto'))); });
@@ -34,7 +36,9 @@ $('btnPauseSettings').addEventListener('click',function(){ syncSettingsUI(); ope
 $('btnSetClose').addEventListener('click',closeModals);
 $('setVol').addEventListener('input',function(e){ SETTINGS.volume=+e.target.value/100; $('setVolV').textContent=e.target.value+'%'; applyVolume(); saveSettings(); });
 $('setSens').addEventListener('input',function(e){ SETTINGS.sens=+e.target.value/100; $('setSensV').textContent=e.target.value+'%'; saveSettings(); });
-$('setQ').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.quality=+b.dataset.q; applyQuality(); saveSettings(); syncSettingsUI(); });
+$('setQ').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.quality=+b.dataset.q;
+  /* a preset clears the individual overrides so its own defaults apply */
+  SETTINGS.fx=null; SETTINGS.shadows=null; SETTINGS.aa='auto'; SETTINGS.res='auto'; PERF.scale=1; FX.failed=false; applyQuality(); saveSettings(); syncSettingsUI(); });
 $('setBomb').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.bombAssist=b.dataset.b; saveSettings(); syncSettingsUI(); });
 $('setTouch').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.touch=b.dataset.t; saveSettings(); syncSettingsUI(); });
 $('btnFull').addEventListener('click',function(){ try{ const el=document.documentElement; (el.requestFullscreen||el.webkitRequestFullscreen).call(el); }catch(err){} });
@@ -70,7 +74,7 @@ function gfxDiag(){
   const i=renderer.info, on=function(b){ return b?'açık':'kapalı'; }, sc=Math.round(renderer.getPixelRatio()*100)/100;
   const rows=[['Cihaz',DEV.kind+(DEV.ios?' · iOS':DEV.android?' · Android':'')],['Ekran kartı',DEV.gpu],['WebGL',DEV.webgl+' · hassasiyet '+(DEV.hp||'?')+' · derinlik '+(DEV.depthBits||'?')+' bit'],
     ['Ekran',innerWidth+'×'+innerHeight+' · cihaz oranı '+(window.devicePixelRatio||1)],['Çizim ölçeği',sc+'x'+(PERF.scale<1?' (otomatik düşürüldü)':'')],
-    ['FPS',Math.round(PERF.fps)],['Çizim çağrısı',i.render.calls],['Üçgen',i.render.triangles.toLocaleString('tr-TR')],['Doku / geometri',i.memory.textures+' / '+i.memory.geometries],
+    ['FPS',Math.round(PERF.fps)],['Çizim çağrısı',i.render.calls+' · gizlenen uzak nesne '+(CULL.list.filter(function(o){ return !o.layers.test(camera.layers); }).length)+'/'+CULL.list.length],['Üçgen',i.render.triangles.toLocaleString('tr-TR')],['Doku / geometri',i.memory.textures+' / '+i.memory.geometries],
     ['Derinlik',DEV.logDepth?'logaritmik':'standart (yakın düzlem '+(camera.near||0).toFixed(2)+' m)'],['Gölgeler',on(renderer.shadowMap.enabled)+(renderer.shadowMap.enabled?' · '+sunLight.shadow.mapSize.x+' px':'')],
     ['Efektler',FX.on?('seviye '+FX.level+(FX.hdr?' · HDR':'')+(FX.msaa?' · MSAA '+(FX.samples||4)+'x':FX.fxaa?' · FXAA':'')):'kapalı'],['Kenar yumuşatma',on(!DEV.safe)],['Güvenli mod',on(DEV.safe)]];
   $('gdiag').innerHTML=rows.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('');

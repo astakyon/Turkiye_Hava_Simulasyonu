@@ -1,6 +1,20 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.59 — 2026-10-11
+- **Çizim çağrısı yarı yarıya azaldı.** Ölçümler (yüksek kalite, gölgeler açık):
+  - Pist başında 1433 → ~725
+  - 900 m irtifada 1730 → ~680
+  - Kasabada 336 → ~310
+- **Çizilen üçgen azaldı.** Örnek: Hilalkent'te 1,49 milyon → 0,79 milyon.
+- **Ekrandaki boyuta göre gizleme:** ekranda birkaç pikselden küçük kalacak uzak nesneler çizilmiyor; bank, lamba, kulübe, tabela gibi ~2800 nesne bu kapsamda. Oyun mantığındaki görünürlük ayarları etkilenmiyor ve gölge de buna uyuyor. Eşik kaliteye göre: Düşük 6 px, Orta 4 px, Yüksek 2,5 px, Ultra 1,2 px.
+- **Orman, kaya, çit direği ve park etmiş araçlar 4 km'lik karolara bölündü.** Kameranın görmediği karolar artık hiç çizilmiyor; önceden hepsi her karede çiziliyordu.
+- **Hazır ayarlar Düşük / Orta / Yüksek / Ultra.** Her biri çözünürlüğü, ağaç ve bulut yoğunluğunu, gölgeyi, efektleri, kenar yumuşatmayı ve uzak ayrıntıyı birlikte ayarlıyor.
+  - Ultra: 4096 gölge, MSAA 8x, en uzak ayrıntı.
+  - Telefonda gölge yalnızca Ultra'da varsayılan olarak açık.
+  - Hazır ayara dokununca ayrı ayrı yapılan seçimler sıfırlanıyor. Kendi seçimlerin kullanılıyorsa "Özel" olarak gösteriliyor.
+- **Grafik tanılama** ekranı gizlenen uzak nesne sayısını da gösteriyor.
+
 ## V1.58 — 2026-10-11
 - **PC'de pikselleşme düzeltildi.** Otomatik çözünürlük eskiden FPS 38'in altına inince görüntüyü %60'a kadar düşürüyordu. Artık bilgisayarda en fazla %85'e, telefonda %70'e iniyor. Düşüş %5'lik küçük adımlarla oluyor, akıcılık düzelince geri çıkıyor. Bu ayar artık yürüyüş ve sürüş modunda da çalışıyor.
 - **Yeni ayar — Çözünürlük:** Otomatik / %75 / %100 / %125 / %150. %125 ve %150 güçlü bilgisayarda daha keskin görüntü verir. Bu değerlerden biri seçilince otomatik düşürme kapanır.

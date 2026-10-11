@@ -32,10 +32,12 @@ function applyQuality(){
   const q=SETTINGS.quality, dpr=window.devicePixelRatio||1;
   const r=SETTINGS.res&&SETTINGS.res!=='auto'?+SETTINGS.res:0;
   if(r){ PERF.scale=1; PERF.base=Math.min(DEV.mobile?2:2.5,dpr*r); }                 /* fixed resolution scale chosen by the player (can supersample on PC) */
-  else PERF.base=[1,Math.min(1.5,dpr),Math.min(2,dpr)][q];
+  else PERF.base=[1,Math.min(1.5,dpr),Math.min(2,dpr),Math.min(2,dpr)][q];
   PERF.scale=Math.max(PERF.scale,perfMin()); renderer.setPixelRatio(PERF.base*PERF.scale); texQuality();
-  if(GFX.trees) GFX.trees.count=Math.floor(GFX.treeN*[0.35,0.7,1][q]);
-  if(GFX.clouds) GFX.clouds.count=Math.floor(GFX.cloudN*[0.5,0.75,1][q]);
+  const td=[0.35,0.7,1,1][q]; if(GFX.trees) GFX.trees.count=Math.floor(GFX.treeN*td);
+  if(GFX.treeChunks) GFX.treeChunks.forEach(function(m){ m.count=Math.max(0,Math.floor(m.userData.full*td)); });
+  if(GFX.clouds) GFX.clouds.count=Math.floor(GFX.cloudN*[0.5,0.75,1,1][q]);
+  if(typeof CULL!=='undefined'){ CULL.px=CULL_PX[q]*(DEV.mobile?1.3:1); CULL.t=99; }
   resize(); if(typeof applyShadows==='function') applyShadows();
   if(typeof applyFX==='function') applyFX();
 }
