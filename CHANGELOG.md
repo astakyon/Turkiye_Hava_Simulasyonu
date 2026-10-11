@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.56 — 2026-10-11
+- **Model havuzu:** model kütüphanesinde artık **Hava / Helikopter / Deniz / Kara / Sivil** sekmeleri var.
+  - **Helikopter:** T129 ATAK, T625 GÖKBEY. "Döndür" testinde rotorlar dönüyor.
+  - **Deniz:** İstif fırkateyni, Ada korveti, TCG Anadolu, denizaltı, hücumbot, römorkör; feribot, konteyner gemisi, tanker, balıkçı teknesi, yelkenli.
+  - **Kara:** Altay, Fırtına, Pars, Kirpi, Hisar, Korkut, radar aracı, askerî kamyon, Bozkurtlar 4×4, arazi kamyoneti.
+  - **Sivil:** Ay Yıldız SUV (beyaz/kırmızı), Beni İzle aracı ve havalimanı hizmet araçları.
+- Her model 3B olarak döndürülüp ölçülebiliyor (boyut, üçgen, parça sayısı) ve **.glb olarak indirilebiliyor**.
+
 ## V1.55 — 2026-10-11
 - **Helikopterler:** **T129 ATAK** (dar gövde, kademeli tandem kokpit, burun sensörü, 20 mm top, roket ve füze kanatçıkları) ve **T625 GÖKBEY** (geniş kabin, sürgülü kapı pencereleri, sponsonlu tekerlekler) eklendi.
 - Helikopterler yedi helipadde bekliyor: Hava Üssü (2), İHA Merkezi, Deniz Üssü, Kara Üssü, Anadolukent ve Hilalkent. Hilalkent'e yeni düz helipad alanı açıldı.

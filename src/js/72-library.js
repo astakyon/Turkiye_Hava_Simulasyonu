@@ -5,19 +5,44 @@ const LIB={on:false, scene:null, cam:null, holder:null, item:null, inst:null, ob
   bg:0, tab:'info', tests:{gear:true, ab:false, wpn:false, spin:true, lights:true, wire:false, surf:false}, guides:false, helpers:null, floor:null, blob:null,
   raw:{}, wireMats:[], flash:null, msgT:0, vw:1, vh:1};
 const LIB_BGS=[{n:'Hangar', top:'#2a323c', bot:'#12171d', floor:0x4c535b},{n:'Gündüz', top:'#4f8fd0', bot:'#d6e6f2', floor:0x7d9a5c},{n:'Gün batımı', top:'#2b3f6e', bot:'#f2a35e', floor:0x5a4a44},{n:'Stüdyo', top:'#eef1f4', bot:'#c9cfd5', floor:0xd6dade}];
+const LIB_CATS=[['hava','Hava'],['heli','Helikopter'],['deniz','Deniz'],['kara','Kara'],['sivil','Sivil']];
 function libItems(){
-  const L=[];
-  GROUPS.forEach(function(g){ L.push({head:g.name, sub:g.sub, off:!g.on}); if(!g.on) return;
-    AC_ORDER.filter(function(id){ return regOf(id).grp===g.id; }).forEach(function(id){ L.push({key:'ac:'+id, kind:'ac', id:id, name:AIRCRAFT[id].name, sub:regOf(id).maker+' · '+(CLASSES[regOf(id).cls]||'')}); }); });
-  L.push({head:'Yer araçları', sub:'Havalimanı'});
-  [['veh:follow','BENİ İZLE aracı','Sürülebilir',function(){ return vehCar('follow'); }],['veh:pickup','Arazi kamyoneti','Devriye',function(){ return vehCar('pickup'); }],
-   ['veh:fuel','Yakıt tankeri','İkmal',function(){ return vehTruck('fuel'); }],['veh:fire','İtfaiye aracı','Kurtarma',function(){ return vehTruck('fire'); }],
-   ['veh:tug','Uçak çekici','Yer hizmeti',function(){ return vehTug(); }],['veh:gpu','Yer güç ünitesi','Yer hizmeti',function(){ return vehGPU(); }],['veh:bus','Personel otobüsü','Ulaşım',function(){ return vehBus(); }]]
-    .forEach(function(v){ L.push({key:v[0], kind:'veh', name:v[1], sub:v[2], build:v[3]}); });
-  L.push({head:'Ekipman', sub:'Hangar'});
+  const L=[], add=function(cat,key,kind,name,sub,build,x){ L.push(Object.assign({cat:cat,key:key,kind:kind,name:name,sub:sub,build:build},x||{})); }, head=function(cat,h,sub,off){ L.push({cat:cat,head:h,sub:sub,off:off}); };
+  const G=function(f){ return function(){ return f().group; }; };
+  GROUPS.forEach(function(g){ head('hava',g.name,g.sub,!g.on); if(!g.on) return;
+    AC_ORDER.filter(function(id){ return regOf(id).grp===g.id; }).forEach(function(id){ L.push({cat:'hava', key:'ac:'+id, kind:'ac', id:id, name:AIRCRAFT[id].name, sub:regOf(id).maker+' · '+(CLASSES[regOf(id).cls]||'')}); }); });
+  head('hava','Ekipman','Hangar');
   [['eq:bomb','Bomba arabası','Mühimmat',function(){ return prCart('bomb'); }],['eq:missile','Füze arabası','Mühimmat',function(){ return prCart('missile'); }],
    ['eq:stand','Bakım merdiveni','Bakım',function(){ return prStand(); }],['eq:bench','İş tezgâhı','Atölye',function(){ return prWorkbench(); }],['eq:chest','Takım dolabı','Atölye',function(){ return prToolChest(); }]]
-    .forEach(function(v){ L.push({key:v[0], kind:'eq', name:v[1], sub:v[2], build:v[3]}); });
+    .forEach(function(v){ add('hava',v[0],'eq',v[1],v[2],v[3]); });
+  head('heli','Helikopterler','Gezintide binilebilir');
+  [['t129','Taarruz · TUSAŞ'],['t625','Genel maksat · TUSAŞ']].forEach(function(h){ add('heli','heli:'+h[0],'heli',HELI_DEF[h[0]].name,h[1],function(){ const m=heliModel(h[0]); LIB.heli=m; return m.g; }); });
+  head('deniz','Savaş gemileri','Hilal Deniz Üssü');
+  add('deniz','sh:istif','ship','İstif sınıfı fırkateyn','F-515 · Fırkateyn',G(function(){ return buildFrigate('istif','F-515'); }));
+  add('deniz','sh:ada','ship','Ada sınıfı korvet','F-511 · Korvet',G(function(){ return buildFrigate('ada','F-511'); }));
+  add('deniz','sh:anadolu','ship','TCG Anadolu','L-400 · Amfibi hücum gemisi',G(buildAnadolu));
+  add('deniz','sh:sub','ship','Denizaltı','Reis sınıfı',G(buildSub));
+  add('deniz','sh:patrol','ship','Hücumbot','Karakol',G(function(){ return buildPatrol('P-1200'); }));
+  add('deniz','sh:tug','ship','Römorkör','Liman hizmeti',G(buildTug));
+  head('deniz','Sivil gemiler','Marina ve açık deniz');
+  add('deniz','sh:ferry','ship','Feribot','Yolcu',G(buildFerry)); add('deniz','sh:cargo','ship','Konteyner gemisi','Yük',G(function(){ return buildCargo('#1d5aa8'); }));
+  add('deniz','sh:tanker','ship','Tanker','Yük',G(buildTanker)); add('deniz','sh:fishing','ship','Balıkçı teknesi','Balıkçılık',G(function(){ return buildFishing('#2f6aa5'); }));
+  add('deniz','sh:sail','ship','Yelkenli','Gezi',G(function(){ return buildSailboat(true); }));
+  head('kara','Zırhlı araçlar','Bozkurtlar');
+  add('kara','ld:altay','land','Altay','Ana muharebe tankı',G(buildAltay)); add('kara','ld:firtina','land','Fırtına','Kundağı motorlu obüs',G(buildFirtina));
+  add('kara','ld:pars','land','Pars','Zırhlı muharebe aracı',G(buildPars)); add('kara','ld:kirpi','land','Kirpi','Mayına dayanıklı araç',G(buildKirpi));
+  head('kara','Hava savunma ve destek','Bozkurtlar');
+  add('kara','ld:hisar','land','Hisar','Hava savunma füzesi',G(buildHisar)); add('kara','ld:korkut','land','Korkut','Uçaksavar topu',G(buildKorkut));
+  add('kara','ld:radar','land','Radar aracı','Erken ihbar',G(buildRadarTruck)); add('kara','ld:truck','land','Askerî kamyon','Lojistik',G(buildArmyTruck));
+  add('kara','car:mil','car','Bozkurtlar 4×4','Gezintide sürülebilir',function(){ return carModel('mil').g; });
+  add('kara','veh:pickup','veh','Arazi kamyoneti','Devriye',function(){ return vehCar('pickup'); });
+  head('sivil','Otomobiller','Gezintide sürülebilir');
+  add('sivil','car:suv','car','Ay Yıldız SUV','Beyaz',function(){ return carModel('suv').g; }); add('sivil','car:suvR','car','Ay Yıldız SUV','Kırmızı',function(){ return carModel('suvR').g; });
+  add('sivil','car:follow','car','BENİ İZLE aracı','Havalimanı',function(){ return carModel('follow').g; });
+  head('sivil','Havalimanı araçları','Yer hizmetleri');
+  [['veh:fuel','Yakıt tankeri','İkmal',function(){ return vehTruck('fuel'); }],['veh:fire','İtfaiye aracı','Kurtarma',function(){ return vehTruck('fire'); }],
+   ['veh:tug','Uçak çekici','Yer hizmeti',function(){ return vehTug(); }],['veh:gpu','Yer güç ünitesi','Yer hizmeti',function(){ return vehGPU(); }],['veh:bus','Personel otobüsü','Ulaşım',function(){ return vehBus(); }]]
+    .forEach(function(v){ add('sivil',v[0],'veh',v[1],v[2],v[3]); });
   return L;
 }
 function libMsg(t,err){ const el=$('libMsg'); el.textContent=t||''; el.classList.toggle('err',!!err); LIB.msgT=t?6:0; }
@@ -44,7 +69,8 @@ function closeLibrary(){
   enterTitle();
 }
 function libRenderList(){
-  $('libList').innerHTML=libItems().map(function(it){
+  const cur=LIB.item&&LIB.item.cat; if(!LIB.cat) LIB.cat=cur||'hava';
+  $('libList').innerHTML='<div class="lcats">'+LIB_CATS.map(function(c){ return '<button type="button" data-cat="'+c[0]+'"'+(LIB.cat===c[0]?' aria-pressed="true"':'')+'>'+c[1]+'</button>'; }).join('')+'</div>'+libItems().filter(function(it){ return it.cat===LIB.cat; }).map(function(it){
     if(it.head) return '<h4>'+it.head+'<small>'+it.sub+'</small></h4>';
     const skin=it.kind==='ac'&&MODELS.skins[it.id], liv=it.kind==='ac'&&LIV.data[it.id];
     return '<button type="button" data-k="'+it.key+'"'+(LIB.item&&LIB.item.key===it.key?' aria-current="true"':'')+'><b>'+it.name+(skin?'<span class="tagm">GLB</span>':'')+(liv&&!skin?'<span class="tagm" style="background:#ffc24a">BOYA</span>':'')+'</b><small>'+it.sub+'</small></button>';
@@ -57,7 +83,7 @@ function libClear(){
 }
 function libSelect(key){
   const it=libItems().find(function(i){ return i.key===key; }); if(!it) return;
-  libWire(false); libClear(); if(!LIB.item||LIB.item.key!==key) LIB.tests.old=false; LIB.item=it; LIB.tests.wpn=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
+  libWire(false); libClear(); if(!LIB.item||LIB.item.key!==key) LIB.tests.old=false; LIB.item=it; LIB.cat=it.cat; LIB.heli=null; LIB.tests.wpn=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
   let obj;
   if(it.kind==='ac'){ const def=AIRCRAFT[it.id], old=LIB.tests.old&&def.buildOld; let m; if(old){ m=def.buildOld(); upgradeModel(m.group); m.acId=it.id; } else m=buildModel(it.id); LIB.inst=m; obj=m.group; obj.position.set(0,AIRFIELD_Y*0+AIRCRAFT[it.id].gearOff,0); m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); }); }
   else { obj=it.build(); obj.traverse(function(o){ if(o.isMesh&&o.material&&o.material.isMeshPhongMaterial) o.material=stdOf(o.material); }); }
@@ -91,7 +117,7 @@ function libSrc(){ const it=LIB.item; if(!it||it.kind!=='ac') return {t:'Kod mod
   return {t:sk.spec.local?'GLB · bu cihazda':(sk.spec.preview?'GLB · deneme':'GLB · models.json'), glb:true}; }
 function libRefreshPanel(){
   const it=LIB.item; if(!it) return; const ac=it.kind==='ac', def=ac?AIRCRAFT[it.id]:null, src=libSrc();
-  $('libKind').textContent=ac?(GROUPS.find(function(g){ return g.id===regOf(it.id).grp; }).name.toUpperCase()+' · '+regOf(it.id).maker):(it.kind==='veh'?'YER ARACI':'EKİPMAN');
+  $('libKind').textContent=ac?(GROUPS.find(function(g){ return g.id===regOf(it.id).grp; }).name.toUpperCase()+' · '+regOf(it.id).maker):({veh:'YER ARACI',eq:'EKİPMAN',heli:'HELİKOPTER',ship:'DENİZ ARACI',land:'KARA ARACI',car:'OTOMOBİL'}[it.kind]||'MODEL');
   $('libName').textContent=it.name; const sr=$('libSrc'); sr.textContent=src.t; sr.classList.toggle('glb',src.glb);
   const bb=libBox(), sz=bb.getSize(new THREE.Vector3()), st=libStats(), f=function(v){ return v.toFixed(1).replace('.',',')+' m'; };
   const rows=[['Uzunluk',f(sz.z)],[ac?'Kanat açıklığı':'Genişlik',f(sz.x)],['Yükseklik',f(sz.y)],['Üçgen',st.tri.toLocaleString('tr-TR')],['Parça',String(st.meshes)],['Malzeme',String(st.mats)]];
@@ -151,6 +177,7 @@ function libStep(dt){
     if(m.surfaces&&m.surfaces.length) m.surfaces.forEach(function(s,i){ const v=LIB.tests.surf?Math.sin(T*2.2+i*0.7):0; s.n.rotation[s.axis]=s.base+v*s.max*s.sign; });
   }
   if(LIB.flash){ LIB.flash.t-=dt; const on=LIB.flash.t>0&&Math.sin(LIB.flash.t*18)>0; LIB.flash.mats.forEach(function(x){ if(x.m.emissive) x.m.emissive.setHex(on?0xff3030:x.e); }); if(LIB.flash.t<=0) LIB.flash=null; }
+  if(LIB.heli&&LIB.tests.spin){ LIB.heli.rotor.rotation.y+=dt*9; LIB.heli.trot.rotation.x+=dt*40; }
   LIB.idle+=dt; if(LIB.auto&&LIB.idle>1.5) LIB.yaw+=dt*0.25;
   const cp=Math.cos(LIB.pitch), sp2=Math.sin(LIB.pitch), c=LIB.cam;
   c.position.set(LIB.tgt.x+Math.sin(LIB.yaw)*cp*LIB.dist, LIB.tgt.y+sp2*LIB.dist, LIB.tgt.z+Math.cos(LIB.yaw)*cp*LIB.dist);
@@ -344,7 +371,7 @@ function libExport(){
   }).catch(function(e){ libMsg('Dışa aktarılamadı: '+(e&&e.message||e),true); });
 }
 /* ---- wiring */
-$('libList').addEventListener('click',function(e){ const b=e.target.closest('button[data-k]'); if(b) libSelect(b.dataset.k); });
+$('libList').addEventListener('click',function(e){ const c=e.target.closest('button[data-cat]'); if(c){ LIB.cat=c.dataset.cat; libRenderList(); const f=libItems().find(function(i){ return i.cat===LIB.cat&&!i.head&&!i.off; }); if(f&&(!LIB.item||LIB.item.cat!==LIB.cat)) libSelect(f.key); return; } const b=e.target.closest('button[data-k]'); if(b) libSelect(b.dataset.k); });
 $('libTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled) libTab(b.dataset.t); });
 $('libTests').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled) libToggle(b.dataset.x); });
 $('btnLibBack').addEventListener('click',closeLibrary);

@@ -14,4 +14,9 @@ livReset('kaan'); T('livery reset restores materials',MODELS.inst.kaan.every(fun
 const so=libSpecOut({rotation:[0,90,0],local:true,preview:true,length:12,gearNodes:[],surfaces:[{node:'a',axis:'x',input:'roll',max:18,sign:-1}]});
 T('spec out',JSON.stringify(so)==='{"rotation":[0,90,0],"length":12,"surfaces":[{"node":"a","axis":"x","input":"roll","max":18,"sign":-1}]}',JSON.stringify(so));
 T('part roles',libPartRole({surfaces:[{node:'a',input:'roll',sign:-1}],gearNodes:['g']},'a')==='ail_l'&&libPartRole({gearNodes:['g']},'g')==='gear');
+// V1.56 model pool: category tabs, every item builds
+LIB_CATS.forEach(function(c){ T('category '+c[0]+' has items',items.filter(function(i){ return i.cat===c[0]; }).length>=2); });
+items.filter(function(i){ return i.kind!=='ac'; }).forEach(function(i){ let o=null; try{ o=i.build(); }catch(e){ console.log(e.message); } T('builds '+i.key,o&&o.children&&o.children.length>0); });
+T('keys unique',new Set(items.map(function(i){ return i.key; })).size===items.length);
+T('ships, land, helis present',['sh:anadolu','ld:altay','heli:t129','heli:t625','car:suv','car:mil'].every(function(k){ return items.some(function(i){ return i.key===k; }); }));
 console.log('pass',ok,'fail',bad);

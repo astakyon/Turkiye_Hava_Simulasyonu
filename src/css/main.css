@@ -460,3 +460,6 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 #wheli.hidden{ display:none; }
 #wheli .tb{ width:76px; height:52px; font-size:12px; }
 #wtouch.lefty #wheli{ right:auto; left:max(18px,calc(env(safe-area-inset-left,0px) + 14px)); }
+.llist .lcats{ position:sticky; top:-8px; z-index:1; display:flex; flex-wrap:wrap; gap:4px; margin:-8px -8px 4px; padding:8px; background:rgba(4,9,18,.96); border-bottom:1px solid var(--line); }
+.llist .lcats button{ display:inline-block; width:auto; flex:1 1 auto; margin:0; padding:5px 7px; font-size:11px; font-weight:700; text-align:center; border:1px solid var(--line); border-radius:14px; }
+.llist .lcats button[aria-pressed="true"]{ background:var(--red); border-color:var(--red); color:#fff; }
