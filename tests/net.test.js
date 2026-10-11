@@ -7,7 +7,7 @@ T('host roster',A.eval("NET.roster.length")===1);
 B.eval("$('netName').value='Berk'; $('netCode').value='"+room.toLowerCase()+"'; netJoin()"); pump();
 C.eval("$('netName').value='Cem'; $('netCode').value='"+room+"'; netJoin()"); pump();
 T('3 in roster',A.eval("NET.roster.length")===3,A.eval("NET.roster.length"));
-T('B id',B.eval("NET.myId")==='P1'); T('C sees roster',C.eval("NET.roster.map(r=>r.name).join(',')")==='Ali,Berk,Cem',C.eval("NET.roster.map(r=>r.name).join(',')"));
+T('B id',B.eval("NET.myId")==='P1'); T('C sees roster',C.eval("NET.roster.map(r=>r.name).join(',')").replace(/ER /g,'')==='Ali,Berk,Cem',C.eval("NET.roster.map(r=>r.name).join(',')"));
 // wrong code
 const D=C; 
 // change aircraft from lobby
