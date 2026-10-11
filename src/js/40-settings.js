@@ -14,22 +14,39 @@ function rec(id){ return RECORDS[id]||(RECORDS[id]={best:null,score:0}); }
 function noteScore(){ const r=rec(activeId); if(score>r.score){ r.score=score; saveRecords(); } }
 function applyVolume(){ if(master) master.gain.value=SETTINGS.volume; }
 const PERF={base:1,scale:1,acc:0,n:0,t:0,low:0,high:0,fps:60,told:false};
+/* automatic resolution: only when the player chose "Otomatik"; PC never drops below 85 % (it was 60 % and looked pixelated),
+   phones below 70 %. Drops in small steps after 3 slow seconds, recovers after 5 smooth ones. */
+function perfMin(){ return DEV.mobile?0.7:0.85; }
 function perfStep(dt){
   PERF.acc+=dt; PERF.n++;
   if(PERF.acc<1) return;
   PERF.fps=PERF.n/PERF.acc; PERF.acc=0; PERF.n=0;
-  if(SETTINGS.fps){ $('fps').textContent=Math.round(PERF.fps)+' FPS · '+Math.round(PERF.base*PERF.scale*100)/100+'x'; }
-  if(!SETTINGS.autoPerf||state!=='play') { PERF.low=PERF.high=0; return; }
-  if(PERF.fps<38){ PERF.low++; PERF.high=0; } else if(PERF.fps>56){ PERF.high++; PERF.low=0; } else { PERF.low=PERF.high=0; }
-  if(PERF.low>=3&&PERF.scale>0.6){ PERF.scale=Math.max(0.6,PERF.scale-0.15); PERF.low=0; renderer.setPixelRatio(PERF.base*PERF.scale); resize(); if(!PERF.told){ PERF.told=true; toast('Akıcılık için görüntü çözünürlüğü düşürüldü','#b8ecff'); } }
-  else if(PERF.high>=6&&PERF.scale<1){ PERF.scale=Math.min(1,PERF.scale+0.1); PERF.high=0; renderer.setPixelRatio(PERF.base*PERF.scale); resize(); }
+  if(SETTINGS.fps){ $('fps').textContent=Math.round(PERF.fps)+' FPS · '+Math.round(renderer.getPixelRatio()*100)/100+'x'; }
+  if(!SETTINGS.autoPerf||(SETTINGS.res&&SETTINGS.res!=='auto')||(state!=='play'&&state!=='walk')) { PERF.low=PERF.high=0; return; }
+  const lo=DEV.mobile?36:40;
+  if(PERF.fps<lo){ PERF.low++; PERF.high=0; } else if(PERF.fps>57){ PERF.high++; PERF.low=0; } else { PERF.low=PERF.high=0; }
+  if(PERF.low>=3&&PERF.scale>perfMin()+0.001){ PERF.scale=Math.max(perfMin(),PERF.scale-0.05); PERF.low=0; renderer.setPixelRatio(PERF.base*PERF.scale); resize(); if(!PERF.told){ PERF.told=true; toast('Akıcılık için çözünürlük biraz düşürüldü (Ayarlar → Grafik → Çözünürlük)','#b8ecff'); } }
+  else if(PERF.high>=5&&PERF.scale<1){ PERF.scale=Math.min(1,PERF.scale+0.05); PERF.high=0; renderer.setPixelRatio(PERF.base*PERF.scale); resize(); }
 }
 function applyQuality(){
   const q=SETTINGS.quality, dpr=window.devicePixelRatio||1;
-  PERF.base=[1,Math.min(1.5,dpr),Math.min(2,dpr)][q]; renderer.setPixelRatio(PERF.base*PERF.scale);
+  const r=SETTINGS.res&&SETTINGS.res!=='auto'?+SETTINGS.res:0;
+  if(r){ PERF.scale=1; PERF.base=Math.min(DEV.mobile?2:2.5,dpr*r); }                 /* fixed resolution scale chosen by the player (can supersample on PC) */
+  else PERF.base=[1,Math.min(1.5,dpr),Math.min(2,dpr)][q];
+  PERF.scale=Math.max(PERF.scale,perfMin()); renderer.setPixelRatio(PERF.base*PERF.scale); texQuality();
   if(GFX.trees) GFX.trees.count=Math.floor(GFX.treeN*[0.35,0.7,1][q]);
   if(GFX.clouds) GFX.clouds.count=Math.floor(GFX.cloudN*[0.5,0.75,1][q]);
   resize(); if(typeof applyShadows==='function') applyShadows();
   if(typeof applyFX==='function') applyFX();
 }
 
+
+/* texture filtering: every texture gets anisotropic filtering and mipmaps (sharp runways and signs at grazing angles, no sparkle) */
+const TEXQ=new WeakSet();
+function texQuality(){
+  if(typeof scene==='undefined') return; let maxA=1; try{ maxA=renderer.capabilities.getMaxAnisotropy(); }catch(e){}
+  const a=Math.min(DEV.mobile?4:16,maxA||1);
+  scene.traverse(function(o){ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):null; if(!ms) return;
+    ms.forEach(function(m){ if(!m) return; ['map','emissiveMap','normalMap','roughnessMap','alphaMap'].forEach(function(k){ const t=m[k]; if(!t||!t.isTexture||TEXQ.has(t)) return; TEXQ.add(t);
+      if(t.anisotropy!==a){ t.anisotropy=a; t.needsUpdate=true; } }); }); });
+}

@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.58 — 2026-10-11
+- **PC'de pikselleşme düzeltildi.** Otomatik çözünürlük eskiden FPS 38'in altına inince görüntüyü %60'a kadar düşürüyordu. Artık bilgisayarda en fazla %85'e, telefonda %70'e iniyor. Düşüş %5'lik küçük adımlarla oluyor, akıcılık düzelince geri çıkıyor. Bu ayar artık yürüyüş ve sürüş modunda da çalışıyor.
+- **Yeni ayar — Çözünürlük:** Otomatik / %75 / %100 / %125 / %150. %125 ve %150 güçlü bilgisayarda daha keskin görüntü verir. Bu değerlerden biri seçilince otomatik düşürme kapanır.
+- **Yeni ayar — Kenar yumuşatma:** Otomatik / FXAA / MSAA 4x / MSAA 8x. Bilgisayarda varsayılan MSAA, telefonda FXAA. Ekran kartının desteklediği en yüksek değerle sınırlanır.
+- **Titremeyen gölgeler:** gölge haritası, ışığın kendi ekseninde tam piksellere sabitleniyor. Kamera hareket ederken gölge kenarlarındaki kayma ve kıpırdama gidiyor.
+- **Doku filtreleme:** tüm dokulara bilgisayarda 16x, telefonda 4x anizotropik filtre uygulanıyor. Pist çizgileri, tabelalar ve zemin dar açıdan bakınca keskin kalıyor, uzakta parlayıp kıpırdamıyor.
+- Grafik tanılama ekranı artık MSAA örnek sayısını da gösteriyor.
+
 ## V1.57 — 2026-10-11
 - **Telefondaki siyah dalgalanma düzeltildi.** Gökyüzü küresi kameranın görüş sınırına çok yakın duruyordu; derinlik hassasiyeti düşük telefon ekran kartlarında gökyüzü bant bant kırpılıyor ve arkadaki siyah ekran görünüyordu. Gökyüzü artık her zaman en arkada, derinlik testine girmeden çiziliyor. Boş kalan her piksel siyah yerine ufuk rengiyle doluyor.
 - **Cihaz profili:** oyun Telefon / Tablet / Bilgisayar ayrımını kendisi yapıyor.

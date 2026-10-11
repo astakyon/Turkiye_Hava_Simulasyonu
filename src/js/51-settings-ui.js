@@ -11,6 +11,8 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
   Array.prototype.forEach.call($('setTod').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.tod||'day'))); });
   Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); });
+  Array.prototype.forEach.call($('setRes').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.r===String(SETTINGS.res||'auto'))); });
+  Array.prototype.forEach.call($('setAA').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.a===(SETTINGS.aa||'auto'))); });
   Array.prototype.forEach.call($('setDepth').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.d===(SETTINGS.depth||'auto'))); });
   $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
@@ -70,7 +72,7 @@ function gfxDiag(){
     ['Ekran',innerWidth+'×'+innerHeight+' · cihaz oranı '+(window.devicePixelRatio||1)],['Çizim ölçeği',sc+'x'+(PERF.scale<1?' (otomatik düşürüldü)':'')],
     ['FPS',Math.round(PERF.fps)],['Çizim çağrısı',i.render.calls],['Üçgen',i.render.triangles.toLocaleString('tr-TR')],['Doku / geometri',i.memory.textures+' / '+i.memory.geometries],
     ['Derinlik',DEV.logDepth?'logaritmik':'standart (yakın düzlem '+(camera.near||0).toFixed(2)+' m)'],['Gölgeler',on(renderer.shadowMap.enabled)+(renderer.shadowMap.enabled?' · '+sunLight.shadow.mapSize.x+' px':'')],
-    ['Efektler',FX.on?('seviye '+FX.level+(FX.hdr?' · HDR':'')+(FX.msaa?' · MSAA':FX.fxaa?' · FXAA':'')):'kapalı'],['Kenar yumuşatma',on(!DEV.safe)],['Güvenli mod',on(DEV.safe)]];
+    ['Efektler',FX.on?('seviye '+FX.level+(FX.hdr?' · HDR':'')+(FX.msaa?' · MSAA '+(FX.samples||4)+'x':FX.fxaa?' · FXAA':'')):'kapalı'],['Kenar yumuşatma',on(!DEV.safe)],['Güvenli mod',on(DEV.safe)]];
   $('gdiag').innerHTML=rows.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('');
 }
 let gdiagT=null;
@@ -83,3 +85,5 @@ $('btnSafe').addEventListener('click',function(){
   else { SETTINGS.safeMode=true; SETTINGS.depth='std'; SETTINGS.fx=0; SETTINGS.shadows=false; SETTINGS.quality=0; }
   saveSettings(); location.reload(); });
 function confirmReload(q){ try{ return window.confirm(q); }catch(e){ return false; } }
+$('setRes').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.res=b.dataset.r; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI(); });
+$('setAA').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.aa=b.dataset.a; saveSettings(); if(FX.on){ try{ fxBuild(); }catch(err){} } syncSettingsUI(); });

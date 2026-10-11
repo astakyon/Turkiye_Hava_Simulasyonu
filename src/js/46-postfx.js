@@ -36,15 +36,15 @@ function fxBuild(){
   FX.hdr=halfOK&&FX.level>=2&&!DEV.mobile&&!DEV.safe;   /* half-float targets misbehave on some phone GPUs */
   const pr=renderer.getPixelRatio(), W=Math.max(1,Math.round(HW*pr)), H=Math.max(1,Math.round(HH*pr));
   const opts={minFilter:THREE.LinearFilter, magFilter:THREE.LinearFilter, format:THREE.RGBAFormat, type:FX.hdr?THREE.HalfFloatType:THREE.UnsignedByteType, depthBuffer:true, stencilBuffer:true /* r128: stencil yoksa derinlik 16 bit → uzakta z-fighting çizgileri; DEPTH24_STENCIL8 */};
-  let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget&&!DEV.mobile;
-  if(FX.msaa){ rt=new THREE.WebGLMultisampleRenderTarget(W,H,opts); rt.samples=4; } else rt=new THREE.WebGLRenderTarget(W,H,opts);
+  const aa=SETTINGS.aa||'auto'; let rt; FX.msaa=w2&&!!THREE.WebGLMultisampleRenderTarget&&(aa==='msaa4'||aa==='msaa8'||(aa==='auto'&&!DEV.mobile));
+  if(FX.msaa){ rt=new THREE.WebGLMultisampleRenderTarget(W,H,opts); let mx=4; try{ mx=gl.getParameter(gl.MAX_SAMPLES)||4; }catch(e){} rt.samples=Math.min(aa==='msaa8'?8:4,mx); FX.samples=rt.samples; } else rt=new THREE.WebGLRenderTarget(W,H,opts);
   if(FX.composer){ FX.composer.renderTarget1.dispose(); FX.composer.renderTarget2.dispose(); }
   const c=new THREE.EffectComposer(renderer,rt); c.setPixelRatio(pr); c.setSize(HW,HH);
   c.addPass(new THREE.RenderPass(scene,camera));
   FX.bloom=null;
   if(FX.level>=2){ FX.bloom=new THREE.UnrealBloomPass(new THREE.Vector2(HW,HH),FX.hdr?0.75:0.25,0.42,FX.hdr?1.9:0.94); c.addPass(FX.bloom); }
   FX.grade=new THREE.ShaderPass(GRADE_SHADER); FX.grade.uniforms.uHdr.value=FX.hdr?1:0; c.addPass(FX.grade);
-  FX.fxaa=null; if(!FX.msaa){ FX.fxaa=new THREE.ShaderPass(THREE.FXAAShader); c.addPass(FX.fxaa); }
+  FX.fxaa=null; if(!FX.msaa&&aa!=='off'){ FX.fxaa=new THREE.ShaderPass(THREE.FXAAShader); c.addPass(FX.fxaa); }
   FX.composer=c; fxResize();
 }
 function fxResize(){

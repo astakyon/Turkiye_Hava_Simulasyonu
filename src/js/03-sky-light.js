@@ -64,11 +64,16 @@ function applyShadows(){
       const basic=!m||m.isMeshBasicMaterial||m.isShaderMaterial||m.transparent; o.userData.rs=!basic; o.userData.cs=!basic&&!o.isInstancedMesh&&!(big&&big.radius>600); }
     o.receiveShadow=o.userData.rs; if(o.userData.cs) o.castShadow=true; });
 }
-const shFocus=new THREE.Vector3();
+const shFocus=new THREE.Vector3(), shR=new THREE.Vector3(), shU=new THREE.Vector3(), shP=new THREE.Vector3();
 function shadowFollow(){
   if(!renderer.shadowMap.enabled) return;
   if(state==='menu'){ if(typeof cineOn==='function'&&cineOn()) shFocus.copy(CINE.pos); else shFocus.copy(MENUV.tgt); } else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) shFocus.copy(camera.position); else shFocus.copy(S.pos);
-  const tx=Math.round(shFocus.x/2)*2, ty=Math.round(shFocus.y/2)*2, tz=Math.round(shFocus.z/2)*2;       /* snap to reduce shimmering */
-  sunLight.target.position.set(tx,ty,tz); sunLight.position.set(tx,ty,tz).addScaledVector(SUN,1800); sunLight.target.updateMatrixWorld();
+  /* stable shadows: snap the focus to whole shadow-map texels in the light's own frame, so the map never slides by a fraction of a
+     texel as the camera moves (that sub-texel slide was the shimmering / crawling edges) */
+  const c=sunLight.shadow.camera, tex=(c.right-c.left)/sunLight.shadow.mapSize.x;
+  shR.crossVectors(UP,SUN); if(shR.lengthSq()<1e-6) shR.set(1,0,0); shR.normalize(); shU.crossVectors(SUN,shR).normalize();
+  const fr=shFocus.dot(shR), fu=shFocus.dot(shU), fs=shFocus.dot(SUN), sr=Math.round(fr/tex)*tex, su=Math.round(fu/tex)*tex;
+  shP.copy(shR).multiplyScalar(sr).addScaledVector(shU,su).addScaledVector(SUN,fs);
+  sunLight.target.position.copy(shP); sunLight.position.copy(shP).addScaledVector(SUN,1800); sunLight.target.updateMatrixWorld();
 }
 
