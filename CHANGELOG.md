@@ -1,6 +1,17 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.42 — 2026-10-11
+### Yeni — Hilalkent kasabası, yol ağı ve trafik
+- **Hilalkent:** adanın kuzeybatı kıyısında, deniz üssünün karşısında.
+  - Dört cadde, sokaklar ve kaldırımlar; renkli 4–7 katlı apartmanlar, alt katlarda tenteli dükkânlar.
+  - Saat kulesi ve havuzlu meydan; iki minareli büyük cami.
+  - Ortaokul ve sahası, park, sahil yürüyüş yolu ve banklar, akaryakıt istasyonu, giriş tabelası.
+  - Yol kenarına park etmiş arabalar.
+- **Yol ağı:** kara üssü yolundan ayrılıp tepelerin üzerinden Hilalkent'e uzanan yeni yol. Kenarlarında ağaçlar var.
+- **Trafik:** köy, deniz üssü, kara üssü ve Hilalkent yollarında ve kasaba caddelerinde gidip gelen arabalar.
+- **Hızlı geçiş (M / GİT ▸):** Hilalkent ve Hilalkent meydanı eklendi.
+
 ## V1.41 — 2026-10-11
 ### Yeni — Bozkurtlar kara üssü
 Adanın kuzeyindeki düzlükte, koya bakan geniş bir kışla. Köyden kuzeye uzanan yeni yolla bağlı.

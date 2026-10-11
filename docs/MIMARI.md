@@ -23,7 +23,7 @@ CI (`pages.yml`) önce `tools/build.py --check`, sonra testleri çalıştırır;
 | Aralık | İçerik |
 |---|---|
 | 01–05 | çekirdek (sürüm, yardımcılar), görüntüleyici, gökyüzü/ışık, arazi (`PADS` düzleştirilmiş üs alanları, `DECKS` rıhtım/iskele, `groundH`), havalimanı |
-| 06–08 | üs çevresi (çit, nizamiye, köy, orman, fener), **deniz üssü** (`NAVAL`), **kara üssü** (`LAND`: kışla, motorlu birlik, sürüş parkuru, atış poligonu); ortak yapı araçları `bldg`, `shed`, `baseGate`, `fenceLine` (07) |
+| 06–08 | üs çevresi (çit, nizamiye, köy, orman, fener), **deniz üssü** (`NAVAL`), **kara üssü** (`LAND`: kışla, motorlu birlik, sürüş parkuru, atış poligonu), **Hilalkent** (`TOWN`) ve **yol trafiği** (`TRAFFIC`, örnekli arabalar); ortak yapı araçları `bldg`, `shed`, `baseGate`, `fenceLine` (07) |
 | 09–15 | modelleme araçları (`MK`), araç modelleri (kodla), kayıt (`REG`, `AIRCRAFT`), **varlıklar** (GLB yükleme, `buildModel`), **gemi modelleri** (fırkateyn, korvet, TCG Anadolu, denizaltı, karakol botu, römorkör), **kara aracı modelleri** (Altay, Fırtına, Pars, MRAP, askerî kamyon) |
 | 20–23 | hangar bekleme alanı, hangar içleri, taksi, bakım hangarı |
 | 30–35 | uçuş durumu, halkalar, muharebe, yer hedefleri, görevler, tehditler |

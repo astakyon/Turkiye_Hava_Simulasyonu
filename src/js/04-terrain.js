@@ -8,7 +8,8 @@ const AIRFIELD_Y = 22;
 /* flat pads cut into the terrain for the bases (x0..x1, z0..z1 fully flat at y; smooth falloff `f` metres; `hardWest`: no
    falloff on the sea side so the quay meets deep water). DECKS: walkable surfaces above the terrain (quays, piers). */
 const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hardWest:true},
-  {id:'land',x0:400,x1:1900,z0:-7950,z1:-7250,y:34,f:320},{id:'range',x0:2120,x1:3300,z0:-7800,z1:-7520,y:34,f:260}];
+  {id:'land',x0:400,x1:1900,z0:-7950,z1:-7250,y:34,f:320},{id:'range',x0:2120,x1:3300,z0:-7800,z1:-7520,y:34,f:260},
+  {id:'town',x0:-9300,x1:-7100,z0:-7350,z1:-6760,y:16,f:350}];
 const DECKS=[];
 function padW(p,x,z){
   let dx=0; if(x<p.x0){ if(p.hardWest){ if(x<p.x0-6) return 0; } else dx=p.x0-x; } else if(x>p.x1) dx=x-p.x1;
