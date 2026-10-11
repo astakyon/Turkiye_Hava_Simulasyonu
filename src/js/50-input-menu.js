@@ -94,7 +94,7 @@ function renderMissions(){
 }
 function misGo(){ selectMission(MORDER[misSel]); preFlight('missions'); }
 $('misList').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const i=+b.dataset.i; if(i===misSel) misGo(); else { misSel=i; renderMissions(); } });
-$('btnMisGo').addEventListener('click',misGo);
+$('btnMisGo').addEventListener('click',function(){ misGo(); });
 $('btnMisAc').addEventListener('click',enterHangar);
 $('btnMisBack').addEventListener('click',enterTitle);
 /* cinematic flight behind the main menu */

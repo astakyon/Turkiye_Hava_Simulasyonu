@@ -9,8 +9,8 @@ try{ const v=localStorage.getItem('ayy-hassist'); if(v!=null) HO.assist=v==='1';
 const HTGT=[];               /* helicopter mission targets */
 const TROOPS=[];             /* soldier figures on the ground */
 const CRATES=[];             /* sling-loadable crates */
-const HO_AMMO={gun:500,cirit:12,umtas:4};
-function hoAmmo(H){ if(!H.ammo) H.ammo={gun:HO_AMMO.gun,cirit:HO_AMMO.cirit,umtas:HO_AMMO.umtas}; if(!H.sel) H.sel='cirit'; return H.ammo; }
+const HO_AMMO={gun:500,cirit:12,umtas:4,door:1000};
+function hoAmmo(H){ if(!H.ammo) H.ammo={gun:HO_AMMO.gun,cirit:HO_AMMO.cirit,umtas:HO_AMMO.umtas,door:HO_AMMO.door}; if(!H.sel) H.sel='cirit'; return H.ammo; }
 /* ---- hover assist: centred cyclic -> brake towards a hover */
 const _hoInput=heliInput; heliInput=function(){ const inp=_hoInput(), H=HELI.cur;
   if(!HO.assist||!H||H.ground) return inp;
@@ -45,32 +45,33 @@ function hoBlast(p,rad,dmg){
 function hoTargets(){ const L=[]; HTGT.forEach(function(o){ if(o.alive) L.push(o); }); if(typeof gtargets!=='undefined') gtargets.forEach(function(o){ if(o.alive) L.push(o); }); return L; }
 /* ---- T129 aiming: nose direction, the best target inside a cone gets the lock */
 function hoAimStep(dt){
-  const H=HELI.cur; HO.cand=null; if(!H||H.id!=='t129'||H.ground&&H.rpm<0.9){ HO.lock=null; HO.lockT=0; return; }
-  const e=-H.pitch*0.9-0.09-WALK.pitch*0.25; HO.aimDir.set(-Math.sin(H.h)*Math.cos(e),Math.sin(e),-Math.cos(H.h)*Math.cos(e)).normalize();
+  const H=HELI.cur; HO.cand=null; if(!H||H.ground&&H.rpm<0.9){ HO.lock=null; HO.lockT=0; return; }
+  if(H.id==='t625'){ const e=-0.32; HO.aimDir.set(Math.cos(H.h)*Math.cos(e),Math.sin(e),-Math.sin(H.h)*Math.cos(e)).normalize(); }
+  else { const e=-H.pitch*0.9-0.09-WALK.pitch*0.25; HO.aimDir.set(-Math.sin(H.h)*Math.cos(e),Math.sin(e),-Math.cos(H.h)*Math.cos(e)).normalize(); }
   HO.aim.set(H.x,H.y+0.6,H.z).addScaledVector(HO.aimDir,4);
-  let best=null, ba=0.26; hoTargets().forEach(function(o){ const dx=o.pos.x-H.x, dy=o.pos.y-H.y, dz=o.pos.z-H.z, d=Math.hypot(dx,dy,dz); if(d>6000||d<30) return;
+  let best=null, ba=H.id==='t625'?0.75:0.26; const rng=H.id==='t625'?900:6000; hoTargets().forEach(function(o){ const dx=o.pos.x-H.x, dy=o.pos.y-H.y, dz=o.pos.z-H.z, d=Math.hypot(dx,dy,dz); if(d>rng||d<15) return;
     const a=Math.acos(clamp((dx*HO.aimDir.x+dy*HO.aimDir.y+dz*HO.aimDir.z)/d,-1,1)); if(a<ba){ ba=a; best=o; } });
   HO.cand=best; if(best&&best===HO.lock) HO.lockT+=dt; else { HO.lock=best; HO.lockT=0; }
 }
-function hoMuzzle(H,out){ out.set(H.x-Math.sin(H.h)*3.2,H.y+0.4,H.z-Math.cos(H.h)*3.2); return out; }
+function hoMuzzle(H,out){ if(H.id==='t625'){ out.set(H.x+Math.cos(H.h)*1.6,H.y+1.2,H.z-Math.sin(H.h)*1.6); return out; } out.set(H.x-Math.sin(H.h)*3.2,H.y+0.4,H.z-Math.cos(H.h)*3.2); return out; }
 const hoV=new THREE.Vector3(), hoD=new THREE.Vector3();
 function hoProj(type,H,dir,tgt){
-  const sp=type==='gun'?900:type==='cirit'?420:210, p=hoMuzzle(H,new THREE.Vector3());
+  const sp=type==='gun'||type==='door'?880:type==='cirit'?420:210, p=hoMuzzle(H,new THREE.Vector3()); if(type==='door') type='gun';
   if(type!=='gun'){ const side=(H.side=(H.side||1)*-1); p.x+=Math.cos(H.h)*1.7*side; p.z-=Math.sin(H.h)*1.7*side; p.y-=0.5; }
   const M=new THREE.MeshBasicMaterial({color:type==='gun'?0xffe08a:0xffb25a}), m=new THREE.Mesh(type==='gun'?new THREE.SphereGeometry(0.09,5,3):new THREE.CylinderGeometry(0.09,0.09,1.6,6),M);
   if(type!=='gun') m.rotation.x=Math.PI/2; m.position.copy(p); scene.add(m);
   const P={type:type,p:p,v:dir.clone().multiplyScalar(sp).add(new THREE.Vector3(H.vx,H.vy,H.vz)),life:type==='gun'?3.5:type==='cirit'?9:22,m:m,tgt:tgt||null,t:0}; HO.pj.push(P);
   sndPlay(type==='gun'?'gun':'missile',{vol:type==='gun'?0.6:0.7,pitch:type==='gun'?1.1:type==='cirit'?1.2:0.9}); return P; }
 function hoGun(dt){
-  const H=HELI.cur; if(!H||H.id!=='t129'||H.ground) return; const A=hoAmmo(H);
-  HO.gunCd-=dt; if(act('heli','gun')<0.5||HO.gunCd>0) return; if(A.gun<=0){ if(!HO.dryT||T-HO.dryT>2){ HO.dryT=T; toast('20 mm mermi bitti — helipada in','#ffc24a'); } return; }
-  HO.gunCd=0.1; A.gun--; let dir=HO.aimDir.clone();
+  const H=HELI.cur; if(!H||H.ground) return; const A=hoAmmo(H), door=H.id==='t625', key=door?'door':'gun';
+  HO.gunCd-=dt; if(act('heli','gun')<0.5||HO.gunCd>0) return; if(A[key]<=0){ if(!HO.dryT||T-HO.dryT>2){ HO.dryT=T; toast('20 mm mermi bitti — helipada in','#ffc24a'); } return; }
+  HO.gunCd=door?0.07:0.1; A[key]--; let dir=HO.aimDir.clone();
   if(HO.cand){ const o=HO.cand, d=o.pos.distanceTo(hoMuzzle(H,hoV)), t=d/900; hoD.set(o.pos.x+(o.mv?-Math.sin(o.h)*o.mv.v*t:0),o.pos.y+0.4+4.9*t*t,o.pos.z+(o.mv?-Math.cos(o.h)*o.mv.v*t:0)).sub(hoV).normalize();
-    if(hoD.dot(dir)>0.93) dir.copy(hoD); }   /* turret slaved to the sight */
-  dir.x+=(Math.random()-0.5)*0.006; dir.y+=(Math.random()-0.5)*0.006; dir.z+=(Math.random()-0.5)*0.006; hoProj('gun',H,dir.normalize());
+    if(hoD.dot(dir)>(door?0.7:0.93)) dir.copy(hoD); }   /* turret slaved to the sight */
+  const sp=door?0.012:0.006; dir.x+=(Math.random()-0.5)*sp; dir.y+=(Math.random()-0.5)*sp; dir.z+=(Math.random()-0.5)*sp; hoProj(door?'door':'gun',H,dir.normalize());
 }
 function hoFire(){
-  const H=HELI.cur; if(!H) return; if(H.id!=='t129'){ toast('GÖKBEY silahsız — B: yük kancası / asker','#ffc24a'); return; }
+  const H=HELI.cur; if(!H) return; if(H.id!=='t129'){ toast('GÖKBEY: Boşluk ile sağ kapı silahı · B yük kancası / asker','#ffc24a'); return; }
   if(H.ground){ toast('Önce kalk','#ffc24a'); return; } const A=hoAmmo(H), w=H.sel;
   if(A[w]<=0){ toast((w==='cirit'?'CİRİT':'UMTAS')+' kalmadı — Tab ile değiştir ya da helipada in','#ffc24a'); return; }
   if(w==='umtas'&&!(HO.lock&&HO.lockT>1.2)){ toast('UMTAS için hedef kilidi gerekli — burnu hedefe tut','#ffc24a'); return; }
@@ -95,9 +96,9 @@ function hoPjStep(dt){
   }
 }
 /* re-arm and refuel on a helipad */
-function hoRearm(dt){ const H=HELI.cur; if(!H||!H.ground||H.id!=='t129') return; const A=hoAmmo(H); if(A.gun===HO_AMMO.gun&&A.cirit===HO_AMMO.cirit&&A.umtas===HO_AMMO.umtas) return;
+function hoRearm(dt){ const H=HELI.cur; if(!H||!H.ground) return; const A=hoAmmo(H); if(A.gun===HO_AMMO.gun&&A.cirit===HO_AMMO.cirit&&A.umtas===HO_AMMO.umtas&&A.door===HO_AMMO.door) return;
   const pad=HELI_SPOTS.some(function(s){ return Math.hypot(s.x-H.x,s.z-H.z)<30; })||(typeof deckAt==='function'&&deckAt(H.x,H.z,H.y+0.5)); if(!pad){ HO.rearmT=0; return; }
-  HO.rearmT+=dt; if(HO.rearmT>3){ HO.rearmT=0; A.gun=HO_AMMO.gun; A.cirit=HO_AMMO.cirit; A.umtas=HO_AMMO.umtas; toast('Mühimmat ikmali tamam','#7dffb0'); } }
+  HO.rearmT+=dt; if(HO.rearmT>3){ HO.rearmT=0; A.gun=HO_AMMO.gun; A.cirit=HO_AMMO.cirit; A.umtas=HO_AMMO.umtas; A.door=HO_AMMO.door; toast('Mühimmat ikmali tamam','#7dffb0'); } }
 /* ---- soldiers */
 function trBuild(){ const M=hoMats(), g=new THREE.Group();
   const b=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.75,0.3),M.olive); b.position.y=1.15; g.add(b);
@@ -267,7 +268,8 @@ const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; 
         hoTargets().forEach(function(o){ const r=hoScreen(o.pos,w,h); if(!r) return; const lk=o===HO.lock&&HO.lockT>1.2, cd=o===HO.cand, z=(cd?14:9)*s;
           hx.strokeStyle=lk?'#ff5a4a':cd?'#ffd27a':'rgba(255,138,90,.55)'; hx.lineWidth=lk?2.5:1.5; hx.strokeRect(r[0]-z,r[1]-z,2*z,2*z);
           if(cd){ hx.textAlign='center'; hx.fillStyle=lk?'#ff5a4a':'#ffd27a'; hx.fillText(lk?'KİLİT':(H.sel==='umtas'?'KİLİTLENİYOR':o.n||o.label||''),r[0],r[1]-z-8*s); } }); }catch(e){} } }
-  else { hx.fillStyle='#ffd27a'; hx.fillText('ASKER '+(H.troops||0)+'/12  ·  KANCA '+(H.sling?'YÜKLÜ':'BOŞ')+' (B)', L, top+Math.round(20*s));
+  else { hx.fillStyle='#ffd27a'; hx.fillText('KAPI SİLAHI '+hoAmmo(H).door+'  ·  ASKER '+(H.troops||0)+'/12  ·  KANCA '+(H.sling?'YÜKLÜ':'BOŞ')+' (B)', L, top+Math.round(20*s));
+    if(!H.ground&&HO.cand){ try{ const r=hoScreen(HO.cand.pos,w,h); if(r){ const z=12*s; hx.strokeStyle='#ffd27a'; hx.lineWidth=1.5; hx.strokeRect(r[0]-z,r[1]-z,2*z,2*z); } }catch(e){} }
     if(!H.ground&&!H.sling){ const L2=slingables(); let near=null, bd=40; L2.forEach(function(o){ const d=Math.hypot(o.x-H.x,o.z-H.z); if(d<bd){ bd=d; near=o; } });
       if(near){ const oy=near.crate?near.y:(near.y==null?groundH(near.x,near.z):near.y), up=H.y-oy, ok=bd<10&&up>4&&up<26; hx.textAlign='center'; hx.fillStyle=ok?'#7dffb0':'#ffd27a';
         hx.fillText(ok?'KANCA HAZIR — B':'YÜK '+Math.round(bd)+' m · '+Math.round(up)+' m altında', w/2, h*0.62); } } }
@@ -281,4 +283,4 @@ const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; 
     hx.fillText(line, w/2, Math.round((WALK.tvis?80:42)*s)); }
 };
 /* ---- controls hint */
-const _hoBoard=heliBoard; heliBoard=function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · J askı yardımı · G in':' — B asker bindir/indir ya da yük kancası · J askı yardımı · G in'),'#b8ecff'); };
+const _hoBoard=heliBoard; heliBoard=function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · J askı yardımı · G in':' — Space sağ kapı silahı · B asker bindir/indir ya da yük kancası · J askı yardımı · G in'),'#b8ecff'); };

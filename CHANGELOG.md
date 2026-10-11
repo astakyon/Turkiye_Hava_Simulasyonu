@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.76 — 2026-10-11
+- **Görev panosu:** Uçak ve helikopter görevleri tek listede. Kategori (Eğitim, Hava, Taarruz, Keşif, Helikopter), zorluk ve süreye göre filtreleyebilir, ödüle göre sıralayabilirsin. Her görevin yanında zorluk, süre, XP ödülü ve kazandığın yıldızlar yazar.
+- **Brifing:** Görev bölgesini gösteren harita, hedefler, tehditler ve önerilen yük listelenir. Önerilen yükü tek dokunuşla uygulayabilirsin. Serbest uçuşta uçak yerine T129 ya da T625 seçilebiliyor.
+- **Oyun içi hedef takibi:** Pusulanın altında görev adı, ilerleme (örneğin 3/13 yer hedefi), kalan süre ve en yakın hedefe uzaklık görünür.
+- **Görev günlüğü:** F2 tuşuyla ya da Duraklat → "Görev günlüğü" ile açılır; görev boyunca olanları zaman damgalı listeler.
+- **Görev sonu raporu:** 1–3 yıldız (bitirmek, hızlı bitirmek, az hasar almak), süre, puan, vurulan hedef, atış sayısı, en düşük can ve XP ödülü. Zor görevler artık daha çok XP veriyor. Helikopter görevleri de yıldız alıyor.
+- **T625 kapı silahı:** Boşluk ile sağ kapıdaki makineli tüfek ateşlenir; menzildeki hedefe kendiliğinden yönelir. Helipadde mühimmatı yenilenir.
+
 ## V1.75 — 2026-10-11
 - **Hava trafiği:** Ana apronda park eden üç yapay zekâ uçağı (Hürjet "Şimşek 05", Hürkuş "Doğan 11", Aksungur "Kartal 21") var. Sırayla taksi yolundan pist başına gidip kalkıyor, sağ trafik turu atıp iniyor, pistin sonunda dönüp geri taksi ederek yerine park ediyor.
 - **Pist kuralları:** Sen pistteyken, pist başında beklerken ya da son yaklaşmadayken yapay zekâ uçakları pist başında bekliyor; inişteki uçak pist doluysa pas geçip turu tekrarlıyor. Sen hangardan taksi ederken de yollarını kesmiyorlar. Kule bu uçaklarla telsizden konuşuyor (taksi, kalkış ve iniş izni, pas geç).

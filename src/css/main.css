@@ -663,3 +663,28 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .visov.flir,.visov.flirb{ background:radial-gradient(circle at 50% 50%,rgba(0,0,0,0) 0 70%,rgba(0,0,0,.35) 100%); }
 .visov.flir::after,.visov.flirb::after{ content:'FLIR'; position:absolute; right:18px; bottom:14px; font:700 12px "Chakra Petch",system-ui,sans-serif; letter-spacing:.2em; color:rgba(255,255,255,.75); }
 .visov.nvg::after{ content:'NVG'; position:absolute; right:18px; bottom:14px; font:700 12px "Chakra Petch",system-ui,sans-serif; letter-spacing:.2em; color:rgba(160,255,140,.8); }
+/* V1.76 mission board */
+.bfilt{ position:absolute; left:max(clamp(16px,3vw,44px),env(safe-area-inset-left)); top:clamp(54px,12vh,84px); width:min(380px,40vw); display:flex; flex-wrap:wrap; gap:4px; }
+.bseg{ display:flex; flex-wrap:wrap; gap:3px; width:100%; }
+.bseg button{ font:600 11px "Chakra Petch",system-ui,sans-serif; padding:4px 8px; border-radius:999px; border:1px solid rgba(184,236,255,.22); background:rgba(8,15,28,.6); color:#cfe3f0; }
+.bseg button[aria-pressed="true"]{ background:#ffb25a; border-color:#ffb25a; color:#1a0e02; }
+#missionsUI .mlist.mis{ top:calc(clamp(54px,12vh,84px) + 118px); width:min(380px,40vw); max-height:calc(100vh - clamp(54px,12vh,84px) - 170px); overflow:auto; }
+.mlist.mis .mitem{ display:flex; align-items:center; gap:10px; }
+.mlist.mis .bt{ font-style:normal; display:flex; flex-direction:column; flex:1; text-align:left; } .mlist.mis .bc{ font-size:10.5px; opacity:.7; letter-spacing:.02em; font-weight:500; }
+.stars i{ font-style:normal; color:rgba(255,255,255,.22); font-size:14px; } .stars i.on{ color:#ffd27a; }
+.bempty{ padding:12px; color:#9fb3c4; font-size:13px; }
+.misdet{ max-height:calc(100vh - clamp(54px,14vh,90px) - 40px); overflow:auto; }
+.brief{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+.bmap{ position:static; width:100%; height:150px; border-radius:8px; border:1px solid rgba(255,255,255,.1); }
+.bcols{ display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px; color:#cfdbe6; } .bcols b{ font-size:10px; letter-spacing:.16em; color:#ffb25a; } .bcols ul{ margin:4px 0 0; padding-left:16px; } .bcols li{ margin:2px 0; }
+.bload{ font-size:12.5px; color:#dfe9f1; display:flex; align-items:center; gap:8px; flex-wrap:wrap; } .bload .btn.sm{ padding:4px 10px; font-size:12px; }
+.bveh b{ display:block; font-size:10px; letter-spacing:.16em; color:#ffb25a; margin-bottom:4px; }
+.mlog{ position:fixed; right:max(14px,env(safe-area-inset-right)); top:120px; width:min(380px,80vw); max-height:60vh; overflow:auto; background:rgba(6,12,22,.88); border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:10px 14px; z-index:6; color:#dfe9f1; font-size:12.5px; zoom:var(--uiz,1); }
+.mlog h3{ margin:0 0 6px; font:700 12px "Chakra Petch",system-ui,sans-serif; letter-spacing:.14em; color:#ffb25a; } .mlog ul{ list-style:none; margin:0; padding:0; } .mlog li{ display:flex; gap:8px; padding:3px 0; border-bottom:1px solid rgba(255,255,255,.06); } .mlog time{ opacity:.6; font-variant-numeric:tabular-nums; } .mlog small{ display:block; margin-top:6px; opacity:.5; }
+.mstats .stars{ display:block; text-align:center; margin:4px 0 8px; } .mstats .stars i{ font-size:34px; margin:0 3px; }
+.mstats ul{ list-style:none; margin:0 0 8px; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:6px; } .mstats li{ background:rgba(255,255,255,.05); border-radius:6px; padding:6px; text-align:center; } .mstats small{ display:block; font-size:9.5px; letter-spacing:.12em; opacity:.6; } .mstats b{ font-size:15px; }
+.mstats .hint{ font-size:12px; color:#ffd27a; margin:0 0 6px; text-align:center; }
+.hmend .stars{ display:block; } .hmend .stars i{ font-size:30px; margin:0 3px; }
+@media (max-width:640px){ .bfilt{ width:calc(100vw - 32px); } #missionsUI .mlist.mis{ width:calc(100vw - 32px); max-height:30vh; } .bcols{ grid-template-columns:1fr; } .bmap{ height:110px; } }
+@media (max-width:640px){ #missionsUI .mlist.mis{ max-height:24vh; } #missionsUI .misdet{ top:calc(clamp(54px,12vh,84px) + 124px + 24vh); bottom:30px; max-height:none; overflow:auto; } .bseg button{ padding:3px 7px; font-size:10.5px; } }
+.misdet .mrow2{ position:sticky; bottom:-14px; background:linear-gradient(180deg,rgba(6,12,22,0),rgba(6,12,22,.96) 30%); padding:10px 0 4px; margin-bottom:-4px; z-index:1; }

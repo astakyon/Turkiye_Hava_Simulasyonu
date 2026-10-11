@@ -84,10 +84,12 @@
 <div id="missionsUI" class="screen hidden">
   <button class="btn ui back" id="btnMisBack" type="button">← Ana menü</button>
   <div class="shdr"><span>■</span> GÖREVLER</div>
+  <div class="bfilt ui" id="misFilt"></div>
   <ul class="mlist mis ui" id="misList"></ul>
   <div class="misdet ui">
     <p class="k" id="misK"></p><h2 id="misName"></h2><p class="d" id="misDesc"></p>
     <div class="mchips" id="misChips"></div>
+    <div class="brief" id="misBrief"></div>
     <div class="mrow2"><button class="btn primary" id="btnMisGo" type="button">▶ Göreve başla</button><button class="btn" id="btnMisAc" type="button"></button></div>
   </div>
   <div class="sbar"><span id="sbAc2"></span><span class="v">↑ ↓ görev · Enter başla · Esc geri</span></div>
@@ -163,6 +165,7 @@
       <button class="btn primary" id="btnResume">Devam et</button>
       <button class="btn" id="btnToHangar">Hangara dön</button>
       <button class="btn" id="btnWalk">Yürüyerek gez</button>
+      <button class="btn" id="btnPauseLog">Görev günlüğü</button>
       <button class="btn" id="btnPauseControls">Kontroller</button>
       <button class="btn" id="btnPauseSettings">Ayarlar</button>
     </div>
@@ -390,6 +393,7 @@
   <div class="card">
     <h2 id="mendTitle"></h2>
     <p class="sub" id="mendBody"></p>
+    <div class="mstats" id="mendStats"></div>
     <div class="stack"><button class="btn primary" id="btnMRetry">Tekrar dene</button><button class="btn" id="btnMHangar">Hangara dön</button></div>
   </div>
 </div>
@@ -424,6 +428,7 @@
 <div id="radioSub" class="radiosub hidden"></div>
 <div id="radioMenu" class="radiomenu hidden"></div>
 <div id="pttInd" class="pttind hidden">🎙 KONUŞUYORSUN</div>
+<div id="mlog" class="mlog hidden" aria-live="polite"></div>
 <div id="visOv" class="visov hidden" aria-hidden="true"></div>
 <div id="touch" class="touch hidden">
   <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tVis">GÖRÜŞ</button><button type="button" id="tEject" class="hidden warn">FIRLAT</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>

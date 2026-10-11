@@ -44,3 +44,4 @@ node harness.js /tmp/sim.js heliops.test.js
 node harness.js /tmp/sim.js damage.test.js
 node harness.js /tmp/sim.js weather.test.js
 node harness.js /tmp/sim.js airlife.test.js
+node harness.js /tmp/sim.js board.test.js

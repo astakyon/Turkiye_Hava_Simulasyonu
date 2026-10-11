@@ -74,7 +74,7 @@ window.addEventListener('keydown',e=>{
       if((e.code==='Enter'||e.code==='Space')&&!onBtn){ e.preventDefault(); const L=titleItems(); if(L[tFocus]) titleAct(L[tFocus].dataset.act); }
       return; }
     if(menuMode==='missions'){
-      if(e.code==='ArrowDown'||e.code==='ArrowUp'){ e.preventDefault(); misSel=(misSel+(e.code==='ArrowDown'?1:-1)+MORDER.length)%MORDER.length; renderMissions(); return; }
+      if(e.code==='ArrowDown'||e.code==='ArrowUp'){ e.preventDefault(); misSel=(misSel+(e.code==='ArrowDown'?1:-1)+misCount())%misCount(); renderMissions(); return; }
       if((e.code==='Enter'||e.code==='Space')&&!onBtn){ e.preventDefault(); misGo(); return; }
       if(e.code==='Escape'){ enterTitle(); }
       return; }

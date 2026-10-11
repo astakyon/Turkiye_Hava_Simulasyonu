@@ -43,7 +43,7 @@ function pollPad(){
     return; }
   if(state==='menu'){
     if(menuMode==='title'){ const eU=press(12), eD=press(13); if(eD||eR) titleFocus(tFocus+1); else if(eU||eL) titleFocus(tFocus-1); else if(eA){ const L=titleItems(); if(L[tFocus]) titleAct(L[tFocus].dataset.act); } }
-    else if(menuMode==='missions'){ const eU=press(12), eD=press(13); if(eD||eU){ misSel=(misSel+(eD?1:-1)+MORDER.length)%MORDER.length; renderMissions(); } else if(eA) misGo(); else if(eB) enterTitle(); }
+    else if(menuMode==='missions'){ const eU=press(12), eD=press(13); if(eD||eU){ misSel=(misSel+(eD?1:-1)+misCount())%misCount(); renderMissions(); } else if(eA) misGo(); else if(eB) enterTitle(); }
     else if(menuMode==='loadout'){ if(eA) loadDone(); else if(eB) closeLoadPanel(); }
     else if(menuMode==='start'){ if(eA) launchFrom(startPick); else if(eB) closeStart(); else if(eLB) cycleMission(-1); else if(eRB) cycleMission(1); else if(eL||eX) cycleStart(-1); else if(eR||eY) cycleStart(1); }
     else{ if(eL) cycleAircraft(-1); else if(eR) cycleAircraft(1); else if(eA) preFlight('hangar'); else if(eB) enterTitle(); }
