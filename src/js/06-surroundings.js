@@ -119,7 +119,7 @@ function buildSurroundings(){
   const fieldGroups=fmats.map(function(){ return []; });
   for(let k=0,placed=0;k<400&&placed<46;k++){
     const x=-1500+r()*2400, z=-3700+r()*1700; if(Math.hypot(x-V.x,z-V.z)<230||Math.hypot(x,z)<1950) continue;
-    if(ENV.road.some(function(p){ return Math.hypot(p[0]-x,p[1]-z)<70; })) continue;
+    if(ENV.road.some(function(p){ return Math.hypot(p[0]-x,p[1]-z)<70; })||nearNavalRoad(x,z,70)) continue;
     const h=terrainH(x,z); if(h<6||h>140) continue; if(Math.abs(terrainH(x+60,z)-h)+Math.abs(terrainH(x,z+60)-h)>16) continue;
     const w=70+r()*90, l=60+r()*80, rot=r()*0.5-0.25, pg=new THREE.PlaneGeometry(w,l,8,8); pg.rotateX(-Math.PI/2); pg.rotateY(rot);
     const p=pg.attributes.position; for(let i=0;i<p.count;i++){ const wx=p.getX(i)+x, wz=p.getZ(i)+z; p.setXYZ(i,wx,terrainH(wx,wz)+1.1,wz); }
@@ -132,6 +132,7 @@ function buildSurroundings(){
     if(ENV.road.some(function(p){ return Math.abs(p[0]-x)<14&&Math.abs(p[1]-z)<14; })) continue;
     if(Math.hypot(x-V.x,z-V.z)<190) continue; tPos.push([x,h,z,0.7+r()*0.8,r()<0.55?0:1]); }
   ENV.road.forEach(function(p,i){ if(i%4||i<10) return; [-1,1].forEach(function(s){ const x=p[0]+s*11, z=p[1]; tPos.push([x,terrainH(x,z),z,0.8+r()*0.3,1]); }); });
+  TREE_EXTRA.forEach(function(t){ tPos.push(t); });
   for(let k=0;k<120;k++){ const x=V.x-170+r()*340, z=V.z-150+r()*300; if(vg.children.some(function(c){ return Math.hypot(c.position.x-x,c.position.z-z)<9; })) continue; tPos.push([x,terrainH(x,z),z,0.6+r()*0.4,1]); }
   const conG=MK.merge([(function(){ const g=new THREE.ConeGeometry(2.6,7,7); g.translate(0,6.5,0); return g; })(),(function(){ const g=new THREE.ConeGeometry(2.0,5.5,7); g.translate(0,9.5,0); return g; })()]);
   const leafG=(function(){ const g=new THREE.IcosahedronGeometry(3.2,1); g.scale(1,0.85,1); g.translate(0,6.4,0); return g; })();
@@ -145,7 +146,7 @@ function buildSurroundings(){
   /* ---- rocks on the slopes and along the shore */
   const rockG=new THREE.DodecahedronGeometry(1,0), rockM=new THREE.MeshLambertMaterial({color:0x8a8579,flatShading:true}), rocks=[];
   for(let k=0;k<6000&&rocks.length<700;k++){ const a=r()*Math.PI*2, d=1800+r()*3800, x=Math.cos(a)*d, z=Math.sin(a)*d, h=terrainH(x,z);
-    const sl=Math.abs(terrainH(x+20,z)-h)+Math.abs(terrainH(x,z+20)-h); if(h<0.5||(sl<6&&h>6)) continue; rocks.push([x,h,z,1+r()*3.5]); }
+    const sl=Math.abs(terrainH(x+20,z)-h)+Math.abs(terrainH(x,z+20)-h); if(h<0.5||(sl<6&&h>6)||inPad('naval',x,z,80)) continue; rocks.push([x,h,z,1+r()*3.5]); }
   const ri=new THREE.InstancedMesh(rockG,rockM,rocks.length); rocks.forEach(function(t,i){ mt.compose(p3.set(t[0],t[1]+t[3]*0.2,t[2]),q4.setFromEuler(new THREE.Euler(i,i*1.7,i*0.3)),s3.set(t[3],t[3]*0.6,t[3]*0.9)); ri.setMatrixAt(i,mt); });
   ri.instanceMatrix.needsUpdate=true; ri.frustumCulled=false; scene.add(ri);
   /* ---- surf along the shoreline around the peninsula */

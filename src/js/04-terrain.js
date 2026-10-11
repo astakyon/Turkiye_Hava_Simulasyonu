@@ -5,6 +5,18 @@ function vnoise(x,y){ const xi=Math.floor(x), yi=Math.floor(y), xf=x-xi, yf=y-yi
 function fbm(x,y,oct){ let s=0,a=.5,f=1,n=0; for(let i=0;i<oct;i++){ s+=a*vnoise(x*f+i*17.3,y*f+i*9.1); n+=a; a*=.5; f*=2.03; } return s/n; }
 
 const AIRFIELD_Y = 22;
+/* flat pads cut into the terrain for the bases (x0..x1, z0..z1 fully flat at y; smooth falloff `f` metres; `hardWest`: no
+   falloff on the sea side so the quay meets deep water). DECKS: walkable surfaces above the terrain (quays, piers). */
+const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hardWest:true}];
+const DECKS=[];
+function padW(p,x,z){
+  let dx=0; if(x<p.x0){ if(p.hardWest){ if(x<p.x0-6) return 0; } else dx=p.x0-x; } else if(x>p.x1) dx=x-p.x1;
+  const dz=z<p.z0?p.z0-z:(z>p.z1?z-p.z1:0); if(dx>=p.f||dz>=p.f) return 0;
+  return (1-smooth(0,p.f,dx))*(1-smooth(0,p.f,dz));
+}
+function inPad(id,x,z,m){ const p=PADS.find(function(q){ return q.id===id; }); m=m||0; return x>p.x0-m&&x<p.x1+m&&z>p.z0-m&&z<p.z1+m; }
+/* walkable ground height: terrain, raised by decks (quays, piers) */
+function groundH(x,z){ let h=terrainH(x,z); for(let i=0;i<DECKS.length;i++){ const d=DECKS[i]; if(x>d.x0&&x<d.x1&&z>d.z0&&z<d.z1&&d.y>h) h=d.y; } return h; }
 function terrainH(x,z){
   const n = fbm(x/11000+3.1, z/11000+7.7, 4);
   const land = smooth(0.40,0.58,n);
@@ -15,6 +27,7 @@ function terrainH(x,z){
   const d = Math.hypot(x,z);
   const w = 1 - smooth(1800,4200,d);
   h += (AIRFIELD_Y - h)*w;
+  for(let i=0;i<PADS.length;i++){ const pw=padW(PADS[i],x,z); if(pw>0) h+=(PADS[i].y-h)*pw; }
   const e = 1 - smooth(11500,14800,Math.max(Math.abs(x),Math.abs(z)));
   return -45 + (h+45)*e;
 }
@@ -33,7 +46,9 @@ function terrainH(x,z){
   for(let i=0;i<p.count;i++){
     const x=p.getX(i), h=p.getY(i), z=p.getZ(i), ny=nrm.getY(i);
     const n1=fbm(x/310+5, z/310+9, 3);
-    if(h<1.2){ A.copy(cDeep).lerp(cShallow, smooth(-40,0,h)); }
+    let pw=0; for(let k=0;k<PADS.length;k++) pw=Math.max(pw,padW(PADS[k],x,z));
+    if(pw>0.25&&h>0.5){ A.copy(cGA).lerp(cGB,n1*0.6); }
+    else if(h<1.2){ A.copy(cDeep).lerp(cShallow, smooth(-40,0,h)); }
     else if(h<9){ A.copy(cSand).lerp(cGA, smooth(5,9,h)); }
     else{
       A.copy(cGA).lerp(cGB,n1); A.lerp(cDry, smooth(250,650,h)*0.7);

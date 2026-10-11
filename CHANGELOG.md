@@ -1,6 +1,29 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.40 — 2026-10-11
+### Yeni — Deniz üssü (Mavi Kanatlar)
+Köyün batısındaki korunaklı koyda, köyden yolla bağlı.
+- **Liman:** rıhtım, kazıklar üzerinde 3 iskele, TCG Anadolu'nun yanaştığı mendirek, kaya dolgu dalgakıran, kırmızı/yeşil giriş fenerleri. Babalar, usturmaçalar, aydınlatma direkleri.
+- **Gemiler** (yer tutucu modeller, Mavi Kanatlar aşamasında detaylanacak):
+  - **TCG Anadolu (L-400):** kayakla atlama rampası, ada, uçuş güvertesi işaretleri, güvertede 3 TB3.
+  - İstif sınıfı fırkateyn **F-515**, Ada sınıfı korvetler **F-511, F-512, F-513**.
+  - Tuzla sınıfı karakol botları; koyda devriye gezen **P-1203** (dümen suyu iziyle).
+  - Römorkör, denizaltı barınağında Reis sınıfı denizaltı.
+- **Tersane:** yüzer havuz (içinde bakımda F-514 korveti), 3 liman vinci (yavaşça dönüyor), atölye, ambarlar, konteynerler.
+- **Kara tarafı:**
+  - Deniz Üssü Komutanlığı binası, bayrak ve çapa anıtı.
+  - Koğuşlar, yemekhane, revir.
+  - Yakıt tankları, helikopter pisti, dönen radarlı haberleşme kulesi, su kulesi.
+  - Çit ve "AY YILDIZ DENİZ ÜSSÜ" nizamiyesi.
+- **Gezme:** arabayla ya da yürüyerek rıhtım, iskele ve mendirek üzerinde dolaşılabiliyor.
+  - Yeni **M** tuşu, dokunmatikte **GİT ▸** düğmesi: hangar, nizamiye, köy, deniz üssü ve rıhtım arasında hızlı geçiş.
+- Kara grubunun adı **Bozkurtlar** oldu.
+### Altyapı
+- Arazide düzleştirilmiş üs alanları (`PADS`) ve yürünebilir yüzeyler (`DECKS`, `groundH`). Kara üssü ve diğer tesisler de bunu kullanacak.
+- Gemi modelleme araçları (`15-model-ships.js`): gövde loft'u, gizli üst yapı blokları, gövde numarası dokusu.
+- Binalara çarpma artık havalimanı dışında da geçerli.
+
 ## V1.39 — 2026-10-11
 ### Yeni — Aşama 4: üs çevresi
 - **Çevre çiti:** üssü saran tel örgü çit (direkler, tel, üst dikenli tel). Çimler çit sınırına kadar biçilmiş.

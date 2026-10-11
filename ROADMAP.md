@@ -12,7 +12,18 @@
 | 1 | V1.30 | Işık ve atmosfer: PBR malzeme, güneş gölgeleri, gökyüzü/güneş, mesafe pusu, kanopi yansıması | ✅ |
 | 2 | V1.31 | Havalimanı: pist işaretleri, kenar/yaklaşma ışıkları, PAPI, kule, terminal, radar, itfaiye, yakıt, yer araçları, tabelalar | ✅ |
 | 3 | V1.32 | Hangar iç tasarımı: kapalı bekleme hangarı (çelik makaslar, tavan lambaları, epoksi zemin, bayrak ve pankartlar, tezgâh, takım dolabı, raf, silah arabaları), bakım hangarı iç donanımı | ✅ |
-| 4 | V1.24 | Ada/çevre: arazi dokuları, köy/yol/sahil, deniz yansıması, ağaç çeşitliliği, mesafeye göre detay | |
+| 4 | V1.39 | Üs çevresi: çit, nizamiye, köy, tarlalar, orman, kıyı köpüğü, deniz feneri | ✅ |
+| 4a | V1.40 | Deniz üssü (Mavi Kanatlar): iskeleler, dalgakıran, TCG Anadolu, fırkateyn/korvetler, denizaltı barınağı, yüzer havuz, vinçler | ✅ |
+| 4b | V1.41 | Kara üssü (Bozkurtlar): kışla, garajlar, araç parkı, atış poligonu | |
+| 4c | V1.42 | Yol ağı ve trafik, kasaba | |
+| 4d | V1.43 | Sivil liman, gemi trafiği, kumsal, martılar | |
+| 4e | V1.44 | Kırsal: rüzgâr türbinleri, GES, seralar, zeytinlik, göl/baraj, köye canlılık | |
+| 4f | V1.45 | Askeri tesisler: dağda radar, hava savunma mevzisi, mühimmat deposu | |
+| 4g | V1.46 | Atmosfer: gece döngüsü, ışıklar, sis, ortam sesleri | |
+| 4h | V1.47 | Güney ada: asma köprü ve şehir | |
+| 4i | V1.48 | Güneydoğu ada: İHA ve test merkezi | |
+| 4j | V1.49 | Kızıl Bölge (düşman üssü ve hedefler, batı uç) | |
+| 4k | V1.50 | Baraj, kayak merkezi, antik kent, kale, petrol platformu, deniz RES, rasathane | |
 | 5 | V1.25 | Uçak detayları: fotoğraflara yüksek benzerlik, panel çizgileri, çıkartmalar, ışıklar, takım ve kumanda yüzeyi animasyonu | |
 | 6 | V1.3x | Gerçek silah envanteri, yeni hava araçları; sonra Mavi Kanatlar (deniz) ve kara sistemleri | |
 

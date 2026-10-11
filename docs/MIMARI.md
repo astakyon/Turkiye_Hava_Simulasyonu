@@ -22,8 +22,9 @@ CI (`pages.yml`) önce `tools/build.py --check`, sonra testleri çalıştırır;
 ## Modüller (yükleme sırası)
 | Aralık | İçerik |
 |---|---|
-| 01–05 | çekirdek (sürüm, yardımcılar), görüntüleyici, gökyüzü/ışık, arazi, havalimanı |
-| 10–14 | araç modelleri (kodla), kayıt (`REG`, `AIRCRAFT`), **varlıklar** (GLB yükleme, `buildModel`) |
+| 01–05 | çekirdek (sürüm, yardımcılar), görüntüleyici, gökyüzü/ışık, arazi (`PADS` düzleştirilmiş üs alanları, `DECKS` rıhtım/iskele, `groundH`), havalimanı |
+| 06–07 | üs çevresi (çit, nizamiye, köy, orman, fener), **deniz üssü** (`NAVAL`: iskeleler, dalgakıran, gemiler, vinçler, binalar) |
+| 09–15 | modelleme araçları (`MK`), araç modelleri (kodla), kayıt (`REG`, `AIRCRAFT`), **varlıklar** (GLB yükleme, `buildModel`), **gemi modelleri** (fırkateyn, korvet, TCG Anadolu, denizaltı, karakol botu, römorkör) |
 | 20–23 | hangar bekleme alanı, hangar içleri, taksi, bakım hangarı |
 | 30–35 | uçuş durumu, halkalar, muharebe, yer hedefleri, görevler, tehditler |
 | 40–46 | ayarlar, iz, ses, fizik, kamera, HUD, **görsel efektler** |

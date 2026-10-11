@@ -22,7 +22,7 @@ function apBox(p,mat,x,y0,z,w,h,d,ry){ const m=new THREE.Mesh(new THREE.BoxGeome
 function apCyl(p,mat,x,y0,z,rt,rb,h,seg,open){ const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||12,1,!!open),mat); m.position.set(x,y0+h/2,z); p.add(m); return m; }
 function apFlat(p,mat,cx,cz,w,l,y,ang){ const g=new THREE.PlaneGeometry(w,l); g.rotateX(-Math.PI/2); const m=new THREE.Mesh(g,mat); m.position.set(cx,y,cz); if(ang) m.rotation.y=ang; p.add(m); return m; }
 function apRect(p,mat,x0,x1,z0,z1,y){ return apFlat(p,mat,(x0+x1)/2,(z0+z1)/2,Math.abs(x1-x0),Math.abs(z1-z0),y); }
-function apObst(x0,x1,z0,z1,top,airOnly){ AP.obst.push({x0:x0,x1:x1,z0:z0,z1:z1,y1:AIRFIELD_Y+top,air:!!airOnly}); }
+function apObst(x0,x1,z0,z1,top,airOnly){ AP.obst.push({x0:x0,x1:x1,z0:z0,z1:z1,y1:AIRFIELD_Y+top,air:!!airOnly}); AP.topY=null; }
 function apWheel(p,mat,x,z,r,w){ const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,w,10),mat); m.rotation.z=Math.PI/2; m.position.set(x,r,z); p.add(m); }
 const APM={};
 function apMats(){
@@ -273,7 +273,7 @@ function airportStep(dt){
 /* buildings are solid: in the air they end the flight, on the ground they stop the aircraft */
 function obstacleStep(){
   if(S.crashed||!AP.obst.length) return;
-  const p=S.pos; if(p.y>AIRFIELD_Y+60||Math.abs(p.x)>700||Math.abs(p.z)>1300) return;
+  const p=S.pos; if(AP.topY==null) AP.topY=AP.obst.reduce(function(m,b){ return Math.max(m,b.y1); },0); if(p.y>AP.topY+5) return;
   for(let k=0;k<AP.obst.length;k++){ const b=AP.obst[k]; if(p.y>b.y1+1) continue;
     if(S.onGround){ if(b.air) continue; if(pushOut([b])) S.speed*=0.5;
     } else if(p.x>b.x0-2&&p.x<b.x1+2&&p.z>b.z0-2&&p.z<b.z1+2){ crash('Binaya çarptın'); return; }

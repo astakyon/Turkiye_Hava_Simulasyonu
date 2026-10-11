@@ -56,7 +56,7 @@ const AIRCRAFT={
 };
 const AC_ORDER=['kaan','anka3','hurjet','hurkus','anka','aksungur','kizilelma','tb2','tb3','akinci'];
 /* system registry: groups (hava / deniz / kara), classes and makers; new vehicles only need an AIRCRAFT entry + a REG line */
-const GROUPS=[{id:'hava',name:'Hilal Kanatlar',sub:'Hava sistemleri',on:true},{id:'deniz',name:'Mavi Kanatlar',sub:'Deniz · yakında',on:false},{id:'kara',name:'Kara Sistemleri',sub:'Kara · yakında',on:false}];
+const GROUPS=[{id:'hava',name:'Hilal Kanatlar',sub:'Hava sistemleri',on:true},{id:'deniz',name:'Mavi Kanatlar',sub:'Deniz · yakında',on:false},{id:'kara',name:'Bozkurtlar',sub:'Kara · yakında',on:false}];
 const CLASSES={savas:'Savaş uçağı',iha:'İHA / SİHA',egitim:'Eğitim / hafif taarruz'};
 const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ'},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},
   anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ'},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar'},
