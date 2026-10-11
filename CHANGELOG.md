@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.74 — 2026-10-11
+- **Hava durumu:** Ayarlar → Grafik'te "Hava durumu" seçimi eklendi: Açık, Bulutlu, Yağmur, Fırtına, Kar, Sis ve Değişken. Değişken seçilirse hava 4–8 dakikada bir kendiliğinden değişir. Geçişler yumuşak olur.
+- **Yağmur ve kar:** Kameranın çevresinde yağmur çizgileri ve kar taneleri yağar. Hızlı uçarken yağmur rüzgârla yatay çizgilere döner. Yağmur sesi de var.
+- **Gökyüzü ve ışık:** Kötü havada gökyüzü griye döner, güneş ışığı zayıflar, bulutlar koyulaşır. Sis ve yağış görüş mesafesini kısaltır.
+- **Fırtına:** Şimşek çakar, gök aydınlanır ve gök gürültüsü uzaklığa göre gecikmeli duyulur.
+- **Rüzgâr ve türbülans:** Rüzgâr uçağı ve helikopteri sürükler, hamleler (gust) değişkendir. Türbülans alçakta ve hızlıyken daha çok sarsar. Rüzgâr yönü ve şiddeti HUD'da yazar, kule anonsları da gerçek rüzgârı söyler.
+- **Gece görüş ve termal kamera:** " tuşuyla (telefonda GÖRÜŞ düğmesi) sırasıyla NVG yeşil gece görüşü, FLIR beyaz sıcak, FLIR siyah sıcak ve normal görüş arasında geçilir. Gece görüşü karanlıkta daha çok aydınlatır.
+- Düzeltme: sapan halatı ve bazı ince çizgiler uzaktan bakınca kayboluyordu.
+
 ## V1.73 — 2026-10-11
 - **Yakıt:** Gaz arttıkça yakıt daha hızlı biter; art yakıcı çok daha fazla yakar, İHA'lar çok daha uzun uçar. HUD'da yakıt göstergesi, %20'de "YAKIT AZ", %8'de "YAKIT KRİTİK" uyarısı ve kule anonsu var. Yakıt bitince motor durur ve süzülerek inmen gerekir.
 - **İkmal ve onarım:** Herhangi bir pistte gazı kesip durursan yakıt dolar. Bakım hangarında hem tam onarım hem tam yakıt yapılır. Ayarlar → Oynanış'tan yakıt tüketimini Kapalı, Normal ya da Gerçekçi (2 kat hızlı) yapabilirsin.

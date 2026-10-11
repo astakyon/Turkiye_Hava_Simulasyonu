@@ -656,3 +656,10 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 /* V1.73 eject touch button */
 .ttop button.warn{ border-color:#ff5a4a; background:rgba(120,16,10,.6); color:#fff; animation:ejPulse 1s infinite; }
 @keyframes ejPulse{ 50%{ background:rgba(200,30,20,.75); } }
+/* V1.74 weather settings + NVG/FLIR overlay */
+.seg.wrap{ flex-wrap:wrap; }
+.visov{ position:fixed; inset:0; pointer-events:none; z-index:2; }
+.visov.nvg{ background:radial-gradient(circle at 50% 50%,rgba(0,0,0,0) 0 58%,rgba(0,8,0,.55) 74%,rgba(0,0,0,.95) 82%), repeating-linear-gradient(0deg,rgba(0,40,0,.08) 0 1px,transparent 1px 3px); }
+.visov.flir,.visov.flirb{ background:radial-gradient(circle at 50% 50%,rgba(0,0,0,0) 0 70%,rgba(0,0,0,.35) 100%); }
+.visov.flir::after,.visov.flirb::after{ content:'FLIR'; position:absolute; right:18px; bottom:14px; font:700 12px "Chakra Petch",system-ui,sans-serif; letter-spacing:.2em; color:rgba(255,255,255,.75); }
+.visov.nvg::after{ content:'NVG'; position:absolute; right:18px; bottom:14px; font:700 12px "Chakra Petch",system-ui,sans-serif; letter-spacing:.2em; color:rgba(160,255,140,.8); }

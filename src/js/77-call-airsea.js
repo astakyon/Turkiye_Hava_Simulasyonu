@@ -28,7 +28,7 @@ function cxAir(id,x,z){
   const J={mode:sling?'sling':'heli', H:H, tx:sp[0], tz:sp[1], ph:'in', t:0, beacon:callBeacon(sp[0],sp[1]), name:sling?callKind(id).n:H.D.name};
   if(sling){ /* the vehicle hangs under the helicopter */
     const c=vehNew(id,sx,sz,0); c.called=true; CALL.list.push(c); while(CALL.list.length>CALL_MAX){ const i=CALL.list.findIndex(function(v){ return v!==c&&!(WALK.mode==='car'&&WALK.car===v); }); if(i<0) break; callRemove(CALL.list[i]); }
-    const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x222222})); line.frustumCulled=false; scene.add(line);
+    const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x222222})); line.frustumCulled=false; line.userData.noCull=true; scene.add(line);
     H.sling={o:c,p:new THREE.Vector3(sx,H.y-13,sz),v:new THREE.Vector3(),L:12,line:line}; J.c=c; }
   else CALLX.helis.push(H);
   CALLX.jobs.push(J); cxSay(J.name+(sling?' T625 ile askıda yola çıktı':' kalkış yaptı')+', tahmini varış '+Math.round(D/45+12)+' saniye.'); return H; }

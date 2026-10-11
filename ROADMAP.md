@@ -83,7 +83,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 ### Faz 6 — Dünya ve atmosfer
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.74 | **Hava durumu.** Açık, bulutlu, yağmur, kar, sis, fırtına (şimşek); rüzgâr yönü ve şiddeti uçuşu etkiler, türbülans var. Bulutun içinden uçarken görüş düşer; pistte ıslak zemin yansıması. Haritada hava durumu seçimi ve rastgele değişim. Gece için **gece görüş (NVG)** ve **termal kamera (FLIR)**. | Her hava tipi seçilebiliyor; rüzgâr inişi etkiliyor. | |
+| V1.74 | **Hava durumu.** Açık, bulutlu, yağmur, kar, sis, fırtına (şimşek); rüzgâr yönü ve şiddeti uçuşu etkiler, türbülans var. Bulutun içinden uçarken görüş düşer; pistte ıslak zemin yansıması. Haritada hava durumu seçimi ve rastgele değişim. Gece için **gece görüş (NVG)** ve **termal kamera (FLIR)**. | Her hava tipi seçilebiliyor; rüzgâr inişi etkiliyor. | ✅ |
 | V1.75 | **Canlı havalimanı.** Sivil ve askerî yapay zekâ trafiği iner, kalkar, taksi yapar ve kuleyle konuşur. Yerde yürüyen personel, bakımcılar ve nöbetçiler. Kasabada yaya NPC'ler. | Trafik kuleyle eşgüdümlü çalışıyor. | |
 
 ### Faz 7 — Görevler ve oyun modları

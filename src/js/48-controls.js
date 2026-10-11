@@ -5,7 +5,7 @@
 const CTRL_DEF={
   gen:{name:'Genel', acts:[
     ['pause','Duraklat / menü',['Escape','KeyP'],['b9']], ['map','Harita',['KeyM'],[]], ['camera','Kamera değiştir',['KeyC'],['b2']],
-    ['resetView','Kamerayı sıfırla',['KeyV'],[]], ['photo','Fotoğraf modu',['KeyH'],[]], ['invert','Yukarı-aşağı ters çevir',['KeyY'],[]], ['mute','Sesi aç / kapat',['KeyU'],[]], ['radio','Telsiz menüsü (hazır mesajlar)',['KeyO'],[]], ['ptt','Bas-konuş (çok oyunculu)',['KeyI'],[]]]},
+    ['resetView','Kamerayı sıfırla',['KeyV'],[]], ['photo','Fotoğraf modu',['KeyH'],[]], ['invert','Yukarı-aşağı ters çevir',['KeyY'],[]], ['mute','Sesi aç / kapat',['KeyU'],[]], ['radio','Telsiz menüsü (hazır mesajlar)',['KeyO'],[]], ['ptt','Bas-konuş (çok oyunculu)',['KeyI'],[]], ['vision','Gece görüş / termal (NVG · FLIR)',['Backquote'],[]]]},
   air:{name:'Hava aracı', acts:[
     ['noseDown','Burun aşağı',['KeyW','ArrowUp'],['a1-']], ['noseUp','Burun yukarı',['KeyS','ArrowDown'],['a1+']],
     ['rollL','Sola yat / yerde sola dön',['KeyA','ArrowLeft'],['a0-']], ['rollR','Sağa yat / yerde sağa dön',['KeyD','ArrowRight'],['a0+']],

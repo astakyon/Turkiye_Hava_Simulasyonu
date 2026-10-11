@@ -134,7 +134,7 @@ function slingHook(){
   if(!best){ toast('Kanca: yükün 4–25 m üstünde ve 10 m yakınında asılı dur','#ffc24a'); return true; }
   const oy=best.crate?best.y:(best.y==null?groundH(best.x,best.z):best.y);
   const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x222222}));
-  line.frustumCulled=false; scene.add(line);
+  line.frustumCulled=false; line.userData.noCull=true; scene.add(line);
   H.sling={o:best,p:new THREE.Vector3(best.x,oy,best.z),v:new THREE.Vector3(),L:Math.max(8,Math.min(16,H.y-oy-1.5)),line:line,ground:true};
   if(!best.crate&&best===WALK.car) WALK.car=VEHS[0];
   toast((best.crate?'Yük':best.K.n)+' kancaya takıldı — B ile bırak','#7dffb0'); sndPlay('gear',{vol:0.6}); return true; }
