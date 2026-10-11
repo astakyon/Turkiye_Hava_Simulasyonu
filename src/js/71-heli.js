@@ -136,8 +136,9 @@ function heliAudio(t,on){
   if(!AC) return;
   if(!HELI.snd){ try{ const src=AC.createBufferSource(); src.buffer=noiseBuf; src.loop=true; const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=500;
       const g=AC.createGain(); g.gain.value=0; const am=AC.createGain(); am.gain.value=0; const lfo=AC.createOscillator(); lfo.type='sine'; lfo.frequency.value=18; const lg=AC.createGain(); lg.gain.value=0;
-      src.connect(lp); lp.connect(am); am.connect(g); lfo.connect(lg); lg.connect(am.gain); g.connect(master); src.start(); lfo.start(); HELI.snd={g:g,lp:lp,lfo:lfo,lg:lg,am:am}; }catch(e){ HELI.snd={g:null}; } }
+      src.connect(lp); lp.connect(am); am.connect(g); lfo.connect(lg); lg.connect(am.gain); g.connect(sndOut('sfx')); src.start(); lfo.start(); HELI.snd={g:g,lp:lp,lfo:lfo,lg:lg,am:am}; }catch(e){ HELI.snd={g:null}; } }
   const S2=HELI.snd; if(!S2.g) return; const H=HELI.cur, r=H?H.rpm:0, live=on&&H&&H.crashT<=0;
-  S2.g.gain.setTargetAtTime(live?0.15+r*0.55:0,t,0.15); S2.am.gain.setTargetAtTime(0.55,t,0.1); S2.lg.gain.setTargetAtTime(0.45*r,t,0.1);
-  S2.lfo.frequency.setTargetAtTime(4+r*15+(H&&!H.ground?Math.abs(H.vy)*0.3:0),t,0.2); S2.lp.frequency.setTargetAtTime(300+r*500,t,0.2);
+  const file=sndLoop('rotor',live?0.3+r*0.6:0,0.4+r*0.7);
+  S2.g.gain.setTargetAtTime(live&&!file?(0.15+r*0.55)*sndVol('rotor'):0,t,0.15); S2.am.gain.setTargetAtTime(0.55,t,0.1); S2.lg.gain.setTargetAtTime(0.45*r,t,0.1);
+  S2.lfo.frequency.setTargetAtTime((4+r*15+(H&&!H.ground?Math.abs(H.vy)*0.3:0))*sndPitch('rotor'),t,0.2); S2.lp.frequency.setTargetAtTime(300+r*500,t,0.2);
 }

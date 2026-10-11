@@ -53,24 +53,24 @@ function todStep(dt){
 const AMBS={on:false, gullT:3, crT:1};
 function ambInit(){
   if(AMBS.on||!AC||!noiseBuf) return; AMBS.on=true;
-  const mk=function(type,f,q){ const s=AC.createBufferSource(); s.buffer=noiseBuf; s.loop=true; const fl=AC.createBiquadFilter(); fl.type=type; fl.frequency.value=f; if(q) fl.Q.value=q; const g=AC.createGain(); g.gain.value=0; s.connect(fl); fl.connect(g); g.connect(master); s.start(0,Math.random()*1.5); return {g:g,f:fl}; };
+  const mk=function(type,f,q){ const s=AC.createBufferSource(); s.buffer=noiseBuf; s.loop=true; const fl=AC.createBiquadFilter(); fl.type=type; fl.frequency.value=f; if(q) fl.Q.value=q; const g=AC.createGain(); g.gain.value=0; s.connect(fl); fl.connect(g); g.connect(sndOut('amb')); s.start(0,Math.random()*1.5); return {g:g,f:fl}; };
   AMBS.surf=mk('lowpass',520); AMBS.wind=mk('bandpass',700,0.6);
 }
 function chirp(f0,f1,dur,vol,type){ if(!AC||muted) return; const o=AC.createOscillator(), g=AC.createGain(), t=AC.currentTime; o.type=type||'sine'; o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f1,t+dur);
-  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(master); o.start(t); o.stop(t+dur+0.05); }
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(sndOut('amb')); o.start(t); o.stop(t+dur+0.05); }
 function ambStep(dt){
   if(!AC) return; ambInit(); if(!AMBS.on) return;
   const c=camera.position, t=AC.currentTime, quiet=muted||state==='menu'||state==='library';
   let sea=0; if(c.y<160){ const R=[0,120,-120]; for(let i=0;i<3;i++) for(let j=0;j<3;j++){ if(terrainH(c.x+R[i],c.z+R[j])<0) sea++; } }
   const shore=sea>0&&sea<9?1:(sea===9?0.35:0), alt=Math.max(0,c.y-groundH(c.x,c.z));
   const surf=quiet?0:shore*Math.max(0,1-alt/160)*0.16*(0.75+0.25*Math.sin(t*0.6)+0.15*Math.sin(t*1.7));
-  AMBS.surf.g.gain.setTargetAtTime(surf,t,0.3);
+  AMBS.surf.g.gain.setTargetAtTime(sndLoop('surf',surf*3,1)?0:surf*sndVol('surf'),t,0.3);
   const wind=quiet?0:(state==='walk'?0.03:0.02)+Math.min(0.06,alt/4000);
-  AMBS.wind.g.gain.setTargetAtTime(wind,t,0.5); AMBS.wind.f.frequency.setTargetAtTime(500+Math.sin(t*0.13)*200+alt*0.1,t,0.5);
+  AMBS.wind.g.gain.setTargetAtTime(sndLoop('wind',wind*5,0.8+alt/6000)?0:wind*sndVol('wind'),t,0.5); AMBS.wind.f.frequency.setTargetAtTime(500+Math.sin(t*0.13)*200+alt*0.1,t,0.5);
   if(quiet) return;
   AMBS.gullT-=dt; if(AMBS.gullT<=0){ AMBS.gullT=2+Math.random()*5;
     const near=MARINA.gullD&&MARINA.gullD.some(function(b){ return Math.abs(b.cx-c.x)<260&&Math.abs(b.cz-c.z)<260; });
-    if(near&&alt<120&&(TOD.nightK||0)<0.5){ const f=1400+Math.random()*500; chirp(f,f*0.62,0.32,0.05,'triangle'); setTimeout(function(){ chirp(f*0.95,f*0.6,0.26,0.04,'triangle'); },360); } }
+    if(near&&alt<120&&(TOD.nightK||0)<0.5) sndPlay('gull',{pitch:1+Math.random()*0.35}); }
   AMBS.crT-=dt; if(AMBS.crT<=0){ AMBS.crT=0.35+Math.random()*0.6;
-    if((TOD.nightK||0)>0.6&&alt<40&&!sea&&state==='walk'){ for(let k=0;k<3;k++) setTimeout(function(){ chirp(4300,4200,0.04,0.012,'square'); },k*70); } }
+    if((TOD.nightK||0)>0.6&&alt<40&&!sea&&state==='walk') sndPlay('cricket'); }
 }

@@ -74,12 +74,12 @@ function dropFlares(){
     f.p.set((k?1:-1)*0.8,-0.6,(model.tail||5)).applyQuaternion(S.q).add(S.pos);
     f.v.set((k?1:-1)*(10+Math.random()*6),-5-Math.random()*4,0).applyQuaternion(S.q).addScaledVector(vF,S.speed*0.7); f.v.y-=S.sink*0.5;
   }
-  noiseBurst(2400,'highpass',0.08,0.35); return true;
+  sndPlay('flare'); return true;
 }
 function beep(freq,dur,vol){
   if(!AC||muted||!master) return;
   const o=AC.createOscillator(), g=AC.createGain(); o.type='square'; o.frequency.value=freq;
-  g.gain.setValueAtTime(vol||0.06,AC.currentTime); g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+dur); o.connect(g); g.connect(master); o.start(); o.stop(AC.currentTime+dur+0.02);
+  g.gain.setValueAtTime(vol||0.06,AC.currentTime); g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+dur); o.connect(g); g.connect(sndOut('sfx')); o.start(); o.stop(AC.currentTime+dur+0.02);
 }
 function damagePlayer(d,reason){
   if(S.crashed) return; S.hp=Math.max(0,S.hp-d); hitFlash=0.7; rumble(350,0.8,1);
@@ -139,6 +139,6 @@ function updateThreats(dt){
   let md=1e9; missiles.forEach(function(m){ if(m.on&&!m.lost&&!m.tgt&&!m.vic) md=Math.min(md,m.p.distanceTo(S.pos)); });
   RWR.lock=lock&&state==='play'&&!S.crashed; RWR.msl=(md<1e8&&state==='play'&&!S.crashed)?md:0;
   rwrT-=dt;
-  if(rwrT<=0 && state==='play' && !S.crashed){ if(RWR.msl>0){ rwrT=clamp(md/3000,0.12,0.5); beep(1700,0.07,0.07); } else if(RWR.lock){ rwrT=0.9; beep(900,0.1,0.05); } }
+  if(rwrT<=0 && state==='play' && !S.crashed){ if(RWR.msl>0){ rwrT=clamp(md/3000,0.12,0.5); sndPlay('rwr'); } else if(RWR.lock){ rwrT=0.9; beep(900,0.1,0.05); } }
 }
 

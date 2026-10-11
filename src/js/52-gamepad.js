@@ -4,7 +4,7 @@ function toggleInvert(){ invertY=!invertY; SETTINGS.invert=invertY; saveSettings
 function toggleMute(){ muted=!muted; toast(muted?'Ses kapalı':'Ses açık'); }
 function toggleGear(){
   if(S.onGround && S.gear){ toast('Yerde iniş takımı kaldırılamaz','#ffc24a'); }
-  else { S.gear=!S.gear; toast(S.gear?'İniş takımı indi':'İniş takımı kalktı'); }
+  else { S.gear=!S.gear; sndPlay('gear'); toast(S.gear?'İniş takımı indi':'İniş takımı kalktı'); }
 }
 const PAD={on:false,id:'',pitch:0,roll:0,yaw:0,thr:0,ab:false,brake:false,fire:false};
 const padPrev=[]; let padFireLock=false, padBuzzT=-1;

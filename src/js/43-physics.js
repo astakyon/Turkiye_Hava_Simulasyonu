@@ -72,7 +72,7 @@ function update(dt){
       const bank=Math.atan2(-vR.y,vU.y), pitch=Math.asin(clamp(vF.y,-1,1));
       if(S.gear && inField){
         if(-S.vy<=CUR.sinkMax && pitch>-0.06 && pitch<0.36 && Math.abs(bank)<0.35 && S.speed<CUR.landV){
-          S.onGround=true; S.sink=0; S.zoneY=zone.y; S.pos.y=zone.y+CUR.gearOff; toast(zone.id==='main'?'İniş tamamlandı':'İniş tamamlandı — '+zone.name,'#7dffb0'); rumble(180,0.3,0.6); if(needsService()) toast('Bakım hangarına git (işaretli): onar ve silah yükle','#b8ecff');
+          S.onGround=true; S.sink=0; S.zoneY=zone.y; S.pos.y=zone.y+CUR.gearOff; sndPlay('touch'); toast(zone.id==='main'?'İniş tamamlandı':'İniş tamamlandı — '+zone.name,'#7dffb0'); rumble(180,0.3,0.6); if(needsService()) toast('Bakım hangarına git (işaretli): onar ve silah yükle','#b8ecff');
         } else crash(-S.vy>CUR.sinkMax?'Sert iniş':'Hatalı iniş açısı');
       } else if(S.gear && gh<=0) crash('Denize düştün');
       else crash(inField?'İniş takımı kapalıydı':(gh<=0?'Denize düştün':'Yere çarptın'));

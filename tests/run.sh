@@ -32,3 +32,4 @@ node harness.js /tmp/sim.js controls.test.js
 node harness.js /tmp/sim.js map.test.js
 node harness.js /tmp/sim.js heli.test.js
 node harness.js /tmp/sim.js v157.test.js
+node harness.js /tmp/sim.js sound.test.js

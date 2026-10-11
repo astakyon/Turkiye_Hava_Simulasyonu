@@ -213,6 +213,7 @@
     </section>
     <section data-tab="s" class="hidden">
       <div class="srow"><div class="sl"><b>Ses seviyesi</b><small><output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
+      <div class="srow"><div class="sl"><b>Ses kütüphanesi</b><small>Kanal karışımı (müzik, efekt, arayüz, telsiz, ortam), her sesi dinle, ayarla ya da kendi ses dosyanla değiştir</small></div><button class="btn" id="btnSndOpen" type="button">Aç</button></div>
     </section>
     <section data-tab="o" class="hidden">
       <div class="srow"><div class="sl"><b>Bomba yardımı</b><small>Güdümlü: kilitli hedefe yönelir</small></div><div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
@@ -227,6 +228,15 @@
   <div class="sbar"><span>Değişiklikler otomatik kaydedilir</span><span class="v">Esc: geri</span></div>
 </div>
 
+<div id="sndLib" class="modal fs hidden">
+  <button class="btn back" id="btnSndBack" type="button">← Geri</button>
+  <div class="shdr"><span>■</span> SES KÜTÜPHANESİ</div>
+  <div class="sndwrap">
+    <div class="sndmix" id="sndMix"></div>
+    <div class="sndcats" id="sndCats" role="tablist"></div>
+    <div class="sndlist" id="sndList"></div>
+  </div>
+</div>
 <div id="records" class="modal hidden">
   <div class="card">
     <h2>Rekorlar</h2>

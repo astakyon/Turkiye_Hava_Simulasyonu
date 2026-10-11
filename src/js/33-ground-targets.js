@@ -235,7 +235,7 @@ function updateLock(dt){
   if(lockTgt&&lockValid(lockTgt)){ lockT+=dt||0; return; }
   const prev=lockTgt; lockTgt=null; lockT=0; let best=0;
   lockCandidates().forEach(function(o){ const c=lockValid(o); if(c>best){ best=c; lockTgt=o; } });
-  if(lockTgt&&lockTgt!==prev) beep(1300,0.09,0.06);
+  if(lockTgt&&lockTgt!==prev) sndPlay('lock');
 }
 function cycleLock(){
   if(state!=='play'||S.onGround||stockTotal()<=0) return; if(!SETTINGS.lockOn){ toast('Hedef kilidi kapalı (K ile aç)','#ffc24a'); return; } fwdOf(S.q,vF);
@@ -263,7 +263,7 @@ function updateCue(dt){
     if(dd<=rr*0.85+slack){ CUE.level=2; CUE.txt='BIRAK!'; } else { CUE.level=1; CUE.txt='KİLİTLENDİ'; }
   }
   cueT-=dt||0;
-  if(CUE.level===2){ if(cueT<=0){ cueT=0.45; beep(1900,0.12,0.07); } } else if(CUE.level===1&&cueT<=0){ cueT=0.9; beep(1100,0.06,0.04); }
+  if(CUE.level===2){ if(cueT<=0){ cueT=0.45; sndPlay('cue'); } } else if(CUE.level===1&&cueT<=0){ cueT=0.9; beep(1100,0.06,0.04); }
 }
 // weapons visible under the wings
 const misVisGeo=new THREE.CylinderGeometry(0.13,0.13,2.6,8), bombVisGeo=new THREE.CylinderGeometry(0.2,0.2,1.8,8); misVisGeo.rotateX(Math.PI/2); bombVisGeo.rotateX(Math.PI/2);
@@ -282,3 +282,8 @@ function refreshStoresVisual(){
   });
 }
 
+
+/* weapon release sounds (Sound Library: missile, bomb) */
+(function(){ const L=launchMissile, B=dropBomb;
+  launchMissile=function(){ const r=L.apply(this,arguments); if(r) sndPlay('missile'); return r; };
+  dropBomb=function(){ const r=B.apply(this,arguments); if(r) sndPlay('bomb'); return r; }; })();

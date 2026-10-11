@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ settings / records / photo UI */
-const MODALS=['controls','settings','records','photoResult','netUI'];
+const MODALS=['controls','settings','records','photoResult','netUI','sndLib'];
 function openModal(id){ $(id).classList.remove('hidden'); }
 function closeModals(){ MODALS.forEach(function(id){ $(id).classList.add('hidden'); }); }
 function anyModalOpen(){ return MODALS.some(function(id){ return !$(id).classList.contains('hidden'); }); }
@@ -91,3 +91,4 @@ $('btnSafe').addEventListener('click',function(){
 function confirmReload(q){ try{ return window.confirm(q); }catch(e){ return false; } }
 $('setRes').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.res=b.dataset.r; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI(); });
 $('setAA').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.aa=b.dataset.a; saveSettings(); if(FX.on){ try{ fxBuild(); }catch(err){} } syncSettingsUI(); });
+$('btnSndOpen').addEventListener('click',function(){ openSoundLib(); });

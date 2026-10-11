@@ -1,6 +1,17 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.60 — 2026-10-11
+- **Ses Kütüphanesi** (Ayarlar → Ses → Ses kütüphanesi): oyundaki 25 ses kategorilere ayrıldı.
+  - Kategoriler: Motor, Silah, Patlama, Çevre, Arayüz, Telsiz, Müzik.
+  - Her sesi dinleyebilir, ses düzeyini (%0–200) ve tonunu (%50–200) ayarlayabilirsin.
+  - **Kendi ses dosyanı yükleyebilirsin** (mp3/ogg/wav/m4a, en fazla 12 MB; bu cihazda saklanır). "Varsayılan" ile eskiye dönülür.
+  - Motor, rotor, araç, rüzgâr ve dalga gibi sürekli sesler için yüklenen dosya döngüde çalıyor. Hızı gaza, rotor devrine ya da vitese göre değişiyor.
+- **Kanal karışımı:** Ana, Müzik, Efekt, Arayüz, Telsiz ve Ortam ses düzeyleri ayrı ayrı ayarlanabiliyor.
+- **Duruma göre ses:** menüde ve kütüphanede uçuş efektleri susuyor. Duraklatınca, haritada ve serviste efektler kısılıyor. Sessize alma (U) tüm kanallara uygulanıyor.
+- Yeni olay sesleri eklendi: füze ateşleme, bomba bırakma, iniş takımı, piste teker teması.
+- Ses sistemi artık sayfada ilk dokunuşta açılıyor; menülerde de ses çalabiliyor (müzik ve düğme sesleri V1.61'de gelecek).
+
 ## V1.59 — 2026-10-11
 - **Çizim çağrısı yarı yarıya azaldı.** Ölçümler (yüksek kalite, gölgeler açık):
   - Pist başında 1433 → ~725
