@@ -37,10 +37,10 @@
 | V1.55 | Helikopterler (T129 ATAK, T625 GÖKBEY) | ✅ |
 | V1.56 | Model havuzu: gemiler, kara araçları, helikopterler, sivil araçlar | ✅ |
 
-## Büyük yol haritası V1.57–V1.83 (modellemelerden önce)
+## Büyük yol haritası V1.57–V1.86 (modellemelerden önce)
 
-Kararlar: müzik hem oyunun ürettiği telifsiz parçalar hem kullanıcı dosyası; telsiz hem tarayıcının Türkçe seslendirmesi hem kullanıcı kaydı.
-Sıra mantığı: önce görüntü bozuklukları, sonra ses, sonra arayüz tasarım sistemi (sonraki tüm yeni ekranlar bu sistemle yapılsın diye), ardından araçlar, görevler, dünya, çok oyunculu ve paylaşım.
+Kararlar: hesaplar bulutta (Supabase: giriş, veritabanı, dosya deposu; ücretsiz katman), yönetici yetkisi sunucu tarafında; müzik hem oyunun ürettiği telifsiz parçalar hem kullanıcı dosyası; telsiz hem tarayıcının Türkçe seslendirmesi hem kullanıcı kaydı.
+Sıra mantığı: önce görüntü bozuklukları, sonra ses, sonra arayüz tasarım sistemi (sonraki tüm yeni ekranlar bu sistemle yapılsın diye), ardından hesap/profil/yönetici, araçlar, görevler, dünya, çok oyunculu ve paylaşım.
 Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle kontrol.
 
 ### Faz 1 — Grafik ve performans
@@ -54,7 +54,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
 | V1.60 | **Ses altyapısı ve Ses Kütüphanesi.** Kanallar: Ana, Müzik, Efekt, Arayüz, Telsiz, Ortam; her birinin ayrı ses düzeyi var. Duruma göre karışım: menüde motor ve rüzgâr susar; duraklatınca efektler kısılır. Ses Kütüphanesi ekranı (model kütüphanesi gibi) şu kategorileri içerir: Motor (jet, pervane, rotor, araç), Silah, Patlama, Çevre, Arayüz, Müzik, Telsiz. Her ses dinlenebilir, ses düzeyi ve tonu ayarlanabilir. Kendi dosyanı yükleyebilirsin (mp3/ogg/wav, cihazda IndexedDB'de saklanır) ve varsayılana dönebilirsin. | Menüde motor sesi yok; yüklenen ses oyunda hemen çalıyor. | |
-| V1.61 | **Müzik ve arayüz sesleri.** Oyunun ürettiği telifsiz müzik: ana menü teması, sakin uçuş, çatışma, zafer ve yenilgi. Duruma göre yumuşak geçiş yapılır. Kullanıcı kendi çalma listesini ekleyebilir. Düğme, sekme, geçiş, bildirim ve uyarı sesleri. | Menü ve oyun müziği durumla değişiyor. | |
+| V1.61 | **Müzik ve arayüz sesleri.** Oyunun ürettiği telifsiz müzik: ana menü teması, sakin uçuş, çatışma, zafer ve yenilgi. Duruma göre yumuşak geçiş yapılır. Yönetici çalma listesini yönetir; oyuncu yalnız ses düzeyini ve müziği açıp kapamayı seçer. Düğme, sekme, geçiş, bildirim ve uyarı sesleri. | Menü ve oyun müziği durumla değişiyor. | |
 | V1.62 | **Telsiz.** Kule konuşmaları: kalkış ve iniş izni, pist, rüzgâr, trafik uyarısı. Kanat adamı, AWACS ve düşman tespiti anonsları. Telsiz filtresi ve cızırtı. Tarayıcının Türkçe seslendirmesi; her cümle Ses Kütüphanesi'nden kendi kaydınla değiştirilebilir. **Telsiz altyazıları.** Çok oyunculuda **bas-konuş sesli sohbet** (WebRTC) ve hazır telsiz mesajları (radyal menü). | Kalkışta kule izin veriyor; çok oyunculuda ses iletiliyor. | |
 
 ### Faz 3 — Arayüz (AAA görünüm)
@@ -64,47 +64,54 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.64 | **Hangar ve mühimmat yükleme.** Araç seçimi karusel kartlarla; sekmeler Uçak, İHA ve **Helikopter**. Hız, manevra, menzil ve yük çubukları; iki aracı karşılaştırma. Mühimmat ekranında uçağın üstten görünümünde istasyonlar; istasyona dokununca uyumlu silahlar listelenir. Hazır yükler: Hava-hava / Kara taarruzu / Keşif / Deniz. Ağırlık, sürükleme ve uyum göstergesi. | Helikopter seçilebiliyor; yükleme üç dokunuşta tamamlanıyor. | |
 | V1.65 | **Ayarlar menüsü.** Sekmeler: Grafik, Ses, Kontroller, Oynanış, Arayüz, Erişilebilirlik. Basit ve Gelişmiş görünüm, ayar arama, her ayar için açıklama ve önizleme, Uygula / Geri al. Erişilebilirlik: yazı boyutu, renk körlüğü modları, altyazı, titreşim, hareket azaltma. | Her ayarın açıklaması var; geri al çalışıyor. | |
 
-### Faz 4 — Araçlar
+### Faz 4 — Hesap, profil, rütbe ve yönetici
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.66 | **Tüm kara araçlarına binme.** Askerî kamyon, otobüs, yakıt tankeri, uçak çekici (uçağı bağlayıp çekme), itfaiye (yangın söndüren su topu), Altay, Pars, Kirpi, Fırtına, Hisar, Korkut. Tank ve zırhlılarda taret döndürme, nişan ve atış. Her araca özgü hız, ağırlık, kamera ve HUD. Kasabadaki sivil arabalara da binilebilir. | Her araca binilip sürülebiliyor; tank ateş ediyor. | |
-| V1.67 | **Deniz araçları ve gemi operasyonları.** Hücumbot, römorkör, balıkçı teknesi, yelkenli ve fırkateyn sürme (deniz kontrol şeması). Dalga ve iz efekti. Helikopterle TCG Anadolu ve fırkateyn güvertesine iniş ve kalkış (hareket eden güverte). | Gemiye iniş yapılabiliyor. | |
-| V1.68 | **Araç çağırma.** Radyal "Araç çağır" menüsü (klavye, gamepad, dokunmatik). Araç bulunduğun yere ya da haritadan seçilen noktaya gelir. Yere uygun öneriler: suda bot, havalimanında çekici, düz alanda helikopter. Teslimat animasyonu (yolda sürerek gelir ya da T625 ile askıda bırakılır). | Her yerde araç çağrılabiliyor. | |
-| V1.69 | **Helikopterler tam oyunda.** Görev ve serbest uçuşta helikopter. T129: 20 mm top, CİRİT roketi, UMTAS (kilit, atış). T625: asker ve yük taşıma, **askı halatıyla araç taşıma**, kapı silahı. Helikopter HUD'u ve otomatik havada asılı kalma (hover) yardımı. | Görevlerde helikopterle hedef vurulabiliyor. | |
-| V1.70 | **Fırlatma koltuğu, paraşüt ve hasar.** Uçaktan fırlama, paraşütle süzülme, yere inince yürüme veya araç çağırma. Yakıt tüketimi ve uyarısı. Hasar modeli: duman, alev, parça kopması, motor arızası. Üste ikmal ve tamir (servis hangarı ile bağlantılı). | Vurulunca atlanabiliyor; yakıt bitiyor ve ikmal yapılıyor. | |
+| V1.66 | **Bulut altyapısı ve giriş.** Supabase projesi (adım adım kurulum rehberi; anahtarlar oyuna eklenir). Giriş ekranı: Google ya da e-posta ile giriş, şifre sıfırlama, **misafir olarak oyna** (internetsiz de çalışır). İlk girişte profil oluşturma: çağrı adı, birlik (Hilal Kanatlar / Mavi Kanatlar / Bozkurtlar), arma ve avatar. Bu cihazdaki eski kayıtları profile aktarma. Bulut eşitleme: ayarlar, kontroller, boyalar, ilerleme; internetsizken önbellekten oynayıp bağlanınca eşitleme. Profil değiştirme (aynı cihazda birden çok oyuncu). | İki farklı cihazda aynı hesapla aynı kayıt görünüyor. | |
+| V1.67 | **Profil ekranı ve rütbeler.** Profil sayfası: rütbe ve arma, toplam uçuş süresi, iniş ve kalkış, tamamlanan görevler, düşürülen hedefler, kullanılan araçlar, en iyi dereceler, madalya ve başarımlar, son uçuşlar. Rütbe sırası: Er → Onbaşı → Çavuş → Uzman Çavuş → Astsubay → Asteğmen → Teğmen → Üsteğmen → Yüzbaşı → Binbaşı → Yarbay → Albay → Tuğgeneral → Tümgeneral → Korgeneral → Orgeneral. Terfi tecrübe puanıyla olur, terfi töreni ekranı çıkar. Bazı uçak ve araçlar rütbeyle açılır (ör. KAAN için Yüzbaşı). Çok oyunculuda isim yanında rütbe arması görünür. | Puan kazanınca terfi oluyor; profil kaydı bulutta. | |
+| V1.68 | **Yönetici modu.** Yönetici yetkisi yalnız sunucuda tanımlı (veritabanı güvenlik kuralları), ilk yönetici senin hesabın. **Yönetim paneli:** oyuncu listesi ve arama, rütbe verme ve geri alma, uyarı, uzaklaştırma, duyuru yayınlama (oyun açılışında görünür), etkinlik ve görev yayınlama, oyun ayarlarını uzaktan değiştirme. **Model Kütüphanesi, Ses Kütüphanesi ve müzikler yalnız yöneticiye görünür.** Yöneticinin yüklediği model, boya, ses ve müzik bulut deposuna gider ve tüm oyunculara otomatik dağıtılır. Değişiklik kaydı tutulur (kim, neyi, ne zaman). | Normal oyuncuda kütüphaneler görünmüyor; yöneticinin yüklediği müzik tüm oyuncularda çalıyor. | |
 
-### Faz 5 — Dünya ve atmosfer
+### Faz 5 — Araçlar
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.71 | **Hava durumu.** Açık, bulutlu, yağmur, kar, sis, fırtına (şimşek); rüzgâr yönü ve şiddeti uçuşu etkiler, türbülans var. Bulutun içinden uçarken görüş düşer; pistte ıslak zemin yansıması. Haritada hava durumu seçimi ve rastgele değişim. Gece için **gece görüş (NVG)** ve **termal kamera (FLIR)**. | Her hava tipi seçilebiliyor; rüzgâr inişi etkiliyor. | |
-| V1.72 | **Canlı havalimanı.** Sivil ve askerî yapay zekâ trafiği iner, kalkar, taksi yapar ve kuleyle konuşur. Yerde yürüyen personel, bakımcılar ve nöbetçiler. Kasabada yaya NPC'ler. | Trafik kuleyle eşgüdümlü çalışıyor. | |
+| V1.69 | **Tüm kara araçlarına binme.** Askerî kamyon, otobüs, yakıt tankeri, uçak çekici (uçağı bağlayıp çekme), itfaiye (yangın söndüren su topu), Altay, Pars, Kirpi, Fırtına, Hisar, Korkut. Tank ve zırhlılarda taret döndürme, nişan ve atış. Her araca özgü hız, ağırlık, kamera ve HUD. Kasabadaki sivil arabalara da binilebilir. | Her araca binilip sürülebiliyor; tank ateş ediyor. | |
+| V1.70 | **Deniz araçları ve gemi operasyonları.** Hücumbot, römorkör, balıkçı teknesi, yelkenli ve fırkateyn sürme (deniz kontrol şeması). Dalga ve iz efekti. Helikopterle TCG Anadolu ve fırkateyn güvertesine iniş ve kalkış (hareket eden güverte). | Gemiye iniş yapılabiliyor. | |
+| V1.71 | **Araç çağırma.** Radyal "Araç çağır" menüsü (klavye, gamepad, dokunmatik). Araç bulunduğun yere ya da haritadan seçilen noktaya gelir. Yere uygun öneriler: suda bot, havalimanında çekici, düz alanda helikopter. Teslimat animasyonu (yolda sürerek gelir ya da T625 ile askıda bırakılır). | Her yerde araç çağrılabiliyor. | |
+| V1.72 | **Helikopterler tam oyunda.** Görev ve serbest uçuşta helikopter. T129: 20 mm top, CİRİT roketi, UMTAS (kilit, atış). T625: asker ve yük taşıma, **askı halatıyla araç taşıma**, kapı silahı. Helikopter HUD'u ve otomatik havada asılı kalma (hover) yardımı. | Görevlerde helikopterle hedef vurulabiliyor. | |
+| V1.73 | **Fırlatma koltuğu, paraşüt ve hasar.** Uçaktan fırlama, paraşütle süzülme, yere inince yürüme veya araç çağırma. Yakıt tüketimi ve uyarısı. Hasar modeli: duman, alev, parça kopması, motor arızası. Üste ikmal ve tamir (servis hangarı ile bağlantılı). | Vurulunca atlanabiliyor; yakıt bitiyor ve ikmal yapılıyor. | |
 
-### Faz 6 — Görevler ve oyun modları
+### Faz 6 — Dünya ve atmosfer
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.73 | **Görev ekranı.** Görev panosunda kategori, zorluk, süre ve ödül filtreleri. Brifing ekranı: harita, hedefler, tehditler, önerilen yük. Oyun içinde hedef takibi (HUD işaretleri, mesafe) ve görev günlüğü (**J**). Görev sonu raporunda yıldız, puan ve istatistik. | Görev panodan seçilip brifingle başlıyor. | |
-| V1.74 | **Dinamik görevler.** Yerlere göre üretilen görevler: devriye, önleme, yakın hava desteği, refakat, İHA keşfi, deniz devriyesi, T625 ile arama-kurtarma ve yük taşıma, kara araçlarıyla konvoy. Görev ortasında olaylar (yeni tehdit, hava değişimi, arıza). Çok aşamalı hedefler, süre sınırı, isteğe bağlı ek hedefler. | Her girişte farklı görev seti. | |
-| V1.75 | **Uçuş okulu.** Dersler: kalkış, tur, iniş, rüzgârlı iniş, helikopterde havada asılı kalma, sapan yükü, silah kullanımı, gemiye iniş. Eğitmen telsiz anlatımı. Lisans ve madalya. | Dersler adım adım tamamlanıyor. | |
-| V1.76 | **Kariyer ve başarımlar.** Rütbe sistemi, puanla yeni uçak, araç ve boya açma. Başarımlar, günlük ve haftalık görevler, istatistik sayfası. | İlerleme kaydediliyor. | |
-| V1.77 | **Yarışlar.** Halkalardan geçmeli uçak yarışı, helikopter slalomu, adada araba rallisi, botla deniz yarışı. Hayalet (en iyi derece) ve sıralama tablosu (cihazda). | Yarışlar süre kaydediyor. | |
-| V1.78 | **Görev editörü.** Haritaya hedef, düşman, nokta ve tetikleyici koyma. Görevi kod veya dosyayla paylaşma. | Kendi görevi yapılıp oynanabiliyor. | |
+| V1.74 | **Hava durumu.** Açık, bulutlu, yağmur, kar, sis, fırtına (şimşek); rüzgâr yönü ve şiddeti uçuşu etkiler, türbülans var. Bulutun içinden uçarken görüş düşer; pistte ıslak zemin yansıması. Haritada hava durumu seçimi ve rastgele değişim. Gece için **gece görüş (NVG)** ve **termal kamera (FLIR)**. | Her hava tipi seçilebiliyor; rüzgâr inişi etkiliyor. | |
+| V1.75 | **Canlı havalimanı.** Sivil ve askerî yapay zekâ trafiği iner, kalkar, taksi yapar ve kuleyle konuşur. Yerde yürüyen personel, bakımcılar ve nöbetçiler. Kasabada yaya NPC'ler. | Trafik kuleyle eşgüdümlü çalışıyor. | |
 
-### Faz 7 — Çok oyunculu
+### Faz 7 — Görevler ve oyun modları
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.79 | **Karma çok oyunculu.** Yaya, araç, helikopter ve uçak aynı oyunda. **Üs ele geçirme** modu (takımlar). **Kule görevlisi** rolü: bir oyuncu kuleden izin verir ve haritayı yönetir. Oyun içi yazılı sohbet. | 4 oyuncu farklı araçlarda aynı oyunda. | |
+| V1.76 | **Görev ekranı.** Görev panosunda kategori, zorluk, süre ve ödül filtreleri. Brifing ekranı: harita, hedefler, tehditler, önerilen yük. Oyun içinde hedef takibi (HUD işaretleri, mesafe) ve görev günlüğü (**J**). Görev sonu raporunda yıldız, puan ve istatistik. | Görev panodan seçilip brifingle başlıyor. | |
+| V1.77 | **Dinamik görevler.** Yerlere göre üretilen görevler: devriye, önleme, yakın hava desteği, refakat, İHA keşfi, deniz devriyesi, T625 ile arama-kurtarma ve yük taşıma, kara araçlarıyla konvoy. Görev ortasında olaylar (yeni tehdit, hava değişimi, arıza). Çok aşamalı hedefler, süre sınırı, isteğe bağlı ek hedefler. | Her girişte farklı görev seti. | |
+| V1.78 | **Uçuş okulu.** Dersler: kalkış, tur, iniş, rüzgârlı iniş, helikopterde havada asılı kalma, sapan yükü, silah kullanımı, gemiye iniş. Eğitmen telsiz anlatımı. Lisans ve madalya. | Dersler adım adım tamamlanıyor. | |
+| V1.79 | **Kariyer ve başarımlar.** Rütbe sistemine (V1.67) bağlı kariyer: görevlerden tecrübe puanı, puanla yeni uçak, araç ve boya açma. Başarımlar, günlük ve haftalık görevler, istatistik sayfası. | İlerleme kaydediliyor. | |
+| V1.80 | **Yarışlar.** Halkalardan geçmeli uçak yarışı, helikopter slalomu, adada araba rallisi, botla deniz yarışı. Hayalet (en iyi derece) ve sıralama tablosu (cihazda). | Yarışlar süre kaydediyor. | |
+| V1.81 | **Görev editörü.** Haritaya hedef, düşman, nokta ve tetikleyici koyma. Görevi kod veya dosyayla paylaşma; yönetici beğendiği görevi herkese yayınlar. | Kendi görevi yapılıp oynanabiliyor. | |
 
-### Faz 8 — Kokpit, paylaşım, telefon
+### Faz 8 — Çok oyunculu
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.80 | **Tekrar izleme.** Son uçuşun kaydı, sinematik kameralar, zaman çubuğu ve yavaş çekim. Fotoğraf ve kısa video kaydı (WebM). | Tekrar izleme ve video indirme çalışıyor. | |
-| V1.81 | **3B kokpit.** KAAN, Hürjet ve T129 için iç görünüm, çok işlevli ekranlar, HUD camı, kafa hareketi. | Kokpitten uçulabiliyor. | |
-| V1.82 | **Telefon ve kayıt.** Eğerek uçma (jiroskop) ve kalibrasyon, titreşim geri bildirimi. Kayıt yedekleme: ayarlar, boyalar, ilerleme ve modeller dosyaya alınıp başka cihaza taşınabilir. Android paketi hazırlığı (TWA/Capacitor). | Telefon eğilerek uçuyor; yedek başka cihazda açılıyor. | |
+| V1.82 | **Karma çok oyunculu.** Yaya, araç, helikopter ve uçak aynı oyunda. **Üs ele geçirme** modu (takımlar). **Kule görevlisi** rolü: bir oyuncu kuleden izin verir ve haritayı yönetir. Oyun içi yazılı sohbet. Odalarda profil adı ve rütbe; yönetici odadan çıkarabilir. | 4 oyuncu farklı araçlarda aynı oyunda. | |
 
-### Faz 9 — Model yenileme
+### Faz 9 — Kokpit, paylaşım, telefon
+| Sürüm | İçerik | Kabul ölçütü | Durum |
+|---|---|---|---|
+| V1.83 | **Tekrar izleme.** Son uçuşun kaydı, sinematik kameralar, zaman çubuğu ve yavaş çekim. Fotoğraf ve kısa video kaydı (WebM). | Tekrar izleme ve video indirme çalışıyor. | |
+| V1.84 | **3B kokpit.** KAAN, Hürjet ve T129 için iç görünüm, çok işlevli ekranlar, HUD camı, kafa hareketi. | Kokpitten uçulabiliyor. | |
+| V1.85 | **Telefon ve kayıt.** Eğerek uçma (jiroskop) ve kalibrasyon, titreşim geri bildirimi. Misafir kaydını dosyayla yedekleme (hesaplılar zaten bulutta). Android paketi hazırlığı (TWA/Capacitor). | Telefon eğilerek uçuyor; yedek başka cihazda açılıyor. | |
+
+### Faz 10 — Model yenileme
 | Sürüm | İçerik | Durum |
 |---|---|---|
-| V1.83+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
+| V1.86+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
 
 ### Android yolu
 1. PWA (V1.20 ✅) → 2. Play Store için TWA paketi (Bubblewrap) veya Capacitor → 3. imzalama, mağaza görselleri, gizlilik politikası.
