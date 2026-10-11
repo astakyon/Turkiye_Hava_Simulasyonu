@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.45">
+<meta name="game-version" content="V1.46">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -663,6 +663,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
     <section data-tab="g">
       <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small>Telefonlarda Orta önerilir</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button></div></div>
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
+      <div class="srow"><div class="sl"><b>Gün saati</b><small>Döngü: 20 dakikada bir tam gün (sabah, öğle, akşam, gece)</small></div><div class="seg" id="setTod"><button type="button" data-t="dawn">Sabah</button><button type="button" data-t="day">Öğle</button><button type="button" data-t="dusk">Akşam</button><button type="button" data-t="night">Gece</button><button type="button" data-t="cycle">Döngü</button></div></div>
       <div class="srow"><div class="sl"><b>Görsel efektler</b><small>Düşük: renk düzeltme, hız bulanıklığı, kenar yumuşatma. Yüksek: + ışık parlaması (bloom). Telefonda FPS düşürebilir</small></div><div class="seg" id="setFx"><button type="button" data-f="0">Kapalı</button><button type="button" data-f="1">Düşük</button><button type="button" data-f="2">Yüksek</button></div></div>
       <div class="srow"><div class="sl"><b>Model kütüphanesi</b><small>Bütün modelleri 3B incele, renk ve kamuflaj değiştir, kendi modelini (.glb, .fbx, .obj, .stl, .dae) yükle</small></div><button class="btn" id="btnLibOpen" type="button">Aç</button></div>
       <div class="srow"><div class="sl"><b>Otomatik performans</b><small>FPS 38’in altına düşerse çözünürlük kademeli düşer</small></div><label class="tgl"><input type="checkbox" id="setAuto"><i></i></label></div>
@@ -800,7 +801,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.45', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.46', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -844,7 +845,7 @@ scene.add(sky);
 const sunLight = new THREE.DirectionalLight(0xfff0d6, 1.25);
 sunLight.position.copy(SUN).multiplyScalar(1000);
 scene.add(sunLight); scene.add(sunLight.target);
-scene.add(new THREE.HemisphereLight(0xc4e0ff, 0x56653f, 0.72));
+const HEMI=new THREE.HemisphereLight(0xc4e0ff, 0x56653f, 0.72); scene.add(HEMI);
 /* sun shadows that follow the camera's subject (quality setting) */
 renderer.toneMapping=THREE.NoToneMapping;   /* filmic curves washed out the stylized palette; keep colours vivid */
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -972,7 +973,7 @@ function terrainH(x,z){
 
   const wg = new THREE.PlaneGeometry(90000,90000); wg.rotateX(-Math.PI/2);
   const water = new THREE.Mesh(wg, new THREE.MeshPhongMaterial({color:0x2a7aa8, specular:0xffffff, shininess:90, transparent:true, opacity:0.84}));
-  scene.add(water);
+  scene.add(water); GFX.water=water;
 
   // trees
   const tg = new THREE.ConeGeometry(5,20,6); tg.translate(0,10,0);
@@ -1370,7 +1371,7 @@ function buildSurroundings(){
   ENV.road=smoothPath(rc,6); terrainRibbon(ENV.road,8,0.3,roadMat);
   /* ---- village: houses with tiled roofs, a mosque with minaret, shops; streets */
   const vg=new THREE.Group(), wallMats=[0xefe6d4,0xf3efe6,0xe6d2b5,0xdfe3e6].map(function(c){ return new THREE.MeshLambertMaterial({color:c}); }),
-        roofMat=new THREE.MeshLambertMaterial({color:0xb2532f}), winMat=new THREE.MeshLambertMaterial({color:0x2b3540}), doorMat=new THREE.MeshLambertMaterial({color:0x6b4a32}),
+        roofMat=new THREE.MeshLambertMaterial({color:0xb2532f}), winMat=ENV.winMat=new THREE.MeshLambertMaterial({color:0x2b3540}), doorMat=new THREE.MeshLambertMaterial({color:0x6b4a32}),
         lead=new THREE.MeshLambertMaterial({color:0x8b98a3}), gold=new THREE.MeshLambertMaterial({color:0xd9b44a}), grassG=new THREE.MeshLambertMaterial({color:0x5f8f3e});
   const streets=[[[V.x-160,V.z-30],[V.x+170,V.z-30]],[[V.x-150,V.z+70],[V.x+150,V.z+70]],[[V.x-60,V.z-150],[V.x-60,V.z+150]],[[V.x+80,V.z-140],[V.x+80,V.z+150]]];
   streets.forEach(function(s){ terrainRibbon(smoothPath(s,8),6,0.28,roadMat); });
@@ -1512,7 +1513,10 @@ function facadeMat(floors,bays,wall,win){ const k=floors+'|'+bays+'|'+wall; if(F
   const t=apTex(W,H,function(x,w,h){ x.fillStyle=wall; x.fillRect(0,0,w,h); const bw=w/bays, fh=h/floors;
     for(let f=0;f<floors;f++){ x.fillStyle='rgba(0,0,0,0.08)'; x.fillRect(0,f*fh+fh-3,w,3);
       for(let b=0;b<bays;b++){ x.fillStyle=win||'#2a3642'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.48); x.fillStyle='rgba(255,255,255,0.18)'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.08); } } });
-  return (FACADE[k]=new THREE.MeshLambertMaterial({map:t})); }
+  const q=mulberry32(floors*31+bays*7), em=apTex(W,H,function(x,w,h){ x.fillStyle='#000'; x.fillRect(0,0,w,h); const bw=w/bays, fh=h/floors;
+    for(let f=0;f<floors;f++) for(let b=0;b<bays;b++){ if(q()<0.45) continue; x.fillStyle=q()<0.8?'#ffd894':'#cfe3ff'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.48); } });
+  const m=new THREE.MeshLambertMaterial({map:t,emissiveMap:em,emissive:0x000000}); NIGHTMATS.push([m,0.85]); return (FACADE[k]=m); }
+const NIGHTMATS=[];   /* [material, emissive strength at night] — lit windows after dark (47-daynight) */
 function bldg(g,x,y,z,w,h,d,o){ o=o||{}; const M=apMats(), fl=o.floors||Math.max(1,Math.round(h/3.4)), wall=o.wall||'#e8e4da';
   const core=apBox(g,o.roof||M.roof,x,y-1,z,w,h+1,d);
   const fx=facadeMat(fl,Math.max(2,Math.round(w/4)),wall,o.win), fz=facadeMat(fl,Math.max(2,Math.round(d/4)),wall,o.win);
@@ -5231,6 +5235,82 @@ function renderFrame(dt){
   else renderer.render(scene,camera);
 }
 function fxReset(){ if(FX.grade) FX.grade.uniforms.uSpeed.value=0; }
+/* ------------------------------------------------------------------ time of day (SETTINGS.tod: dawn / day / dusk / night / cycle)
+   Moves the sun, recolours sky, fog, lights, water and clouds, shows stars and a moon at night, lights windows and
+   beacons after dark; plus ambient sound (surf near the shore, wind, gulls, crickets at night). */
+const TOD={h:13, last:-1, stars:null, moon:null, sun0:SUN.clone(), presets:{dawn:6.4, day:13, dusk:17.6, night:23.2}};
+const TODC={
+  day:  {sun:0xfff0d6, si:1.25, hs:0xc4e0ff, hg:0x56653f, hi:0.72, top:0x2c68a8, mid:0x87b6de, hor:0xc2d8e8, fog:0xcfe0ec, water:0x2a7aa8, cloud:0xffffff},
+  gold: {sun:0xffb36a, si:1.05, hs:0xffd6b0, hg:0x4a4436, hi:0.52, top:0x3a5c96, mid:0xe7a477, hor:0xf3c08e, fog:0xe7c3a2, water:0x3a6e8e, cloud:0xffd2b4},
+  night:{sun:0x9fb4ff, si:0.22, hs:0x34477a, hg:0x0e1218, hi:0.26, top:0x040a18, mid:0x0a1730, hor:0x17263f, fog:0x0f1828, water:0x0d2236, cloud:0x3a4558}
+};
+const _ca=new THREE.Color(), _cb=new THREE.Color();
+function todMix(k,a,b,t){ return _ca.setHex(TODC[a][k]).lerp(_cb.setHex(TODC[b][k]),t); }
+function todHour(){ const m=SETTINGS.tod||'day'; return m==='cycle'?TOD.h:TOD.presets[m]; }
+function todReset(){ if((SETTINGS.tod||'day')!=='cycle') TOD.h=todHour(); TOD.last=-1; todApply(todHour()); }
+function todBuild(){
+  const n=1600, p=new Float32Array(n*3), r=mulberry32(77); for(let i=0;i<n;i++){ const a=r()*Math.PI*2, z=0.05+r()*0.95, s=Math.sqrt(1-z*z); p[i*3]=Math.cos(a)*s*30000; p[i*3+1]=z*30000; p[i*3+2]=Math.sin(a)*s*30000; }
+  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(p,3));
+  TOD.stars=new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:2.2,sizeAttenuation:false,transparent:true,opacity:0,fog:false,depthWrite:false})); TOD.stars.frustumCulled=false; scene.add(TOD.stars);
+  TOD.moon=new THREE.Mesh(new THREE.CircleGeometry(520,32),new THREE.MeshBasicMaterial({color:0xf2f0e6,fog:false,transparent:true,opacity:0})); TOD.moon.material.userData.glow=1.2; scene.add(TOD.moon);
+  todReset();
+}
+/* h: hour 0..24 */
+function todApply(h){
+  const day=(SETTINGS.tod||'day')==='day';
+  const az=Math.PI*(h-6)/12, el=Math.sin(Math.PI*(h-6)/12)*1.1, se=Math.sin(Math.max(-0.6,Math.min(1.2,el)));
+  if(day) SUN.copy(TOD.sun0); else SUN.set(Math.cos(az)*Math.cos(el),Math.sin(el),-0.55*Math.cos(el)-0.25).normalize();
+  const dayK=day?1:smooth(0.12,0.5,se), nightK=day?0:1-smooth(-0.22,0.02,se);
+  const pick=function(k){ if(nightK>0) return todMix(k,'gold','night',nightK); return todMix(k,'gold','day',dayK); };
+  const moonDir=new THREE.Vector3(-0.45,0.62,0.55).normalize();
+  sunLight.color.copy(pick('sun')); sunLight.intensity=nightK>0?TODC.gold.si*(1-nightK)+TODC.night.si*nightK:TODC.gold.si+(TODC.day.si-TODC.gold.si)*dayK;
+  HEMI.color.copy(pick('hs')); HEMI.groundColor.copy(pick('hg')); HEMI.intensity=nightK>0?TODC.gold.hi*(1-nightK)+TODC.night.hi*nightK:TODC.gold.hi+(TODC.day.hi-TODC.gold.hi)*dayK;
+  if(nightK>0.5) SUN.copy(moonDir);                                     /* light (and shadows) come from the moon after dark */
+  const u=sky.material.uniforms; u.top.value.copy(pick('top')); u.mid.value.copy(pick('mid')); u.hor.value.copy(pick('hor')); u.sunK.value=nightK>0.5?0.15:1;
+  scene.fog.color.copy(pick('fog')); const mist=day?0:smooth(5,6.5,h)*(1-smooth(8,9.5,h)); scene.fog.near=3800-2600*mist; scene.fog.far=26000-13000*mist;
+  if(GFX.water) GFX.water.material.color.copy(pick('water'));
+  if(GFX.clouds) GFX.clouds.material.color.copy(pick('cloud'));
+  if(TOD.stars){ TOD.stars.material.opacity=nightK*0.9; TOD.moon.material.opacity=nightK; TOD.moon.position.copy(moonDir).multiplyScalar(29000); TOD.moon.lookAt(0,0,0); }
+  /* lights after dark: windows, beacons */
+  const lit=smooth(0.25,0.85,nightK+(1-dayK)*0.35);
+  NIGHTMATS.forEach(function(e){ e[0].emissive.setScalar(lit*e[1]); });
+  if(ENV.winMat){ ENV.winMat.emissive.setRGB(lit*0.9,lit*0.72,lit*0.4); }
+  const M=apMats(); if(M.win&&M.win.emissive) M.win.emissive.setRGB(lit*0.6,lit*0.5,lit*0.3); if(M.glass&&M.glass.emissive) M.glass.emissive.setRGB(lit*0.25,lit*0.25,lit*0.2);
+  if(ENV.beacon) ENV.beacon.material.opacity=0.12+0.3*lit;
+  TOD.lit=lit; TOD.nightK=nightK;
+}
+function todStep(dt){
+  if(!TOD.stars) return; const m=SETTINGS.tod||'day';
+  if(m==='cycle'){ TOD.h=(TOD.h+dt*24/1200)%24; if(Math.abs(TOD.h-TOD.last)>0.02){ TOD.last=TOD.h; todApply(TOD.h); } }
+  if(TOD.stars) TOD.stars.position.copy(camera.position);
+  if(TOD.moon&&TOD.nightK>0){ TOD.moon.position.copy(new THREE.Vector3(-0.45,0.62,0.55).normalize().multiplyScalar(29000)).add(camera.position); TOD.moon.lookAt(camera.position); }
+  ambStep(dt);
+}
+/* ---- ambient sound: surf, wind, gull calls, crickets; generated with WebAudio from the shared noise buffer */
+const AMBS={on:false, gullT:3, crT:1};
+function ambInit(){
+  if(AMBS.on||!AC||!noiseBuf) return; AMBS.on=true;
+  const mk=function(type,f,q){ const s=AC.createBufferSource(); s.buffer=noiseBuf; s.loop=true; const fl=AC.createBiquadFilter(); fl.type=type; fl.frequency.value=f; if(q) fl.Q.value=q; const g=AC.createGain(); g.gain.value=0; s.connect(fl); fl.connect(g); g.connect(master); s.start(0,Math.random()*1.5); return {g:g,f:fl}; };
+  AMBS.surf=mk('lowpass',520); AMBS.wind=mk('bandpass',700,0.6);
+}
+function chirp(f0,f1,dur,vol,type){ if(!AC||muted) return; const o=AC.createOscillator(), g=AC.createGain(), t=AC.currentTime; o.type=type||'sine'; o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f1,t+dur);
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(master); o.start(t); o.stop(t+dur+0.05); }
+function ambStep(dt){
+  if(!AC) return; ambInit(); if(!AMBS.on) return;
+  const c=camera.position, t=AC.currentTime, quiet=muted||state==='menu'||state==='library';
+  let sea=0; if(c.y<160){ const R=[0,120,-120]; for(let i=0;i<3;i++) for(let j=0;j<3;j++){ if(terrainH(c.x+R[i],c.z+R[j])<0) sea++; } }
+  const shore=sea>0&&sea<9?1:(sea===9?0.35:0), alt=Math.max(0,c.y-groundH(c.x,c.z));
+  const surf=quiet?0:shore*Math.max(0,1-alt/160)*0.16*(0.75+0.25*Math.sin(t*0.6)+0.15*Math.sin(t*1.7));
+  AMBS.surf.g.gain.setTargetAtTime(surf,t,0.3);
+  const wind=quiet?0:(state==='walk'?0.03:0.02)+Math.min(0.06,alt/4000);
+  AMBS.wind.g.gain.setTargetAtTime(wind,t,0.5); AMBS.wind.f.frequency.setTargetAtTime(500+Math.sin(t*0.13)*200+alt*0.1,t,0.5);
+  if(quiet) return;
+  AMBS.gullT-=dt; if(AMBS.gullT<=0){ AMBS.gullT=2+Math.random()*5;
+    const near=MARINA.gullD&&MARINA.gullD.some(function(b){ return Math.abs(b.cx-c.x)<260&&Math.abs(b.cz-c.z)<260; });
+    if(near&&alt<120&&(TOD.nightK||0)<0.5){ const f=1400+Math.random()*500; chirp(f,f*0.62,0.32,0.05,'triangle'); setTimeout(function(){ chirp(f*0.95,f*0.6,0.26,0.04,'triangle'); },360); } }
+  AMBS.crT-=dt; if(AMBS.crT<=0){ AMBS.crT=0.35+Math.random()*0.6;
+    if((TOD.nightK||0)>0.6&&alt<40&&!sea&&state==='walk'){ for(let k=0;k<3;k++) setTimeout(function(){ chirp(4300,4200,0.04,0.012,'square'); },k*70); } }
+}
 /* ------------------------------------------------------------------ input + menu */
 let menuMode='title';
 function showScreen(name){ $('startUI').classList.add('hidden'); ['title','hangarUI','setupUI','pause','missionsUI'].forEach(function(id){ $(id).classList.toggle('hidden',id!==name); }); }
@@ -5303,6 +5383,7 @@ function cineStep(dt){
   cV3.copy(cV1).multiplyScalar(cb).addScaledVector(cV2,-sb); cV2.multiplyScalar(cb).addScaledVector(cV1,sb); cV1.copy(CINE.fwd).negate();
   cM.makeBasis(cV3,cV2,cV1); CINE.q.setFromRotationMatrix(cM);
 }
+$('setTod').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.tod=b.dataset.t; saveSettings(); todReset(); syncSettingsUI(); });
 $('setFx').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.fx=+b.dataset.f; FX.failed=false; saveSettings(); applyFX(); syncSettingsUI(); });
 $('setShadow').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.shadows=b.dataset.s==='1'; saveSettings(); applyShadows(); syncSettingsUI(); });
 $('setTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; setTab(b.dataset.tab); });
@@ -5442,6 +5523,7 @@ function syncSettingsUI(){
   $('setVol').value=Math.round(SETTINGS.volume*100); $('setVolV').textContent=Math.round(SETTINGS.volume*100)+'%';
   $('setSens').value=Math.round(SETTINGS.sens*100); $('setSensV').textContent=Math.round(SETTINGS.sens*100)+'%';
   Array.prototype.forEach.call($('setQ').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.q===SETTINGS.quality)); });
+  Array.prototype.forEach.call($('setTod').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.tod||'day'))); });
   Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); });
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
@@ -6841,7 +6923,7 @@ $('btnLibOpen').addEventListener('click',function(){ if(state==='menu') openLibr
 window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
 window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files; if(!f||!f.length) return; e.preventDefault(); if(state==='menu'&&!LIB.on) openLibrary('ac:'+selectedId); if(LIB.on) importFiles(f); });
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); todBuild(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -6854,7 +6936,7 @@ function frame(now){
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
   netStep(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
-  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); updateTaxiVisuals();
+  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow();
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);

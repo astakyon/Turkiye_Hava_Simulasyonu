@@ -27,7 +27,7 @@ CI (`pages.yml`) önce `tools/build.py --check`, sonra testleri çalıştırır;
 | 09–15 | modelleme araçları (`MK`), araç modelleri (kodla), kayıt (`REG`, `AIRCRAFT`), **varlıklar** (GLB yükleme, `buildModel`), **gemi modelleri** (fırkateyn, korvet, TCG Anadolu, denizaltı, karakol botu, römorkör), **kara aracı modelleri** (Altay, Fırtına, Pars, MRAP, askerî kamyon) |
 | 20–23 | hangar bekleme alanı, hangar içleri, taksi, bakım hangarı |
 | 30–35 | uçuş durumu, halkalar, muharebe, yer hedefleri, görevler, tehditler |
-| 40–46 | ayarlar, iz, ses, fizik, kamera, HUD, **görsel efektler** |
+| 40–47 | ayarlar, iz, ses, fizik, kamera, HUD, **görsel efektler**, **gün saati** (`TOD`: güneş/ay, gökyüzü, sis, gece ışıkları `NIGHTMATS`; ortam sesleri `AMBS`) |
 | 50–54 | menü/giriş, ayarlar arayüzü, gamepad, dokunmatik, fare/klavye |
 | 60 | yapay zekâ ve çevrimiçi (P2P) |
 | 70 | üssü gezme (yaya + araç) |

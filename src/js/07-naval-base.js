@@ -25,7 +25,10 @@ function facadeMat(floors,bays,wall,win){ const k=floors+'|'+bays+'|'+wall; if(F
   const t=apTex(W,H,function(x,w,h){ x.fillStyle=wall; x.fillRect(0,0,w,h); const bw=w/bays, fh=h/floors;
     for(let f=0;f<floors;f++){ x.fillStyle='rgba(0,0,0,0.08)'; x.fillRect(0,f*fh+fh-3,w,3);
       for(let b=0;b<bays;b++){ x.fillStyle=win||'#2a3642'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.48); x.fillStyle='rgba(255,255,255,0.18)'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.08); } } });
-  return (FACADE[k]=new THREE.MeshLambertMaterial({map:t})); }
+  const q=mulberry32(floors*31+bays*7), em=apTex(W,H,function(x,w,h){ x.fillStyle='#000'; x.fillRect(0,0,w,h); const bw=w/bays, fh=h/floors;
+    for(let f=0;f<floors;f++) for(let b=0;b<bays;b++){ if(q()<0.45) continue; x.fillStyle=q()<0.8?'#ffd894':'#cfe3ff'; x.fillRect(b*bw+bw*0.2,f*fh+fh*0.25,bw*0.6,fh*0.48); } });
+  const m=new THREE.MeshLambertMaterial({map:t,emissiveMap:em,emissive:0x000000}); NIGHTMATS.push([m,0.85]); return (FACADE[k]=m); }
+const NIGHTMATS=[];   /* [material, emissive strength at night] — lit windows after dark (47-daynight) */
 function bldg(g,x,y,z,w,h,d,o){ o=o||{}; const M=apMats(), fl=o.floors||Math.max(1,Math.round(h/3.4)), wall=o.wall||'#e8e4da';
   const core=apBox(g,o.roof||M.roof,x,y-1,z,w,h+1,d);
   const fx=facadeMat(fl,Math.max(2,Math.round(w/4)),wall,o.win), fz=facadeMat(fl,Math.max(2,Math.round(d/4)),wall,o.win);

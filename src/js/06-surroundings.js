@@ -75,7 +75,7 @@ function buildSurroundings(){
   ENV.road=smoothPath(rc,6); terrainRibbon(ENV.road,8,0.3,roadMat);
   /* ---- village: houses with tiled roofs, a mosque with minaret, shops; streets */
   const vg=new THREE.Group(), wallMats=[0xefe6d4,0xf3efe6,0xe6d2b5,0xdfe3e6].map(function(c){ return new THREE.MeshLambertMaterial({color:c}); }),
-        roofMat=new THREE.MeshLambertMaterial({color:0xb2532f}), winMat=new THREE.MeshLambertMaterial({color:0x2b3540}), doorMat=new THREE.MeshLambertMaterial({color:0x6b4a32}),
+        roofMat=new THREE.MeshLambertMaterial({color:0xb2532f}), winMat=ENV.winMat=new THREE.MeshLambertMaterial({color:0x2b3540}), doorMat=new THREE.MeshLambertMaterial({color:0x6b4a32}),
         lead=new THREE.MeshLambertMaterial({color:0x8b98a3}), gold=new THREE.MeshLambertMaterial({color:0xd9b44a}), grassG=new THREE.MeshLambertMaterial({color:0x5f8f3e});
   const streets=[[[V.x-160,V.z-30],[V.x+170,V.z-30]],[[V.x-150,V.z+70],[V.x+150,V.z+70]],[[V.x-60,V.z-150],[V.x-60,V.z+150]],[[V.x+80,V.z-140],[V.x+80,V.z+150]]];
   streets.forEach(function(s){ terrainRibbon(smoothPath(s,8),6,0.28,roadMat); });

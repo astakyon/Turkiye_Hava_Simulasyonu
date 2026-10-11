@@ -74,7 +74,7 @@ function terrainH(x,z){
 
   const wg = new THREE.PlaneGeometry(90000,90000); wg.rotateX(-Math.PI/2);
   const water = new THREE.Mesh(wg, new THREE.MeshPhongMaterial({color:0x2a7aa8, specular:0xffffff, shininess:90, transparent:true, opacity:0.84}));
-  scene.add(water);
+  scene.add(water); GFX.water=water;
 
   // trees
   const tg = new THREE.ConeGeometry(5,20,6); tg.translate(0,10,0);

@@ -19,7 +19,7 @@
 | 4d | V1.43 | Hilal Marina, deniz otobüsü ve gemi trafiği, kumsal, martılar | ✅ |
 | 4e | V1.44 | Kırsal: rüzgâr türbinleri, GES, seralar, zeytinlik, gölet, köye canlılık | ✅ |
 | 4f | V1.45 | Askeri tesisler: dağda radar, hava savunma mevzisi, mühimmat deposu | ✅ |
-| 4g | V1.46 | Atmosfer: gece döngüsü, ışıklar, sis, ortam sesleri | |
+| 4g | V1.46 | Atmosfer: gün saati/döngü, gece ışıkları, sabah sisi, ortam sesleri | ✅ |
 | 4h | V1.47 | Güney ada: asma köprü ve şehir | |
 | 4i | V1.48 | Güneydoğu ada: İHA ve test merkezi | |
 | 4j | V1.49 | Kızıl Bölge (düşman üssü ve hedefler, batı uç) | |

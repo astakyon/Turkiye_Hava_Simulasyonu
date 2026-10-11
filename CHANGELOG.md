@@ -1,6 +1,22 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.46 — 2026-10-11
+### Yeni — Atmosfer: gün saati, gece ışıkları, sis, ortam sesleri
+- **Gün saati** (Ayarlar → Grafik → Gün saati): **Sabah**, **Öğle**, **Akşam**, **Gece** ya da **Döngü**. Döngüde 20 dakikada bir tam gün geçiyor. Öğle eskisiyle aynı görünüm.
+- **Gökyüzü ve ışık:** güneş saate göre hareket ediyor.
+  - Sabah ve akşam: altın sarısı ışık ve turuncu gökyüzü, gün batımında renklenen bulutlar.
+  - Gece: yıldızlar, ay ve ay ışığı.
+  - Su, bulutlar ve sis rengi saate uyuyor.
+- **Sabah sisi:** sabahları görüş mesafesi kısalıyor.
+- **Gece ışıkları:**
+  - Hilalkent, köy ve üslerdeki binaların pencereleri yanıyor.
+  - Pist ve yaklaşma ışıkları, sokak lambaları, fenerler ve ikaz ışıkları geceleri asıl etkisini gösteriyor.
+  - Deniz fenerinin huzmesi belirginleşiyor.
+- **Ortam sesleri:**
+  - Kıyıya yakınken dalga sesi, yükseklikle artan rüzgâr.
+  - Martı sürülerinin yanında martı sesleri, gece yürürken cırcır böcekleri.
+
 ## V1.45 — 2026-10-11
 ### Yeni — Askeri tesisler
 - **Hava savunma mevzileri:** havalimanının dört yanında toprak setli mevziler.

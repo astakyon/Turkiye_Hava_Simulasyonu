@@ -17,7 +17,7 @@ scene.add(sky);
 const sunLight = new THREE.DirectionalLight(0xfff0d6, 1.25);
 sunLight.position.copy(SUN).multiplyScalar(1000);
 scene.add(sunLight); scene.add(sunLight.target);
-scene.add(new THREE.HemisphereLight(0xc4e0ff, 0x56653f, 0.72));
+const HEMI=new THREE.HemisphereLight(0xc4e0ff, 0x56653f, 0.72); scene.add(HEMI);
 /* sun shadows that follow the camera's subject (quality setting) */
 renderer.toneMapping=THREE.NoToneMapping;   /* filmic curves washed out the stylized palette; keep colours vivid */
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;

@@ -70,6 +70,7 @@ function cineStep(dt){
   cV3.copy(cV1).multiplyScalar(cb).addScaledVector(cV2,-sb); cV2.multiplyScalar(cb).addScaledVector(cV1,sb); cV1.copy(CINE.fwd).negate();
   cM.makeBasis(cV3,cV2,cV1); CINE.q.setFromRotationMatrix(cM);
 }
+$('setTod').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.tod=b.dataset.t; saveSettings(); todReset(); syncSettingsUI(); });
 $('setFx').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.fx=+b.dataset.f; FX.failed=false; saveSettings(); applyFX(); syncSettingsUI(); });
 $('setShadow').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.shadows=b.dataset.s==='1'; saveSettings(); applyShadows(); syncSettingsUI(); });
 $('setTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; setTab(b.dataset.tab); });
