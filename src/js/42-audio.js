@@ -19,7 +19,7 @@ function initAudio(){
 }
 function audioUpdate(){
   if(!AC||!eng) return;
-  sndMixStep();
+  sndMixStep(); musStep();
   const t=AC.currentTime, heli=state==='walk'&&WALK.mode==='heli';
   heliAudio(t,heli&&!muted);
   /* procedural engine targets (noise gain, tone gain, tone freq, filter) + the matching Sound Library loop */

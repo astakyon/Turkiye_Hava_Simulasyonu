@@ -50,6 +50,7 @@ function setupMission(){
   aiSetup();
 }
 function endMission(ok,tm){
+  if(typeof musSting==='function') musSting(ok?'victory':'defeat');
   if(M.done) return; M.done=true;
   const t=(tm!=null?tm:M.t); let isRec=false;
   if(ok){

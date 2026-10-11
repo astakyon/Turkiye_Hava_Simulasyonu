@@ -76,6 +76,7 @@ function sndMixStep(){
 }
 function sndPlay(id,o){
   if(!AC||muted) return; const d=SNDI[id]; if(!d) return; o=o||{};
+  if(d.music){ if(typeof musPreview==='function') musPreview(d.music); return; }
   const v=sndVol(id)*(o.vol==null?1:o.vol), p=sndPitch(id)*(o.pitch==null?1:o.pitch), dest=o.dest||sndOut(d.bus);
   if(SND.buf[id]){ const s=AC.createBufferSource(), g=AC.createGain(); s.buffer=SND.buf[id]; s.playbackRate.value=p; g.gain.value=v; s.connect(g); g.connect(dest); s.start();
     if(d.loop) s.stop(AC.currentTime+Math.min(4,s.buffer.duration/p)); return s; }
@@ -121,7 +122,7 @@ function syncSoundLib(){
       '<label>Ton <input type="range" min="50" max="200" data-k="pitch" value="'+p+'"><output>'+p+'%</output></label>'+
       '<label class="btn">Dosya yükle<input type="file" accept="audio/*,.mp3,.ogg,.wav,.m4a" data-act="file" hidden></label>'+
       '<button type="button" class="btn" data-act="reset"'+(u.file||u.vol!=null||u.pitch!=null?'':' disabled')+'>Varsayılan</button></div></div>'; }).join('')
-    :'<p class="sndempty">Müzik çalma listesi bir sonraki sürümde (V1.61) bu bölüme gelecek.</p>';
+    :'<p class="sndempty">Bu kategoride ses yok.</p>';
 }
 (function(){
   const lib=$('sndLib');

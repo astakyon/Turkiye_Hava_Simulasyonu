@@ -8,7 +8,8 @@ const keys={};
 
 let score=0, kills=0, ringIdx=0, courseT=null, bestCourse=null, allDeadT=0;
 const msgs=[];
-function toast(text,color){ msgs.push({text,color:color||'#b8ecff',t:3.2}); if(msgs.length>4) msgs.shift(); }
+function toast(text,color){ msgs.push({text,color:color||'#b8ecff',t:3.2}); if(msgs.length>4) msgs.shift();
+  if(typeof sndPlay==='function'&&typeof T==='number'&&T-(toast.t||-9)>0.9){ toast.t=T; sndPlay(color==='#ffc24a'||color==='#ff6a5a'?'ui_alert':'ui_notify'); } }
 function fmtT(t){ const m=Math.floor(t/60), s=t-m*60; return String(m).padStart(2,'0')+':'+(s<10?'0':'')+s.toFixed(1); }
 
 function resetFlight(mode){

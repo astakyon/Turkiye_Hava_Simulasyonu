@@ -1,6 +1,17 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.61 — 2026-10-11
+- **Oyunun kendi müziği.** Parçalar tarayıcıda canlı üretiliyor, telifsiz:
+  - **Ana menü teması:** Re minör, savaş davulları, Hicaz havasında yaylı ezgi.
+  - **Sakin uçuş:** yumuşak akorlar, arpej.
+  - **Çatışma:** 132 vuruşluk ritim, ostinato bas, yaylı vuruşlar.
+  - **Zafer** ve **yenilgi** kısa melodileri.
+- **Duruma göre müzik:** menü ve hangarda tema çalıyor, uçuşta sakin müzik. Düşman 6,5 km'ye yaklaşınca, füze ya da radar uyarısı gelince çatışma müziğine geçiyor; tehlike bittikten 12 saniye sonra sakine dönüyor. Görev başarıyla bitince zafer, başarısızlıkta ya da kazada yenilgi melodisi çalıyor. Geçişler yumuşak.
+- Ses Kütüphanesi'nde artık **Müzik** kategorisi var: her parça dinlenebiliyor, ses düzeyi ve hızı ayarlanabiliyor ya da kendi müzik dosyanla değiştirilebiliyor (dosya döngüde çalar).
+- **Arayüz sesleri:** düğme, geri, onay ve üzerine gelme (fareyle). Bildirim ve uyarı mesajlarının kendi sesi var.
+- Ayarlar → Ses: **Müzik** ve **Arayüz sesleri** açılıp kapatılabiliyor.
+
 ## V1.60 — 2026-10-11
 - **Ses Kütüphanesi** (Ayarlar → Ses → Ses kütüphanesi): oyundaki 25 ses kategorilere ayrıldı.
   - Kategoriler: Motor, Silah, Patlama, Çevre, Arayüz, Telsiz, Müzik.

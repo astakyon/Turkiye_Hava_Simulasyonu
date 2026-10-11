@@ -19,6 +19,7 @@ function syncSettingsUI(){
   $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
+  $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
   Array.prototype.forEach.call($('setTouch').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===SETTINGS.touch)); });
@@ -92,3 +93,12 @@ function confirmReload(q){ try{ return window.confirm(q); }catch(e){ return fals
 $('setRes').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.res=b.dataset.r; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI(); });
 $('setAA').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.aa=b.dataset.a; saveSettings(); if(FX.on){ try{ fxBuild(); }catch(err){} } syncSettingsUI(); });
 $('btnSndOpen').addEventListener('click',function(){ openSoundLib(); });
+$('setMusic').addEventListener('change',function(e){ SETTINGS.music=e.target.checked; saveSettings(); });
+$('setUiSnd').addEventListener('change',function(e){ SETTINGS.uiSnd=e.target.checked; saveSettings(); });
+/* interface sounds: clicks, back, confirm, hover (mouse only) */
+(function(){ let last=null, lastT=0;
+  document.addEventListener('click',function(e){ if(SETTINGS.uiSnd===false||typeof sndPlay!=='function') return; const b=e.target.closest('button,.btn,[role=tab],label.tgl'); if(!b||b.disabled) return;
+    if(b.closest('#wtouch,#touch,.touch')) return;   /* game controls on the touch screen */
+    sndPlay(b.classList.contains('back')||/^(←|Geri)/.test((b.textContent||'').trim())?'ui_back':(b.classList.contains('primary')?'ui_ok':'ui_click')); },true);
+  document.addEventListener('pointerover',function(e){ if(e.pointerType!=='mouse'||SETTINGS.uiSnd===false||typeof sndPlay!=='function') return; const b=e.target.closest('button,.btn'); if(!b||b===last||b.disabled) return;
+    last=b; const now=performance.now(); if(now-lastT<70) return; lastT=now; sndPlay('ui_hover'); },true); })();

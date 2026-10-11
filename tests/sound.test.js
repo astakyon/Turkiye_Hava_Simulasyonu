@@ -6,4 +6,7 @@ SND.cat='silah'; syncSoundLib(); T('library lists category',/Top atışı/.test(
 SND.user.gun={vol:1.5,pitch:0.8}; T('per-sound volume',sndVol('gun')===1.5&&sndPitch('gun')===0.8); delete SND.user.gun;
 sndPlay('gun'); sndMixStep(); T('no audio context is harmless',true);
 openSoundLib(); T('open from menu',true);
+T('music tracks',['menu','calm','combat','victory','defeat'].every(function(k){ return MUS_T[k]&&SNDI['mus_'+k]; }));
+musStep(); musSting('victory'); T('music safe without audio',true);
+SND.cat='muzik'; syncSoundLib(); T('music in library',/Çatışma/.test($('sndList').innerHTML));
 console.log('pass',ok,'fail',bad);

@@ -14,6 +14,7 @@ const vF=new THREE.Vector3(), vR=new THREE.Vector3(), vU=new THREE.Vector3(), ve
 const dq=new THREE.Quaternion(), eul=new THREE.Euler();
 function fwdOf(q,out){ return out.set(0,0,-1).applyQuaternion(q); }
 function crash(reason){
+  if(typeof musSting==='function') musSting('defeat');
   if(S.crashed) return;
   S.crashed=true; S.crashT=3.4; S.crashReason=reason; S.speed=0; S.sink=0;
   S.pos.y=Math.max(S.pos.y,Math.max(0,terrainH(S.pos.x,S.pos.z))+1);
