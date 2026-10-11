@@ -37,6 +37,22 @@
 | V1.55 | Helikopterler (T129 ATAK, T625 GÖKBEY) | ✅ |
 | V1.56 | Model havuzu: gemiler, kara araçları, helikopterler, sivil araçlar | ✅ |
 
+## Kalite, ses, görev ve arayüz yol haritası (V1.57+) — modellemelerden önce
+| Sürüm | İçerik | Durum |
+|---|---|---|
+| V1.57 | Telefonda siyah dalgalanma düzeltmesi: cihaz profili (Telefon/PC), mobilde logaritmik derinlik yerine güvenli derinlik, gölge sapması ve hassasiyet ayarı, sorunlu efektleri mobilde kapatma; Ayarlar'da "Grafik tanılama" (GPU, çözünürlük, FPS, etkin özellikler) | |
+| V1.58 | PC görüntü kalitesi: pikselleşmeye yol açan otomatik çözünürlük düşürmenin yerine akıllı ölçek (PC'de alt sınır, kademeli), kenar yumuşatma iyileştirmesi, doku filtreleme (anizotropik + mipmap), titremeyen gölge (sabitlenmiş gölge kamerası), ince parçalarda (çit, tel, anten) saçaklanma azaltma | |
+| V1.59 | Performans: uzak üs ve şehirlerde ayrıntı seviyesi (LOD) ve görüş mesafesi, örnekleme (instancing), gölgeyi yalnız yakına, hazır ayarlar Düşük / Orta / Yüksek / Ultra; hedef PC'de 60, telefonda 50+ FPS | |
+| V1.60 | Ses altyapısı + **Ses Kütüphanesi**: kanallar (Ana, Müzik, Efekt, Arayüz, Telsiz, Ortam) ayrı ses düzeyleri; duruma göre karışım (menüde motor/rüzgâr sesi susar); kategoriler: Motor, Silah, Çevre, Arayüz, Müzik, Telsiz; dinle, değiştir, kendi ses dosyanı yükle (cihazda saklanır) | |
+| V1.61 | Müzik ve arayüz sesleri: ana menü müziği, oyunda duruma göre değişen müzik (sakin / çatışma / zafer), düğme, geçiş, bildirim sesleri | |
+| V1.62 | Telsiz: kule konuşmaları (kalkış/iniş izni, rüzgâr, pist), kanat adamı ve AWACS anonsları, telsiz filtresi; çok oyunculu bas-konuş sesli sohbet ve hazır telsiz mesajları | |
+| V1.63 | **Görev ekranı**: görev panosu (liste, brifing, harita, hedefler, ödül, zorluk), oyun içi hedef takibi ve görev günlüğü (J) | |
+| V1.64 | Dinamik görevler: yerlere göre üretilen görevler (devriye, önleme, yakın hava desteği, refakat, keşif İHA, T625 ile arama-kurtarma/yük, deniz devriyesi); görev ortasında olaylar, çok aşamalı hedefler, yıldız/puan, kariyer ilerlemesi | |
+| V1.65 | Arayüz tasarım sistemi + **yeni ana menü**: tek görsel dil (renk, yazı, düğme, kart, ikon), büyük ana ekran (Kariyer / Görevler / Serbest Uçuş / Çok Oyunculu / Hangar / Kütüphaneler / Ayarlar), gamepad ve klavyeyle gezinme, geçiş animasyonları | |
+| V1.66 | Hangar ve mühimmat yükleme: uçak seçimi kart/karusel, performans çubukları, karşılaştırma; silah istasyonlarını gösteren yükleme ekranı, hazır yükler (Hava-hava / Kara taarruz / Keşif), ağırlık ve uyum göstergesi | |
+| V1.67 | Ayarlar menüsü: sekmeler (Grafik, Ses, Kontroller, Oynanış, Arayüz, Erişilebilirlik), arama, açıklama ve önizleme, uygula / geri al, hazır ayarlar | |
+| sonra | Uçak modellerini yenileme serisi (KAAN → ANKA-3 → …), her modelden sonra onay | |
+
 ### Android yolu
 1. PWA (V1.20 ✅) → 2. Play Store için TWA paketi (Bubblewrap) veya Capacitor → 3. imzalama, mağaza görselleri, gizlilik politikası.
 
