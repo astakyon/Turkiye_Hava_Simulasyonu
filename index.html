@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.52">
+<meta name="game-version" content="V1.53">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -453,6 +453,26 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .touch.lefty .tthr{ right:auto; left:max(12px,calc(env(safe-area-inset-left,0px) + 8px)); transform-origin:bottom left; }
 .touch.lefty .tright{ right:auto; left:calc(max(12px,calc(env(safe-area-inset-left,0px) + 8px)) + var(--thw) + 12px); transform-origin:bottom left; }
 #wtouch.lefty .wright{ right:auto; left:max(18px,calc(env(safe-area-inset-left,0px) + 14px)); }
+
+/* map */
+.mapui{ position:fixed; inset:0; z-index:40; background:#0b1a26; display:flex; }
+.mapui.hidden{ display:none; }
+#mapCv{ flex:1; width:100%; height:100%; touch-action:none; cursor:grab; display:block; }
+.mapside{ position:absolute; top:max(10px,env(safe-area-inset-top,0px)); right:max(10px,env(safe-area-inset-right,0px)); bottom:10px; width:min(280px,40vw); display:flex; flex-direction:column; gap:8px; background:rgba(6,14,24,.82); border:1px solid rgba(184,236,255,.25); border-radius:12px; padding:10px; color:#fff; }
+.maphead{ display:flex; justify-content:space-between; align-items:center; letter-spacing:.12em; }
+.mapsel{ display:flex; flex-direction:column; gap:6px; padding:8px; border-radius:8px; background:rgba(255,255,255,.05); }
+.mapsel small{ opacity:.75; font-size:12px; line-height:1.35; }
+.maplist{ overflow:auto; display:flex; flex-direction:column; gap:2px; }
+.maplist button{ text-align:left; background:none; border:0; color:#e8f2f8; padding:5px 6px; border-radius:6px; font:500 13px "Chakra Petch",system-ui,sans-serif; cursor:pointer; display:flex; align-items:center; gap:8px; }
+.maplist button:hover{ background:rgba(184,236,255,.12); }
+.maplist i{ width:9px; height:9px; border-radius:50%; display:inline-block; flex:none; }
+.mapzoom{ position:absolute; left:max(12px,env(safe-area-inset-left,0px)); bottom:14px; display:flex; flex-direction:column; gap:6px; }
+.mapzoom button{ width:42px; height:42px; border-radius:10px; border:1px solid rgba(184,236,255,.4); background:rgba(6,14,24,.8); color:#fff; font-size:20px; }
+.minimap{ position:fixed; left:auto; bottom:auto; inset:auto; right:max(12px,env(safe-area-inset-right,0px)); top:70px; width:150px; height:150px; border-radius:50%; border:2px solid rgba(184,236,255,.55); z-index:3; margin-top:72px; pointer-events:none; box-shadow:0 2px 10px rgba(0,0,0,.4); }
+.minimap.hidden{ display:none; }
+.splace{ display:flex; gap:10px; align-items:center; margin:8px 0 2px; font-size:13px; }
+.splace select{ flex:1; }
+@media (max-width:700px){ .mapside{ top:auto; height:42vh; width:auto; left:10px; } }
 </style>
 </head>
 <body>
@@ -583,6 +603,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <label>Hava savunma (SAM)<select id="aiSam"><option value="0">Kapalı</option><option value="1">Açık</option></select></label>
       <label>Zorluk<select id="aiSkill"><option value="0">Kolay</option><option value="1">Orta</option><option value="2">Zor</option></select></label>
     </div>
+    <label class="splace">Başlangıç yeri<select id="startPlace"></select></label>
     <h3>Nereden başlamak istersin?</h3>
     <div class="startopts" id="startSeg">
       <button type="button" data-s="hangar"><b>Hangardan</b><small>Taksi yolundan piste git</small></button>
@@ -671,6 +692,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
     </section>
     <section data-tab="a" class="hidden">
       <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Otomatik: telefonda Sinematik, bilgisayarda Komuta</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Otomatik</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
+      <div class="srow"><div class="sl"><b>Köşe haritası</b><small>Uçarken ve gezerken sağ üstte küçük harita</small></div><label class="tgl"><input type="checkbox" id="setMini"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Sürüm</b><small>Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır; gerçek verileri yansıtmaz.</small></div><span id="setVer"></span></div>
     </section>
   </div>
@@ -757,7 +779,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 </div>
 
 <div id="touch" class="touch hidden">
-  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
+  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
   <div class="ttaxi"><button type="button" id="tAuto" class="hidden">OTO TAKSİ</button><button type="button" id="tSkip" class="hidden">PİSTE GEÇ</button></div>
   <div class="tstick" id="tStick"><div class="tknob" id="tKnob"></div></div>
   <div class="tright" id="tRight">
@@ -769,11 +791,18 @@ input[type=range]{ width:100%; accent-color:var(--red); }
   <div class="twpn" id="tWpn"></div>
 </div>
 <div id="wtouch" class="touch hidden">
-  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wWarp">GİT ▸</button></div>
+  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wWarp">HARİTA</button></div>
   <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
   <div class="tright wright"><button type="button" id="wJump" class="tb">ZIPLA</button><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
 </div>
 <div id="fps" class="fps hidden"></div>
+<canvas id="miniMap" class="minimap hidden"></canvas>
+<div id="mapUI" class="mapui hidden">
+  <canvas id="mapCv"></canvas>
+  <div class="mapside ui"><div class="maphead"><b>HARİTA</b><button type="button" class="btn" id="mapClose">✕ Kapat</button></div>
+    <div class="mapsel" id="mapSel"></div><div class="maplist" id="mapList"></div></div>
+  <div class="mapzoom"><button type="button" id="mapZin">+</button><button type="button" id="mapZout">−</button><button type="button" id="mapMe">◎</button></div>
+</div>
 <div id="rotate" class="hidden">Daha rahat oynamak için telefonu yatay çevir</div>
 
 <div id="prep" class="prep hidden">
@@ -787,7 +816,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.52', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.53', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -4208,10 +4237,23 @@ function resetFlight(mode){
   if(mode==='hangar'){ const dd=displays[activeId]; S.pos.set(dd.x,AIRFIELD_Y+CUR.gearOff,HANGAR.z); S.q.identity(); S.speed=0; S.throttle=0; S.gear=true; S.onGround=true; S.taxi=true; S.clearance=false; startTaxi(); }
   else if(mode==='runway'){ S.pos.set(0,AIRFIELD_Y+CUR.gearOff,1150); S.q.identity(); S.speed=0; S.throttle=0; S.gear=true; S.onGround=true; S.taxi=false; S.clearance=true; }
   else{ S.pos.set(0,1100,900); S.q.identity(); S.speed=CUR.airV; S.throttle=0.75; S.gear=false; S.onGround=false; S.taxi=false; S.clearance=true; if(NET.on&&NET.started) netSpawnMe(); }
+  applyStartPlace(mode);
   camQ.copy(S.q); camSnap=true; planeGroup.visible=true;
   ringIdx=0; courseT=null; updateRingVisuals();
 }
 
+
+/* start somewhere other than the main base (map → "Buradan başla"): UAV centre / enemy airfield runways, or in the air above a place */
+function applyStartPlace(mode){
+  const id=SETTINGS.startPlace; if(!id||NET.on) return; const p=placeById(id); if(!p) return;
+  if(p.rw&&p.rw!=='main'&&mode!=='air'){ const z=LZONES.find(function(L){ return L.id===p.rw; }); if(!z) return;
+    S.speed=0; S.throttle=0; S.gear=true; S.onGround=true; S.taxi=false; S.clearance=true; S.auto=false; S.zoneY=z.y;
+    if(p.rw==='uav'){ S.pos.set(UAV.rw.x,z.y+CUR.gearOff,UAV.rw.z1-80); S.q.identity(); }
+    else { S.pos.set(z.x0+80,z.y+CUR.gearOff,(z.z0+z.z1)/2); S.q.setFromAxisAngle(UP,-Math.PI/2); }
+    if(typeof stopTaxi==='function') stopTaxi(); return; }
+  let hi=Math.max(0,terrainH(p.x,p.z)); for(let k=0;k<8;k++){ const a=k/8*6.28; hi=Math.max(hi,terrainH(p.x+Math.cos(a)*700,p.z+Math.sin(a)*700)); }
+  S.pos.set(p.x,Math.max(hi+400,700),p.z+1000); S.q.identity(); S.speed=CUR.airV; S.throttle=0.75; S.gear=false; S.onGround=false; S.taxi=false; S.clearance=true; S.auto=false;
+}
 /* ------------------------------------------------------------------ rings */
 const RING_PTS=[[0,350,-3000],[1800,520,-5200],[4200,700,-5600],[6200,900,-3600],[6400,600,-600],[5000,450,2200],[2400,380,4200],
   [-800,420,5600],[-3800,650,4600],[-6000,1000,2000],[-5600,700,-1800],[-3400,520,-4600],[-1000,420,-1500]];
@@ -5726,6 +5768,134 @@ function ctlBindUI(){
   $('padInv').addEventListener('change',function(e){ SETTINGS.pad=SETTINGS.pad||{}; SETTINGS.pad.invY=e.target.checked; saveSettings(); });
   $('tchLeft').addEventListener('change',function(e){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.left=e.target.checked; saveSettings(); applyTouchOpt(); });
 }
+/* ------------------------------------------------------------------ map: full-screen island map (M), corner minimap, places,
+   teleporting (in flight: above the place; on foot / in the car: on the ground) and choosing where a flight starts. */
+const PLACES=[
+  {id:'base',n:'Ay Yıldız Hava Üssü',k:'air',x:0,z:0,g:[-150,-1700,0],rw:'main'},
+  {id:'uav',n:'İHA ve Test Merkezi',k:'air',x:11300,z:11400,g:[11560,11400,Math.PI/2],rw:'uav'},
+  {id:'naval',n:'Deniz Üssü',k:'navy',x:-1750,z:-3800,g:[-1560,-3330,Math.PI/2]},
+  {id:'land',n:'Kara Üssü',k:'army',x:1150,z:-7600,g:[900,-7290,0]},
+  {id:'range',n:'Atış poligonu',k:'army',x:2700,z:-7660,g:[2160,-7660,-Math.PI/2]},
+  {id:'village',n:'Köy',k:'town',x:-330,z:-2880,g:[-300,-2800,Math.PI]},
+  {id:'hilalkent',n:'Hilalkent',k:'city',x:-8200,z:-7050,g:[-7300,-7000,Math.PI/2]},
+  {id:'anadolukent',n:'Anadolukent',k:'city',x:-1450,z:6300,g:[-600,6100,Math.PI]},
+  {id:'marina',n:'Hilal Marina',k:'sea',x:2350,z:1250,g:[2190,1180,-2.1]},
+  {id:'beach',n:'Kumsal',k:'sea',x:1100,z:2500,g:[1200,2380,2.9]},
+  {id:'bridge',n:'Hilal Köprüsü',k:'site',x:-600,z:4200,g:[-604,3600,Math.PI]},
+  {id:'lake',n:'Gölet',k:'site',x:1700,z:-3750,g:[1440,-3750,Math.PI/2]},
+  {id:'ges',n:'Güneş santrali',k:'site',x:500,z:-3900,g:[500,-3760,Math.PI]},
+  {id:'wind',n:'Rüzgâr santrali',k:'site',x:3700,z:-1100,g:null},
+  {id:'ad',n:'Hava savunma mevzisi',k:'army',x:640,z:-500,g:[600,-470,-0.5]},
+  {id:'ammo',n:'Mühimmat deposu',k:'army',x:-1150,z:-300,g:[-1020,-290,Math.PI/2]},
+  {id:'radar',n:'Radar istasyonu',k:'army',x:5360,z:-2680,g:[5340,-2600,0]},
+  {id:'dam',n:'Hilal Barajı',k:'site',x:-3000,z:12400,g:[-3000,12000,0]},
+  {id:'ski',n:'Kayak merkezi',k:'site',x:4340,z:-5465,g:[4360,-5420,-1.4]},
+  {id:'skitop',n:'Kayak zirvesi',k:'site',x:6700,z:-5050,g:[6700,-5020,2]},
+  {id:'antik',n:'Antik kent',k:'site',x:-6080,z:5720,g:[-6040,5780,Math.PI]},
+  {id:'kale',n:'Kale',k:'site',x:9310,z:8002,g:[9310,8045,Math.PI]},
+  {id:'obs',n:'Rasathane',k:'site',x:10700,z:-10500,g:[10700,-10470,Math.PI]},
+  {id:'oil',n:'Petrol platformu',k:'sea',x:-6500,z:1500,g:null},
+  {id:'owf',n:'Denizde rüzgâr santrali',k:'sea',x:-12700,z:1900,g:null},
+  {id:'kzb',n:'Kızıl Bölge (düşman üssü)',k:'enemy',x:-9600,z:9600,g:null,rw:'enemy'}];
+const MAPV={open:false, from:'play', cx:0, cz:0, scale:0.03, img:null, sel:null, drag:null, mini:null, miniT:0};
+const MAP_W=30000;   /* world span drawn on the base image */
+function placeById(id){ return PLACES.find(function(p){ return p.id===id; }); }
+/* base image: terrain colour by height, generated once */
+function mapImage(){
+  if(MAPV.img) return MAPV.img; const N=640, c=document.createElement('canvas'); c.width=c.height=N; const x=c.getContext('2d'), im=x.createImageData(N,N), d=im.data;
+  for(let j=0;j<N;j++) for(let i=0;i<N;i++){ const wx=-MAP_W/2+(i+0.5)/N*MAP_W, wz=-MAP_W/2+(j+0.5)/N*MAP_W, h=terrainH(wx,wz), o=(j*N+i)*4; let r,g,b;
+    if(h<0){ const t=Math.min(1,-h/45); r=40-18*t; g=110-40*t; b=150-30*t; }
+    else if(h<4){ r=214; g=200; b=150; }
+    else if(inAnyPad(wx,wz,0)&&h<600){ r=150; g=160; b=150; }
+    else if(h<300){ const t=h/300; r=90+40*t; g=140-10*t; b=70+10*t; }
+    else if(h<1050){ const t=(h-300)/750; r=130+30*t; g=128+12*t; b=110+25*t; }
+    else { r=235; g=238; b=242; }
+    d[o]=r; d[o+1]=g; d[o+2]=b; d[o+3]=255; }
+  x.putImageData(im,0,0); MAPV.img=c; return c; }
+function mapToScreen(wx,wz,W,H){ return [W/2+(wx-MAPV.cx)*MAPV.scale, H/2+(wz-MAPV.cz)*MAPV.scale]; }
+function mapToWorld(px,py,W,H){ return [MAPV.cx+(px-W/2)/MAPV.scale, MAPV.cz+(py-H/2)/MAPV.scale]; }
+function playerPos(){ if(state==='walk'||MAPV.from==='walk'){ if(WALK.mode==='car') return [WALK.car.x,WALK.car.z,-WALK.car.h]; return [WALK.pos.x,WALK.pos.z,-WALK.yaw]; }
+  const f=new THREE.Vector3(0,0,-1).applyQuaternion(S.q); return [S.pos.x,S.pos.z,Math.atan2(f.x,-f.z)]; }
+const KCOL={air:'#7fd0ff',navy:'#5aa0ff',army:'#9fd36a',town:'#ffd27a',city:'#ffb25a',sea:'#7ff0e0',site:'#e8e8e8',enemy:'#ff5a4a'};
+/* draw the map (full screen or minimap) into a 2D context */
+function drawMap(x,W,H,mini){
+  x.save(); x.fillStyle='#1a3d55'; x.fillRect(0,0,W,H);
+  const img=mapImage(), a=mapToScreen(-MAP_W/2,-MAP_W/2,W,H), s=MAP_W*MAPV.scale; x.imageSmoothingEnabled=true; x.drawImage(img,a[0],a[1],s,s);
+  const line=function(pts,col,w){ if(!pts||pts.length<2) return; x.strokeStyle=col; x.lineWidth=w; x.beginPath(); pts.forEach(function(p,i){ const q=mapToScreen(p[0],p[1],W,H); if(i) x.lineTo(q[0],q[1]); else x.moveTo(q[0],q[1]); }); x.stroke(); };
+  const roads=[ENV.road].concat(EXTRA_ROADS); roads.forEach(function(r){ line(r,'rgba(60,60,60,0.85)',mini?1.5:2.5); });
+  line([[SOUTH.bx,SOUTH.zN],[SOUTH.bx,SOUTH.zS]],'#d83a2a',mini?2:3.5);
+  /* runways */
+  const rw=function(x0,x1,z0,z1){ const p=mapToScreen(x0,z0,W,H), q=mapToScreen(x1,z1,W,H); x.fillStyle='#30343a'; x.fillRect(p[0],p[1],Math.max(2,q[0]-p[0]),Math.max(2,q[1]-p[1])); };
+  rw(-35,35,-1250,1250); rw(UAV.rw.x-15,UAV.rw.x+15,UAV.rw.z0,UAV.rw.z1); const ep=PADS.find(function(p){ return p.id==='enemy'; }); if(ep) rw(ep.x0+120,ep.x1-120,(ep.z0+ep.z1)/2-20,(ep.z0+ep.z1)/2+20);
+  /* Kızıl Bölge border */
+  const k0=mapToScreen(KZB.x0,KZB.z0,W,H), k1=mapToScreen(KZB.x1,KZB.z1,W,H); x.setLineDash([8,6]); x.strokeStyle='rgba(255,70,60,0.9)'; x.lineWidth=2; x.strokeRect(k0[0],k0[1],k1[0]-k0[0],k1[1]-k0[1]); x.setLineDash([]);
+  if(!mini){ x.fillStyle='rgba(255,90,74,0.95)'; x.font='700 13px "Chakra Petch",system-ui,sans-serif'; x.textAlign='left'; x.fillText('KIZIL BÖLGE',k0[0]+8,k0[1]+18); }
+  /* ships, ground targets, aircraft */
+  if(MARINA.movers) MARINA.movers.forEach(function(m){ const p=mapToScreen(m.g.position.x,m.g.position.z,W,H); x.fillStyle='#ffffff'; x.fillRect(p[0]-1.5,p[1]-1.5,3,3); });
+  if(typeof gtargets!=='undefined') gtargets.forEach(function(o){ if(!o.alive) return; const p=mapToScreen(o.pos.x,o.pos.z,W,H); x.fillStyle=o.type==='sam'?'#ff3a2a':'#ff8a5a'; x.fillRect(p[0]-3,p[1]-3,6,6); });
+  if(typeof ACT!=='undefined') ACT.forEach(function(a){ if(!a.alive||a.isMe) return; const p=mapToScreen(a.pos.x,a.pos.z,W,H); x.fillStyle=a.team==='red'?'#ff4a4a':'#5ab0ff'; x.beginPath(); x.arc(p[0],p[1],3.5,0,6.3); x.fill(); });
+  /* places */
+  PLACES.forEach(function(pl){ const p=mapToScreen(pl.x,pl.z,W,H); if(p[0]<-20||p[0]>W+20||p[1]<-20||p[1]>H+20) return; const sel=MAPV.sel===pl;
+    x.fillStyle=KCOL[pl.k]||'#fff'; x.strokeStyle='#08121c'; x.lineWidth=2; x.beginPath(); x.arc(p[0],p[1],mini?3:(sel?8:5.5),0,6.3); x.fill(); x.stroke();
+    if(!mini&&(MAPV.scale>0.02||pl.k==='air'||pl.k==='city'||pl.k==='navy'||pl.k==='army'&&pl.id==='land'||sel)){ x.font=(sel?'700 14px':'600 12px')+' "Chakra Petch",system-ui,sans-serif'; x.textAlign='left';
+      x.lineWidth=3; x.strokeStyle='rgba(6,14,24,0.85)'; x.strokeText(pl.n,p[0]+9,p[1]+4); x.fillStyle='#fff'; x.fillText(pl.n,p[0]+9,p[1]+4); } });
+  /* player arrow */
+  const me=playerPos(), p=mapToScreen(me[0],me[1],W,H); x.translate(p[0],p[1]); x.rotate(me[2]); x.fillStyle='#ffd23a'; x.strokeStyle='#000'; x.lineWidth=1.5;
+  x.beginPath(); x.moveTo(0,-(mini?7:11)); x.lineTo(mini?5:8,mini?6:9); x.lineTo(0,mini?3:5); x.lineTo(-(mini?5:8),mini?6:9); x.closePath(); x.fill(); x.stroke();
+  x.restore();
+}
+/* ---- full-screen map */
+function openMap(){
+  if(MAPV.open) return; if(state!=='play'&&state!=='walk') return;
+  MAPV.open=true; MAPV.from=state; if(!NET.on) state='map'; const me=playerPos(); MAPV.cx=me[0]; MAPV.cz=me[1]; MAPV.scale=Math.min(window.innerWidth,window.innerHeight)/9000; MAPV.sel=null;
+  $('mapUI').classList.remove('hidden'); mapList(); mapPanel(); mapResize(); mapDraw(); try{ document.exitPointerLock&&document.exitPointerLock(); }catch(e){}
+}
+function closeMap(){ if(!MAPV.open) return; MAPV.open=false; $('mapUI').classList.add('hidden'); if(state==='map') state=MAPV.from; padFireLock=true; $('gl').focus(); }
+function mapResize(){ const c=$('mapCv'), r=c.getBoundingClientRect(), d=Math.min(2,window.devicePixelRatio||1); c.width=Math.round(r.width*d); c.height=Math.round(r.height*d); }
+function mapDraw(){ if(!MAPV.open) return; const c=$('mapCv'), x=c.getContext('2d'), d=c.width/c.getBoundingClientRect().width; x.setTransform(d,0,0,d,0,0); drawMap(x,c.width/d,c.height/d,false); }
+function mapList(){ $('mapList').innerHTML=PLACES.map(function(p){ return '<button type="button" data-id="'+p.id+'"><i style="background:'+(KCOL[p.k]||'#fff')+'"></i>'+p.n+'</button>'; }).join(''); }
+function mapPanel(){ const p=MAPV.sel, el=$('mapSel'); if(!p){ el.innerHTML='<b>Bir yer seç</b><small>Haritada ya da listede bir yere dokun.'+(NET.on?' Çevrimiçi oyunda ışınlanma kapalı.':'')+'</small>'; return; }
+  const fly=MAPV.from==='play', canTp=!NET.on&&(fly||p.g), start=SETTINGS.startPlace===p.id;
+  el.innerHTML='<b>'+p.n+'</b><small>'+(fly?'Işınlanınca bu yerin üstünde, havada devam edersin.':(p.g?'Yürüyerek ya da araçla buraya geçersin.':'Bu yere yalnızca uçarken gidilebilir.'))+'</small>'+
+    (canTp?'<button type="button" class="btn primary" id="mapTp">Işınlan</button>':'')+
+    '<button type="button" class="btn" id="mapStart">'+(start?'✓ Başlangıç yeri':'Buradan başla')+'</button>'; }
+function mapSelect(p){ MAPV.sel=p; mapPanel(); mapDraw(); }
+/* teleport: flying → above the place at a safe height; walking/driving → on the ground */
+function teleportTo(p){
+  if(NET.on||!p) return;
+  if(MAPV.from==='play'){ const top=Math.max(terrainH(p.x,p.z),0); let hi=top; for(let k=0;k<8;k++){ const a=k/8*6.28; hi=Math.max(hi,terrainH(p.x+Math.cos(a)*600,p.z+Math.sin(a)*600)); }
+    S.pos.set(p.x,Math.max(hi+350,600),p.z+900); S.onGround=false; S.taxi=false; S.clearance=true; S.auto=false; S.speed=Math.max(S.speed,CUR.airV); S.sink=0; S.gear=false; if(S.throttle<0.5) S.throttle=0.75;
+    S.q.identity(); camQ.copy(S.q); camSnap=true; toast('📍 '+p.n,'#b8ecff'); }
+  else if(p.g){ const g=p.g, c=WALK.car; if(WALK.mode==='car'){ c.x=g[0]; c.z=g[1]; c.h=g[2]; c.v=0; placeCar(); } else { WALK.pos.set(g[0],groundH(g[0],g[1])+1.7,g[1]); WALK.yaw=g[2]; WALK.air=false; } toast('📍 '+p.n,'#b8ecff'); }
+  closeMap();
+}
+function setStartPlace(p){ SETTINGS.startPlace=p.id==='base'?null:p.id; saveSettings(); toast(p.id==='base'?'Başlangıç yeri: Ay Yıldız Hava Üssü':'Başlangıç yeri: '+p.n+(p.rw?'':' (havada başlarsın)'),'#7dffb0'); mapPanel(); if(typeof refreshStartPlace==='function') refreshStartPlace(); }
+(function(){
+  const cv=$('mapCv'); if(!cv) return; const ptr=new Map(); let pinch=0, moved=0;
+  cv.addEventListener('pointerdown',function(e){ try{ cv.setPointerCapture(e.pointerId); }catch(err){} ptr.set(e.pointerId,{x:e.clientX,y:e.clientY}); moved=0; if(ptr.size===2){ const v=Array.from(ptr.values()); pinch=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y); } });
+  cv.addEventListener('pointermove',function(e){ const p=ptr.get(e.pointerId); if(!p) return; const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY; moved+=Math.abs(dx)+Math.abs(dy);
+    if(ptr.size===1){ MAPV.cx-=dx/MAPV.scale; MAPV.cz-=dy/MAPV.scale; mapDraw(); }
+    else if(ptr.size===2){ const v=Array.from(ptr.values()), d=Math.hypot(v[0].x-v[1].x,v[0].y-v[1].y); if(pinch>0) mapZoom(d/pinch); pinch=d; } });
+  const up=function(e){ if(!ptr.has(e.pointerId)) return; if(ptr.size===1&&moved<6){ const r=cv.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top; let best=null, bd=18;
+      PLACES.forEach(function(p){ const q=mapToScreen(p.x,p.z,r.width,r.height), d=Math.hypot(q[0]-px,q[1]-py); if(d<bd){ bd=d; best=p; } }); mapSelect(best); }
+    ptr.delete(e.pointerId); pinch=0; };
+  cv.addEventListener('pointerup',up); cv.addEventListener('pointercancel',up);
+  cv.addEventListener('wheel',function(e){ e.preventDefault(); mapZoom(Math.exp(-clamp(e.deltaY,-120,120)*0.0015)); },{passive:false});
+  $('mapList').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const p=placeById(b.dataset.id); MAPV.cx=p.x; MAPV.cz=p.z; mapSelect(p); });
+  $('mapSel').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b||!MAPV.sel) return; if(b.id==='mapTp') teleportTo(MAPV.sel); else if(b.id==='mapStart') setStartPlace(MAPV.sel); });
+  $('mapClose').addEventListener('click',closeMap); $('mapZin').addEventListener('click',function(){ mapZoom(1.4); }); $('mapZout').addEventListener('click',function(){ mapZoom(1/1.4); });
+  $('mapMe').addEventListener('click',function(){ const me=playerPos(); MAPV.cx=me[0]; MAPV.cz=me[1]; mapDraw(); });
+  window.addEventListener('keydown',function(e){ if(!MAPV.open) return; if(e.code==='Escape'||isKey(e,'gen','map')){ e.preventDefault(); e.stopImmediatePropagation(); closeMap(); } },true);
+  window.addEventListener('resize',function(){ if(MAPV.open){ mapResize(); mapDraw(); } });
+})();
+function mapZoom(f){ MAPV.scale=clamp(MAPV.scale*f,0.006,0.15); mapDraw(); }
+/* ---- corner minimap (Settings → Interface) */
+function miniStep(dt){
+  const on=!!SETTINGS.minimap&&(state==='play'||state==='walk')&&!MAPV.open, el=$('miniMap'); if(!el) return; el.classList.toggle('hidden',!on); if(!on) return;
+  MAPV.miniT-=dt; if(MAPV.miniT>0) return; MAPV.miniT=0.2;
+  const d=Math.min(2,window.devicePixelRatio||1), W=el.clientWidth||150; if(el.width!==Math.round(W*d)){ el.width=el.height=Math.round(W*d); }
+  const x=el.getContext('2d'), keep=[MAPV.cx,MAPV.cz,MAPV.scale], me=playerPos(); MAPV.cx=me[0]; MAPV.cz=me[1]; MAPV.scale=W/3500;
+  x.setTransform(d,0,0,d,0,0); drawMap(x,W,W,true); MAPV.cx=keep[0]; MAPV.cz=keep[1]; MAPV.scale=keep[2]; }
 /* ------------------------------------------------------------------ input + menu */
 let menuMode='title';
 function showScreen(name){ $('startUI').classList.add('hidden'); ['title','hangarUI','setupUI','pause','missionsUI'].forEach(function(id){ $(id).classList.toggle('hidden',id!==name); }); }
@@ -5862,7 +6032,7 @@ $('acPrev').addEventListener('click',function(){ cycleAircraft(-1); });
 $('acNext').addEventListener('click',function(){ cycleAircraft(1); });
 function startGame(mode){
   if(typeof fxReset==='function') fxReset();
-  if(mode==='walk'){ startWalk(); return; }
+  if(mode==='walk'){ startWalk(); const sp=SETTINGS.startPlace&&placeById(SETTINGS.startPlace); if(sp&&sp.g){ MAPV.from='walk'; teleportTo(sp); } return; }
   walkLeave(); WALK.from='play';
   initAudio(); padFireLock=true; startMode=mode; CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1;
   if(activeId!==selectedId) setAircraft(selectedId);
@@ -5928,6 +6098,12 @@ $('btnToHangar').addEventListener('click',toHangarFromPause);
 $('btnWalk').addEventListener('click',function(){ if(state==='paused') startWalk(); });
 $('gl').addEventListener('click',()=>$('gl').focus());
 
+
+/* start screen: where to start */
+function refreshStartPlace(){ const el=$('startPlace'); if(!el) return; if(!el.dataset.ok){ el.dataset.ok='1'; el.innerHTML=PLACES.map(function(p){ return '<option value="'+p.id+'">'+p.n+(p.rw||p.id==='base'?'':' (havada)')+'</option>'; }).join(''); }
+  el.value=SETTINGS.startPlace||'base'; }
+$('startPlace').addEventListener('change',function(e){ const p=placeById(e.target.value); if(p){ SETTINGS.startPlace=p.id==='base'?null:p.id; saveSettings(); } });
+refreshStartPlace();
 /* ------------------------------------------------------------------ settings / records / photo UI */
 const MODALS=['controls','settings','records','photoResult','netUI'];
 function openModal(id){ $(id).classList.remove('hidden'); }
@@ -5943,7 +6119,7 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); });
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
-  $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
+  $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
   Array.prototype.forEach.call($('setTouch').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===SETTINGS.touch)); });
 }
@@ -5964,6 +6140,7 @@ $('setQ').addEventListener('click',function(e){ const b=e.target.closest('button
 $('setBomb').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.bombAssist=b.dataset.b; saveSettings(); syncSettingsUI(); });
 $('setTouch').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.touch=b.dataset.t; saveSettings(); syncSettingsUI(); });
 $('btnFull').addEventListener('click',function(){ try{ const el=document.documentElement; (el.requestFullscreen||el.webkitRequestFullscreen).call(el); }catch(err){} });
+$('setMini').addEventListener('change',function(e){ SETTINGS.minimap=e.target.checked; saveSettings(); });
 $('setLock').addEventListener('change',function(e){ SETTINGS.lockOn=e.target.checked; saveSettings(); lockTgt=null; lockT=0; });
 $('setInv').addEventListener('change',function(e){ invertY=e.target.checked; SETTINGS.invert=invertY; saveSettings(); });
 $('setRumble').addEventListener('change',function(e){ SETTINGS.rumble=e.target.checked; saveSettings(); });
@@ -6091,7 +6268,7 @@ window.addEventListener('pointerdown',function(e){ if(e.pointerType==='touch') T
   hold('tYawL',function(v){ TOUCH.yawL=v; TOUCH.yaw=(TOUCH.yawR?1:0)-(TOUCH.yawL?1:0); });
   hold('tYawR',function(v){ TOUCH.yawR=v; TOUCH.yaw=(TOUCH.yawR?1:0)-(TOUCH.yawL?1:0); });
   tap('tFlare',function(){ dropFlares(); }); tap('tGear',function(){ toggleGear(); }); tap('tCam',function(){ toggleCam(); });
-  tap('tPause',function(){ pauseGame(); }); tap('tAuto',function(){ toggleAutoTaxi(); }); tap('tSkip',function(){ skipTaxi(); });
+  tap('tPause',function(){ pauseGame(); }); tap('tMap',function(){ openMap(); }); tap('tAuto',function(){ toggleAutoTaxi(); }); tap('tSkip',function(){ skipTaxi(); });
   ['touch'].forEach(function(id){ $(id).addEventListener('contextmenu',function(e){ e.preventDefault(); }); });
 })();
 function updateTouchUI(){
@@ -6964,7 +7141,7 @@ function updateWalkTouch(){
   function sEnd(e){ if(e.pointerId!==sid) return; sid=null; WALK.sx=WALK.sy=0; }
   stick.addEventListener('pointerup',sEnd); stick.addEventListener('pointercancel',sEnd);
   function tap(id,fn){ const el=$(id); el.addEventListener('pointerdown',function(e){ e.preventDefault(); fn(); el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); },130); }); }
-  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',walkWarp);
+  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',function(){ openMap(); });
   const glc=$('gl');
   glc.addEventListener('click',function(){ if(state==='walk'&&!touchWanted()&&glc.requestPointerLock){ try{ glc.requestPointerLock(); }catch(e){} } });
   document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });
@@ -7370,11 +7547,11 @@ function frame(now){
   netStep(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
   placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); updateTaxiVisuals();
-  if(state==='menu') menuCam(dt); else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) walkCam(dt); else cameraUpdate(dt);
+  if(state==='menu') menuCam(dt); else if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')||(state==='map'&&MAPV.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow();
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
   renderFrame(dt);
-  drawHUD(); audioUpdate(); updateTouchUI(); updateWalkTouch();
+  drawHUD(); miniStep(dt); audioUpdate(); updateTouchUI(); updateWalkTouch();
 }
 requestAnimationFrame(frame);
 })();

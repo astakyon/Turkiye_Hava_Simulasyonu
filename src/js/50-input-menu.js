@@ -134,7 +134,7 @@ $('acPrev').addEventListener('click',function(){ cycleAircraft(-1); });
 $('acNext').addEventListener('click',function(){ cycleAircraft(1); });
 function startGame(mode){
   if(typeof fxReset==='function') fxReset();
-  if(mode==='walk'){ startWalk(); return; }
+  if(mode==='walk'){ startWalk(); const sp=SETTINGS.startPlace&&placeById(SETTINGS.startPlace); if(sp&&sp.g){ MAPV.from='walk'; teleportTo(sp); } return; }
   walkLeave(); WALK.from='play';
   initAudio(); padFireLock=true; startMode=mode; CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1;
   if(activeId!==selectedId) setAircraft(selectedId);
@@ -200,3 +200,9 @@ $('btnToHangar').addEventListener('click',toHangarFromPause);
 $('btnWalk').addEventListener('click',function(){ if(state==='paused') startWalk(); });
 $('gl').addEventListener('click',()=>$('gl').focus());
 
+
+/* start screen: where to start */
+function refreshStartPlace(){ const el=$('startPlace'); if(!el) return; if(!el.dataset.ok){ el.dataset.ok='1'; el.innerHTML=PLACES.map(function(p){ return '<option value="'+p.id+'">'+p.n+(p.rw||p.id==='base'?'':' (havada)')+'</option>'; }).join(''); }
+  el.value=SETTINGS.startPlace||'base'; }
+$('startPlace').addEventListener('change',function(e){ const p=placeById(e.target.value); if(p){ SETTINGS.startPlace=p.id==='base'?null:p.id; saveSettings(); } });
+refreshStartPlace();

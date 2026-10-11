@@ -13,7 +13,7 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setFx').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===fxWanted())); });
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
   Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
-  $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
+  $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
   Array.prototype.forEach.call($('setTouch').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===SETTINGS.touch)); });
 }
@@ -34,6 +34,7 @@ $('setQ').addEventListener('click',function(e){ const b=e.target.closest('button
 $('setBomb').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.bombAssist=b.dataset.b; saveSettings(); syncSettingsUI(); });
 $('setTouch').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.touch=b.dataset.t; saveSettings(); syncSettingsUI(); });
 $('btnFull').addEventListener('click',function(){ try{ const el=document.documentElement; (el.requestFullscreen||el.webkitRequestFullscreen).call(el); }catch(err){} });
+$('setMini').addEventListener('change',function(e){ SETTINGS.minimap=e.target.checked; saveSettings(); });
 $('setLock').addEventListener('change',function(e){ SETTINGS.lockOn=e.target.checked; saveSettings(); lockTgt=null; lockT=0; });
 $('setInv').addEventListener('change',function(e){ invertY=e.target.checked; SETTINGS.invert=invertY; saveSettings(); });
 $('setRumble').addEventListener('change',function(e){ SETTINGS.rumble=e.target.checked; saveSettings(); });

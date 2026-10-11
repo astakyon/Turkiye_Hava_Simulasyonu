@@ -1,6 +1,24 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.53 — 2026-10-11
+### Yeni — Harita, ışınlanma ve başlangıç yeri
+- **Harita (M tuşu, telefonda HARİTA düğmesi):**
+  - Tam ekran ada haritası: arazi renkleri, yollar, pistler, Hilal Köprüsü, Kızıl Bölge sınırı.
+  - Senin konumun ve yönün; düşman yer hedefleri (SAM'lar kırmızı), uçaklar ve gemiler.
+  - Sürükle-kaydır, tekerlek / iki parmakla yakınlaştır, "◎" ile kendine dön.
+  - Yan panelde bütün yerlerin listesi.
+  - Tek oyunculu oyunda harita açıkken oyun durur.
+- **Işınlanma:** haritada bir yere dokun → **Işınlan**.
+  - Uçarken: o yerin üstünde, güvenli yükseklikte ve yere doğru uçarak devam edersin.
+  - Yürürken ya da araçtayken: yerde.
+  - Çevrimiçi oyunda kapalı.
+- **Başlangıç yeri:** haritada **Buradan başla** ya da "Uçuşa hazır" ekranındaki **Başlangıç yeri** listesi.
+  - **İHA ve Test Merkezi** ile **Kızıl Bölge hava üssü**: pistten (ya da havadan) başlarsın.
+  - Diğer yerler: o yerin üstünde havada başlarsın. "Üssü gez" ile o yerde yürüyerek başlarsın.
+  - Seçim hatırlanıyor.
+- **Köşe haritası:** Ayarlar → Arayüz → Köşe haritası. Uçarken ve gezerken sağ üstte dönen küçük harita.
+
 ## V1.52 — 2026-10-11
 ### Yeni — Kontrol sistemi
 - **Ayarlar → Kontroller** üç sekme oldu: **Klavye / Fare**, **Gamepad**, **Dokunmatik**.

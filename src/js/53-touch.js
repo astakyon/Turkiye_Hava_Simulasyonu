@@ -34,7 +34,7 @@ window.addEventListener('pointerdown',function(e){ if(e.pointerType==='touch') T
   hold('tYawL',function(v){ TOUCH.yawL=v; TOUCH.yaw=(TOUCH.yawR?1:0)-(TOUCH.yawL?1:0); });
   hold('tYawR',function(v){ TOUCH.yawR=v; TOUCH.yaw=(TOUCH.yawR?1:0)-(TOUCH.yawL?1:0); });
   tap('tFlare',function(){ dropFlares(); }); tap('tGear',function(){ toggleGear(); }); tap('tCam',function(){ toggleCam(); });
-  tap('tPause',function(){ pauseGame(); }); tap('tAuto',function(){ toggleAutoTaxi(); }); tap('tSkip',function(){ skipTaxi(); });
+  tap('tPause',function(){ pauseGame(); }); tap('tMap',function(){ openMap(); }); tap('tAuto',function(){ toggleAutoTaxi(); }); tap('tSkip',function(){ skipTaxi(); });
   ['touch'].forEach(function(id){ $(id).addEventListener('contextmenu',function(e){ e.preventDefault(); }); });
 })();
 function updateTouchUI(){

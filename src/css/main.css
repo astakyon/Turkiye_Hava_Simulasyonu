@@ -436,3 +436,23 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .touch.lefty .tthr{ right:auto; left:max(12px,calc(env(safe-area-inset-left,0px) + 8px)); transform-origin:bottom left; }
 .touch.lefty .tright{ right:auto; left:calc(max(12px,calc(env(safe-area-inset-left,0px) + 8px)) + var(--thw) + 12px); transform-origin:bottom left; }
 #wtouch.lefty .wright{ right:auto; left:max(18px,calc(env(safe-area-inset-left,0px) + 14px)); }
+
+/* map */
+.mapui{ position:fixed; inset:0; z-index:40; background:#0b1a26; display:flex; }
+.mapui.hidden{ display:none; }
+#mapCv{ flex:1; width:100%; height:100%; touch-action:none; cursor:grab; display:block; }
+.mapside{ position:absolute; top:max(10px,env(safe-area-inset-top,0px)); right:max(10px,env(safe-area-inset-right,0px)); bottom:10px; width:min(280px,40vw); display:flex; flex-direction:column; gap:8px; background:rgba(6,14,24,.82); border:1px solid rgba(184,236,255,.25); border-radius:12px; padding:10px; color:#fff; }
+.maphead{ display:flex; justify-content:space-between; align-items:center; letter-spacing:.12em; }
+.mapsel{ display:flex; flex-direction:column; gap:6px; padding:8px; border-radius:8px; background:rgba(255,255,255,.05); }
+.mapsel small{ opacity:.75; font-size:12px; line-height:1.35; }
+.maplist{ overflow:auto; display:flex; flex-direction:column; gap:2px; }
+.maplist button{ text-align:left; background:none; border:0; color:#e8f2f8; padding:5px 6px; border-radius:6px; font:500 13px "Chakra Petch",system-ui,sans-serif; cursor:pointer; display:flex; align-items:center; gap:8px; }
+.maplist button:hover{ background:rgba(184,236,255,.12); }
+.maplist i{ width:9px; height:9px; border-radius:50%; display:inline-block; flex:none; }
+.mapzoom{ position:absolute; left:max(12px,env(safe-area-inset-left,0px)); bottom:14px; display:flex; flex-direction:column; gap:6px; }
+.mapzoom button{ width:42px; height:42px; border-radius:10px; border:1px solid rgba(184,236,255,.4); background:rgba(6,14,24,.8); color:#fff; font-size:20px; }
+.minimap{ position:fixed; left:auto; bottom:auto; inset:auto; right:max(12px,env(safe-area-inset-right,0px)); top:70px; width:150px; height:150px; border-radius:50%; border:2px solid rgba(184,236,255,.55); z-index:3; margin-top:72px; pointer-events:none; box-shadow:0 2px 10px rgba(0,0,0,.4); }
+.minimap.hidden{ display:none; }
+.splace{ display:flex; gap:10px; align-items:center; margin:8px 0 2px; font-size:13px; }
+.splace select{ flex:1; }
+@media (max-width:700px){ .mapside{ top:auto; height:42vh; width:auto; left:10px; } }

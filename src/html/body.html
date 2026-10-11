@@ -125,6 +125,7 @@
       <label>Hava savunma (SAM)<select id="aiSam"><option value="0">Kapalı</option><option value="1">Açık</option></select></label>
       <label>Zorluk<select id="aiSkill"><option value="0">Kolay</option><option value="1">Orta</option><option value="2">Zor</option></select></label>
     </div>
+    <label class="splace">Başlangıç yeri<select id="startPlace"></select></label>
     <h3>Nereden başlamak istersin?</h3>
     <div class="startopts" id="startSeg">
       <button type="button" data-s="hangar"><b>Hangardan</b><small>Taksi yolundan piste git</small></button>
@@ -213,6 +214,7 @@
     </section>
     <section data-tab="a" class="hidden">
       <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Otomatik: telefonda Sinematik, bilgisayarda Komuta</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Otomatik</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
+      <div class="srow"><div class="sl"><b>Köşe haritası</b><small>Uçarken ve gezerken sağ üstte küçük harita</small></div><label class="tgl"><input type="checkbox" id="setMini"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Sürüm</b><small>Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır; gerçek verileri yansıtmaz.</small></div><span id="setVer"></span></div>
     </section>
   </div>
@@ -299,7 +301,7 @@
 </div>
 
 <div id="touch" class="touch hidden">
-  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
+  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
   <div class="ttaxi"><button type="button" id="tAuto" class="hidden">OTO TAKSİ</button><button type="button" id="tSkip" class="hidden">PİSTE GEÇ</button></div>
   <div class="tstick" id="tStick"><div class="tknob" id="tKnob"></div></div>
   <div class="tright" id="tRight">
@@ -311,11 +313,18 @@
   <div class="twpn" id="tWpn"></div>
 </div>
 <div id="wtouch" class="touch hidden">
-  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wWarp">GİT ▸</button></div>
+  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wWarp">HARİTA</button></div>
   <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
   <div class="tright wright"><button type="button" id="wJump" class="tb">ZIPLA</button><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
 </div>
 <div id="fps" class="fps hidden"></div>
+<canvas id="miniMap" class="minimap hidden"></canvas>
+<div id="mapUI" class="mapui hidden">
+  <canvas id="mapCv"></canvas>
+  <div class="mapside ui"><div class="maphead"><b>HARİTA</b><button type="button" class="btn" id="mapClose">✕ Kapat</button></div>
+    <div class="mapsel" id="mapSel"></div><div class="maplist" id="mapList"></div></div>
+  <div class="mapzoom"><button type="button" id="mapZin">+</button><button type="button" id="mapZout">−</button><button type="button" id="mapMe">◎</button></div>
+</div>
 <div id="rotate" class="hidden">Daha rahat oynamak için telefonu yatay çevir</div>
 
 <div id="prep" class="prep hidden">

@@ -13,10 +13,10 @@ function frame(now){
   netStep(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
   placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); updateTaxiVisuals();
-  if(state==='menu') menuCam(dt); else if(state==='walk'||(state==='paused'&&WALK.from==='walk')) walkCam(dt); else cameraUpdate(dt);
+  if(state==='menu') menuCam(dt); else if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')||(state==='map'&&MAPV.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow();
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
   renderFrame(dt);
-  drawHUD(); audioUpdate(); updateTouchUI(); updateWalkTouch();
+  drawHUD(); miniStep(dt); audioUpdate(); updateTouchUI(); updateWalkTouch();
 }
 requestAnimationFrame(frame);

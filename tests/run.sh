@@ -29,3 +29,4 @@ node harness.js /tmp/sim.js enemy.test.js
 node harness.js /tmp/sim.js landmarks.test.js
 node harness.js /tmp/sim.js v151.test.js
 node harness.js /tmp/sim.js controls.test.js
+node harness.js /tmp/sim.js map.test.js
