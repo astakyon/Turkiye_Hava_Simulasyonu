@@ -1,6 +1,22 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.50 — 2026-10-11
+### Yeni — Simge yapılar (Aşama 4 tamamlandı)
+- **Hilal Barajı:** güney dağlarında kemer barajla kapatılmış bir vadi gölü.
+- **Kayak merkezi:** doğu dağlarının karlı zirvesi (≈1860 m).
+  - Etekte otel ve teleferik istasyonu, zirvede üst istasyon.
+  - Direkler üzerinde 2,4 km'lik teleferik ve gidip gelen kabinler, kayak pistleri.
+- **Antik kent:** güney adanın kıyısında amfitiyatro, yarı yıkık tapınak sütunları, devrik sütunlar ve sur kalıntıları.
+- **Kale:** güneydoğudaki adacıkta mazgallı surlar, dört köşe kulesi ve bayraklı burç.
+- **Petrol platformu:** batı denizinde.
+  - Sarı ayaklar, modüller, sondaj kulesi, helikopter pisti.
+  - Yanan bir alev bacası.
+- **Denizde rüzgâr santrali:** adanın batısında, denize oturtulmuş 12 türbin.
+- **Yıldıztepe Rasathanesi:** kuzeydoğu zirvesinde (≈900 m) yarıklı gözlem kubbeleri.
+- **Hızlı geçiş (M / GİT ▸):** Hilal Barajı, Kayak merkezi, Kayak zirvesi, Antik kent, Kale, Rasathane eklendi.
+- Bu sürümle adanın çevre planı (Aşama 4) tamamlandı.
+
 ## V1.49 — 2026-10-11
 ### Yeni — Kızıl Bölge (düşman bölgesi)
 - **Konum:** güney adanın batı yarısı düşman toprağı. Sınırda kırmızı-beyaz direkler var.

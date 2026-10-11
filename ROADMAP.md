@@ -23,7 +23,7 @@
 | 4h | V1.47 | Hilal Köprüsü ve Anadolukent (güney ada) | ✅ |
 | 4i | V1.48 | Güneydoğu ada: İHA ve test merkezi | ✅ |
 | 4j | V1.49 | Kızıl Bölge (düşman üssü ve hedefler, güney adanın batısı) | ✅ |
-| 4k | V1.50 | Baraj, kayak merkezi, antik kent, kale, petrol platformu, deniz RES, rasathane | |
+| 4k | V1.50 | Baraj, kayak merkezi, antik kent, kale, petrol platformu, deniz RES, rasathane | ✅ |
 | 5 | V1.25 | Uçak detayları: fotoğraflara yüksek benzerlik, panel çizgileri, çıkartmalar, ışıklar, takım ve kumanda yüzeyi animasyonu | |
 | 6 | V1.3x | Gerçek silah envanteri, yeni hava araçları; sonra Mavi Kanatlar (deniz) ve kara sistemleri | |
 

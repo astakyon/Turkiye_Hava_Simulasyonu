@@ -23,7 +23,7 @@ CI (`pages.yml`) önce `tools/build.py --check`, sonra testleri çalıştırır;
 | Aralık | İçerik |
 |---|---|
 | 01–05 | çekirdek (sürüm, yardımcılar), görüntüleyici, gökyüzü/ışık, arazi (`PADS` düzleştirilmiş üs alanları, `DECKS` rıhtım/iskele, `groundH`), havalimanı |
-| 06–08 | üs çevresi (çit, nizamiye, köy, orman, fener), **deniz üssü** (`NAVAL`), **kara üssü** (`LAND`: kışla, motorlu birlik, sürüş parkuru, atış poligonu), **Hilalkent** (`TOWN`), **yol trafiği** (`TRAFFIC`, örnekli arabalar), **Hilal Marina**, kumsal, gemi trafiği ve martılar (`MARINA`; döndürülmüş çerçeveli alan: `PADS[].fr`, `frWorld`); ortak yapı araçları `bldg`, `shed`, `baseGate`, `fenceLine` (07) |
+| 06–08 | üs çevresi (çit, nizamiye, köy, orman, fener), **deniz üssü** (`NAVAL`), **kara üssü** (`LAND`: kışla, motorlu birlik, sürüş parkuru, atış poligonu), **Hilalkent** (`TOWN`), **yol trafiği** (`TRAFFIC`, örnekli arabalar), **Hilal Marina**, kumsal, gemi trafiği ve martılar (`MARINA`; döndürülmüş çerçeveli alan: `PADS[].fr`, `frWorld`); kırsal (`RURAL`), askeri tesisler (`MIL`), köprü ve Anadolukent (`SOUTH`), İHA merkezi (`UAV`), Kızıl Bölge (`KZB`), simge yapılar (`LMK`); ortak yapı araçları `bldg`, `shed`, `baseGate`, `fenceLine` (07) |
 | 09–15 | modelleme araçları (`MK`), araç modelleri (kodla), kayıt (`REG`, `AIRCRAFT`), **varlıklar** (GLB yükleme, `buildModel`), **gemi modelleri** (fırkateyn, korvet, TCG Anadolu, denizaltı, karakol botu, römorkör), **kara aracı modelleri** (Altay, Fırtına, Pars, MRAP, askerî kamyon) |
 | 20–23 | hangar bekleme alanı, hangar içleri, taksi, bakım hangarı |
 | 30–35 | uçuş durumu, halkalar, muharebe, yer hedefleri, görevler, tehditler |
