@@ -1,6 +1,21 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.55 — 2026-10-11
+- **Helikopterler:** **T129 ATAK** (dar gövde, kademeli tandem kokpit, burun sensörü, 20 mm top, roket ve füze kanatçıkları) ve **T625 GÖKBEY** (geniş kabin, sürgülü kapı pencereleri, sponsonlu tekerlekler) eklendi.
+- Helikopterler yedi helipadde bekliyor: Hava Üssü (2), İHA Merkezi, Deniz Üssü, Kara Üssü, Anadolukent ve Hilalkent. Hilalkent'e yeni düz helipad alanı açıldı.
+- Gezintide helikoptere yaklaşıp **E** ile bin. Motorlar birkaç saniyede ısınır.
+  - **R/Shift** yüksel, **F/Ctrl** alçal
+  - **WASD** ile cyclic ileri-geri ve yana
+  - **Q/E** ile pedal
+  - **C** ile kokpit veya takip kamerası
+  - **G** ile yerdeyken in
+- Uçuş modeli: rotor diski eğildikçe hızlanır (T129 ~275, T625 ~255 km/sa). Collective tırmanma hızını belirler, bırakınca havada asılı kalır. Yere yakın alçalış yumuşar ve binaların çatısına inilebilir.
+- Sert iniş, suya düşme ve engele çarpma kaza sayılır. Kazada helikopter kendi pistine geri getirilir.
+- HUD'da hız, irtifa, dikey hız ve rotor devri gösterilir; alçalma hızı yüksekse uyarı çıkar. Pal sesi rotor devrine göre değişir.
+- Helikopterdeyken harita ile her yere (petrol platformu dahil) havadan ışınlanılabilir.
+- Gamepad'de heli şeması kullanılır. Dokunmatikte YÜKSEL / ALÇAL / DÖN düğmeleri var; sol çubuk cyclic olarak çalışır.
+
 ## V1.54 — 2026-10-11
 - **Yeni araçlar:** gezinti aracı baştan modellendi. Çıkarılmış gövde profili, eğimli cam evi, LED far/stop şeritleri, ızgara, ayna, tavan rayı, "TR AY YILDIZ" plakası ve 19" jantlarla modern **Ay Yıldız SUV** (beyaz/kırmızı); yüksek şasili, koruma demirli, stepneli, kamuflajlı **Bozkurtlar 4×4**; tepe lambalı **Beni İzle** aracı.
 - **T tuşu (gamepad Y / dokunmatik ARAÇ):** aracı değiştir; seçim hatırlanır.

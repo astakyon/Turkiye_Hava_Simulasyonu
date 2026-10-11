@@ -54,6 +54,7 @@ function startWalk(){
   if(NET.on){ toast('Yürüyüş modu çok oyunculu oyunda kullanılamaz','#ffc24a'); return; }
   initAudio(); aiClear(); clearThreats(); setPrep(false,[],'');
   if(activeId!==selectedId) setAircraft(selectedId);
+  if(HELI.cur){ const H=HELI.cur; HELI.cur=null; if(!H.ground){ H.x=H.home[0]; H.z=H.home[1]; H.h=H.home[2]; H.y=groundH(H.x,H.z); H.ground=true; H.pitch=H.roll=0; heliPlace(H); } }
   buildCar(); WALK.boxes=walkBoxes(); WALK.mode='foot'; WALK.run=false; WALK.camD=1; WALK.cy=0; WALK.fp=false; WALK.hint=8;
   const d=displays[selectedId]; WALK.pos.set(d.x+(d.ox||0)+4,AIRFIELD_Y+1.7,HANGAR.z-22); WALK.yaw=Math.PI+0.25; WALK.pitch=-0.05;
   state='walk'; showScreen(''); $('gl').focus(); planeGroup.visible=false;
@@ -72,7 +73,7 @@ function walkUpdate(dt){
     const sp=(WALK.run||act('foot','run')>0.5)?8.5:4.2, sy=Math.sin(WALK.yaw), cy=Math.cos(WALK.yaw);
     let mx=(-sy*inp.f+cy*inp.r), mz=(-cy*inp.f-sy*inp.r); const m=Math.hypot(mx,mz); if(m>1){ mx/=m; mz/=m; }
     WALK.pos.x+=mx*sp*dt; WALK.pos.z+=mz*sp*dt;
-    pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes());
+    pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes()); pushCircle(WALK.pos,0.35,heliBoxes());
     if(Math.abs(WALK.pos.x)>14500||Math.abs(WALK.pos.z)>14500||groundH(WALK.pos.x,WALK.pos.z)<0.8){ WALK.pos.x-=mx*sp*dt; WALK.pos.z-=mz*sp*dt; }
     const gh=groundH(WALK.pos.x,WALK.pos.z)+1.7;
     if(WALK.jumpQ&&!WALK.air){ WALK.vy=5.4; WALK.air=true; WALK.y=WALK.pos.y; } WALK.jumpQ=false;
@@ -80,9 +81,11 @@ function walkUpdate(dt){
     else { WALK.bob+=m*sp*dt*1.7; WALK.pos.y=gh+Math.sin(WALK.bob)*0.035*Math.min(1,m); }
     /* what can I interact with? */
     WALK.near=null; WALK.nearId=null;
-    const c=WALK.car; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
+    const c=WALK.car, hn=heliNear(WALK.pos); WALK.nearHeli=hn; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
+    else if(hn) WALK.near='heli';
     else { let best=9; AC_ORDER.forEach(function(id){ const d=displays[id]; if(!d||!d.g.visible) return; const dd=Math.hypot(d.x+(d.ox||0)-WALK.pos.x,HANGAR.z+(d.oz||0)-WALK.pos.z); if(dd<best){ best=dd; WALK.nearId=id; } }); if(WALK.nearId) WALK.near='plane'; }
-  } else {
+  } else if(WALK.mode==='heli'){ heliStep(dt); WALK.near=null; }
+  else {
     carStep(dt,inp);
     placeCar(dt); WALK.near='car';
     WALK.cy*=Math.exp(-dt*(Math.abs(WALK.car.v)>2?1.2:0.15));
@@ -123,6 +126,8 @@ function carGear(v){ const t=[0,9,17,25,34,44,99], a=Math.abs(v); let g=1; while
 function carBoxes(){ const c=WALK.car, hw=c.m?c.m.tw/2+0.15:1.0, hl=c.m?c.m.wb/2+0.9:2.35, s=Math.abs(Math.sin(c.h)), co=Math.abs(Math.cos(c.h)), ex=hw*co+hl*s, ez=hl*co+hw*s; return [{x0:c.x-ex*0.8,x1:c.x+ex*0.8,z0:c.z-ez*0.8,z1:c.z+ez*0.8}]; }
 function walkInteract(){
   if(state!=='walk') return;
+  if(WALK.mode==='heli'){ heliExit(); return; }
+  if(WALK.near==='heli'&&WALK.nearHeli){ heliBoard(WALK.nearHeli); return; }
   if(WALK.mode==='car'){ const c=WALK.car; WALK.mode='foot'; c.v=0; WALK.pos.set(c.x-Math.cos(c.h)*(c.m.tw/2+1.3),0,c.z+Math.sin(c.h)*(c.m.tw/2+1.3)); WALK.yaw=c.h; WALK.pitch=0;
     WALK.pos.y=groundH(WALK.pos.x,WALK.pos.z)+1.7; pushCircle(WALK.pos,0.35,WALK.boxes); return; }
   if(WALK.near==='car'){ const c0=WALK.car; WALK.mode='car'; WALK.cy=0; toast(c0.K.n+' — W/S gaz-fren · A/D direksiyon · Space el freni (drift) · Shift turbo · T araç değiştir · C kamera · E in','#b8ecff'); return; }
@@ -130,6 +135,7 @@ function walkInteract(){
 }
 const wE=new THREE.Euler(0,0,0,'YXZ'), wV=new THREE.Vector3(), wV2=new THREE.Vector3();
 function walkCam(dt){
+  if(WALK.mode==='heli'&&HELI.cur){ heliCam(dt); return; }
   if(Math.abs(lastFov-70)>0.05){ camera.fov=70; lastFov=70; camera.updateProjectionMatrix(); }
   if(WALK.mode==='foot'){ camera.position.copy(WALK.pos); wE.set(WALK.pitch,WALK.yaw,0); camera.quaternion.setFromEuler(wE); camera.updateMatrixWorld(); return; }
   const c=WALK.car, m=c.m, gy=c.y==null?groundH(c.x,c.z):c.y, big=c.K&&c.K.mil?1.18:1, sp=Math.abs(c.v);
@@ -147,6 +153,10 @@ function walkCam(dt){
 function drawWalkHUD(){
   const w=HW, h=HH, s=clamp(Math.min(w,h)/760,0.7,1.5), foot=WALK.mode==='foot';
   hx.save(); hx.textAlign='center'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,0.7)'; hx.shadowBlur=4;
+  if(WALK.mode==='heli'&&HELI.cur){ heliHUD(w,h,s);
+    if(WALK.hint>0&&!WALK.tvis){ hx.textAlign='center'; hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.globalAlpha=Math.min(1,WALK.hint); hx.fillStyle='#dfe9f1';
+      hx.fillText('R/Shift yüksel · F/Ctrl alçal · W/S ileri-geri · A/D yana · Q/E dön · C kamera · G in (yerdeyken) · M harita', w/2, h-24*s); hx.globalAlpha=1; }
+    hx.restore(); return; }
   if(foot){ hx.fillStyle='rgba(255,255,255,0.85)'; hx.beginPath(); hx.arc(w/2,h/2,2.2*s,0,Math.PI*2); hx.fill(); }
   hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.textAlign='left'; hx.fillStyle='#b8ecff';
   const top=Math.round(20*s); hx.textAlign=WALK.tvis?'center':'left';
@@ -156,6 +166,7 @@ function drawWalkHUD(){
     hx.fillText('VİTES '+gr+(c.turbo?'  ·  TURBO':'')+(c.slip>3.5?'  ·  DRİFT':''), WALK.tvis?w/2:Math.round(16*s), top+Math.round(56*s)); }
   let msg='';
   if(foot&&WALK.near==='car') msg=(WALK.tvis?'BİN':'E')+' — araca bin';
+  else if(foot&&WALK.near==='heli'&&WALK.nearHeli) msg=(WALK.tvis?'BİN':'E')+' — '+WALK.nearHeli.D.name+' helikopterine bin';
   else if(foot&&WALK.near==='plane'&&WALK.nearId) msg=(WALK.tvis?'UÇAĞA BİN':'E')+' — '+AIRCRAFT[WALK.nearId].name+' ile uç';
   else if(!foot) msg=(WALK.tvis?'İN':'E')+' — araçtan in';
   if(msg){ hx.textAlign='center'; hx.font='700 '+Math.round(16*s)+'px "Chakra Petch",system-ui,sans-serif'; const tw=hx.measureText(msg).width+28*s, y=h*0.72;
@@ -169,6 +180,11 @@ function walkLook(dx,dy){ const s=SETTINGS.sens||1;
   else { WALK.cy-=dx*0.005*s; WALK.pitch=clamp(WALK.pitch-dy*0.004*s,-0.6,0.9); } }
 function walkKey(e){
   if(isKey(e,'gen','pause')||e.code==='Escape'){ walkLeave(); pauseGame(); return; }
+  if(WALK.mode==='heli'){
+    if(isKey(e,'heli','exit')){ heliExit(); return; }
+    if(isKey(e,'gen','camera')){ HELI.fp=!HELI.fp; WALK.pitch=0; WALK.cy=0; return; }
+    if(isKey(e,'gen','map')) openMap(); if(isKey(e,'gen','mute')) toggleMute();
+    if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.code)>=0) e.preventDefault(); return; }
   const foot=WALK.mode==='foot';
   if(foot?isKey(e,'foot','use'):isKey(e,'land','exit')){ walkInteract(); return; }
   if(!foot&&isKey(e,'land','cam')){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
@@ -186,9 +202,9 @@ function updateWalkTouch(){
   if(!vis){ WALK.sx=WALK.sy=0; return; }
   $('wKnob').style.transform='translate('+(WALK.sx*60)+'%,'+(WALK.sy*60)+'%)';
   const foot=WALK.mode==='foot', a=$('wAct');
-  const lbl=!foot?'İN':(WALK.near==='car'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
+  const lbl=!foot?'İN':(WALK.near==='car'||WALK.near==='heli'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
   a.innerHTML=lbl; a.classList.toggle('off',!lbl);
-  $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot); $('wSwap').classList.toggle('hidden',foot);
+  $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); const heli=WALK.mode==='heli'; $('wCam').classList.toggle('hidden',foot); $('wSwap').classList.toggle('hidden',foot||heli); $('wheli').classList.toggle('hidden',!heli);
 }
 (function(){
   const stick=$('wStick'); let sid=null;
@@ -198,7 +214,10 @@ function updateWalkTouch(){
   function sEnd(e){ if(e.pointerId!==sid) return; sid=null; WALK.sx=WALK.sy=0; }
   stick.addEventListener('pointerup',sEnd); stick.addEventListener('pointercancel',sEnd);
   function tap(id,fn){ const el=$(id); el.addEventListener('pointerdown',function(e){ e.preventDefault(); fn(); el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); },130); }); }
-  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',function(){ openMap(); }); tap('wSwap',carSwap);
+  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ if(WALK.mode==='heli') HELI.fp=!HELI.fp; else WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',function(){ openMap(); }); tap('wSwap',carSwap);
+  function hold(id,set){ const el=$(id); const on=function(e){ e.preventDefault(); set(1); el.classList.add('on'); }, off=function(){ set(0); el.classList.remove('on'); };
+    el.addEventListener('pointerdown',on); el.addEventListener('pointerup',off); el.addEventListener('pointercancel',off); el.addEventListener('pointerleave',off); }
+  hold('hUp',function(v){ WALK.tcoll=v; }); hold('hDn',function(v){ WALK.tcoll=-v; }); hold('hYL',function(v){ WALK.tyaw=-v; }); hold('hYR',function(v){ WALK.tyaw=v; });
   const glc=$('gl');
   glc.addEventListener('click',function(){ if(state==='walk'&&!touchWanted()&&glc.requestPointerLock){ try{ glc.requestPointerLock(); }catch(e){} } });
   document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });

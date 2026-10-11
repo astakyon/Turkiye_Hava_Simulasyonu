@@ -456,3 +456,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .splace{ display:flex; gap:10px; align-items:center; margin:8px 0 2px; font-size:13px; }
 .splace select{ flex:1; }
 @media (max-width:700px){ .mapside{ top:auto; height:42vh; width:auto; left:10px; } }
+#wheli{ position:absolute; right:max(18px,calc(env(safe-area-inset-right,0px) + 14px)); bottom:calc(max(18px,env(safe-area-inset-bottom,0px) + 14px) + 96px); display:grid; grid-template-columns:auto auto; gap:10px; pointer-events:auto; }
+#wheli.hidden{ display:none; }
+#wheli .tb{ width:76px; height:52px; font-size:12px; }
+#wtouch.lefty #wheli{ right:auto; left:max(18px,calc(env(safe-area-inset-left,0px) + 14px)); }

@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.54">
+<meta name="game-version" content="V1.55">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -473,6 +473,10 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .splace{ display:flex; gap:10px; align-items:center; margin:8px 0 2px; font-size:13px; }
 .splace select{ flex:1; }
 @media (max-width:700px){ .mapside{ top:auto; height:42vh; width:auto; left:10px; } }
+#wheli{ position:absolute; right:max(18px,calc(env(safe-area-inset-right,0px) + 14px)); bottom:calc(max(18px,env(safe-area-inset-bottom,0px) + 14px) + 96px); display:grid; grid-template-columns:auto auto; gap:10px; pointer-events:auto; }
+#wheli.hidden{ display:none; }
+#wheli .tb{ width:76px; height:52px; font-size:12px; }
+#wtouch.lefty #wheli{ right:auto; left:max(18px,calc(env(safe-area-inset-left,0px) + 14px)); }
 </style>
 </head>
 <body>
@@ -793,6 +797,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <div id="wtouch" class="touch hidden">
   <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wSwap" class="hidden">ARAÇ</button><button type="button" id="wWarp">HARİTA</button></div>
   <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
+  <div id="wheli" class="hidden"><button type="button" id="hYL" class="tb">◀ DÖN</button><button type="button" id="hYR" class="tb">DÖN ▶</button><button type="button" id="hDn" class="tb">ALÇAL</button><button type="button" id="hUp" class="tb">YÜKSEL</button></div>
   <div class="tright wright"><button type="button" id="wJump" class="tb">ZIPLA</button><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
 </div>
 <div id="fps" class="fps hidden"></div>
@@ -816,7 +821,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.54', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.55', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -933,6 +938,7 @@ const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hard:'w'
   {id:'enemy',enemy:true,x0:-10500,x1:-8700,z0:9300,z1:9900,y:132,f:420},
   {id:'uav',x0:10900,x1:11800,z0:10150,z1:12650,y:45,f:360},
   {id:'city',x0:-2700,x1:-200,z0:5950,z1:6650,y:32,f:380},
+  {id:'hpTown',x0:-8240,x1:-8160,z0:-6770,z1:-6695,y:16,f:90},
   {id:'lake',x0:1640,x1:1760,z0:-3810,z1:-3690,y:84,f:210},
   {id:'marina',fr:{cx:2350,cz:1250,a:0.536},x0:-260,x1:40,z0:-290,z1:260,y:2.7,f:300,hard:'e'}];
 const DECKS=[];
@@ -3874,6 +3880,101 @@ function carModel(kind){
 function carBuild(kind){
   const m=carModel(kind); m.body.position.y=0; const b=bakeGroup(m.body); m.g.remove(m.body); b.position.y=m.ride; m.g.add(b); m.body=b; return m;
 }
+/* ------------------------------------------------------------------ helicopters: T129 ATAK (tandem-seat attack) and T625 GÖKBEY (utility).
+   Fuselages are lathe bodies (smooth round sections) squashed to the right width/height; rotors are separate groups for spinning.
+   heliModel(id) -> {g, rotor, trot, disc, tdisc, def}. Forward is -z, origin on the ground under the rotor mast, wheels touch y=0. */
+const HELI_DEF={
+  t129:{name:'T129 ATAK', paint:0x4f5a4b, R:5.95, tr:1.1, blades:4, mastY:3.45, top:76, acc:30, climb:13, yawR:1.25, len:14},
+  t625:{name:'T625 GÖKBEY', paint:0x6c767e, R:6.1, tr:1.15, blades:4, mastY:3.35, top:72, acc:27, climb:11, yawR:1.1, len:13.5}
+};
+const HLM={};
+function heliMats(){
+  if(HLM.dark) return HLM; const L=function(c){ return new THREE.MeshLambertMaterial({color:c}); };
+  Object.assign(HLM,{dark:L(0x23272b), metal:L(0x7c838a), blade:L(0x1d2125), tire:L(0x16181a), white:L(0xeef0f2), red:L(0xc8141c),
+    glass:new THREE.MeshStandardMaterial({color:0x1a2a36, roughness:0.06, metalness:0.75, envMap:ENVMAP, envMapIntensity:1.4, transparent:true, opacity:0.88}),
+    disc:new THREE.MeshBasicMaterial({color:0x111418, transparent:true, opacity:0, depthWrite:false, side:THREE.DoubleSide}),
+    nav:new THREE.MeshBasicMaterial({color:0xff2a1a}), navG:new THREE.MeshBasicMaterial({color:0x22ff66}), strobe:new THREE.MeshBasicMaterial({color:0xffffff})});
+  HLM.nav.userData.glow=4; HLM.navG.userData.glow=4; HLM.strobe.userData.glow=3;
+  return HLM;
+}
+function heliPaint(c){ const k='p'+c; return HLM[k]||(HLM[k]=new THREE.MeshStandardMaterial({color:c, roughness:0.55, metalness:0.25, envMap:ENVMAP, envMapIntensity:0.6})); }
+/* lathe body along z: profile [[r, a]] with a = distance forward (+a -> -z); sx/sy squash width/height */
+function hLathe(prof,sx,sy,mat,seg){
+  const pts=prof.map(function(p){ return new THREE.Vector2(Math.max(0.001,p[0]),p[1]); });
+  const geo=new THREE.LatheGeometry(pts,seg||20); geo.scale(sx,1,sy); geo.rotateX(-Math.PI/2); return new THREE.Mesh(geo,mat);
+}
+function hBox(p,mat,x,y,z,w,h,d){ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat); m.position.set(x,y,z); p.add(m); return m; }
+function hCylZ(p,mat,x,y,z,r0,r1,len,seg){ const g=new THREE.CylinderGeometry(r1,r0,len,seg||14); g.rotateX(Math.PI/2); const m=new THREE.Mesh(g,mat); m.position.set(x,y,z); p.add(m); return m; }   // r0 front (-z), r1 back
+function hWheel(p,x,y,z,r,w){ const M=heliMats(), t=new THREE.Mesh(new THREE.CylinderGeometry(r,r,w,14),M.tire); t.rotation.z=Math.PI/2; t.position.set(x,y,z); p.add(t);
+  const h=new THREE.Mesh(new THREE.CylinderGeometry(r*0.5,r*0.5,w+0.02,10),M.metal); h.rotation.z=Math.PI/2; h.position.set(x,y,z); p.add(h); }
+function hRoundel(p,x,y,z,r,side){ const M=heliMats(), a=new THREE.Mesh(new THREE.CircleGeometry(r,20),M.red), b=new THREE.Mesh(new THREE.CircleGeometry(r*0.55,20),M.white);
+  [a,b].forEach(function(m,i){ m.position.set(x+side*(0.003+i*0.003),y,z); m.rotation.y=side*Math.PI/2; p.add(m); }); }
+function heliRotor(R,n,chord,hubR){
+  const M=heliMats(), g=new THREE.Group();
+  for(let i=0;i<n;i++){ const b=new THREE.Group(); b.rotation.y=i*Math.PI*2/n; g.add(b);
+    const bl=hBox(b,M.blade,0,0,-R/2-hubR*0.6,chord,0.06,R-hubR*1.2); bl.rotation.z=0.06; hBox(b,M.white,0,0.002,-R+0.35,chord+0.01,0.065,0.5); }
+  const hub=new THREE.Mesh(new THREE.CylinderGeometry(hubR,hubR*1.2,0.35,12),M.metal); g.add(hub);
+  const cap=new THREE.Mesh(new THREE.SphereGeometry(hubR*0.8,12,8,0,Math.PI*2,0,Math.PI/2),M.dark); cap.position.y=0.17; g.add(cap);
+  return g;
+}
+function heliModel(id){
+  const D=HELI_DEF[id], M=heliMats(), P=heliPaint(D.paint), g=new THREE.Group(), body=new THREE.Group(); g.add(body);
+  if(id==='t129'){
+    /* narrow fuselage, tandem stepped canopy (gunner front, pilot behind and higher) */
+    const pod=hLathe([[0,-2.6],[0.5,-2.5],[0.68,-1.2],[0.74,0.4],[0.72,2.2],[0.62,3.6],[0.48,4.7],[0.3,5.5],[0.12,5.85],[0,5.9]],0.72,1.28,P,22); pod.position.set(0,1.5,0); body.add(pod);
+    const fair=hLathe([[0,-1.6],[0.42,-1.3],[0.55,0],[0.5,1.4],[0.3,2.1],[0,2.3]],1.25,0.75,P); fair.position.set(0,2.35,0.2); body.add(fair);     // engine/gearbox fairing
+    [-1,1].forEach(function(s){ const n=hLathe([[0,-1.4],[0.24,-1.3],[0.33,-0.4],[0.33,0.7],[0.28,1.2],[0,1.3]],1,1.05,P,14); n.position.set(s*0.62,2.35,0.6); body.add(n);
+      const ex=hCylZ(body,M.dark,s*0.86,2.45,1.9,0.18,0.22,0.6,10); ex.rotation.y=s*0.5; });
+    const c1=new THREE.Mesh(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI*0.5),M.glass); c1.scale.set(0.5,0.62,1.05); c1.position.set(0,2.02,-3.25); body.add(c1);
+    const c2=new THREE.Mesh(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI*0.5),M.glass); c2.scale.set(0.52,0.7,1.05); c2.position.set(0,2.2,-1.85); body.add(c2);
+    /* nose sensor ball, chin turret with 20 mm cannon */
+    const sb=new THREE.Mesh(new THREE.SphereGeometry(0.34,14,10),M.dark); sb.position.set(0,1.42,-5.55); body.add(sb);
+    const sw=new THREE.Mesh(new THREE.CircleGeometry(0.16,12),M.glass); sw.position.set(0,1.42,-5.9); sw.rotation.y=Math.PI; body.add(sw);
+    const tu=new THREE.Mesh(new THREE.SphereGeometry(0.3,12,8),M.dark); tu.position.set(0,0.88,-4.3); body.add(tu); hCylZ(body,M.dark,0,0.84,-5.1,0.05,0.07,1.5,8);
+    /* stub wings with rocket pods (inner) and 4-round missile racks (outer) */
+    [-1,1].forEach(function(s){ const w=hBox(body,P,s*1.45,1.45,0.05,1.9,0.12,1.05); w.rotation.z=-s*0.06;
+      hBox(body,M.dark,s*1.15,1.2,0.05,0.12,0.35,0.6); hCylZ(body,M.dark,s*1.15,0.92,0.05,0.24,0.24,1.5,12); hCylZ(body,M.metal,s*1.15,0.92,-0.71,0.24,0.22,0.03,12);
+      hBox(body,M.dark,s*2.05,1.18,0.05,0.12,0.3,0.6); [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(q){ hCylZ(body,M.metal,s*2.05+q[0]*0.13,0.92+q[1]*0.13,0.05,0.09,0.09,1.6,8); });
+      hBox(body,M.dark,s*2.38,1.42,0.05,0.04,0.3,0.6); });
+    /* tail boom, fin with tail rotor on the left, stabiliser, tail wheel */
+    hCylZ(body,P,0,1.85,4.6,0.48,0.2,4.6,14);
+    { const sh=new THREE.Shape(); sh.moveTo(0,0); sh.lineTo(1.0,0); sh.lineTo(1.6,1.75); sh.lineTo(1.05,1.8); sh.lineTo(0.2,0.5); sh.lineTo(-0.1,0.25);
+      const fg=new THREE.ExtrudeGeometry(sh,{depth:0.14,bevelEnabled:false}); fg.translate(0,0,-0.07); const fin=new THREE.Mesh(fg,P); fin.rotation.y=-Math.PI/2; fin.position.set(0,1.85,6.4); body.add(fin); }
+    hBox(body,P,0,1.92,6.0,2.3,0.08,0.55); [-1,1].forEach(function(s){ hBox(body,P,s*1.15,1.92,6.0,0.05,0.4,0.5); });
+    hBox(body,P,0,1.3,6.9,0.1,0.8,0.4); hWheel(body,0,0.17,7.0,0.17,0.12); hBox(body,M.dark,0,0.6,6.95,0.06,0.9,0.08);
+    hRoundel(body,0.31,1.9,4.0,0.22,1); hRoundel(body,-0.31,1.9,4.0,0.22,-1);
+    /* main gear (fixed, trailing arm) */
+    [-1,1].forEach(function(s){ hBox(body,M.dark,s*0.75,0.6,-1.4,0.9,0.08,0.12).rotation.z=s*0.5; hWheel(body,s*1.12,0.3,-1.4,0.3,0.2); });
+    /* nav lights */
+    hBox(body,M.nav,-2.42,1.45,0.05,0.06,0.06,0.1); hBox(body,M.navG,2.42,1.45,0.05,0.06,0.06,0.1); hBox(body,M.strobe,0,3.6,7.6,0.08,0.08,0.08);
+  } else {
+    /* T625: roomy cabin, smooth nose with a big wrap-around windscreen, sponsons with the main wheels */
+    const pod=hLathe([[0,-3.2],[0.55,-3.05],[0.9,-2.0],[1.0,-0.6],[1.02,1.0],[0.98,2.4],[0.82,3.35],[0.6,4.0],[0.32,4.4],[0,4.55]],0.95,0.98,P,24); pod.position.set(0,1.45,0); body.add(pod);
+    const ws=new THREE.Mesh(new THREE.SphereGeometry(1,22,12,0,Math.PI*2,0,Math.PI*0.42),M.glass); ws.scale.set(0.9,0.72,1.25); ws.position.set(0,1.6,-2.95); body.add(ws);
+    const top=hLathe([[0,-2.2],[0.45,-1.9],[0.6,-0.6],[0.6,1.2],[0.45,2.2],[0,2.5]],1.2,0.62,P,18); top.position.set(0,2.42,0.4); body.add(top);
+    [-1,1].forEach(function(s){ const ex=hCylZ(body,M.dark,s*0.62,2.55,2.6,0.16,0.2,0.6,10); ex.rotation.y=s*0.45;
+      [-1.55,-0.35,0.75].forEach(function(z,i){ hBox(body,M.glass,s*0.985,1.85,z,0.03,0.55,i===0?0.7:0.85); });
+      hBox(body,M.dark,s*0.99,2.25,-0.1,0.02,0.04,2.5); hBox(body,M.dark,s*0.995,1.3,0.2,0.02,1.25,0.03); hBox(body,M.dark,s*0.995,1.3,-1.0,0.02,1.25,0.03);
+      const sp=hLathe([[0,-1.0],[0.22,-0.85],[0.3,0],[0.26,0.8],[0,1.0]],1,0.9,P,12); sp.position.set(s*1.05,0.72,0.6); body.add(sp);
+      hWheel(body,s*1.12,0.3,0.7,0.3,0.2); hRoundel(body,s*0.96,1.6,2.6,0.25,s); });
+    hWheel(body,0,0.22,-2.6,0.22,0.16); hBox(body,M.dark,0,0.5,-2.6,0.08,0.5,0.08);
+    hCylZ(body,P,0,1.9,5.8,0.55,0.22,5.6,14);
+    { const sh=new THREE.Shape(); sh.moveTo(0,0); sh.lineTo(1.1,0); sh.lineTo(1.7,1.9); sh.lineTo(1.1,1.95); sh.lineTo(0.15,0.55); sh.lineTo(-0.1,0.25);
+      const fg=new THREE.ExtrudeGeometry(sh,{depth:0.16,bevelEnabled:false}); fg.translate(0,0,-0.08); const fin=new THREE.Mesh(fg,P); fin.rotation.y=-Math.PI/2; fin.position.set(0,1.95,7.9); body.add(fin); }
+    hBox(body,P,0,1.95,7.4,2.6,0.08,0.6); [-1,1].forEach(function(s){ hBox(body,P,s*1.3,1.95,7.4,0.05,0.45,0.55); });
+    hBox(body,M.red,0,1.92,8.62,0.1,0.25,0.05);
+    hBox(body,M.nav,-1.05,1.0,0.6,0.06,0.06,0.1); hBox(body,M.navG,1.05,1.0,0.6,0.06,0.06,0.1); hBox(body,M.strobe,0,3.75,9.1,0.08,0.08,0.08);
+  }
+  /* main rotor (with a faint blur disc that fades in as the rotor spins up), tail rotor on the left of the fin */
+  hCylZ(body,M.metal,0,D.mastY-0.3,id==='t129'?0.2:0.4,0.1,0.1,0.01); { const m=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.16,0.7,10),M.metal); m.position.set(0,D.mastY-0.3,id==='t129'?0.2:0.4); body.add(m); }
+  const rotor=heliRotor(D.R,D.blades,0.5,0.35); rotor.position.set(0,D.mastY,id==='t129'?0.2:0.4); g.add(rotor);
+  const dm=M.disc.clone(), disc=new THREE.Mesh(new THREE.CircleGeometry(D.R,40),dm); disc.rotation.x=-Math.PI/2; disc.position.copy(rotor.position); disc.position.y+=0.02; g.add(disc);
+  const tz=id==='t129'?7.65:9.15, ty=id==='t129'?3.05:3.25, trot=new THREE.Group(); trot.position.set(-0.18,ty,tz); g.add(trot);
+  const tr=heliRotor(D.tr,4,0.2,0.1); tr.rotation.z=Math.PI/2; trot.add(tr);
+  const tdisc=new THREE.Mesh(new THREE.CircleGeometry(D.tr,24),dm); tdisc.rotation.y=Math.PI/2; tdisc.position.set(-0.22,ty,tz); g.add(tdisc);
+  return {g:g, body:body, rotor:rotor, trot:trot, disc:disc, tdisc:tdisc, def:D, id:id};
+}
+function heliBuild(id){ const m=heliModel(id); const b=bakeGroup(m.body); m.g.remove(m.body); m.g.add(b); m.body=b; return m; }
 /* ------------------------------------------------------------------ hangar waiting area (all aircraft parked, camera flies to the selected one) */
 const HANGAR={cx:-278, z:900, step:36};
 const TAXI_PT=new THREE.Vector3(0,AIRFIELD_Y+6,HANGAR.z-20);
@@ -5103,6 +5204,8 @@ function initAudio(){
 }
 function audioUpdate(){
   if(!AC||!eng) return;
+  heliAudio(AC.currentTime,state==='walk'&&WALK.mode==='heli'&&!muted);
+  if(state==='walk'&&WALK.mode==='heli'){ eng.g.gain.setTargetAtTime(0,AC.currentTime,0.1); eng.og.gain.setTargetAtTime(0,AC.currentTime,0.1); return; }
   if(state==='walk'&&WALK.mode==='car'&&WALK.car.K){ const c=WALK.car, t=AC.currentTime, on=!muted, gr=carGear(c.v), rpm=Math.abs(c.v)<0.3?0.16+(c.thr||0)*0.5:gr[1], th=c.thr||0, mil=c.K.mil;
     if(eng.osc.type!=='sawtooth') eng.osc.type='sawtooth';
     eng.osc.frequency.setTargetAtTime((mil?32:40)+rpm*(mil?85:120)+(c.turbo?18:0),t,0.05);
@@ -5946,7 +6049,7 @@ function mapImage(){
   x.putImageData(im,0,0); MAPV.img=c; return c; }
 function mapToScreen(wx,wz,W,H){ return [W/2+(wx-MAPV.cx)*MAPV.scale, H/2+(wz-MAPV.cz)*MAPV.scale]; }
 function mapToWorld(px,py,W,H){ return [MAPV.cx+(px-W/2)/MAPV.scale, MAPV.cz+(py-H/2)/MAPV.scale]; }
-function playerPos(){ if(state==='walk'||MAPV.from==='walk'){ if(WALK.mode==='car') return [WALK.car.x,WALK.car.z,-WALK.car.h]; return [WALK.pos.x,WALK.pos.z,-WALK.yaw]; }
+function playerPos(){ if(state==='walk'||MAPV.from==='walk'){ if(WALK.mode==='car') return [WALK.car.x,WALK.car.z,-WALK.car.h]; if(WALK.mode==='heli'&&HELI.cur) return [HELI.cur.x,HELI.cur.z,-HELI.cur.h]; return [WALK.pos.x,WALK.pos.z,-WALK.yaw]; }
   const f=new THREE.Vector3(0,0,-1).applyQuaternion(S.q); return [S.pos.x,S.pos.z,Math.atan2(f.x,-f.z)]; }
 const KCOL={air:'#7fd0ff',navy:'#5aa0ff',army:'#9fd36a',town:'#ffd27a',city:'#ffb25a',sea:'#7ff0e0',site:'#e8e8e8',enemy:'#ff5a4a'};
 /* draw the map (full screen or minimap) into a 2D context */
@@ -5987,7 +6090,7 @@ function mapResize(){ const c=$('mapCv'), r=c.getBoundingClientRect(), d=Math.mi
 function mapDraw(){ if(!MAPV.open) return; const c=$('mapCv'), x=c.getContext('2d'), d=c.width/c.getBoundingClientRect().width; x.setTransform(d,0,0,d,0,0); drawMap(x,c.width/d,c.height/d,false); }
 function mapList(){ $('mapList').innerHTML=PLACES.map(function(p){ return '<button type="button" data-id="'+p.id+'"><i style="background:'+(KCOL[p.k]||'#fff')+'"></i>'+p.n+'</button>'; }).join(''); }
 function mapPanel(){ const p=MAPV.sel, el=$('mapSel'); if(!p){ el.innerHTML='<b>Bir yer seç</b><small>Haritada ya da listede bir yere dokun.'+(NET.on?' Çevrimiçi oyunda ışınlanma kapalı.':'')+'</small>'; return; }
-  const fly=MAPV.from==='play', canTp=!NET.on&&(fly||p.g), start=SETTINGS.startPlace===p.id;
+  const fly=MAPV.from==='play'||(MAPV.from==='walk'&&WALK.mode==='heli'), canTp=!NET.on&&(fly||p.g), start=SETTINGS.startPlace===p.id;
   el.innerHTML='<b>'+p.n+'</b><small>'+(fly?'Işınlanınca bu yerin üstünde, havada devam edersin.':(p.g?'Yürüyerek ya da araçla buraya geçersin.':'Bu yere yalnızca uçarken gidilebilir.'))+'</small>'+
     (canTp?'<button type="button" class="btn primary" id="mapTp">Işınlan</button>':'')+
     '<button type="button" class="btn" id="mapStart">'+(start?'✓ Başlangıç yeri':'Buradan başla')+'</button>'; }
@@ -5998,6 +6101,7 @@ function teleportTo(p){
   if(MAPV.from==='play'){ const top=Math.max(terrainH(p.x,p.z),0); let hi=top; for(let k=0;k<8;k++){ const a=k/8*6.28; hi=Math.max(hi,terrainH(p.x+Math.cos(a)*600,p.z+Math.sin(a)*600)); }
     S.pos.set(p.x,Math.max(hi+350,600),p.z+900); S.onGround=false; S.taxi=false; S.clearance=true; S.auto=false; S.speed=Math.max(S.speed,CUR.airV); S.sink=0; S.gear=false; if(S.throttle<0.5) S.throttle=0.75;
     S.q.identity(); camQ.copy(S.q); camSnap=true; toast('📍 '+p.n,'#b8ecff'); }
+  else if(WALK.mode==='heli'&&HELI.cur){ heliTeleport(p); toast('📍 '+p.n,'#b8ecff'); }
   else if(p.g){ const g=p.g, c=WALK.car; if(WALK.mode==='car'){ c.x=g[0]; c.z=g[1]; c.h=g[2]; c.v=0; placeCar(); } else { WALK.pos.set(g[0],groundH(g[0],g[1])+1.7,g[1]); WALK.yaw=g[2]; WALK.air=false; } toast('📍 '+p.n,'#b8ecff'); }
   closeMap();
 }
@@ -6348,11 +6452,12 @@ function pollPad(){
   const P=function(s,a){ return padEdge(s,a); };
   const E={weapon:P('air','weapon'),flares:P('air','flares'),gear:P('air','gear'),skip:P('air','skipTaxi'),next:P('air','nextWpn'),lock:P('air','lock'),tgt:P('air','nextTarget'),auto:P('air','autoTaxi'),
     pause:P('gen','pause'),cam:P('gen','camera'),inv:P('gen','invert'),photo:P('gen','photo'),map:P('gen','map'),mute:P('gen','mute'),view:P('gen','resetView'),
-    use:P('foot','use'),jump:P('foot','jump'),runT:P('foot','runToggle'),exit:P('land','exit'),ccam:P('land','cam'),swap:P('land','swap')};
+    use:P('foot','use'),jump:P('foot','jump'),runT:P('foot','runToggle'),exit:P('land','exit'),ccam:P('land','cam'),swap:P('land','swap'),hexit:P('heli','exit')};
   if(state==='play'){ if(E.weapon) fireWeapon(); if(E.flares) dropFlares(); if(E.pause) pauseGame(); if(E.gear) toggleGear(); if(E.cam) toggleCam(); if(E.skip&&S.onGround&&S.taxi&&!S.clearance) skipTaxi(); if(E.inv) toggleInvert();
     if(E.next) cycleWeapon(1); if(E.lock) toggleLock(); if(E.tgt) cycleLock(); if(E.auto) toggleAutoTaxi(); if(E.photo) enterPhoto(); if(E.mute) toggleMute(); if(E.view){ CAMU.yaw=0; CAMU.pitch=0; CAMU.zoom=1; } if(E.map&&typeof openMap==='function') openMap(); }
   else if(state==='walk'){ if(E.pause){ walkLeave(); pauseGame(); }
-    if(WALK.mode==='foot'){ if(E.use) walkInteract(); if(E.jump) WALK.jumpQ=true; if(E.runT) WALK.run=!WALK.run; }
+    if(WALK.mode==='heli'){ if(E.hexit) heliExit(); if(E.cam){ HELI.fp=!HELI.fp; WALK.pitch=0; } if(E.map) openMap(); }
+    else if(WALK.mode==='foot'){ if(E.use) walkInteract(); if(E.jump) WALK.jumpQ=true; if(E.runT) WALK.run=!WALK.run; }
     else { if(E.exit) walkInteract(); if(E.ccam){ WALK.fp=!WALK.fp; WALK.pitch=0; } if(E.swap) carSwap(); }
     const lx=pad('foot','lookR')-pad('foot','lookL'), ly=pad('foot','lookD')-pad('foot','lookU'); if(lx||ly) walkLook(lx*9,ly*7); }
   PAD.pitch=pad('air','noseUp')-pad('air','noseDown');
@@ -7180,6 +7285,7 @@ function startWalk(){
   if(NET.on){ toast('Yürüyüş modu çok oyunculu oyunda kullanılamaz','#ffc24a'); return; }
   initAudio(); aiClear(); clearThreats(); setPrep(false,[],'');
   if(activeId!==selectedId) setAircraft(selectedId);
+  if(HELI.cur){ const H=HELI.cur; HELI.cur=null; if(!H.ground){ H.x=H.home[0]; H.z=H.home[1]; H.h=H.home[2]; H.y=groundH(H.x,H.z); H.ground=true; H.pitch=H.roll=0; heliPlace(H); } }
   buildCar(); WALK.boxes=walkBoxes(); WALK.mode='foot'; WALK.run=false; WALK.camD=1; WALK.cy=0; WALK.fp=false; WALK.hint=8;
   const d=displays[selectedId]; WALK.pos.set(d.x+(d.ox||0)+4,AIRFIELD_Y+1.7,HANGAR.z-22); WALK.yaw=Math.PI+0.25; WALK.pitch=-0.05;
   state='walk'; showScreen(''); $('gl').focus(); planeGroup.visible=false;
@@ -7198,7 +7304,7 @@ function walkUpdate(dt){
     const sp=(WALK.run||act('foot','run')>0.5)?8.5:4.2, sy=Math.sin(WALK.yaw), cy=Math.cos(WALK.yaw);
     let mx=(-sy*inp.f+cy*inp.r), mz=(-cy*inp.f-sy*inp.r); const m=Math.hypot(mx,mz); if(m>1){ mx/=m; mz/=m; }
     WALK.pos.x+=mx*sp*dt; WALK.pos.z+=mz*sp*dt;
-    pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes());
+    pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes()); pushCircle(WALK.pos,0.35,heliBoxes());
     if(Math.abs(WALK.pos.x)>14500||Math.abs(WALK.pos.z)>14500||groundH(WALK.pos.x,WALK.pos.z)<0.8){ WALK.pos.x-=mx*sp*dt; WALK.pos.z-=mz*sp*dt; }
     const gh=groundH(WALK.pos.x,WALK.pos.z)+1.7;
     if(WALK.jumpQ&&!WALK.air){ WALK.vy=5.4; WALK.air=true; WALK.y=WALK.pos.y; } WALK.jumpQ=false;
@@ -7206,9 +7312,11 @@ function walkUpdate(dt){
     else { WALK.bob+=m*sp*dt*1.7; WALK.pos.y=gh+Math.sin(WALK.bob)*0.035*Math.min(1,m); }
     /* what can I interact with? */
     WALK.near=null; WALK.nearId=null;
-    const c=WALK.car; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
+    const c=WALK.car, hn=heliNear(WALK.pos); WALK.nearHeli=hn; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
+    else if(hn) WALK.near='heli';
     else { let best=9; AC_ORDER.forEach(function(id){ const d=displays[id]; if(!d||!d.g.visible) return; const dd=Math.hypot(d.x+(d.ox||0)-WALK.pos.x,HANGAR.z+(d.oz||0)-WALK.pos.z); if(dd<best){ best=dd; WALK.nearId=id; } }); if(WALK.nearId) WALK.near='plane'; }
-  } else {
+  } else if(WALK.mode==='heli'){ heliStep(dt); WALK.near=null; }
+  else {
     carStep(dt,inp);
     placeCar(dt); WALK.near='car';
     WALK.cy*=Math.exp(-dt*(Math.abs(WALK.car.v)>2?1.2:0.15));
@@ -7249,6 +7357,8 @@ function carGear(v){ const t=[0,9,17,25,34,44,99], a=Math.abs(v); let g=1; while
 function carBoxes(){ const c=WALK.car, hw=c.m?c.m.tw/2+0.15:1.0, hl=c.m?c.m.wb/2+0.9:2.35, s=Math.abs(Math.sin(c.h)), co=Math.abs(Math.cos(c.h)), ex=hw*co+hl*s, ez=hl*co+hw*s; return [{x0:c.x-ex*0.8,x1:c.x+ex*0.8,z0:c.z-ez*0.8,z1:c.z+ez*0.8}]; }
 function walkInteract(){
   if(state!=='walk') return;
+  if(WALK.mode==='heli'){ heliExit(); return; }
+  if(WALK.near==='heli'&&WALK.nearHeli){ heliBoard(WALK.nearHeli); return; }
   if(WALK.mode==='car'){ const c=WALK.car; WALK.mode='foot'; c.v=0; WALK.pos.set(c.x-Math.cos(c.h)*(c.m.tw/2+1.3),0,c.z+Math.sin(c.h)*(c.m.tw/2+1.3)); WALK.yaw=c.h; WALK.pitch=0;
     WALK.pos.y=groundH(WALK.pos.x,WALK.pos.z)+1.7; pushCircle(WALK.pos,0.35,WALK.boxes); return; }
   if(WALK.near==='car'){ const c0=WALK.car; WALK.mode='car'; WALK.cy=0; toast(c0.K.n+' — W/S gaz-fren · A/D direksiyon · Space el freni (drift) · Shift turbo · T araç değiştir · C kamera · E in','#b8ecff'); return; }
@@ -7256,6 +7366,7 @@ function walkInteract(){
 }
 const wE=new THREE.Euler(0,0,0,'YXZ'), wV=new THREE.Vector3(), wV2=new THREE.Vector3();
 function walkCam(dt){
+  if(WALK.mode==='heli'&&HELI.cur){ heliCam(dt); return; }
   if(Math.abs(lastFov-70)>0.05){ camera.fov=70; lastFov=70; camera.updateProjectionMatrix(); }
   if(WALK.mode==='foot'){ camera.position.copy(WALK.pos); wE.set(WALK.pitch,WALK.yaw,0); camera.quaternion.setFromEuler(wE); camera.updateMatrixWorld(); return; }
   const c=WALK.car, m=c.m, gy=c.y==null?groundH(c.x,c.z):c.y, big=c.K&&c.K.mil?1.18:1, sp=Math.abs(c.v);
@@ -7273,6 +7384,10 @@ function walkCam(dt){
 function drawWalkHUD(){
   const w=HW, h=HH, s=clamp(Math.min(w,h)/760,0.7,1.5), foot=WALK.mode==='foot';
   hx.save(); hx.textAlign='center'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,0.7)'; hx.shadowBlur=4;
+  if(WALK.mode==='heli'&&HELI.cur){ heliHUD(w,h,s);
+    if(WALK.hint>0&&!WALK.tvis){ hx.textAlign='center'; hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.globalAlpha=Math.min(1,WALK.hint); hx.fillStyle='#dfe9f1';
+      hx.fillText('R/Shift yüksel · F/Ctrl alçal · W/S ileri-geri · A/D yana · Q/E dön · C kamera · G in (yerdeyken) · M harita', w/2, h-24*s); hx.globalAlpha=1; }
+    hx.restore(); return; }
   if(foot){ hx.fillStyle='rgba(255,255,255,0.85)'; hx.beginPath(); hx.arc(w/2,h/2,2.2*s,0,Math.PI*2); hx.fill(); }
   hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.textAlign='left'; hx.fillStyle='#b8ecff';
   const top=Math.round(20*s); hx.textAlign=WALK.tvis?'center':'left';
@@ -7282,6 +7397,7 @@ function drawWalkHUD(){
     hx.fillText('VİTES '+gr+(c.turbo?'  ·  TURBO':'')+(c.slip>3.5?'  ·  DRİFT':''), WALK.tvis?w/2:Math.round(16*s), top+Math.round(56*s)); }
   let msg='';
   if(foot&&WALK.near==='car') msg=(WALK.tvis?'BİN':'E')+' — araca bin';
+  else if(foot&&WALK.near==='heli'&&WALK.nearHeli) msg=(WALK.tvis?'BİN':'E')+' — '+WALK.nearHeli.D.name+' helikopterine bin';
   else if(foot&&WALK.near==='plane'&&WALK.nearId) msg=(WALK.tvis?'UÇAĞA BİN':'E')+' — '+AIRCRAFT[WALK.nearId].name+' ile uç';
   else if(!foot) msg=(WALK.tvis?'İN':'E')+' — araçtan in';
   if(msg){ hx.textAlign='center'; hx.font='700 '+Math.round(16*s)+'px "Chakra Petch",system-ui,sans-serif'; const tw=hx.measureText(msg).width+28*s, y=h*0.72;
@@ -7295,6 +7411,11 @@ function walkLook(dx,dy){ const s=SETTINGS.sens||1;
   else { WALK.cy-=dx*0.005*s; WALK.pitch=clamp(WALK.pitch-dy*0.004*s,-0.6,0.9); } }
 function walkKey(e){
   if(isKey(e,'gen','pause')||e.code==='Escape'){ walkLeave(); pauseGame(); return; }
+  if(WALK.mode==='heli'){
+    if(isKey(e,'heli','exit')){ heliExit(); return; }
+    if(isKey(e,'gen','camera')){ HELI.fp=!HELI.fp; WALK.pitch=0; WALK.cy=0; return; }
+    if(isKey(e,'gen','map')) openMap(); if(isKey(e,'gen','mute')) toggleMute();
+    if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.code)>=0) e.preventDefault(); return; }
   const foot=WALK.mode==='foot';
   if(foot?isKey(e,'foot','use'):isKey(e,'land','exit')){ walkInteract(); return; }
   if(!foot&&isKey(e,'land','cam')){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
@@ -7312,9 +7433,9 @@ function updateWalkTouch(){
   if(!vis){ WALK.sx=WALK.sy=0; return; }
   $('wKnob').style.transform='translate('+(WALK.sx*60)+'%,'+(WALK.sy*60)+'%)';
   const foot=WALK.mode==='foot', a=$('wAct');
-  const lbl=!foot?'İN':(WALK.near==='car'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
+  const lbl=!foot?'İN':(WALK.near==='car'||WALK.near==='heli'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
   a.innerHTML=lbl; a.classList.toggle('off',!lbl);
-  $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot); $('wSwap').classList.toggle('hidden',foot);
+  $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); const heli=WALK.mode==='heli'; $('wCam').classList.toggle('hidden',foot); $('wSwap').classList.toggle('hidden',foot||heli); $('wheli').classList.toggle('hidden',!heli);
 }
 (function(){
   const stick=$('wStick'); let sid=null;
@@ -7324,7 +7445,10 @@ function updateWalkTouch(){
   function sEnd(e){ if(e.pointerId!==sid) return; sid=null; WALK.sx=WALK.sy=0; }
   stick.addEventListener('pointerup',sEnd); stick.addEventListener('pointercancel',sEnd);
   function tap(id,fn){ const el=$(id); el.addEventListener('pointerdown',function(e){ e.preventDefault(); fn(); el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); },130); }); }
-  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',function(){ openMap(); }); tap('wSwap',carSwap);
+  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ if(WALK.mode==='heli') HELI.fp=!HELI.fp; else WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',function(){ openMap(); }); tap('wSwap',carSwap);
+  function hold(id,set){ const el=$(id); const on=function(e){ e.preventDefault(); set(1); el.classList.add('on'); }, off=function(){ set(0); el.classList.remove('on'); };
+    el.addEventListener('pointerdown',on); el.addEventListener('pointerup',off); el.addEventListener('pointercancel',off); el.addEventListener('pointerleave',off); }
+  hold('hUp',function(v){ WALK.tcoll=v; }); hold('hDn',function(v){ WALK.tcoll=-v; }); hold('hYL',function(v){ WALK.tyaw=-v; }); hold('hYR',function(v){ WALK.tyaw=v; });
   const glc=$('gl');
   glc.addEventListener('click',function(){ if(state==='walk'&&!touchWanted()&&glc.requestPointerLock){ try{ glc.requestPointerLock(); }catch(e){} } });
   document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });
@@ -7340,6 +7464,149 @@ function walkWarp(){
   else { WALK.pos.set(w.x,groundH(w.x,w.z)+1.7,w.z); WALK.yaw=w.h; }
   if(WALK.mode==='car'){ c.v=0; placeCar(); }
   toast('📍 '+w.n,'#b8ecff');
+}
+/* ------------------------------------------------------------------ helicopters you can board in walk mode.
+   T129 ATAK and T625 GÖKBEY stand on helipads at the air base, the UAV centre, the naval and land bases and both cities.
+   Walk up, press E to board; the engines spool up, then fly with the 'heli' control scheme (cyclic / collective / pedals).
+   Land gently (G to get out). Arcade flight model: cyclic tilts the disc, tilt accelerates, collective sets the climb rate. */
+const HELI={list:[], cur:null, built:false, snd:null, fp:false};
+const HELI_SPOTS=[
+  {id:'t129',x:-450,z:470,h:Math.PI/2,at:'Ay Yıldız Hava Üssü',pad:true},
+  {id:'t625',x:-450,z:540,h:Math.PI/2,at:'Ay Yıldız Hava Üssü',pad:true},
+  {id:'t129',x:11300,z:11950,h:0,at:'İHA ve Test Merkezi',pad:true},
+  {id:'t625',x:-1720,z:-3360,h:Math.PI/2,at:'Deniz Üssü'},
+  {id:'t129',x:1300,z:-7340,h:0,at:'Kara Üssü'},
+  {id:'t625',x:-1450,z:6605,h:Math.PI/2,at:'Anadolukent',pad:true},
+  {id:'t625',x:-8200,z:-6732,h:Math.PI/2,at:'Hilalkent',pad:true}];
+function helipadMark(g,x,y,z){
+  const M=apMats(), pm=new THREE.MeshLambertMaterial({color:0x5c6166,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}); pm.userData.flat=true;
+  const pad=new THREE.Mesh(new THREE.CircleGeometry(16,32),pm); pad.rotation.x=-Math.PI/2; pad.position.set(x,y+0.12,z); g.add(pad);
+  const ring=new THREE.Mesh(new THREE.RingGeometry(12,13,40),M.markY); ring.rotation.x=-Math.PI/2; ring.position.set(x,y+0.15,z); g.add(ring);
+  apBox(g,M.mark,x-3,y+0.15,z,1.2,0.02,10); apBox(g,M.mark,x+3,y+0.15,z,1.2,0.02,10); apBox(g,M.mark,x,y+0.15,z,6,0.02,1.2);
+  for(let k=0;k<8;k++){ const a=k/8*Math.PI*2; apBox(g,M.amber,x+Math.cos(a)*15.5,y+0.1,z+Math.sin(a)*15.5,0.3,0.2,0.3); }
+}
+function buildHelis(){
+  if(HELI.built) return; const pg=new THREE.Group();
+  HELI_SPOTS.forEach(function(s){ const y=groundH(s.x,s.z); if(s.pad) helipadMark(pg,s.x,y,s.z);
+    const m=heliBuild(s.id), H={id:s.id, m:m, D:m.def, at:s.at, home:[s.x,s.z,s.h], x:s.x, y:y, z:s.z, h:s.h, vx:0, vy:0, vz:0, yr:0, pitch:0, roll:0, rpm:0, rot:0, ground:true, crashT:0};
+    scene.add(m.g); heliPlace(H); HELI.list.push(H); });
+  if(pg.children.length) scene.add(bakeGroup(pg));
+  clearTreesNear(HELI_SPOTS.map(function(s){ return [s.x,s.z]; }),24);
+  HELI.built=true;
+}
+function heliPlace(H){
+  const m=H.m; m.g.position.set(H.x,H.y,H.z); m.g.rotation.set(-H.pitch,H.h,-H.roll,'YXZ');
+  m.rotor.rotation.y=H.rot; m.trot.rotation.x=H.rot*4.7;
+  const blur=clamp((H.rpm-0.45)*1.6,0,1); m.disc.material.opacity=blur*0.22; m.disc.visible=blur>0.01; m.tdisc.visible=blur>0.01;
+}
+function heliBoxes(){ const L=[]; HELI.list.forEach(function(H){ if(H===HELI.cur||H.y-groundH(H.x,H.z)>2) return; const r=2.0, l=H.D.len*0.42;
+  const s=Math.abs(Math.sin(H.h)), c=Math.abs(Math.cos(H.h)), ex=r*c+l*s, ez=l*c+r*s; L.push({x0:H.x-ex,x1:H.x+ex,z0:H.z-ez,z1:H.z+ez}); }); return L; }
+function heliNear(p){ let best=null, bd=8; HELI.list.forEach(function(H){ if(H.crashT>0) return; const d=Math.hypot(H.x-p.x,H.z-p.z); if(d<bd){ bd=d; best=H; } }); return best; }
+function heliBoard(H){
+  HELI.cur=H; WALK.mode='heli'; WALK.cy=0; WALK.pitch=0; HELI.fp=false; H.ground=true; H.vx=H.vy=H.vz=0;
+  toast(H.D.name+' — motorlar çalışıyor… R/Shift yüksel · F/Ctrl alçal · WASD cyclic · Q/E pedal · C kamera · G in','#b8ecff');
+}
+function heliExit(){
+  const H=HELI.cur; if(!H) return;
+  if(!H.ground||Math.hypot(H.vx,H.vz)>2){ toast('Önce iniş yap (yerde ve dururken G ile inebilirsin)','#ffc24a'); return; }
+  HELI.cur=null; WALK.mode='foot'; const s=Math.sin(H.h), c=Math.cos(H.h), d=2.8;
+  WALK.pos.set(H.x-c*d-s*1.5,0,H.z+s*d-c*1.5); WALK.pos.y=groundH(WALK.pos.x,WALK.pos.z)+1.7; WALK.yaw=H.h; WALK.pitch=0; WALK.air=false;
+}
+function heliFloor(H){
+  let f=groundH(H.x,H.z), roof=false; const ob=AP.obst;
+  for(let i=0;i<ob.length;i++){ const b=ob[i]; if(H.x>b.x0&&H.x<b.x1&&H.z>b.z0&&H.z<b.z1&&b.y1>f&&H.y>=b.y1-1.5&&!(b.y0!=null&&H.y<b.y0)){ f=b.y1; roof=true; } }
+  return {y:Math.max(f,0), water:f<0.3&&!roof};
+}
+/* inside an obstacle (below its top)? push out horizontally */
+function heliObst(H,px,pz){
+  const ob=AP.obst, r=H.D.R*0.55;
+  for(let i=0;i<ob.length;i++){ const b=ob[i]; if(H.y>=b.y1-1.5||(b.y0!=null&&H.y+3<b.y0)) continue;
+    if(H.x>b.x0-r&&H.x<b.x1+r&&H.z>b.z0-r&&H.z<b.z1+r) return true; }
+  return false;
+}
+function heliInput(){
+  const t=WALK.tvis;
+  return {f:clamp(act('heli','cycF')-act('heli','cycB')+(t?-WALK.sy:0),-1,1), r:clamp(act('heli','cycR')-act('heli','cycL')+(t?WALK.sx:0),-1,1),
+    c:clamp(act('heli','collUp')-act('heli','collDn')+(WALK.tcoll||0),-1,1), y:clamp(act('heli','yawR')-act('heli','yawL')+(WALK.tyaw||0),-1,1)};
+}
+function heliStep(dt){
+  const H=HELI.cur; if(!H) return; const D=H.D;
+  if(H.crashT>0){ H.crashT-=dt; if(typeof updateParts==='function') updateParts(dt); if(H.crashT<=0) heliRespawn(H); return; }
+  const inp=heliInput();
+  H.rpm=Math.min(1,H.rpm+dt/(H.rpm<0.6?3.5:2.2)); H.rot+=dt*(4+H.rpm*24)*H.rpm;
+  const F=heliFloor(H), sp=Math.hypot(H.vx,H.vz);
+  if(H.ground){
+    H.y=F.y; H.vx*=Math.exp(-dt*5); H.vz*=Math.exp(-dt*5); H.vy=0; H.pitch*=Math.exp(-dt*4); H.roll*=Math.exp(-dt*4);
+    if(H.rpm>0.5) H.h-=inp.y*0.6*H.rpm*dt;
+    if(H.rpm>0.95&&inp.c>0.15){ H.ground=false; H.vy=2; }
+  } else {
+    const tp=inp.f*0.34, tr=inp.r*0.42;
+    H.pitch+=(tp-H.pitch)*Math.min(1,dt*2.6); H.roll+=(tr-H.roll)*Math.min(1,dt*2.6);
+    const fx=-Math.sin(H.h), fz=-Math.cos(H.h), rx=Math.cos(H.h), rz=-Math.sin(H.h);
+    H.vx+=(fx*H.pitch+rx*H.roll*0.85)*D.acc*dt; H.vz+=(fz*H.pitch+rz*H.roll*0.85)*D.acc*dt;
+    const k=0.05+0.0019*sp*(30/D.top*1.4); H.vx*=Math.exp(-k*dt); H.vz*=Math.exp(-k*dt);
+    let tvy=inp.c>0?inp.c*D.climb:inp.c*9; if(H.rpm<0.9) tvy=-5;
+    const agl=H.y-F.y; if(agl<6&&tvy<0) tvy*=0.35+0.65*agl/6;          // ground cushion: gentle final descent
+    H.vy+=(tvy-H.vy)*Math.min(1,dt*1.9);
+    const tyr=inp.y*D.yawR+H.roll*Math.min(sp,60)*0.018; H.yr+=(tyr-H.yr)*Math.min(1,dt*3); H.h-=H.yr*dt;
+    const ox=H.x, oz=H.z; H.x+=H.vx*dt; H.z+=H.vz*dt; H.y+=H.vy*dt;
+    if(heliObst(H)){ H.x=ox; H.z=oz; const s2=Math.hypot(H.vx,H.vz); if(s2>18) return heliCrash(H,'Engele çarptın'); H.vx*=-0.3; H.vz*=-0.3; }
+    if(Math.abs(H.x)>14500||Math.abs(H.z)>14500){ H.x=clamp(H.x,-14500,14500); H.z=clamp(H.z,-14500,14500); H.vx*=-0.3; H.vz*=-0.3; }
+    if(H.y>3500){ H.y=3500; H.vy=Math.min(H.vy,0); }
+    const F2=heliFloor(H);
+    if(H.y<=F2.y){ const imp=-H.vy, s3=Math.hypot(H.vx,H.vz), tilt=Math.abs(H.pitch)+Math.abs(H.roll);
+      if(F2.water) return heliCrash(H,'Suya düştün');
+      if(imp>7||s3>22||tilt>0.6) return heliCrash(H,imp>7?'Çok sert indin':'Yere çarptın');
+      H.y=F2.y; H.ground=true; H.vy=0; H.yr=0; if(imp>3.5) toast('Sert iniş!','#ffc24a'); else toast('İniş tamam','#7dffb0'); }
+  }
+  heliPlace(H);
+}
+function heliCrash(H,why){
+  explode(new THREE.Vector3(H.x,H.y+1.5,H.z),40,6); H.crashT=2.6; H.m.g.visible=false; H.vx=H.vy=H.vz=0; toast('💥 '+why,'#ff6a5a');
+}
+function heliRespawn(H){
+  H.x=H.home[0]; H.z=H.home[1]; H.h=H.home[2]; H.y=groundH(H.x,H.z); H.pitch=H.roll=H.yr=0; H.rpm=0; H.ground=true; H.m.g.visible=true; heliPlace(H);
+  HELI.cur=null; WALK.mode='foot'; const s=Math.sin(H.h), c=Math.cos(H.h);
+  WALK.pos.set(H.x-c*9,0,H.z+s*9); WALK.pos.y=groundH(WALK.pos.x,WALK.pos.z)+1.7; WALK.yaw=H.h-Math.PI/2; WALK.air=false;
+  toast('Helikopter '+H.at+' pistine geri getirildi','#b8ecff');
+}
+/* parked helicopters wind down; rotors keep turning a little after landing */
+function helisIdle(dt){ HELI.list.forEach(function(H){ if(H===HELI.cur&&state==='walk') return; if(H.rpm>0){ H.rpm=Math.max(0,H.rpm-dt/9); H.rot+=dt*(4+H.rpm*24)*H.rpm; heliPlace(H); } }); }
+function heliTeleport(p){
+  const H=HELI.cur, gx=p.g?p.g[0]:p.x, gz=p.g?p.g[1]:p.z;
+  H.x=gx; H.z=gz+60; H.y=Math.max(groundH(H.x,H.z),0)+70; H.vx=H.vz=H.vy=0; H.ground=false; H.rpm=1; heliPlace(H);
+}
+const hV=new THREE.Vector3(), hV2=new THREE.Vector3(), hE=new THREE.Euler(0,0,0,'YXZ');
+function heliCam(dt){
+  const H=HELI.cur, sp=Math.hypot(H.vx,H.vz);
+  const fov=65+clamp((sp-20)*0.15,0,10); if(Math.abs(lastFov-fov)>0.05){ camera.fov=fov; lastFov=fov; camera.updateProjectionMatrix(); }
+  if(HELI.fp){ const s=Math.sin(H.h), c=Math.cos(H.h), lz=H.id==='t129'?-1.9:-2.7, ly=H.id==='t129'?2.45:2.05, lx=H.id==='t129'?0:0.45;
+    camera.position.set(H.x+lx*c+lz*s, H.y+ly, H.z-lx*s+lz*c); hE.set(H.pitch*-0.9+WALK.pitch-0.12,H.h+WALK.cy,-H.roll*0.9); camera.quaternion.setFromEuler(hE); camera.updateMatrixWorld(); return; }
+  const a=H.h+WALK.cy, D=(19+sp*0.08)*WALK.camD;
+  hV.set(H.x+Math.sin(a)*D, H.y+5.5+D*0.18+WALK.pitch*-8, H.z+Math.cos(a)*D);
+  const gc=Math.max(groundH(hV.x,hV.z),0)+1.5; if(hV.y<gc) hV.y=gc;
+  if(dt>0&&camera.position.distanceTo(hV)<80) camera.position.lerp(hV,1-Math.exp(-dt*5)); else camera.position.copy(hV);
+  camera.lookAt(hV2.set(H.x,H.y+2.5,H.z)); camera.updateMatrixWorld();
+}
+function heliHUD(w,h,s){
+  const H=HELI.cur, F=heliFloor(H), sp=Math.hypot(H.vx,H.vz), L=WALK.tvis?w/2:Math.round(16*s), top=Math.round(20*s);
+  hx.textAlign=WALK.tvis?'center':'left'; hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#b8ecff';
+  hx.fillText(H.D.name+(H.ground?' · YERDE':' · UÇUŞTA'), L, top);
+  hx.font='700 '+Math.round(26*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff'; hx.fillText(Math.round(sp*3.6)+' km/sa', L, top+Math.round(28*s));
+  hx.font='700 '+Math.round(14*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#b8ecff';
+  hx.fillText('İRT '+Math.round(H.y-F.y)+' m  ·  DİKEY '+(H.vy>=0?'+':'')+H.vy.toFixed(1)+' m/s  ·  ROTOR %'+Math.round(H.rpm*100), L, top+Math.round(52*s));
+  if(H.rpm<0.95&&H.ground){ hx.textAlign='center'; hx.fillStyle='#ffc24a'; hx.fillText('MOTORLAR ISINIYOR… %'+Math.round(H.rpm*100), w/2, h*0.3); }
+  else if(H.ground&&H.rpm>=0.95&&WALK.hint>0){ hx.textAlign='center'; hx.fillStyle='#7dffb0'; hx.fillText(WALK.tvis?'YÜKSEL ile kalk':'R ya da Shift ile kalk', w/2, h*0.3); }
+  if(!H.ground&&H.y-F.y<25&&H.vy<-4){ hx.textAlign='center'; hx.fillStyle='#ff6a5a'; hx.fillText('ALÇALMA HIZI YÜKSEK', w/2, h*0.36); }
+}
+function heliAudio(t,on){
+  if(!AC) return;
+  if(!HELI.snd){ try{ const src=AC.createBufferSource(); src.buffer=noiseBuf; src.loop=true; const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=500;
+      const g=AC.createGain(); g.gain.value=0; const am=AC.createGain(); am.gain.value=0; const lfo=AC.createOscillator(); lfo.type='sine'; lfo.frequency.value=18; const lg=AC.createGain(); lg.gain.value=0;
+      src.connect(lp); lp.connect(am); am.connect(g); lfo.connect(lg); lg.connect(am.gain); g.connect(master); src.start(); lfo.start(); HELI.snd={g:g,lp:lp,lfo:lfo,lg:lg,am:am}; }catch(e){ HELI.snd={g:null}; } }
+  const S2=HELI.snd; if(!S2.g) return; const H=HELI.cur, r=H?H.rpm:0, live=on&&H&&H.crashT<=0;
+  S2.g.gain.setTargetAtTime(live?0.15+r*0.55:0,t,0.15); S2.am.gain.setTargetAtTime(0.55,t,0.1); S2.lg.gain.setTargetAtTime(0.45*r,t,0.1);
+  S2.lfo.frequency.setTargetAtTime(4+r*15+(H&&!H.ground?Math.abs(H.vy)*0.3:0),t,0.2); S2.lp.frequency.setTargetAtTime(300+r*500,t,0.2);
 }
 /* ------------------------------------------------------------------ model library: inspect every model in 3D, test parts, repaint, import / export
    Opens from the main menu or Ayarlar → Grafik. Renders its own small studio scene (the game world is not drawn meanwhile).
@@ -7716,7 +7983,7 @@ $('btnLibOpen').addEventListener('click',function(){ if(state==='menu') openLibr
 window.addEventListener('dragover',function(e){ if(e.dataTransfer&&Array.prototype.indexOf.call(e.dataTransfer.types||[],'Files')>=0) e.preventDefault(); });
 window.addEventListener('drop',function(e){ const f=e.dataTransfer&&e.dataTransfer.files; if(!f||!f.length) return; e.preventDefault(); if(state==='menu'&&!LIB.on) openLibrary('ac:'+selectedId); if(LIB.on) importFiles(f); });
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit();
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -7729,7 +7996,7 @@ function frame(now){
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
   netStep(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
-  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); updateTaxiVisuals();
+  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); marinaStep(dt); ruralStep(dt); militaryStep(dt); todStep(dt); southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); helisIdle(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')||(state==='map'&&MAPV.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow();
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);

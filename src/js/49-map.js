@@ -44,7 +44,7 @@ function mapImage(){
   x.putImageData(im,0,0); MAPV.img=c; return c; }
 function mapToScreen(wx,wz,W,H){ return [W/2+(wx-MAPV.cx)*MAPV.scale, H/2+(wz-MAPV.cz)*MAPV.scale]; }
 function mapToWorld(px,py,W,H){ return [MAPV.cx+(px-W/2)/MAPV.scale, MAPV.cz+(py-H/2)/MAPV.scale]; }
-function playerPos(){ if(state==='walk'||MAPV.from==='walk'){ if(WALK.mode==='car') return [WALK.car.x,WALK.car.z,-WALK.car.h]; return [WALK.pos.x,WALK.pos.z,-WALK.yaw]; }
+function playerPos(){ if(state==='walk'||MAPV.from==='walk'){ if(WALK.mode==='car') return [WALK.car.x,WALK.car.z,-WALK.car.h]; if(WALK.mode==='heli'&&HELI.cur) return [HELI.cur.x,HELI.cur.z,-HELI.cur.h]; return [WALK.pos.x,WALK.pos.z,-WALK.yaw]; }
   const f=new THREE.Vector3(0,0,-1).applyQuaternion(S.q); return [S.pos.x,S.pos.z,Math.atan2(f.x,-f.z)]; }
 const KCOL={air:'#7fd0ff',navy:'#5aa0ff',army:'#9fd36a',town:'#ffd27a',city:'#ffb25a',sea:'#7ff0e0',site:'#e8e8e8',enemy:'#ff5a4a'};
 /* draw the map (full screen or minimap) into a 2D context */
@@ -85,7 +85,7 @@ function mapResize(){ const c=$('mapCv'), r=c.getBoundingClientRect(), d=Math.mi
 function mapDraw(){ if(!MAPV.open) return; const c=$('mapCv'), x=c.getContext('2d'), d=c.width/c.getBoundingClientRect().width; x.setTransform(d,0,0,d,0,0); drawMap(x,c.width/d,c.height/d,false); }
 function mapList(){ $('mapList').innerHTML=PLACES.map(function(p){ return '<button type="button" data-id="'+p.id+'"><i style="background:'+(KCOL[p.k]||'#fff')+'"></i>'+p.n+'</button>'; }).join(''); }
 function mapPanel(){ const p=MAPV.sel, el=$('mapSel'); if(!p){ el.innerHTML='<b>Bir yer seç</b><small>Haritada ya da listede bir yere dokun.'+(NET.on?' Çevrimiçi oyunda ışınlanma kapalı.':'')+'</small>'; return; }
-  const fly=MAPV.from==='play', canTp=!NET.on&&(fly||p.g), start=SETTINGS.startPlace===p.id;
+  const fly=MAPV.from==='play'||(MAPV.from==='walk'&&WALK.mode==='heli'), canTp=!NET.on&&(fly||p.g), start=SETTINGS.startPlace===p.id;
   el.innerHTML='<b>'+p.n+'</b><small>'+(fly?'Işınlanınca bu yerin üstünde, havada devam edersin.':(p.g?'Yürüyerek ya da araçla buraya geçersin.':'Bu yere yalnızca uçarken gidilebilir.'))+'</small>'+
     (canTp?'<button type="button" class="btn primary" id="mapTp">Işınlan</button>':'')+
     '<button type="button" class="btn" id="mapStart">'+(start?'✓ Başlangıç yeri':'Buradan başla')+'</button>'; }
@@ -96,6 +96,7 @@ function teleportTo(p){
   if(MAPV.from==='play'){ const top=Math.max(terrainH(p.x,p.z),0); let hi=top; for(let k=0;k<8;k++){ const a=k/8*6.28; hi=Math.max(hi,terrainH(p.x+Math.cos(a)*600,p.z+Math.sin(a)*600)); }
     S.pos.set(p.x,Math.max(hi+350,600),p.z+900); S.onGround=false; S.taxi=false; S.clearance=true; S.auto=false; S.speed=Math.max(S.speed,CUR.airV); S.sink=0; S.gear=false; if(S.throttle<0.5) S.throttle=0.75;
     S.q.identity(); camQ.copy(S.q); camSnap=true; toast('📍 '+p.n,'#b8ecff'); }
+  else if(WALK.mode==='heli'&&HELI.cur){ heliTeleport(p); toast('📍 '+p.n,'#b8ecff'); }
   else if(p.g){ const g=p.g, c=WALK.car; if(WALK.mode==='car'){ c.x=g[0]; c.z=g[1]; c.h=g[2]; c.v=0; placeCar(); } else { WALK.pos.set(g[0],groundH(g[0],g[1])+1.7,g[1]); WALK.yaw=g[2]; WALK.air=false; } toast('📍 '+p.n,'#b8ecff'); }
   closeMap();
 }

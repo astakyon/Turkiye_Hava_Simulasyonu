@@ -19,6 +19,8 @@ function initAudio(){
 }
 function audioUpdate(){
   if(!AC||!eng) return;
+  heliAudio(AC.currentTime,state==='walk'&&WALK.mode==='heli'&&!muted);
+  if(state==='walk'&&WALK.mode==='heli'){ eng.g.gain.setTargetAtTime(0,AC.currentTime,0.1); eng.og.gain.setTargetAtTime(0,AC.currentTime,0.1); return; }
   if(state==='walk'&&WALK.mode==='car'&&WALK.car.K){ const c=WALK.car, t=AC.currentTime, on=!muted, gr=carGear(c.v), rpm=Math.abs(c.v)<0.3?0.16+(c.thr||0)*0.5:gr[1], th=c.thr||0, mil=c.K.mil;
     if(eng.osc.type!=='sawtooth') eng.osc.type='sawtooth';
     eng.osc.frequency.setTargetAtTime((mil?32:40)+rpm*(mil?85:120)+(c.turbo?18:0),t,0.05);
