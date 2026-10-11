@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.81 — 2026-10-11
+- **Görev editörü:** Görev panosunda "Özel" kategorisi ve "＋ Yeni görev oluştur" girişi var. Editörde ada haritasına yer hedefi (kamyon, radar, depo, sığınak, SAM), hava hedefi, düşman uçağı, geçiş noktası, keşif noktası ve başlangıç yeri (yön ve irtifa ile) yerleştirilebiliyor. Öğeler sürüklenip taşınıyor; özellikleri (tür, irtifa, yarıçap, yön) yandaki panelden ayarlanıyor.
+- **Aşamalar (tetikleyiciler):** Her öğeye 1–5 arası bir aşama veriliyor. 1. aşama baştan var; bir aşamadaki her şey bitince sıradaki aşamanın öğeleri belirir (örneğin "radarı vur → düşman uçakları gelsin → keşif yap").
+- **Görev ayarları:** Ad, brifing, uçak (sabit ya da oyuncunun seçtiği), süre sınırı, hava durumu ve gün saati. Görev bitince hava ve saat eski hâline dönüyor.
+- **Dene ve kaydet:** "Dene" görevi kaydedip hemen başlatıyor; görev sonunda "Editöre dön" ile düzenlemeye devam ediliyor. Kaydedilen görevler panoda "Özel" altında listeleniyor ve "✎ Düzenle" ile açılıyor.
+- **Paylaşma:** Görev kısa bir kodla (AYG1.…) kopyalanıp başkasına gönderilebiliyor ya da .json dosyası olarak kaydedilebiliyor. Kod veya dosya editörde içe aktarılıyor.
+- **Yönetici yayını:** Yönetici hesabıyla "Herkese yayınla" seçilen görevi bütün oyunculara gönderiyor; bu görevler panoda ★ ile görünüyor. Bunun için Supabase şemasına 'mission' içerik türü eklendi (supabase/schema.sql).
+
 ## V1.80 — 2026-10-11
 - **Yarışlar:** Görev panosuna "Yarış" kategorisi eklendi, dört yarış var: Ada halka yarışı (Hürjet, adanın çevresinde 12 halka), Helikopter slalomu (T129, pistin doğusunda 15 metrede 11 kapı), Ada rallisi (SUV, Kara Üssü'nden köye dağ yolu) ve Körfez tekne yarışı (Hücumbot, şamandıraların çevresinde iki tur).
 - **Süre ve kapılar:** Süre ilk kapıdan geçince başlıyor. Sıradaki kapı yeşil, sonraki üç kapı turuncu görünüyor. HUD'da kapı sayısı, süre, en iyi derece, sıradaki kapının yönü, mesafesi ve yükseklik farkı yazıyor.

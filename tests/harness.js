@@ -69,7 +69,7 @@ const win={innerWidth:1280,innerHeight:720,devicePixelRatio:1,addEventListener(t
 const doc={getElementById:el,createElement:()=>el('c'+Math.random()),body:el('body'),documentElement:el('html'),addEventListener(t,f){(listeners[t]=listeners[t]||[]).push(f)},querySelector:()=>el('q'),querySelectorAll:()=>[],hidden:false,fullscreenElement:null,exitPointerLock(){},title:''};
 let src=fs.readFileSync(process.argv[2]||'/tmp/sim.js','utf8');
 const tests=fs.readFileSync(process.argv[3],'utf8');
-const ctx={THREE,document:doc,window:win,navigator:win.navigator,localStorage:win.localStorage,console,Math,performance:{now:()=>0},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,
+const ctx={btoa:function(s){ return Buffer.from(s,"binary").toString("base64"); },atob:function(s){ return Buffer.from(s,"base64").toString("binary"); },THREE,document:doc,window:win,navigator:win.navigator,localStorage:win.localStorage,console,Math,performance:{now:()=>0},setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,
  requestAnimationFrame:()=>0,AudioContext:class{constructor(){return mk()}},Image:class{},innerWidth:1280,innerHeight:720,devicePixelRatio:1,matchMedia:win.matchMedia,Float32Array,Uint8Array,Map,Set,JSON,Date,
  fetch:()=>Promise.reject(),URL:{createObjectURL(){return''}},Blob:class{},FileReader:class{}};
 ctx.window=Object.assign(ctx,{addEventListener:win.addEventListener,removeEventListener(){},cancelAnimationFrame(){}});

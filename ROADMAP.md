@@ -94,7 +94,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.78 | **Uçuş okulu.** Dersler: kalkış, tur, iniş, rüzgârlı iniş, helikopterde havada asılı kalma, sapan yükü, silah kullanımı, gemiye iniş. Eğitmen telsiz anlatımı. Lisans ve madalya. | Dersler adım adım tamamlanıyor. | ✅ |
 | V1.79 | **Kariyer ve başarımlar.** Rütbe sistemine (V1.67) bağlı kariyer: görevlerden tecrübe puanı, puanla yeni uçak, araç ve boya açma. Başarımlar, günlük ve haftalık görevler, istatistik sayfası. | İlerleme kaydediliyor. | ✅ |
 | V1.80 | **Yarışlar.** Halkalardan geçmeli uçak yarışı, helikopter slalomu, adada araba rallisi, botla deniz yarışı. Hayalet (en iyi derece) ve sıralama tablosu (cihazda). | Yarışlar süre kaydediyor. | ✅ |
-| V1.81 | **Görev editörü.** Haritaya hedef, düşman, nokta ve tetikleyici koyma. Görevi kod veya dosyayla paylaşma; yönetici beğendiği görevi herkese yayınlar. | Kendi görevi yapılıp oynanabiliyor. | |
+| V1.81 | **Görev editörü.** Haritaya hedef, düşman, nokta ve tetikleyici koyma. Görevi kod veya dosyayla paylaşma; yönetici beğendiği görevi herkese yayınlar. | Kendi görevi yapılıp oynanabiliyor. | ✅ |
 
 ### Faz 8 — Çok oyunculu
 | Sürüm | İçerik | Kabul ölçütü | Durum |

@@ -25,7 +25,7 @@ create table if not exists public.saves(
 -- ---------- yöneticinin yayınladığı içerik: model, ses, müzik, boya (dosyalar 'content' deposunda)
 create table if not exists public.content(
   id text primary key,
-  kind text not null check (kind in ('model','sound','music','livery','config')),
+  kind text not null check (kind in ('model','sound','music','livery','config','mission')),
   path text,
   meta jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now(),
@@ -115,4 +115,4 @@ create policy "içerik dosyası silme" on storage.objects for delete to authenti
 
 -- V1.68: uzaktan oyun ayarı için 'config' türü (eski kurulumlar için kısıtı güncelle)
 alter table public.content drop constraint if exists content_kind_check;
-alter table public.content add constraint content_kind_check check (kind in ('model','sound','music','livery','config'));
+alter table public.content add constraint content_kind_check check (kind in ('model','sound','music','livery','config','mission'));

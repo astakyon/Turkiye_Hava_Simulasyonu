@@ -275,6 +275,20 @@
   <div class="box"><h2 id="hmEndT">GÖREV</h2><p id="hmEndS"></p>
     <div class="row"><button type="button" class="btn primary" id="hmAgain">Tekrar dene</button><button type="button" class="btn" id="hmFree">Serbest uçuşa devam</button><button type="button" class="btn back" id="hmHangar">Hangara dön</button></div></div>
 </div>
+<div id="edUI" class="modal fs hidden" role="dialog" aria-label="Görev editörü">
+  <button class="btn back" id="edBack" type="button">← Geri</button>
+  <div class="shdr"><span>■</span> GÖREV EDİTÖRÜ</div>
+  <div class="edwrap">
+    <div class="edmapw"><canvas id="edMap"></canvas><div class="edz"><button type="button" class="btn sm" id="edZin">+</button><button type="button" class="btn sm" id="edZout">−</button></div><p class="edsum" id="edSum"></p></div>
+    <div class="edside">
+      <div class="edtools" id="edTools"></div>
+      <div class="edprops" id="edProps"></div>
+      <details class="edsetw" open><summary>Görev ayarları</summary><div class="edset" id="edSet"></div></details>
+      <div class="edbtns"><button type="button" class="btn primary" id="edTry">▶ Dene</button><button type="button" class="btn" id="edSave">Kaydet</button><button type="button" class="btn" id="edNew">Yeni</button><button type="button" class="btn hidden" id="edPub">Herkese yayınla</button></div>
+      <details class="edsetw"><summary>Paylaş / içe aktar</summary><div class="edio"><textarea id="edIO" rows="3" placeholder="AYG1.… görev kodunu buraya yapıştır"></textarea><div class="edbtns"><button type="button" class="btn sm" id="edCode">Kodu kopyala</button><button type="button" class="btn sm" id="edImp">Koddan yükle</button><button type="button" class="btn sm" id="edFile">Dosyaya kaydet</button><label class="btn sm">Dosyadan yükle<input type="file" id="edFileIn" accept=".json,application/json" hidden></label></div></div></details>
+    </div>
+  </div>
+</div>
 <div id="callUI" class="modal callui hidden" role="dialog" aria-label="Araç çağır">
   <div class="cwrap"><div class="ctabs" id="callTabs"></div>
     <div class="cring" id="callRing"></div><div class="chub" id="callHub"></div>
@@ -399,7 +413,7 @@
     <h2 id="mendTitle"></h2>
     <p class="sub" id="mendBody"></p>
     <div class="mstats" id="mendStats"></div>
-    <div class="stack"><button class="btn primary" id="btnMRetry">Tekrar dene</button><button class="btn" id="btnMHangar">Hangara dön</button></div>
+    <div class="stack"><button class="btn primary" id="btnMRetry">Tekrar dene</button><button class="btn hidden" id="btnMEdit">Editöre dön</button><button class="btn" id="btnMHangar">Hangara dön</button></div>
   </div>
 </div>
 
