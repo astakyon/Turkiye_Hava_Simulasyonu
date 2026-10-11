@@ -587,3 +587,20 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
 .supa{ display:flex; flex-wrap:wrap; gap:6px; max-width:420px; } .supa .inp{ flex:1 1 180px; padding:7px 10px; font-size:12px; }
 .c-news{ position:absolute; right:max(clamp(16px,3vw,44px),env(safe-area-inset-right)); top:calc(max(16px,env(safe-area-inset-top)) + 58px); max-width:min(440px,40vw); padding:10px 14px; border-radius:var(--r2); border:1px solid rgba(255,194,74,.4); background:rgba(40,28,4,.75); font-size:13px; line-height:1.4; }
 .c-news b{ color:var(--amber); letter-spacing:.2em; font-size:10px; margin-right:6px; }
+
+/* career */
+.accp.car{ grid-column:1/-1; }
+.carhead{ display:flex; gap:16px; align-items:center; } .carhead .rk{ display:grid; place-items:center; width:84px; height:84px; border-radius:50%; background:radial-gradient(circle,#18263c,#0a1220); border:1px solid rgba(255,210,122,.35); flex:none; }
+.carhead h2{ margin:2px 0 8px; font-size:var(--t-xl); } .carhead small{ color:var(--dim); font-size:12px; } .carhead > div:last-child{ flex:1; min-width:0; }
+.xpb{ height:8px; border-radius:4px; background:rgba(255,255,255,.1); overflow:hidden; margin-bottom:4px; } .xpb i{ display:block; height:100%; background:linear-gradient(90deg,#b8862b,#ffd27a); border-radius:4px; transition:width .5s var(--ease); }
+.carstats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:8px; } .carstats div{ padding:10px; border-radius:var(--r2); background:rgba(255,255,255,.04); border:1px solid var(--edge); }
+.carstats b{ display:block; font-size:var(--t-l); } .carstats small{ color:var(--dim); font-size:11px; }
+.carmed{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:6px; } .md{ display:grid; grid-template-columns:auto 1fr; gap:0 8px; padding:8px; border-radius:var(--r2); border:1px solid var(--edge); opacity:.38; }
+.md span{ grid-row:span 2; font-size:20px; filter:grayscale(1); } .md.on{ opacity:1; border-color:rgba(255,210,122,.45); } .md.on span{ filter:none; } .md b{ font-size:12px; } .md small{ font-size:10px; color:var(--dim); }
+.carlog{ overflow-x:auto; } .carlog table{ width:100%; border-collapse:collapse; font-size:12px; } .carlog th{ text-align:left; color:var(--dim); font-weight:600; padding:4px 6px; border-bottom:1px solid var(--edge); } .carlog td{ padding:5px 6px; border-bottom:1px solid rgba(255,255,255,.05); white-space:nowrap; }
+.carrk summary{ cursor:pointer; color:var(--dim); font-size:12px; } #carRanks{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:6px; margin-top:8px; }
+.rr{ display:grid; grid-template-columns:auto 1fr; gap:0 6px; align-items:center; padding:6px; border-radius:var(--r1); opacity:.5; } .rr svg{ grid-row:span 2; } .rr b{ font-size:12px; } .rr small{ font-size:10px; color:var(--dim); } .rr.past{ opacity:.8; } .rr.cur{ opacity:1; background:rgba(255,210,122,.12); }
+.rankup{ position:fixed; inset:0; z-index:40; display:grid; place-items:center; background:radial-gradient(circle at 50% 45%,rgba(40,30,8,.85),rgba(2,5,10,.94)); animation:dsFade .3s var(--ease); }
+.rankup .ru{ text-align:center; animation:dsIn .5s var(--ease); } .rankup .k{ margin:12px 0 0; letter-spacing:.5em; color:#ffd27a; font-weight:800; font-size:13px; } .rankup h2{ margin:4px 0 8px; font-size:clamp(34px,6vw,64px); letter-spacing:.08em; }
+.rankup p{ color:#d6e0ea; } .rankup .un b{ color:#ffd27a; } .rankup .btn{ margin-top:14px; min-width:180px; }
+.chip .lk{ position:absolute; top:4px; right:6px; font-size:11px; }

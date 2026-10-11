@@ -11,10 +11,10 @@ function lpAll(){ try{ const L=JSON.parse(localStorage.getItem('ayy-profiles')||
 function lpSave(L){ try{ localStorage.setItem('ayy-profiles',JSON.stringify(L)); }catch(e){} }
 function lpCurId(){ try{ return localStorage.getItem('ayy-prof-cur')||'g1'; }catch(e){ return 'g1'; } }
 function lpCur(){ const L=lpAll(); return L.find(function(p){ return p.id===lpCurId(); })||L[0]; }
-function accProfile(){ return ACC.prof||lpCur(); }
+function accProfile(){ if(ACC.prof) return ACC.prof; if(!ACC.local||ACC.local.id!==lpCurId()) ACC.local=lpCur(); return ACC.local; }
 function accSetProfile(patch){
   if(ACC.prof){ Object.assign(ACC.prof,patch); accPushProfile(); }
-  else { const L=lpAll(), p=L.find(function(x){ return x.id===lpCurId(); })||L[0]; Object.assign(p,patch); lpSave(L); }
+  else { const L=lpAll(), p=L.find(function(x){ return x.id===lpCurId(); })||L[0]; Object.assign(p,patch); lpSave(L); ACC.local=null; }
   if(patch.callsign){ SETTINGS.callsign=patch.callsign; saveSettings(); }
   accChip();
 }
@@ -109,7 +109,7 @@ function accChip(){ const p=accProfile(), em=(EMBLEMS.find(function(e){ return e
   sub.textContent=(UNITS[p.unit]||'Hilal Kanatlar')+' · '+(ACC.user?ACC_ST[ACC.status]||'':(ACC.cfg?'Misafir · giriş yap':'Misafir'));
   rk.textContent=typeof rankShort==='function'?rankShort(p.rank||0):em; rk.title=em; }
 function accMsg(t,err){ const el=$('accMsg'); if(!el) return; el.textContent=t||''; el.classList.toggle('err',!!err); }
-function accOpen(tab){ closeModals(); $('acctUI').classList.remove('hidden'); ACC.tab=tab||(ACC.user&&!ACC.prof?'profile':'acct'); accRender(); }
+function accOpen(tab){ closeModals(); $('acctUI').classList.remove('hidden'); ACC.tab=tab||(ACC.user&&!ACC.prof?'profile':'acct'); accRender(); try{ const t=tab==='career'?$('carSec'):(tab==='profile'?$('accProfTitle'):null); if(t&&t.scrollIntoView) t.scrollIntoView({block:'start'}); }catch(e){} }
 function accClose(){ $('acctUI').classList.add('hidden'); }
 function accRender(){
   const p=accProfile(), cfg=!!ACC.cfg, L=lpAll();
@@ -121,6 +121,7 @@ function accRender(){
   $('accCs').value=p.callsign||''; $('accUnit').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(p.unit||'hava'))); });
   $('accEm').innerHTML=EMBLEMS.map(function(e){ return '<button type="button" data-e="'+e[0]+'"'+(e[0]===(p.emblem||'hilal')?' aria-pressed="true"':'')+'>'+e[1]+'</button>'; }).join('');
   $('accProfTitle').textContent=ACC.user&&!ACC.prof?'Profilini oluştur':'Profil';
+  if(typeof careerRender==='function') careerRender();
 }
 (function(){
   $('btnAccBack').addEventListener('click',function(){ accClose(); if(state==='menu') refreshTitle(); });
@@ -139,7 +140,7 @@ function accRender(){
   $('accProfList').addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(!b) return; const L=lpAll();
     if(b.dataset.p==='new'){ const id='g'+Date.now().toString(36); L.push({id:id,callsign:'Pilot '+(L.length+1),unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}); lpSave(L); try{ localStorage.setItem('ayy-prof-cur',id); }catch(err){} }
     else { lpSave(L); try{ localStorage.setItem('ayy-prof-cur',b.dataset.p); }catch(err){} }
-    const p=lpCur(); SETTINGS.callsign=p.callsign; saveSettings(); accChip(); accRender(); toast('Profil: '+p.callsign,'#b8ecff'); });
+    ACC.local=null; const p=lpCur(); SETTINGS.callsign=p.callsign; saveSettings(); accChip(); accRender(); toast('Profil: '+p.callsign,'#b8ecff'); });
   /* cloud connection from the settings (advanced) */
   $('btnSupa').addEventListener('click',function(){ const url=($('setSupaUrl').value||'').trim(), key=($('setSupaKey').value||'').trim();
     if(!url&&!key){ try{ localStorage.removeItem('ayy-supa'); }catch(e){} toast('Bulut bağlantısı kaldırıldı — sayfa yenileniyor','#ffc24a'); setTimeout(function(){ location.reload(); },900); return; }

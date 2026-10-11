@@ -1,6 +1,21 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.67 — 2026-10-11
+- **Rütbeler:** Er → Onbaşı → Çavuş → Uzman Çavuş → Astsubay → Asteğmen → Teğmen → Üsteğmen → Yüzbaşı → Binbaşı → Yarbay → Albay → Tuğgeneral → Tümgeneral → Korgeneral → Orgeneral.
+  - Her rütbenin arması var: erbaşlarda şerit, astsubayda çubuk, subaylarda yıldız, üst subaylarda ay-yıldız, generallerde defne ve yıldızlar.
+- **Tecrübe puanı (TP):** uçuşta kazanılan puanın dörtte biri (hedef, düşman, halka), havada geçen her dakika (+10), kalkış (+5), iniş (+30), tamamlanan görev (+150), haritada yeni bir yer (+15), helikopterle uçuş.
+- **Terfi töreni:** rütbe atlayınca menüde büyük arma ve zafer müziğiyle gösteriliyor; açılan uçaklar listeleniyor.
+- **Kariyer sayfası** (ana menü → Kariyer ya da profil kartı):
+  - Rütbe ve sonraki rütbeye kalan TP çubuğu.
+  - İstatistikler: uçuş süresi, kalkış, iniş, görev, düşürülen uçak, yer hedefi, helikopter, kaza.
+  - 10 madalya.
+  - Son 12 uçuşun kaydı: tarih, araç, görev, süre, sonuç, TP.
+  - Rütbe basamakları.
+- **Rütbeyle açılan uçaklar:** TB3 (Asteğmen), Akıncı (Teğmen), Kızılelma (Üsteğmen), KAAN (Yüzbaşı), ANKA-3 (Binbaşı). Hangarda kilit simgesi ve gerekli rütbe gösteriliyor.
+  - Kilitler yalnız bulut hesabıyla oynayan normal oyuncular için geçerli. Yönetici her uçağı kullanabiliyor; bulut bağlantısı kurulmamış cihazda da kilit yok.
+- Profil kartında rütbe kısaltması, çok oyunculuda isim yanında rütbe.
+
 ## V1.66 — 2026-10-11
 - **Hesap ve profil ekranı:** ana menüdeki profil kartına dokununca açılıyor.
   - Google ya da e-posta/şifre ile giriş, kayıt, şifre yenileme.

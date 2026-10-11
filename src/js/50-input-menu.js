@@ -18,7 +18,7 @@ function titleDetail(act){
   const D={
     free:['OYNA','Serbest Uçuş','Adayı dilediğin gibi keşfet: üsler, şehirler, köprüler, adalar. Süre ve düşman yok (Ayarlar → Oynanış ile açabilirsin).',[chip('Uçak',a.short),chip('Başlangıç',START_TXT[startPick]),chip('Yer',pl?pl.n:'Ay Yıldız Hava Üssü')],'▶ Uç'],
     missions:['OYNA','Görevler',MORDER.length+' görev: halka parkuru, it dalaşı, yer hedefleri, keşif ve daha fazlası. Brifingi okuyup uçağını seç.',[chip('Seçili',MISSIONS[missionId==='net'?'free':missionId].name),chip('Uçak',a.short)],'Görevleri aç'],
-    career:['OYNA','Kariyer','Er’den Orgeneral’e: rütbe, madalya, açılan uçaklar ve kayıtlar. Hesap ve profil sistemiyle birlikte geliyor.',[chip('Yakında')],'Yakında'],
+    career:['OYNA','Kariyer','Er’den Orgeneral’e: uçtukça tecrübe puanı kazan, terfi et, madalya topla, yeni uçakların kilidini aç.',[chip('Rütbe',rankName(accProfile().rank||0)),chip('TP',(accProfile().xp||0).toLocaleString('tr-TR'))],'Kariyerimi aç'],
     net:['OYNA','Çok Oyunculu','Arkadaşlarınla 4 kişiye kadar: işbirliği, takım ya da herkes herkese. Oda kodu ile katıl, sesli sohbet et.',[chip(navigator.onLine===false?'Çevrimdışı':'İnternet var'),chip('Oyuncu','2–4')],'Oda kur / katıl'],
     walk:['OYNA','Üssü Gez','Yürü, zıpla, araçlara ve helikopterlere bin. Haritadan istediğin yere ışınlan.',[chip('Araç','SUV, 4×4'),chip('Helikopter','T129, T625')],'▶ Gezmeye başla'],
     hangar:['ÜS','Hangar','Uçağını seç, boyasını ve mühimmatını ayarla, hangarda 3B incele.',[chip('Uçak',a.name),chip('Yük',loadSummary(selectedId))],'Hangara git'],
@@ -27,7 +27,7 @@ function titleDetail(act){
     settings:['SİSTEM','Ayarlar','Grafik, kontroller (klavye, gamepad, dokunmatik), ses, oynanış ve arayüz.',[chip('Kalite',['Düşük','Orta','Yüksek','Ultra'][SETTINGS.quality]),chip('Cihaz',DEV.kind)],'Ayarları aç'],
     records:['SİSTEM','Rekorlar','Uçak ve görev bazında en iyi süreler ve puanlar.',[],'Rekorları aç']};
   const d=D[act]; if(!d) return; const el=$('cDet');
-  $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=d[3].join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=act==='career';
+  $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=d[3].join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=false;
   el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim');
 }
 /* input hints follow the last device used */
@@ -51,12 +51,13 @@ function refreshTitle(){
 }
 function titleAct(act){
   if(state!=='menu') return;
+  if((act==='fly'||act==='free')&&rankLocked(selectedId)){ toast('🔒 '+AIRCRAFT[selectedId].name+' '+rankName(RANK_LOCK[selectedId])+' rütbesinde açılır — hangardan başka uçak seç','#ffc24a'); enterHangar(); return; }
   if(act==='fly'){ startGame(startPick); return; }
   if(act==='free'){ if(missionId!=='free') selectMission('free'); startGame(startPick==='walk'?'hangar':startPick); return; }
   if(act==='walk'){ startGame('walk'); return; }
   if(act==='sounds'){ openSoundLib(); return; }
   if(act==='records'){ renderRecords(); openModal('records'); return; }
-  if(act==='career') return;
+  if(act==='career'){ accOpen('career'); return; }
   if(act==='hangar'){ enterHangar(); return; }
   if(act==='missions'){ openMissions(); return; }
   if(act==='net'){ openNet(); return; }
@@ -125,7 +126,8 @@ const START_ORDER=['hangar','runway','air','walk'];
 function loadSummary(id){ const n=SLOTS[id]||0; if(n<=0) return 'silah taşımaz'; const l=loadoutOf(id), parts=WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }); return parts.join(' · ')||'boş'; }
 let loadFrom='hangar';
 function preFlight(from){            // after picking the aircraft: weapons first (if it carries any), then the start dialog
-  if(state!=='menu') return; loadFrom=(from==='missions')?'missions':'hangar';
+  if(state!=='menu') return;
+  if(rankLocked(selectedId)){ toast('🔒 '+AIRCRAFT[selectedId].name+' '+rankName(RANK_LOCK[selectedId])+' rütbesinde açılır','#ffc24a'); return; } loadFrom=(from==='missions')?'missions':'hangar';
   if(SLOTS[selectedId]>0) openLoadPanel(loadFrom); else openStart(loadFrom);
 }
 function loadDone(){ const f=loadFrom; if(f==='missions'){ menuMode='missions'; showScreen('missionsUI'); renderMissions(); } else { menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2; showScreen('hangarUI'); refreshHangarUI(); } openStart(f); }
@@ -211,7 +213,7 @@ function refreshHangarUI(){
     $('hStats').innerHTML=st.map(function(t){ return '<li><small>'+t[0]+'</small><b>'+t[1]+'</b></li>'; }).join(''); $('hPerf').innerHTML=perfHTML(HSEL);
     $('acPos').textContent=(HSEL==='t129'?1:2)+' / 2'; $('btnPlay').textContent='▶ Helikopterle uç';
     Array.prototype.forEach.call($('acChips').children,function(b){ b.setAttribute('aria-checked',String(b.dataset.heli===HSEL)); }); return; }
-  $('btnPlay').textContent='▶ Oyuna başla';
+  $('btnPlay').textContent=rankLocked(selectedId)?'🔒 '+rankName(RANK_LOCK[selectedId])+' rütbesinde açılır':'▶ Oyuna başla'; $('btnPlay').classList.toggle('locked',rankLocked(selectedId));
   const a=AIRCRAFT[selectedId];
   $('hName').textContent=a.name; $('hKind').textContent=regOf(selectedId).maker+' · '+a.kind; $('hDesc').textContent=a.desc;
   const st=[['UZUNLUK',a.len],['AÇIKLIK',a.span],['SİLAH YERİ',SLOTS[selectedId]>0?String(SLOTS[selectedId]):'—'],['FLARE',String(FLARES[selectedId]||0)],['MÜRETTEBAT',a.uav?'İnsansız':'Pilotlu']]; if(a.hasAB) st.push(['MOTOR','Art yakıcı']);
@@ -250,7 +252,7 @@ function buildPicker(){
   L.forEach(function(id){
     const a=AIRCRAFT[id], b=document.createElement('button');
     b.type='button'; b.className='chip'; b.dataset.id=id; b.setAttribute('role','radio');
-    b.innerHTML=silSVG(id)+'<span>'+a.short+'</span><small>'+regOf(id).maker+'</small>';
+    b.innerHTML=silSVG(id)+'<span>'+a.short+'</span><small>'+(rankLocked(id)?'🔒 '+rankName(RANK_LOCK[id]):regOf(id).maker)+'</small>';
     b.addEventListener('click',function(){ selectAircraft(id); });
     box.appendChild(b);
   });

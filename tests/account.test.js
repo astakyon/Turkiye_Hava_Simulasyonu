@@ -32,6 +32,6 @@ localStorage.setItem('ayy-supa',JSON.stringify({url:'https://abc.supabase.co',ke
   DB.profiles.u1.role='admin'; await accAfterLogin(); T('admin role from server',accIsAdmin());
   await accSignOut(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); T('signed out',!ACC.user&&ACC.status==='guest');
   /* local profiles */
-  const L=lpAll(); L.push({id:'g2',callsign:'Mavi 2',unit:'deniz',emblem:'kartal',xp:0,rank:0,stats:{}}); lpSave(L); localStorage.setItem('ayy-prof-cur','g2'); T('local profile switch',accProfile().callsign==='Mavi 2');
+  const L=lpAll(); L.push({id:'g2',callsign:'Mavi 2',unit:'deniz',emblem:'kartal',xp:0,rank:0,stats:{}}); lpSave(L); localStorage.setItem('ayy-prof-cur','g2'); ACC.local=null; T('local profile switch',accProfile().callsign==='Mavi 2');
   console.log('pass',ok,'fail',bad);
 })();

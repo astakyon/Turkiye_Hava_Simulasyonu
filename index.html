@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.66">
+<meta name="game-version" content="V1.67">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -604,6 +604,23 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
 .supa{ display:flex; flex-wrap:wrap; gap:6px; max-width:420px; } .supa .inp{ flex:1 1 180px; padding:7px 10px; font-size:12px; }
 .c-news{ position:absolute; right:max(clamp(16px,3vw,44px),env(safe-area-inset-right)); top:calc(max(16px,env(safe-area-inset-top)) + 58px); max-width:min(440px,40vw); padding:10px 14px; border-radius:var(--r2); border:1px solid rgba(255,194,74,.4); background:rgba(40,28,4,.75); font-size:13px; line-height:1.4; }
 .c-news b{ color:var(--amber); letter-spacing:.2em; font-size:10px; margin-right:6px; }
+
+/* career */
+.accp.car{ grid-column:1/-1; }
+.carhead{ display:flex; gap:16px; align-items:center; } .carhead .rk{ display:grid; place-items:center; width:84px; height:84px; border-radius:50%; background:radial-gradient(circle,#18263c,#0a1220); border:1px solid rgba(255,210,122,.35); flex:none; }
+.carhead h2{ margin:2px 0 8px; font-size:var(--t-xl); } .carhead small{ color:var(--dim); font-size:12px; } .carhead > div:last-child{ flex:1; min-width:0; }
+.xpb{ height:8px; border-radius:4px; background:rgba(255,255,255,.1); overflow:hidden; margin-bottom:4px; } .xpb i{ display:block; height:100%; background:linear-gradient(90deg,#b8862b,#ffd27a); border-radius:4px; transition:width .5s var(--ease); }
+.carstats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:8px; } .carstats div{ padding:10px; border-radius:var(--r2); background:rgba(255,255,255,.04); border:1px solid var(--edge); }
+.carstats b{ display:block; font-size:var(--t-l); } .carstats small{ color:var(--dim); font-size:11px; }
+.carmed{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:6px; } .md{ display:grid; grid-template-columns:auto 1fr; gap:0 8px; padding:8px; border-radius:var(--r2); border:1px solid var(--edge); opacity:.38; }
+.md span{ grid-row:span 2; font-size:20px; filter:grayscale(1); } .md.on{ opacity:1; border-color:rgba(255,210,122,.45); } .md.on span{ filter:none; } .md b{ font-size:12px; } .md small{ font-size:10px; color:var(--dim); }
+.carlog{ overflow-x:auto; } .carlog table{ width:100%; border-collapse:collapse; font-size:12px; } .carlog th{ text-align:left; color:var(--dim); font-weight:600; padding:4px 6px; border-bottom:1px solid var(--edge); } .carlog td{ padding:5px 6px; border-bottom:1px solid rgba(255,255,255,.05); white-space:nowrap; }
+.carrk summary{ cursor:pointer; color:var(--dim); font-size:12px; } #carRanks{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:6px; margin-top:8px; }
+.rr{ display:grid; grid-template-columns:auto 1fr; gap:0 6px; align-items:center; padding:6px; border-radius:var(--r1); opacity:.5; } .rr svg{ grid-row:span 2; } .rr b{ font-size:12px; } .rr small{ font-size:10px; color:var(--dim); } .rr.past{ opacity:.8; } .rr.cur{ opacity:1; background:rgba(255,210,122,.12); }
+.rankup{ position:fixed; inset:0; z-index:40; display:grid; place-items:center; background:radial-gradient(circle at 50% 45%,rgba(40,30,8,.85),rgba(2,5,10,.94)); animation:dsFade .3s var(--ease); }
+.rankup .ru{ text-align:center; animation:dsIn .5s var(--ease); } .rankup .k{ margin:12px 0 0; letter-spacing:.5em; color:#ffd27a; font-weight:800; font-size:13px; } .rankup h2{ margin:4px 0 8px; font-size:clamp(34px,6vw,64px); letter-spacing:.08em; }
+.rankup p{ color:#d6e0ea; } .rankup .un b{ color:#ffd27a; } .rankup .btn{ margin-top:14px; min-width:180px; }
+.chip .lk{ position:absolute; top:4px; right:6px; font-size:11px; }
 </style>
 </head>
 <body>
@@ -630,7 +647,7 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
   <div class="tt-c" id="titleC">
     <header class="c-top"><div class="c-brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM3"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM3)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div></div>
       <button class="c-prof ui" type="button" id="cProf" title="Profil"><span class="rk" id="cRank">ER</span><span class="pn"><b id="cName">Misafir pilot</b><small id="cSub">Hilal Kanatlar</small></span></button></header>
-    <nav class="c-nav ui" id="cNav" aria-label="Ana menü"><p class="mg">OYNA</p><button class="mitem mc" type="button" data-act="free"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 5l12 7-12 7z"/></svg><span class="mt"><b>Serbest Uçuş</b><small id="mc_free">Süresiz, düşmansız</small></span></button><button class="mitem mc" type="button" data-act="missions"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg><span class="mt"><b>Görevler</b><small id="mc_missions"></small></span></button><button class="mitem mc" type="button" data-act="career" disabled aria-disabled="true"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span class="mt"><b>Kariyer</b><small id="mc_career">Yakında</small></span><i class="soon">YAKINDA</i></button><button class="mitem mc" type="button" data-act="net"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></svg><span class="mt"><b>Çok Oyunculu</b><small id="mc_net">4 kişi · sesli sohbet</small></span></button><button class="mitem mc" type="button" data-act="walk"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="13" cy="4.5" r="2"/><path d="M10 21l2-6-3-3 1-5 4 3 3 1M12 15l3 6"/></svg><span class="mt"><b>Üssü Gez</b><small id="mc_walk">Yürü, sür, helikoptere bin</small></span></button><p class="mg">ÜS</p><button class="mitem mc" type="button" data-act="hangar"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M3 20V10l9-6 9 6v10"/><path d="M7 20v-6h10v6"/></svg><span class="mt"><b>Hangar</b><small id="mc_hangar">Uçak, boya, mühimmat</small></span></button><button class="mitem mc" type="button" data-act="library"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg><span class="mt"><b>Model Kütüphanesi</b><small id="mc_library">Hava · deniz · kara</small></span></button><button class="mitem mc" type="button" data-act="sounds"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12"/></svg><span class="mt"><b>Ses Kütüphanesi</b><small id="mc_sounds">Sesler ve müzikler</small></span></button><p class="mg">SİSTEM</p><button class="mitem mc" type="button" data-act="settings"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg><span class="mt"><b>Ayarlar</b><small id="mc_settings">Grafik, kontroller, ses</small></span></button><button class="mitem mc" type="button" data-act="records"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8"/></svg><span class="mt"><b>Rekorlar</b><small id="mc_records">En iyi süreler</small></span></button></nav>
+    <nav class="c-nav ui" id="cNav" aria-label="Ana menü"><p class="mg">OYNA</p><button class="mitem mc" type="button" data-act="free"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 5l12 7-12 7z"/></svg><span class="mt"><b>Serbest Uçuş</b><small id="mc_free">Süresiz, düşmansız</small></span></button><button class="mitem mc" type="button" data-act="missions"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg><span class="mt"><b>Görevler</b><small id="mc_missions"></small></span></button><button class="mitem mc" type="button" data-act="career"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span class="mt"><b>Kariyer</b><small id="mc_career">Rütbe, madalya, kayıt</small></span></button><button class="mitem mc" type="button" data-act="net"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></svg><span class="mt"><b>Çok Oyunculu</b><small id="mc_net">4 kişi · sesli sohbet</small></span></button><button class="mitem mc" type="button" data-act="walk"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="13" cy="4.5" r="2"/><path d="M10 21l2-6-3-3 1-5 4 3 3 1M12 15l3 6"/></svg><span class="mt"><b>Üssü Gez</b><small id="mc_walk">Yürü, sür, helikoptere bin</small></span></button><p class="mg">ÜS</p><button class="mitem mc" type="button" data-act="hangar"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M3 20V10l9-6 9 6v10"/><path d="M7 20v-6h10v6"/></svg><span class="mt"><b>Hangar</b><small id="mc_hangar">Uçak, boya, mühimmat</small></span></button><button class="mitem mc" type="button" data-act="library"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg><span class="mt"><b>Model Kütüphanesi</b><small id="mc_library">Hava · deniz · kara</small></span></button><button class="mitem mc" type="button" data-act="sounds"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12"/></svg><span class="mt"><b>Ses Kütüphanesi</b><small id="mc_sounds">Sesler ve müzikler</small></span></button><p class="mg">SİSTEM</p><button class="mitem mc" type="button" data-act="settings"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg><span class="mt"><b>Ayarlar</b><small id="mc_settings">Grafik, kontroller, ses</small></span></button><button class="mitem mc" type="button" data-act="records"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8"/></svg><span class="mt"><b>Rekorlar</b><small id="mc_records">En iyi süreler</small></span></button></nav>
     <div class="c-news hidden ui" id="cNews"></div>
     <section class="c-det ui" id="cDet" aria-live="polite"><p class="k" id="cdK"></p><h2 id="cdT"></h2><p class="d" id="cdD"></p><div class="chips" id="cdC"></div><button class="btn primary" type="button" id="cdGo">Başlat</button></section>
     <footer class="c-hint" id="cHint"></footer>
@@ -884,6 +901,13 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
   <button class="btn back" id="btnAccBack" type="button">← Geri</button>
   <div class="shdr"><span>■</span> HESAP VE PROFİL</div>
   <div class="accwrap">
+    <section class="accp car" id="carSec">
+      <div class="carhead" id="carHead"></div>
+      <div class="carstats" id="carStats"></div>
+      <p class="k">MADALYALAR</p><div class="carmed" id="carMedals"></div>
+      <p class="k">SON UÇUŞLAR</p><div class="carlog" id="carLog"></div>
+      <details class="carrk"><summary>Rütbe basamakları</summary><div id="carRanks"></div></details>
+    </section>
     <section class="accp">
       <p class="k">HESAP</p>
       <div class="accst" id="accState"></div>
@@ -991,6 +1015,7 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
   </div>
 </div>
 
+<div id="rankUp" class="rankup hidden"></div>
 <div id="radioSub" class="radiosub hidden"></div>
 <div id="radioMenu" class="radiomenu hidden"></div>
 <div id="pttInd" class="pttind hidden">🎙 KONUŞUYORSUN</div>
@@ -1033,7 +1058,7 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.66', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.67', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -6757,7 +6782,7 @@ function titleDetail(act){
   const D={
     free:['OYNA','Serbest Uçuş','Adayı dilediğin gibi keşfet: üsler, şehirler, köprüler, adalar. Süre ve düşman yok (Ayarlar → Oynanış ile açabilirsin).',[chip('Uçak',a.short),chip('Başlangıç',START_TXT[startPick]),chip('Yer',pl?pl.n:'Ay Yıldız Hava Üssü')],'▶ Uç'],
     missions:['OYNA','Görevler',MORDER.length+' görev: halka parkuru, it dalaşı, yer hedefleri, keşif ve daha fazlası. Brifingi okuyup uçağını seç.',[chip('Seçili',MISSIONS[missionId==='net'?'free':missionId].name),chip('Uçak',a.short)],'Görevleri aç'],
-    career:['OYNA','Kariyer','Er’den Orgeneral’e: rütbe, madalya, açılan uçaklar ve kayıtlar. Hesap ve profil sistemiyle birlikte geliyor.',[chip('Yakında')],'Yakında'],
+    career:['OYNA','Kariyer','Er’den Orgeneral’e: uçtukça tecrübe puanı kazan, terfi et, madalya topla, yeni uçakların kilidini aç.',[chip('Rütbe',rankName(accProfile().rank||0)),chip('TP',(accProfile().xp||0).toLocaleString('tr-TR'))],'Kariyerimi aç'],
     net:['OYNA','Çok Oyunculu','Arkadaşlarınla 4 kişiye kadar: işbirliği, takım ya da herkes herkese. Oda kodu ile katıl, sesli sohbet et.',[chip(navigator.onLine===false?'Çevrimdışı':'İnternet var'),chip('Oyuncu','2–4')],'Oda kur / katıl'],
     walk:['OYNA','Üssü Gez','Yürü, zıpla, araçlara ve helikopterlere bin. Haritadan istediğin yere ışınlan.',[chip('Araç','SUV, 4×4'),chip('Helikopter','T129, T625')],'▶ Gezmeye başla'],
     hangar:['ÜS','Hangar','Uçağını seç, boyasını ve mühimmatını ayarla, hangarda 3B incele.',[chip('Uçak',a.name),chip('Yük',loadSummary(selectedId))],'Hangara git'],
@@ -6766,7 +6791,7 @@ function titleDetail(act){
     settings:['SİSTEM','Ayarlar','Grafik, kontroller (klavye, gamepad, dokunmatik), ses, oynanış ve arayüz.',[chip('Kalite',['Düşük','Orta','Yüksek','Ultra'][SETTINGS.quality]),chip('Cihaz',DEV.kind)],'Ayarları aç'],
     records:['SİSTEM','Rekorlar','Uçak ve görev bazında en iyi süreler ve puanlar.',[],'Rekorları aç']};
   const d=D[act]; if(!d) return; const el=$('cDet');
-  $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=d[3].join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=act==='career';
+  $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=d[3].join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=false;
   el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim');
 }
 /* input hints follow the last device used */
@@ -6790,12 +6815,13 @@ function refreshTitle(){
 }
 function titleAct(act){
   if(state!=='menu') return;
+  if((act==='fly'||act==='free')&&rankLocked(selectedId)){ toast('🔒 '+AIRCRAFT[selectedId].name+' '+rankName(RANK_LOCK[selectedId])+' rütbesinde açılır — hangardan başka uçak seç','#ffc24a'); enterHangar(); return; }
   if(act==='fly'){ startGame(startPick); return; }
   if(act==='free'){ if(missionId!=='free') selectMission('free'); startGame(startPick==='walk'?'hangar':startPick); return; }
   if(act==='walk'){ startGame('walk'); return; }
   if(act==='sounds'){ openSoundLib(); return; }
   if(act==='records'){ renderRecords(); openModal('records'); return; }
-  if(act==='career') return;
+  if(act==='career'){ accOpen('career'); return; }
   if(act==='hangar'){ enterHangar(); return; }
   if(act==='missions'){ openMissions(); return; }
   if(act==='net'){ openNet(); return; }
@@ -6864,7 +6890,8 @@ const START_ORDER=['hangar','runway','air','walk'];
 function loadSummary(id){ const n=SLOTS[id]||0; if(n<=0) return 'silah taşımaz'; const l=loadoutOf(id), parts=WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }); return parts.join(' · ')||'boş'; }
 let loadFrom='hangar';
 function preFlight(from){            // after picking the aircraft: weapons first (if it carries any), then the start dialog
-  if(state!=='menu') return; loadFrom=(from==='missions')?'missions':'hangar';
+  if(state!=='menu') return;
+  if(rankLocked(selectedId)){ toast('🔒 '+AIRCRAFT[selectedId].name+' '+rankName(RANK_LOCK[selectedId])+' rütbesinde açılır','#ffc24a'); return; } loadFrom=(from==='missions')?'missions':'hangar';
   if(SLOTS[selectedId]>0) openLoadPanel(loadFrom); else openStart(loadFrom);
 }
 function loadDone(){ const f=loadFrom; if(f==='missions'){ menuMode='missions'; showScreen('missionsUI'); renderMissions(); } else { menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2; showScreen('hangarUI'); refreshHangarUI(); } openStart(f); }
@@ -6950,7 +6977,7 @@ function refreshHangarUI(){
     $('hStats').innerHTML=st.map(function(t){ return '<li><small>'+t[0]+'</small><b>'+t[1]+'</b></li>'; }).join(''); $('hPerf').innerHTML=perfHTML(HSEL);
     $('acPos').textContent=(HSEL==='t129'?1:2)+' / 2'; $('btnPlay').textContent='▶ Helikopterle uç';
     Array.prototype.forEach.call($('acChips').children,function(b){ b.setAttribute('aria-checked',String(b.dataset.heli===HSEL)); }); return; }
-  $('btnPlay').textContent='▶ Oyuna başla';
+  $('btnPlay').textContent=rankLocked(selectedId)?'🔒 '+rankName(RANK_LOCK[selectedId])+' rütbesinde açılır':'▶ Oyuna başla'; $('btnPlay').classList.toggle('locked',rankLocked(selectedId));
   const a=AIRCRAFT[selectedId];
   $('hName').textContent=a.name; $('hKind').textContent=regOf(selectedId).maker+' · '+a.kind; $('hDesc').textContent=a.desc;
   const st=[['UZUNLUK',a.len],['AÇIKLIK',a.span],['SİLAH YERİ',SLOTS[selectedId]>0?String(SLOTS[selectedId]):'—'],['FLARE',String(FLARES[selectedId]||0)],['MÜRETTEBAT',a.uav?'İnsansız':'Pilotlu']]; if(a.hasAB) st.push(['MOTOR','Art yakıcı']);
@@ -6989,7 +7016,7 @@ function buildPicker(){
   L.forEach(function(id){
     const a=AIRCRAFT[id], b=document.createElement('button');
     b.type='button'; b.className='chip'; b.dataset.id=id; b.setAttribute('role','radio');
-    b.innerHTML=silSVG(id)+'<span>'+a.short+'</span><small>'+regOf(id).maker+'</small>';
+    b.innerHTML=silSVG(id)+'<span>'+a.short+'</span><small>'+(rankLocked(id)?'🔒 '+rankName(RANK_LOCK[id]):regOf(id).maker)+'</small>';
     b.addEventListener('click',function(){ selectAircraft(id); });
     box.appendChild(b);
   });
@@ -8980,10 +9007,10 @@ function lpAll(){ try{ const L=JSON.parse(localStorage.getItem('ayy-profiles')||
 function lpSave(L){ try{ localStorage.setItem('ayy-profiles',JSON.stringify(L)); }catch(e){} }
 function lpCurId(){ try{ return localStorage.getItem('ayy-prof-cur')||'g1'; }catch(e){ return 'g1'; } }
 function lpCur(){ const L=lpAll(); return L.find(function(p){ return p.id===lpCurId(); })||L[0]; }
-function accProfile(){ return ACC.prof||lpCur(); }
+function accProfile(){ if(ACC.prof) return ACC.prof; if(!ACC.local||ACC.local.id!==lpCurId()) ACC.local=lpCur(); return ACC.local; }
 function accSetProfile(patch){
   if(ACC.prof){ Object.assign(ACC.prof,patch); accPushProfile(); }
-  else { const L=lpAll(), p=L.find(function(x){ return x.id===lpCurId(); })||L[0]; Object.assign(p,patch); lpSave(L); }
+  else { const L=lpAll(), p=L.find(function(x){ return x.id===lpCurId(); })||L[0]; Object.assign(p,patch); lpSave(L); ACC.local=null; }
   if(patch.callsign){ SETTINGS.callsign=patch.callsign; saveSettings(); }
   accChip();
 }
@@ -9078,7 +9105,7 @@ function accChip(){ const p=accProfile(), em=(EMBLEMS.find(function(e){ return e
   sub.textContent=(UNITS[p.unit]||'Hilal Kanatlar')+' · '+(ACC.user?ACC_ST[ACC.status]||'':(ACC.cfg?'Misafir · giriş yap':'Misafir'));
   rk.textContent=typeof rankShort==='function'?rankShort(p.rank||0):em; rk.title=em; }
 function accMsg(t,err){ const el=$('accMsg'); if(!el) return; el.textContent=t||''; el.classList.toggle('err',!!err); }
-function accOpen(tab){ closeModals(); $('acctUI').classList.remove('hidden'); ACC.tab=tab||(ACC.user&&!ACC.prof?'profile':'acct'); accRender(); }
+function accOpen(tab){ closeModals(); $('acctUI').classList.remove('hidden'); ACC.tab=tab||(ACC.user&&!ACC.prof?'profile':'acct'); accRender(); try{ const t=tab==='career'?$('carSec'):(tab==='profile'?$('accProfTitle'):null); if(t&&t.scrollIntoView) t.scrollIntoView({block:'start'}); }catch(e){} }
 function accClose(){ $('acctUI').classList.add('hidden'); }
 function accRender(){
   const p=accProfile(), cfg=!!ACC.cfg, L=lpAll();
@@ -9090,6 +9117,7 @@ function accRender(){
   $('accCs').value=p.callsign||''; $('accUnit').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(p.unit||'hava'))); });
   $('accEm').innerHTML=EMBLEMS.map(function(e){ return '<button type="button" data-e="'+e[0]+'"'+(e[0]===(p.emblem||'hilal')?' aria-pressed="true"':'')+'>'+e[1]+'</button>'; }).join('');
   $('accProfTitle').textContent=ACC.user&&!ACC.prof?'Profilini oluştur':'Profil';
+  if(typeof careerRender==='function') careerRender();
 }
 (function(){
   $('btnAccBack').addEventListener('click',function(){ accClose(); if(state==='menu') refreshTitle(); });
@@ -9108,13 +9136,111 @@ function accRender(){
   $('accProfList').addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(!b) return; const L=lpAll();
     if(b.dataset.p==='new'){ const id='g'+Date.now().toString(36); L.push({id:id,callsign:'Pilot '+(L.length+1),unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}); lpSave(L); try{ localStorage.setItem('ayy-prof-cur',id); }catch(err){} }
     else { lpSave(L); try{ localStorage.setItem('ayy-prof-cur',b.dataset.p); }catch(err){} }
-    const p=lpCur(); SETTINGS.callsign=p.callsign; saveSettings(); accChip(); accRender(); toast('Profil: '+p.callsign,'#b8ecff'); });
+    ACC.local=null; const p=lpCur(); SETTINGS.callsign=p.callsign; saveSettings(); accChip(); accRender(); toast('Profil: '+p.callsign,'#b8ecff'); });
   /* cloud connection from the settings (advanced) */
   $('btnSupa').addEventListener('click',function(){ const url=($('setSupaUrl').value||'').trim(), key=($('setSupaKey').value||'').trim();
     if(!url&&!key){ try{ localStorage.removeItem('ayy-supa'); }catch(e){} toast('Bulut bağlantısı kaldırıldı — sayfa yenileniyor','#ffc24a'); setTimeout(function(){ location.reload(); },900); return; }
     if(!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url)||key.length<40){ toast('Adres https://xxxx.supabase.co biçiminde, anahtar "anon public" olmalı','#ff6a5a'); return; }
     try{ localStorage.setItem('ayy-supa',JSON.stringify({url:url.replace(/\/$/,''),key:key})); }catch(e){} toast('Bağlanılıyor…','#b8ecff'); accInit().then(function(){ accOpen(); }); });
 })();
+/* ------------------------------------------------------------------ career: ranks (Er → Orgeneral), experience, statistics, medals, flight log
+   XP comes from the score earned in flight (targets, aircraft, rings), landings, mission completions and time in the air.
+   Promotions show a ceremony; some aircraft unlock with rank (players only — the administrator / development device flies all).
+   Everything lives in the profile (local guest profile or the cloud profile row). */
+const RANKS=[
+  ['Er','ER',0],['Onbaşı','OBŞ',100],['Çavuş','ÇVŞ',300],['Uzman Çavuş','UZÇ',600],['Astsubay','ASB',1000],['Asteğmen','ASĞ',1500],['Teğmen','TĞM',2200],['Üsteğmen','ÜTĞ',3000],
+  ['Yüzbaşı','YZB',4000],['Binbaşı','BNB',5500],['Yarbay','YBY',7500],['Albay','ALB',10000],['Tuğgeneral','TUĞ',13500],['Tümgeneral','TÜM',18000],['Korgeneral','KOR',24000],['Orgeneral','ORG',32000]];
+const RANK_LOCK={tb3:5,akinci:6,kizilelma:7,kaan:8,anka3:9};    /* aircraft id → rank index needed */
+const MEDALS=[
+  ['first','İlk uçuş','Bir kez havalan',function(s){ return (s.takeoffs||0)>=1; }],
+  ['land1','Pilot kanadı','İlk başarılı iniş',function(s){ return (s.landings||0)>=1; }],
+  ['land25','Usta pilot','25 iniş',function(s){ return (s.landings||0)>=25; }],
+  ['hour','Bir saat havada','Toplam 60 dakika uçuş',function(s){ return (s.flightSec||0)>=3600; }],
+  ['kill1','İlk zafer','İlk düşman uçağını düşür',function(s){ return (s.kills||0)>=1; }],
+  ['ace','As pilot','5 düşman uçağı',function(s){ return (s.kills||0)>=5; }],
+  ['strike','Hedef uzmanı','25 yer hedefi',function(s){ return (s.ground||0)>=25; }],
+  ['mis5','Görev adamı','5 görev tamamla',function(s){ return (s.missions||0)>=5; }],
+  ['heli','Döner kanat','Helikopterle 5 dakika uç',function(s){ return (s.heliSec||0)>=300; }],
+  ['explorer','Kâşif','Haritada 10 farklı yere git',function(s){ return (s.places||[]).length>=10; }]];
+const CAR={prevState:null, prevGround:true, lastScore:0, airT:0, sess:null, ceremony:[], pushT:0};
+function rankOf(xp){ let r=0; for(let i=0;i<RANKS.length;i++) if(xp>=RANKS[i][2]) r=i; return r; }
+function rankShort(i){ return (RANKS[i]||RANKS[0])[1]; }
+function rankName(i){ return (RANKS[i]||RANKS[0])[0]; }
+function rankLocked(id){ if(typeof accIsAdmin==='function'&&accIsAdmin()) return false; if(SETTINGS.rankLocks===false) return false; const need=RANK_LOCK[id]; return need!=null&&(accProfile().rank||0)<need; }
+/* insignia: chevrons for enlisted, bar for NCO, stars for officers, crescent-star for field grade, wreath for generals */
+function rankSVG(i,size){
+  const s=size||40, gold='#ffd27a', sil='#e6edf3'; let g='';
+  if(i===0) g='<rect x="10" y="18" width="20" height="4" rx="2" fill="'+sil+'" opacity=".5"/>';
+  else if(i<=3) for(let k=0;k<i;k++) g+='<path d="M8 '+(14+k*7)+' L20 '+(8+k*7)+' L32 '+(14+k*7)+'" fill="none" stroke="'+gold+'" stroke-width="3.2" stroke-linejoin="round"/>';
+  else if(i===4) g='<rect x="8" y="17" width="24" height="6" rx="1.5" fill="'+gold+'"/><rect x="8" y="17" width="24" height="2" fill="#fff" opacity=".4"/>';
+  else if(i<=8){ const n=i===5?1:i-5, star=function(x,y,o){ return '<polygon transform="translate('+x+' '+y+') scale(.55)" points="0,-9 2.6,-2.8 9,-2.8 3.9,1.1 5.8,7.6 0,3.7 -5.8,7.6 -3.9,1.1 -9,-2.8 -2.6,-2.8" fill="'+(o?'none':gold)+'" stroke="'+gold+'" stroke-width="1.6"/>'; };
+    const xs=n===1?[20]:n===2?[13,27]:[9,20,31]; xs.forEach(function(x){ g+=star(x,20,i===5); }); }
+  else if(i<=11){ const n=i-8; g='<circle cx="13" cy="20" r="7" fill="none" stroke="'+gold+'" stroke-width="2.6"/><circle cx="15.5" cy="20" r="5.6" fill="#0b1626"/>';
+    for(let k=0;k<n;k++) g+='<polygon transform="translate('+(24+k*6.5)+' 20) scale(.36)" points="0,-9 2.6,-2.8 9,-2.8 3.9,1.1 5.8,7.6 0,3.7 -5.8,7.6 -3.9,1.1 -9,-2.8 -2.6,-2.8" fill="'+gold+'"/>'; }
+  else { const n=i-11; g='<path d="M6 30 Q4 18 12 10 M34 30 Q36 18 28 10" fill="none" stroke="'+gold+'" stroke-width="2.4"/>';
+    const xs=n===1?[20]:n===2?[15,25]:n===3?[11,20,29]:[9,16,24,31]; xs.forEach(function(x){ g+='<polygon transform="translate('+x+' 20) scale(.42)" points="0,-9 2.6,-2.8 9,-2.8 3.9,1.1 5.8,7.6 0,3.7 -5.8,7.6 -3.9,1.1 -9,-2.8 -2.6,-2.8" fill="'+gold+'"/>'; }); }
+  return '<svg viewBox="0 0 40 40" width="'+s+'" height="'+s+'" aria-hidden="true">'+g+'</svg>';
+}
+/* add XP / stats to the current profile, promote when a threshold is crossed */
+function careerAdd(xp,statPatch,why){
+  const p=accProfile(), st=p.stats||(p.stats={});
+  if(statPatch) Object.keys(statPatch).forEach(function(k){ st[k]=(st[k]||0)+statPatch[k]; });
+  if(xp>0){ p.xp=Math.round((p.xp||0)+xp); if(CAR.sess) CAR.sess.xp+=xp; }
+  const r=rankOf(p.xp||0); if(r>(p.rank||0)){ p.rank=r; CAR.ceremony.push(r); }
+  MEDALS.forEach(function(m){ const got=st.medals||(st.medals=[]); if(got.indexOf(m[0])<0&&m[3](st)){ got.push(m[0]); toast('🎖 Madalya: '+m[1],'#ffd27a'); } });
+  careerSave();
+}
+function careerSave(){ const p=accProfile();
+  if(ACC.prof){ if(!CAR.pushT) CAR.pushT=setTimeout(function(){ CAR.pushT=0; accPushProfile(); },5000); }
+  else { const L=lpAll(), i=Math.max(0,L.findIndex(function(x){ return x.id===p.id; })); L[i]=p; lpSave(L); }
+  accChip(); }
+/* watch the flight: time aloft, takeoffs, landings, score → XP, sessions for the log */
+function careerStep(dt){
+  const st=state, inPlay=st==='play', p=accProfile();
+  if(inPlay&&CAR.prevState!=='play'&&CAR.prevState!=='paused'&&CAR.prevState!=='map'){ CAR.sess={t:Date.now(),ac:activeId,m:missionId,dur:0,xp:0,res:'—'}; CAR.lastScore=score; CAR.prevGround=S.onGround; }
+  if(inPlay&&!S.crashed){
+    if(CAR.sess) CAR.sess.dur+=dt;
+    if(!S.onGround){ CAR.airT+=dt; (p.stats||(p.stats={})).flightSec=((p.stats.flightSec)||0)+dt; if(CAR.airT>=60){ CAR.airT-=60; careerAdd(10,null); } }
+    if(CAR.prevGround&&!S.onGround&&S.speed>40) careerAdd(5,{takeoffs:1});
+    if(!CAR.prevGround&&S.onGround) careerAdd(30,{landings:1});
+    CAR.prevGround=S.onGround;
+    if(score>CAR.lastScore){ careerAdd(Math.round((score-CAR.lastScore)*0.25),null); CAR.lastScore=score; } else if(score<CAR.lastScore) CAR.lastScore=score;
+  }
+  if(st==='walk'&&WALK.mode==='heli'&&HELI.cur&&!HELI.cur.ground){ const s2=p.stats||(p.stats={}); s2.heliSec=(s2.heliSec||0)+dt; CAR.heliT=(CAR.heliT||0)+dt; if(CAR.heliT>=60){ CAR.heliT-=60; careerAdd(10,null); } }
+  /* a flight ended: write it to the log */
+  if(CAR.sess&&!inPlay&&st!=='paused'&&st!=='map'){ const s=CAR.sess; CAR.sess=null; if(s.dur>15){ const log=(p.stats.log||(p.stats.log=[])); log.unshift({t:s.t,ac:s.ac,m:s.m,dur:Math.round(s.dur),xp:Math.round(s.xp),res:s.res}); if(log.length>12) log.length=12; careerSave(); } }
+  if(CAR.ceremony.length&&(st==='menu'||st==='mend')&&!anyModalOpen()) careerCeremony(CAR.ceremony.shift());
+  CAR.prevState=st;
+}
+/* hooks: mission results, kills, ground targets, crashes, places visited */
+(function(){
+  const E=endMission; endMission=function(ok){ const r=E.apply(this,arguments); if(CAR.sess) CAR.sess.res=ok?'Başarılı':'Başarısız'; if(ok) careerAdd(150,{missions:1}); return r; };
+  const D=actorDown; actorDown=function(a,byId){ const r=D.apply(this,arguments); if(byId===NET.myId&&a.team!==myTeam()) careerAdd(0,{kills:1}); return r; };
+  const K=killGround; killGround=function(o){ const r=K.apply(this,arguments); careerAdd(0,{ground:1}); return r; };
+  const C=crash; crash=function(){ const r=C.apply(this,arguments); if(CAR.sess) CAR.sess.res='Kaza'; careerAdd(0,{crashes:1}); return r; };
+  const TP=teleportTo; teleportTo=function(pl){ const r=TP.apply(this,arguments); if(pl&&pl.id){ const s=accProfile().stats||(accProfile().stats={}), L=s.places||(s.places=[]); if(L.indexOf(pl.id)<0){ L.push(pl.id); careerAdd(15,null); } } return r; };
+})();
+/* promotion ceremony */
+function careerCeremony(r){
+  const el=$('rankUp'); if(!el) return; const unl=Object.keys(RANK_LOCK).filter(function(id){ return RANK_LOCK[id]===r&&AIRCRAFT[id]; }).map(function(id){ return AIRCRAFT[id].name; });
+  el.innerHTML='<div class="ru">'+rankSVG(r,120)+'<p class="k">TERFİ</p><h2>'+rankName(r).toLocaleUpperCase('tr-TR')+'</h2><p>'+(accProfile().callsign||'Pilot')+', yeni rütben hayırlı olsun.</p>'+(unl.length?'<p class="un">Açılan: <b>'+unl.join(', ')+'</b></p>':'')+'<button class="btn primary" type="button" id="btnRankOk">Devam</button></div>';
+  el.classList.remove('hidden'); if(typeof musSting==='function') musSting('victory'); sndPlay('ui_ok');
+  $('btnRankOk').addEventListener('click',function(){ el.classList.add('hidden'); });
+}
+/* profile page (career) inside the account screen */
+function careerRender(){
+  const p=accProfile(), st=p.stats||{}, r=p.rank||0, nx=RANKS[r+1], cur=RANKS[r][2], f=nx?Math.min(1,((p.xp||0)-cur)/(nx[2]-cur)):1;
+  const mins=Math.round((st.flightSec||0)/60), got=st.medals||[];
+  const box=function(k,v){ return '<div><b>'+v+'</b><small>'+k+'</small></div>'; };
+  $('carHead').innerHTML='<div class="rk">'+rankSVG(r,64)+'</div><div><p class="k">'+(UNITS[p.unit]||'Hilal Kanatlar').toLocaleUpperCase('tr-TR')+'</p><h2>'+rankName(r)+' '+(p.callsign||'')+'</h2>'+
+    '<div class="xpb"><i style="width:'+Math.round(f*100)+'%"></i></div><small>'+(p.xp||0).toLocaleString('tr-TR')+' TP'+(nx?' · '+nx[0]+' için '+(nx[2]-(p.xp||0)).toLocaleString('tr-TR')+' TP':' · en yüksek rütbe')+'</small></div>';
+  $('carStats').innerHTML=box('Uçuş süresi',mins>=60?Math.floor(mins/60)+' sa '+(mins%60)+' dk':mins+' dk')+box('Kalkış',st.takeoffs||0)+box('İniş',st.landings||0)+box('Görev',st.missions||0)+box('Düşürülen uçak',st.kills||0)+box('Yer hedefi',st.ground||0)+box('Helikopter',Math.round((st.heliSec||0)/60)+' dk')+box('Kaza',st.crashes||0);
+  $('carMedals').innerHTML=MEDALS.map(function(m){ const on=got.indexOf(m[0])>=0; return '<div class="md'+(on?' on':'')+'" title="'+m[2]+'"><span>🎖</span><b>'+m[1]+'</b><small>'+m[2]+'</small></div>'; }).join('');
+  const log=st.log||[];
+  $('carLog').innerHTML=log.length?'<table><thead><tr><th>Tarih</th><th>Araç</th><th>Görev</th><th>Süre</th><th>Sonuç</th><th>TP</th></tr></thead><tbody>'+log.map(function(l){ const d=new Date(l.t);
+    return '<tr><td>'+d.toLocaleDateString('tr-TR')+' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})+'</td><td>'+((AIRCRAFT[l.ac]||{}).short||l.ac)+'</td><td>'+((MISSIONS[l.m]||{}).name||l.m)+'</td><td>'+Math.floor(l.dur/60)+':'+String(l.dur%60).padStart(2,'0')+'</td><td>'+l.res+'</td><td>+'+l.xp+'</td></tr>'; }).join('')+'</tbody></table>':'<p class="ninfo">Henüz uçuş kaydı yok. Bir uçuş yap, burada görünsün.</p>';
+  $('carRanks').innerHTML=RANKS.map(function(R,i){ return '<div class="rr'+(i===r?' cur':'')+(i<r?' past':'')+'">'+rankSVG(i,28)+'<b>'+R[0]+'</b><small>'+R[2].toLocaleString('tr-TR')+' TP</small></div>'; }).join('');
+}
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) accOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
@@ -9134,7 +9260,7 @@ function frame(now){
   sky.position.copy(camera.position); shadowFollow(); if(state!=='library') cullStep(dt);
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
   renderFrame(dt);
-  drawHUD(); miniStep(dt); audioUpdate(); radioStep(dt); updateTouchUI(); updateWalkTouch();
+  drawHUD(); miniStep(dt); audioUpdate(); radioStep(dt); careerStep(dt); updateTouchUI(); updateWalkTouch();
 }
 requestAnimationFrame(frame);
 })();
