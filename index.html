@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.62">
+<meta name="game-version" content="V1.63">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -17,7 +17,12 @@
 <style>
 :root{
   --bg:#060b14; --ink:#eef3f8; --dim:#9aaec2; --line:rgba(190,220,245,.2); --glass:rgba(8,15,28,.78);
-  --red:#e30a17; --red-hi:#ff2a38; --hud:#b8ecff;
+  --red:#e30a17; --red-hi:#ff2a38; --hud:#b8ecff; --amber:#ffc24a; --ok:#7dffb0;
+  /* design system: radii, spacing, type scale, surfaces, motion */
+  --r1:6px; --r2:10px; --r3:14px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --t-xs:11px; --t-s:13px; --t-m:15px; --t-l:19px; --t-xl:28px; --t-xxl:clamp(30px,4.2vw,52px);
+  --surf:rgba(8,15,28,.78); --surf2:rgba(14,24,42,.86); --edge:rgba(190,220,245,.16); --glow:0 10px 40px rgba(0,0,0,.45);
+  --ease:cubic-bezier(.2,.8,.2,1); --dur:.18s;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -507,6 +512,52 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .radiomenu button{ display:flex; gap:8px; align-items:center; text-align:left; padding:7px 8px; border-radius:6px; border:1px solid transparent; background:none; color:var(--ink); font-size:13px; }
 .radiomenu button:hover{ border-color:var(--line); background:rgba(255,255,255,.05); } .radiomenu kbd{ min-width:20px; text-align:center; padding:1px 4px; border-radius:4px; background:rgba(255,255,255,.12); font:700 11px ui-monospace,monospace; }
 .pttind{ position:fixed; right:max(14px,env(safe-area-inset-right)); top:calc(max(10px,env(safe-area-inset-top)) + 58px); z-index:6; padding:6px 12px; border-radius:16px; background:#c8141c; color:#fff; font-weight:700; font-size:12px; letter-spacing:.06em; }
+
+/* ================= design system (V1.63) ================= */
+@keyframes dsIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+@keyframes dsFade{ from{ opacity:0; } to{ opacity:1; } }
+.modal:not(.hidden){ animation:dsFade var(--dur) var(--ease); }
+.modal.fs:not(.hidden) .spanel,.modal.fs:not(.hidden) .sndwrap,.modal.fs:not(.hidden) .np2{ animation:dsIn .26s var(--ease); }
+@media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }
+.btn{ transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),transform var(--dur) var(--ease); }
+.btn:active{ transform:scale(.97); }
+:focus-visible{ outline:2px solid var(--hud); outline-offset:2px; }
+.ds-kbd,.c-hint kbd{ display:inline-block; min-width:18px; padding:1px 6px; margin:0 4px 0 0; border-radius:4px; border:1px solid var(--edge); background:rgba(255,255,255,.08); font:700 11px ui-monospace,Menlo,monospace; color:var(--ink); text-align:center; }
+/* ---------- new main menu (C) */
+#title .tt-c{ display:none; } #title.ui-c .tt-c{ display:block; } #title.ui-c .ticons,#title.ui-c .sbar{ display:none; }
+.tt-c{ position:absolute; inset:0; background:linear-gradient(90deg,rgba(4,9,18,.93) 0%,rgba(4,9,18,.72) 26%,rgba(4,9,18,.1) 52%,rgba(4,9,18,0) 64%),linear-gradient(0deg,rgba(4,9,18,.75) 0%,rgba(4,9,18,0) 30%); }
+.c-top{ position:absolute; left:max(clamp(16px,3vw,44px),env(safe-area-inset-left)); right:max(clamp(16px,3vw,44px),env(safe-area-inset-right)); top:max(16px,env(safe-area-inset-top)); display:flex; align-items:center; justify-content:space-between; }
+.c-brand{ display:flex; align-items:center; gap:12px; } .c-brand .logo{ width:46px; height:46px; }
+#title .c-brand h1{ margin:0; font-size:clamp(22px,2.6vw,34px); letter-spacing:.14em; line-height:1; } #title .c-brand p{ margin:4px 0 0; font-size:var(--t-xs); letter-spacing:.42em; color:#ff6b74; font-weight:700; }
+.c-prof{ display:flex; align-items:center; gap:10px; padding:6px 14px 6px 6px; border-radius:999px; border:1px solid var(--edge); background:var(--surf); text-align:left; }
+.c-prof:hover{ border-color:rgba(190,220,245,.4); }
+.c-prof .rk{ display:grid; place-items:center; width:36px; height:36px; border-radius:50%; background:linear-gradient(160deg,#ffd27a,#b8862b); color:#1a1205; font-weight:800; font-size:11px; letter-spacing:.04em; }
+.c-prof b{ display:block; font-size:var(--t-s); } .c-prof small{ display:block; font-size:var(--t-xs); color:var(--dim); }
+.c-nav{ position:absolute; left:max(clamp(16px,3vw,44px),env(safe-area-inset-left)); top:clamp(86px,15vh,130px); bottom:52px; width:min(360px,44vw); overflow-y:auto; overflow-x:hidden; padding:4px 10px 4px 0; scrollbar-width:thin; }
+.c-nav .mg{ margin:14px 0 6px 2px; font-size:var(--t-xs); font-weight:800; letter-spacing:.34em; color:#ff6b74; } .c-nav .mg:first-child{ margin-top:0; }
+.mc{ position:relative; display:flex; align-items:center; gap:14px; width:100%; min-height:52px; margin:2px 0; padding:8px 14px; border:0; border-radius:var(--r2); background:none; text-align:left; transition:background var(--dur) var(--ease),transform var(--dur) var(--ease); animation:dsIn .3s var(--ease) both; }
+.mc::before{ content:""; position:absolute; left:0; top:10px; bottom:10px; width:3px; border-radius:2px; background:var(--red); transform:scaleY(0); transition:transform var(--dur) var(--ease); }
+.mc .mi-ic{ flex:none; width:22px; height:22px; color:var(--dim); transition:color var(--dur); }
+.mc .mt b{ display:block; font-size:clamp(15px,1.6vw,19px); letter-spacing:.06em; text-transform:uppercase; } .mc .mt small{ display:block; font-size:var(--t-xs); color:var(--dim); letter-spacing:.04em; margin-top:2px; }
+.mc:hover,.mc.kf{ background:linear-gradient(90deg,rgba(227,10,23,.28),rgba(227,10,23,0)); transform:translateX(4px); } .mc:hover::before,.mc.kf::before{ transform:scaleY(1); } .mc:hover .mi-ic,.mc.kf .mi-ic{ color:#fff; }
+.mc[disabled]{ opacity:.45; cursor:default; } .mc[disabled]:hover{ background:none; transform:none; } .mc[disabled]:hover::before{ transform:scaleY(0); }
+.mc .soon{ margin-left:auto; font-style:normal; font-size:9px; font-weight:800; letter-spacing:.14em; padding:2px 6px; border-radius:3px; background:rgba(255,194,74,.18); color:var(--amber); }
+.c-nav .mc:nth-of-type(2){ animation-delay:.03s } .c-nav .mc:nth-of-type(3){ animation-delay:.06s } .c-nav .mc:nth-of-type(4){ animation-delay:.09s } .c-nav .mc:nth-of-type(5){ animation-delay:.12s }
+.c-det{ position:absolute; right:max(clamp(16px,3vw,44px),env(safe-area-inset-right)); bottom:56px; width:min(440px,40vw); padding:20px 22px; border-radius:var(--r3); border:1px solid var(--edge); background:var(--surf); backdrop-filter:blur(8px); box-shadow:var(--glow); }
+.c-det .k{ margin:0; font-size:var(--t-xs); letter-spacing:.3em; font-weight:800; color:#ff6b74; } .c-det h2{ margin:6px 0 8px; font-size:var(--t-xl); letter-spacing:.04em; line-height:1.05; }
+.c-det .d{ margin:0 0 12px; font-size:var(--t-s); line-height:1.5; color:#c9d6e3; } .c-det .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+.c-det .chips span{ font-size:var(--t-xs); padding:4px 9px; border-radius:999px; border:1px solid var(--edge); background:rgba(255,255,255,.05); color:#d8e4ef; } .c-det .chips b{ color:#fff; }
+.c-det .btn{ width:100%; padding:12px; font-size:var(--t-m); letter-spacing:.06em; } .c-det.anim{ animation:dsIn .22s var(--ease); }
+.c-hint{ position:absolute; left:max(clamp(16px,3vw,44px),env(safe-area-inset-left)); right:max(clamp(16px,3vw,44px),env(safe-area-inset-right)); bottom:max(14px,env(safe-area-inset-bottom)); display:flex; gap:18px; flex-wrap:wrap; font-size:var(--t-xs); color:var(--dim); letter-spacing:.06em; }
+.c-hint .v{ margin-left:auto; }
+@media (max-height:520px){
+  .c-brand .logo{ width:32px; height:32px; } #title .c-brand h1{ font-size:20px; } #title .c-brand p{ font-size:9px; letter-spacing:.3em; }
+  .c-prof{ padding:4px 10px 4px 4px; } .c-prof .rk{ width:28px; height:28px; font-size:9px; }
+  .c-nav{ top:62px; bottom:36px; width:min(300px,42vw); } .mc{ min-height:38px; padding:5px 10px; gap:10px; } .mc .mt small{ display:none; } .c-nav .mg{ margin:8px 0 2px; }
+  .c-det{ bottom:36px; width:min(380px,48vw); padding:12px 14px; } .c-det h2{ font-size:20px; margin:4px 0; } .c-det .d{ font-size:12px; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; } .c-det .chips{ margin-bottom:8px; } .c-det .btn{ padding:9px; }
+  .c-hint{ bottom:8px; } }
+@media (max-width:640px) and (min-height:521px){ .c-nav{ width:auto; right:16px; bottom:auto; max-height:52vh; } .c-det{ left:16px; width:auto; bottom:44px; } .tt-c{ background:linear-gradient(0deg,rgba(4,9,18,.95) 0%,rgba(4,9,18,.6) 60%,rgba(4,9,18,.85) 100%); } }
+@media (max-height:820px) and (min-height:521px){ .mc{ min-height:44px; padding:5px 14px; } .c-nav .mg{ margin:10px 0 4px 2px; } .mc .mt small{ font-size:10px; } }
 </style>
 </head>
 <body>
@@ -526,6 +577,14 @@ input[type=range]{ width:100%; accent-color:var(--red); }
     </ul>
   </div>
   <div class="tcap" id="tCap"><b></b><small></small></div>
+  <div class="tt-c" id="titleC">
+    <header class="c-top"><div class="c-brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM3"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM3)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div></div>
+      <button class="c-prof ui" type="button" id="cProf" title="Profil"><span class="rk" id="cRank">ER</span><span class="pn"><b id="cName">Misafir pilot</b><small id="cSub">Hilal Kanatlar</small></span></button></header>
+    <nav class="c-nav ui" id="cNav" aria-label="Ana menü"><p class="mg">OYNA</p><button class="mitem mc" type="button" data-act="free"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 5l12 7-12 7z"/></svg><span class="mt"><b>Serbest Uçuş</b><small id="mc_free">Süresiz, düşmansız</small></span></button><button class="mitem mc" type="button" data-act="missions"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg><span class="mt"><b>Görevler</b><small id="mc_missions"></small></span></button><button class="mitem mc" type="button" data-act="career" disabled aria-disabled="true"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span class="mt"><b>Kariyer</b><small id="mc_career">Yakında</small></span><i class="soon">YAKINDA</i></button><button class="mitem mc" type="button" data-act="net"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></svg><span class="mt"><b>Çok Oyunculu</b><small id="mc_net">4 kişi · sesli sohbet</small></span></button><button class="mitem mc" type="button" data-act="walk"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="13" cy="4.5" r="2"/><path d="M10 21l2-6-3-3 1-5 4 3 3 1M12 15l3 6"/></svg><span class="mt"><b>Üssü Gez</b><small id="mc_walk">Yürü, sür, helikoptere bin</small></span></button><p class="mg">ÜS</p><button class="mitem mc" type="button" data-act="hangar"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M3 20V10l9-6 9 6v10"/><path d="M7 20v-6h10v6"/></svg><span class="mt"><b>Hangar</b><small id="mc_hangar">Uçak, boya, mühimmat</small></span></button><button class="mitem mc" type="button" data-act="library"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg><span class="mt"><b>Model Kütüphanesi</b><small id="mc_library">Hava · deniz · kara</small></span></button><button class="mitem mc" type="button" data-act="sounds"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12"/></svg><span class="mt"><b>Ses Kütüphanesi</b><small id="mc_sounds">Sesler ve müzikler</small></span></button><p class="mg">SİSTEM</p><button class="mitem mc" type="button" data-act="settings"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg><span class="mt"><b>Ayarlar</b><small id="mc_settings">Grafik, kontroller, ses</small></span></button><button class="mitem mc" type="button" data-act="records"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4M12 14v4M8 21h8"/></svg><span class="mt"><b>Rekorlar</b><small id="mc_records">En iyi süreler</small></span></button></nav>
+    <section class="c-det ui" id="cDet" aria-live="polite"><p class="k" id="cdK"></p><h2 id="cdT"></h2><p class="d" id="cdD"></p><div class="chips" id="cdC"></div><button class="btn primary" type="button" id="cdGo">Başlat</button></section>
+    <footer class="c-hint" id="cHint"></footer>
+  </div>
+
   <div class="tt-b" id="titleB">
     <div class="tb-top"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM2"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM2)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><span>HİLAL KANATLAR</span></div>
     <div class="tb-title"><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div>
@@ -737,7 +796,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
       <div class="srow"><div class="sl"><b>Otomatik hedef kilidi</b><small>Uyarı panosu ile (K tuşu)</small></div><label class="tgl"><input type="checkbox" id="setLock"><i></i></label></div>
     </section>
     <section data-tab="a" class="hidden">
-      <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Otomatik: telefonda Sinematik, bilgisayarda Komuta</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Otomatik</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
+      <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Yeni: gruplanmış menü ve ayrıntı paneli (klavye, gamepad, dokunmatik). Eski tasarımlar da seçilebilir</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Yeni (önerilen)</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
       <div class="srow"><div class="sl"><b>Köşe haritası</b><small>Uçarken ve gezerken sağ üstte küçük harita</small></div><label class="tgl"><input type="checkbox" id="setMini"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Sürüm</b><small>Uçak modelleri ve uçuş değerleri stilize ve yaklaşıktır; gerçek verileri yansıtmaz.</small></div><span id="setVer"></span></div>
     </section>
@@ -877,7 +936,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.62', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.63', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -6586,12 +6645,39 @@ function enterTitle(){ if(!NET.on) aiClear(); state='menu'; menuMode='title'; if
 /* ---------- main menu (A: Komuta, B: Sinematik) */
 let tFocus=0, startFrom='hangar', misSel=0;
 const START_TXT={hangar:'hangardan',runway:'pistten',air:'havada',walk:'üssü gezerek'};
-function uiStyle(){ const s=SETTINGS.ui||'auto'; if(s==='A'||s==='B') return s; let coarse=false; try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){} return (coarse||Math.min(window.innerWidth,window.innerHeight)<500)?'B':'A'; }
-function titleItems(){ return Array.prototype.slice.call(document.querySelectorAll(uiStyle()==='A'?'#titleA .mitem':'#titleB .mitem')); }
-function titleFocus(i){ const L=titleItems(); if(!L.length) return; tFocus=(i+L.length)%L.length; L.forEach(function(b,j){ b.classList.toggle('kf',j===tFocus); }); }
+function uiStyle(){ const s=SETTINGS.ui||'auto'; if(s==='A'||s==='B') return s; return 'C'; }
+function titleItems(){ const st=uiStyle(); return Array.prototype.slice.call(document.querySelectorAll(st==='A'?'#titleA .mitem':(st==='B'?'#titleB .mitem':'#titleC .mitem:not([disabled])'))); }
+function titleFocus(i){ const L=titleItems(); if(!L.length) return; tFocus=(i+L.length)%L.length; L.forEach(function(b,j){ b.classList.toggle('kf',j===tFocus); });
+  if(uiStyle()==='C'){ titleDetail(L[tFocus].dataset.act); try{ L[tFocus].scrollIntoView({block:'nearest'}); }catch(e){} } }
+/* detail panel of the new menu: what the focused item does, live facts, one big action */
+function titleDetail(act){
+  const a=AIRCRAFT[selectedId], chip=function(k,v){ return '<span>'+k+(v!=null?' <b>'+v+'</b>':'')+'</span>'; }, pl=(SETTINGS.startPlace&&typeof placeById==='function'&&placeById(SETTINGS.startPlace))||null;
+  const D={
+    free:['OYNA','Serbest Uçuş','Adayı dilediğin gibi keşfet: üsler, şehirler, köprüler, adalar. Süre ve düşman yok (Ayarlar → Oynanış ile açabilirsin).',[chip('Uçak',a.short),chip('Başlangıç',START_TXT[startPick]),chip('Yer',pl?pl.n:'Ay Yıldız Hava Üssü')],'▶ Uç'],
+    missions:['OYNA','Görevler',MORDER.length+' görev: halka parkuru, it dalaşı, yer hedefleri, keşif ve daha fazlası. Brifingi okuyup uçağını seç.',[chip('Seçili',MISSIONS[missionId==='net'?'free':missionId].name),chip('Uçak',a.short)],'Görevleri aç'],
+    career:['OYNA','Kariyer','Er’den Orgeneral’e: rütbe, madalya, açılan uçaklar ve kayıtlar. Hesap ve profil sistemiyle birlikte geliyor.',[chip('Yakında')],'Yakında'],
+    net:['OYNA','Çok Oyunculu','Arkadaşlarınla 4 kişiye kadar: işbirliği, takım ya da herkes herkese. Oda kodu ile katıl, sesli sohbet et.',[chip(navigator.onLine===false?'Çevrimdışı':'İnternet var'),chip('Oyuncu','2–4')],'Oda kur / katıl'],
+    walk:['OYNA','Üssü Gez','Yürü, zıpla, araçlara ve helikopterlere bin. Haritadan istediğin yere ışınlan.',[chip('Araç','SUV, 4×4'),chip('Helikopter','T129, T625')],'▶ Gezmeye başla'],
+    hangar:['ÜS','Hangar','Uçağını seç, boyasını ve mühimmatını ayarla, hangarda 3B incele.',[chip('Uçak',a.name),chip('Yük',loadSummary(selectedId))],'Hangara git'],
+    library:['ÜS','Model Kütüphanesi','Bütün uçak, helikopter, gemi, kara ve sivil araçları 3B incele; boyut ve parça bilgilerine bak.',[chip('Kategori','5')],'Kütüphaneyi aç'],
+    sounds:['ÜS','Ses Kütüphanesi','Motor, silah, çevre, arayüz, telsiz sesleri ve müzikler. Dinle, ayarla ya da kendi dosyanla değiştir.',[chip('Ses',SND_DEFS.length)],'Kütüphaneyi aç'],
+    settings:['SİSTEM','Ayarlar','Grafik, kontroller (klavye, gamepad, dokunmatik), ses, oynanış ve arayüz.',[chip('Kalite',['Düşük','Orta','Yüksek','Ultra'][SETTINGS.quality]),chip('Cihaz',DEV.kind)],'Ayarları aç'],
+    records:['SİSTEM','Rekorlar','Uçak ve görev bazında en iyi süreler ve puanlar.',[],'Rekorları aç']};
+  const d=D[act]; if(!d) return; const el=$('cDet');
+  $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=d[3].join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=act==='career';
+  el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim');
+}
+/* input hints follow the last device used */
+let lastIn=DEV.mobile?'touch':'kb';
+function titleHints(){ const h=$('cHint'); if(!h) return; const v='<span class="v">'+GAME_VERSION+'</span>';
+  h.innerHTML=(lastIn==='pad'?'<span><kbd>✛</kbd>Seç</span><span><kbd>A</kbd>Aç</span><span><kbd>B</kbd>Geri</span>':lastIn==='touch'?'<span>Bir bölüme dokun, sonra sağdaki düğmeyle başlat</span>':'<span><kbd>↑</kbd><kbd>↓</kbd>Seç</span><span><kbd>Enter</kbd>Aç</span><span><kbd>Esc</kbd>Geri</span><span><kbd>M</kbd>Harita (oyunda)</span>')+v; }
+function setLastIn(k){ if(lastIn===k) return; lastIn=k; if(menuMode==='title') titleHints(); }
+window.addEventListener('keydown',function(){ setLastIn('kb'); },true);
+window.addEventListener('pointerdown',function(e){ setLastIn(e.pointerType==='touch'?'touch':'kb'); },true);
 function refreshTitle(){
   const st=uiStyle(), a=AIRCRAFT[selectedId], r=regOf(selectedId);
-  $('title').classList.toggle('ui-a',st==='A'); $('title').classList.toggle('ui-b',st==='B');
+  $('title').classList.toggle('ui-a',st==='A'); $('title').classList.toggle('ui-b',st==='B'); $('title').classList.toggle('ui-c',st==='C');
+  if(st==='C'){ $('mc_missions').textContent=MORDER.length+' görev'; $('cName').textContent=SETTINGS.callsign||'Misafir pilot'; titleHints(); }
   const sub=a.short+' · '+MISSIONS[missionId==='net'?'free':missionId].name+' · '+START_TXT[startPick];
   $('flySubA').textContent=sub; $('flySubB').textContent=sub;
   $('mAac').textContent=AC_ORDER.length+' ARAÇ'; $('mAmis').textContent=MORDER.length+' GÖREV'; $('mAload').textContent=(uiStyle()==='A'?'ARAYÜZ · KOMUTA':'');
@@ -6603,13 +6689,24 @@ function refreshTitle(){
 function titleAct(act){
   if(state!=='menu') return;
   if(act==='fly'){ startGame(startPick); return; }
+  if(act==='free'){ if(missionId!=='free') selectMission('free'); startGame(startPick==='walk'?'hangar':startPick); return; }
+  if(act==='walk'){ startGame('walk'); return; }
+  if(act==='sounds'){ openSoundLib(); return; }
+  if(act==='records'){ renderRecords(); openModal('records'); return; }
+  if(act==='career') return;
   if(act==='hangar'){ enterHangar(); return; }
   if(act==='missions'){ openMissions(); return; }
   if(act==='net'){ openNet(); return; }
   if(act==='settings'){ syncSettingsUI(); openModal('settings'); return; }
   if(act==='library'){ openLibrary(); return; }
 }
-$('title').addEventListener('click',function(e){ const b=e.target.closest('.mitem'); if(b){ titleAct(b.dataset.act); } });
+$('title').addEventListener('click',function(e){ const b=e.target.closest('.mitem'); if(!b||b.disabled) return;
+  /* new menu: a tap/click on a section first shows its details (touch), a second one (or the big button) opens it */
+  if(uiStyle()==='C'&&lastIn==='touch'&&!b.classList.contains('kf')){ const L=titleItems(); titleFocus(L.indexOf(b)); return; }
+  titleAct(b.dataset.act); });
+$('cdGo').addEventListener('click',function(){ titleAct(this.dataset.act); });
+$('cNav').addEventListener('pointerover',function(e){ if(e.pointerType!=='mouse') return; const b=e.target.closest('.mitem'); if(!b||b.disabled) return; const L=titleItems(), i=L.indexOf(b); if(i>=0&&i!==tFocus) titleFocus(i); });
+$('cProf').addEventListener('click',function(){ syncSettingsUI(); openModal('settings'); const t=document.querySelector('#setTabs [data-tab="s"]'); if(t) t.click(); toast('Profil ve rütbe sistemi V1.66–V1.67 ile geliyor; çağrı adını Ses sekmesinden değiştirebilirsin','#b8ecff'); });
 window.addEventListener('online',function(){ if(menuMode==='title') refreshTitle(); }); window.addEventListener('offline',function(){ if(menuMode==='title') refreshTitle(); });
 /* missions screen */
 function openMissions(){ state='menu'; menuMode='missions'; showScreen('missionsUI'); misSel=Math.max(0,MORDER.indexOf(missionId)); renderMissions(); }
@@ -6930,6 +7027,12 @@ function pollPad(){
   const press=i=>{ const now=b(i), was=!!padPrev[i]; padPrev[i]=now; return now&&!was; };
   const eA=press(0), eB=press(1), eX=press(2), eY=press(3), eBack=press(8), eStart=press(9), eL=press(14), eR=press(15), eR3=press(11), eL3=press(10), eLB=press(4), eRB=press(5);
   if(!b(0)) padFireLock=false;
+  if(typeof setLastIn==='function'&&g.buttons.some(function(x){ return x&&x.pressed; })) setLastIn('pad');
+  /* any open dialog: spatial focus navigation with the d-pad / stick, A = press, B = back */
+  if(typeof anyModalOpen==='function'&&anyModalOpen()){ const eU=press(12), eD=press(13), sx=ax(0), sy=ax(1); PADNAV.cd-=1;
+    let dir=eU?'u':eD?'d':eL?'l':eR?'r':null; if(!dir&&PADNAV.cd<=0&&(Math.abs(sx)>0.6||Math.abs(sy)>0.6)){ dir=Math.abs(sx)>Math.abs(sy)?(sx>0?'r':'l'):(sy>0?'d':'u'); PADNAV.cd=12; }
+    if(dir) uiNavMove(dir); else if(eA){ const f=document.activeElement; if(f&&f!==document.body&&f.click) f.click(); } else if(eB){ const m=uiTopModal(), bk=m&&m.querySelector('.back,[id$="Close"],[id$="Back"]'); if(bk) bk.click(); else closeModals(); }
+    return; }
   if(state==='menu'){
     if(menuMode==='title'){ const eU=press(12), eD=press(13); if(eD||eR) titleFocus(tFocus+1); else if(eU||eL) titleFocus(tFocus-1); else if(eA){ const L=titleItems(); if(L[tFocus]) titleAct(L[tFocus].dataset.act); } }
     else if(menuMode==='missions'){ const eU=press(12), eD=press(13); if(eD||eU){ misSel=(misSel+(eD?1:-1)+MORDER.length)%MORDER.length; renderMissions(); } else if(eA) misGo(); else if(eB) enterTitle(); }
@@ -6960,6 +7063,18 @@ function pollPad(){
 }
 window.addEventListener('gamepadconnected',()=>pollPad());
 
+
+/* ---- spatial navigation inside dialogs (gamepad) */
+const PADNAV={cd:0};
+function uiTopModal(){ const L=Array.prototype.slice.call(document.querySelectorAll('.modal:not(.hidden)')); return L[L.length-1]||null; }
+function uiFocusables(root){ return Array.prototype.slice.call(root.querySelectorAll('button:not([disabled]),input:not([disabled]):not([type=hidden]),select,label.tgl,[tabindex="0"]')).filter(function(e){ const r=e.getBoundingClientRect(); return r.width>0&&r.height>0&&!e.closest('.hidden'); }); }
+function uiNavMove(dir){
+  const m=uiTopModal(); if(!m) return; const L=uiFocusables(m); if(!L.length) return; let cur=document.activeElement; if(!m.contains(cur)||L.indexOf(cur)<0){ L[0].focus(); return; }
+  const a=cur.getBoundingClientRect(), ax0=a.left+a.width/2, ay0=a.top+a.height/2; let best=null, bs=1e9;
+  L.forEach(function(e){ if(e===cur) return; const r=e.getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2, dx=x-ax0, dy=y-ay0;
+    const ok=dir==='r'?dx>4:dir==='l'?dx<-4:dir==='d'?dy>4:dy<-4; if(!ok) return; const main=dir==='r'||dir==='l'?Math.abs(dx):Math.abs(dy), off=dir==='r'||dir==='l'?Math.abs(dy):Math.abs(dx), sc=main+off*2.2; if(sc<bs){ bs=sc; best=e; } });
+  if(best){ best.focus(); try{ best.scrollIntoView({block:'nearest'}); }catch(e){} if(typeof sndPlay==='function') sndPlay('ui_hover'); }
+}
 /* ------------------------------------------------------------------ touch controls (phone / tablet) */
 const TOUCH={pitch:0,roll:0,yaw:0,yawL:false,yawR:false,fire:false,ab:false,brake:false,sx:0,sy:0,seen:false,vis:false,arm:'gun'};
 let WBOX=[], WPANEL=null, TLAY={L:0,R:0,ok:false};

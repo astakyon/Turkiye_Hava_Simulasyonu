@@ -16,4 +16,11 @@ closeStart(); T('back to missions',menuMode==='missions');
 key('Escape'); T('esc -> title',menuMode==='title');
 titleAct('settings'); T('settings item',true); closeModals(); enterHangar(); selectAircraft('anka'); preFlight('hangar'); T('unarmed skips loadout',menuMode==='start'); closeStart(); selectAircraft('kaan'); enterTitle(); titleAct('missions'); misGo(); T('missions -> loadout',menuMode==='loadout'); loadDone(); T('-> start from missions',menuMode==='start'&&startFrom==='missions'); closeStart(); T('back missions',menuMode==='missions'); enterTitle();
 enterTitle(); selectStart('air'); titleAct('fly'); T('quick fly',state==='play'&&!S.onGround);
+// V1.63 new main menu
+enterTitle(); SETTINGS.ui='auto'; refreshTitle(); T('new menu default',uiStyle()==='C');
+titleDetail('free'); T('detail panel',/Serbest/.test($('cdT').textContent),$('cdT').textContent);
+titleDetail('hangar'); T('detail hangar',$('cdGo').dataset.act==='hangar');
+titleAct('sounds'); T('sound library from menu',true); closeModals();
+enterTitle(); titleAct('walk'); T('walk from menu',state==='walk');
+enterTitle(); titleAct('free'); T('free flight from menu',state==='play'&&missionId==='free');
 console.log('pass',ok,'fail',bad);

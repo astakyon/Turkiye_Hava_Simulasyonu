@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.63 — 2026-10-11
+- **Yeni ana menü.** Bölümler gruplandı:
+  - **OYNA:** Serbest Uçuş, Görevler, Kariyer (yakında), Çok Oyunculu, Üssü Gez.
+  - **ÜS:** Hangar, Model Kütüphanesi, Ses Kütüphanesi.
+  - **SİSTEM:** Ayarlar, Rekorlar.
+  - Her bölümün ikonu ve kısa açıklaması var.
+- **Ayrıntı paneli:** seçili bölümün ne yaptığını, canlı bilgileri (uçak, başlangıç yeri, yük, kalite…) ve tek büyük "Başlat" düğmesini gösteriyor.
+- Üstte **profil kartı** (çağrı adı, rütbe arması; tam profil V1.66–V1.67'de). Altta son kullanılan cihaza göre değişen tuş ipuçları: klavye, gamepad ya da dokunmatik.
+- **Gamepad ve klavyeyle tam gezinme:** ana menüde ok tuşları ve Enter. Artık tüm pencerelerde (ayarlar, kütüphaneler, çok oyunculu…) gamepad yön tuşu veya çubukla en yakın düğmeye geçiliyor; A ile basılıyor, B ile geri dönülüyor.
+- **Tasarım sistemi:** ortak renk, yazı ölçeği, köşe, boşluk ve hareket değerleri tanımlandı. Pencere açılışları yumuşak, düğmelerde basma tepkisi var. Odak çerçevesi tek tip. "Hareketi azalt" ayarı açık olan cihazlarda animasyonlar kapanıyor.
+- Telefonda dokunulan bölüm önce ayrıntısını gösteriyor, ikinci dokunuşta ya da büyük düğmeyle açılıyor. Kısa ekranlarda menü sıkışık düzene geçiyor.
+- Eski tasarımlar (Komuta, Sinematik) Ayarlar → Arayüz bölümünden hâlâ seçilebiliyor.
+
 ## V1.62 — 2026-10-11
 - **Kule konuşmaları:** pistte başlarken kalkış izni (pist ve rüzgâr bilgisiyle), kalkış sonrası "kalkışınız görüldü", takım inik yaklaşırken iniş izni, inince "apronda park edin". Pist dışında çok alçak uçarken uyarı.
 - **AWACS (Kartal Gözü):** yeni düşmanlar belirince sayısını, saat yönünü ve uzaklığını bildiriyor. Hava sahası temizlenince ve görev bitince haber veriyor.

@@ -35,6 +35,12 @@ function pollPad(){
   const press=i=>{ const now=b(i), was=!!padPrev[i]; padPrev[i]=now; return now&&!was; };
   const eA=press(0), eB=press(1), eX=press(2), eY=press(3), eBack=press(8), eStart=press(9), eL=press(14), eR=press(15), eR3=press(11), eL3=press(10), eLB=press(4), eRB=press(5);
   if(!b(0)) padFireLock=false;
+  if(typeof setLastIn==='function'&&g.buttons.some(function(x){ return x&&x.pressed; })) setLastIn('pad');
+  /* any open dialog: spatial focus navigation with the d-pad / stick, A = press, B = back */
+  if(typeof anyModalOpen==='function'&&anyModalOpen()){ const eU=press(12), eD=press(13), sx=ax(0), sy=ax(1); PADNAV.cd-=1;
+    let dir=eU?'u':eD?'d':eL?'l':eR?'r':null; if(!dir&&PADNAV.cd<=0&&(Math.abs(sx)>0.6||Math.abs(sy)>0.6)){ dir=Math.abs(sx)>Math.abs(sy)?(sx>0?'r':'l'):(sy>0?'d':'u'); PADNAV.cd=12; }
+    if(dir) uiNavMove(dir); else if(eA){ const f=document.activeElement; if(f&&f!==document.body&&f.click) f.click(); } else if(eB){ const m=uiTopModal(), bk=m&&m.querySelector('.back,[id$="Close"],[id$="Back"]'); if(bk) bk.click(); else closeModals(); }
+    return; }
   if(state==='menu'){
     if(menuMode==='title'){ const eU=press(12), eD=press(13); if(eD||eR) titleFocus(tFocus+1); else if(eU||eL) titleFocus(tFocus-1); else if(eA){ const L=titleItems(); if(L[tFocus]) titleAct(L[tFocus].dataset.act); } }
     else if(menuMode==='missions'){ const eU=press(12), eD=press(13); if(eD||eU){ misSel=(misSel+(eD?1:-1)+MORDER.length)%MORDER.length; renderMissions(); } else if(eA) misGo(); else if(eB) enterTitle(); }
@@ -65,3 +71,15 @@ function pollPad(){
 }
 window.addEventListener('gamepadconnected',()=>pollPad());
 
+
+/* ---- spatial navigation inside dialogs (gamepad) */
+const PADNAV={cd:0};
+function uiTopModal(){ const L=Array.prototype.slice.call(document.querySelectorAll('.modal:not(.hidden)')); return L[L.length-1]||null; }
+function uiFocusables(root){ return Array.prototype.slice.call(root.querySelectorAll('button:not([disabled]),input:not([disabled]):not([type=hidden]),select,label.tgl,[tabindex="0"]')).filter(function(e){ const r=e.getBoundingClientRect(); return r.width>0&&r.height>0&&!e.closest('.hidden'); }); }
+function uiNavMove(dir){
+  const m=uiTopModal(); if(!m) return; const L=uiFocusables(m); if(!L.length) return; let cur=document.activeElement; if(!m.contains(cur)||L.indexOf(cur)<0){ L[0].focus(); return; }
+  const a=cur.getBoundingClientRect(), ax0=a.left+a.width/2, ay0=a.top+a.height/2; let best=null, bs=1e9;
+  L.forEach(function(e){ if(e===cur) return; const r=e.getBoundingClientRect(), x=r.left+r.width/2, y=r.top+r.height/2, dx=x-ax0, dy=y-ay0;
+    const ok=dir==='r'?dx>4:dir==='l'?dx<-4:dir==='d'?dy>4:dy<-4; if(!ok) return; const main=dir==='r'||dir==='l'?Math.abs(dx):Math.abs(dy), off=dir==='r'||dir==='l'?Math.abs(dy):Math.abs(dx), sc=main+off*2.2; if(sc<bs){ bs=sc; best=e; } });
+  if(best){ best.focus(); try{ best.scrollIntoView({block:'nearest'}); }catch(e){} if(typeof sndPlay==='function') sndPlay('ui_hover'); }
+}
