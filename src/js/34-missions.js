@@ -87,7 +87,7 @@ function updateMission(dt){
 function refreshMission(){
   Array.prototype.forEach.call($('missionSeg').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.m===missionId)); });
   $('mDesc').textContent=MISSIONS[missionId].desc;
-  if($('aiEnemy')){ const c=aiCfg(); $('aiEnemy').value=String(c.enemies); $('aiWing').value=c.wing?'1':'0'; $('aiSkill').value=String(c.skill); $('aiEnemy').disabled=(missionId==='dogfight'); }
+  if($('aiEnemy')){ const c=aiCfg(); $('aiEnemy').value=String(c.enemies); $('aiWing').value=c.wing?'1':'0'; $('aiSkill').value=String(c.skill); $('aiSam').value=c.sam?'1':'0'; $('aiEnemy').disabled=(missionId==='dogfight'); $('aiSam').disabled=(missionId!=='free'); }
 }
 function selectMission(id){ missionId=id; try{ localStorage.setItem('kaan-sim-mission',id); }catch(e){} refreshMission(); }
 function cycleMission(d){ selectMission(MORDER[(MORDER.indexOf(missionId)+d+MORDER.length)%MORDER.length]); }

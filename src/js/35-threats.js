@@ -56,7 +56,7 @@ function launchSam(o){
 }
 function samBrain(o,dt){
   o.tracking=false; if(!o.alive) return; o.cd-=dt;
-  if(state!=='play'||S.onGround||S.crashed||inSafeZone()){ o.lockT=0; return; }
+  if(state!=='play'||S.onGround||S.crashed||inSafeZone()||(M.id==='free'&&!aiCfg().sam)){ o.lockT=0; return; }
   const d=o.pos.distanceTo(S.pos), agl=S.pos.y-Math.max(0,terrainH(S.pos.x,S.pos.z));
   mvTmp.set(o.pos.x,o.pos.y+6,o.pos.z);
   if(d<4200 && agl>25 && hasLOS(mvTmp,S.pos)){

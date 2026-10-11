@@ -11,7 +11,7 @@ const NET_MODES={coop:{name:'İşbirliği',desc:'Herkes aynı takımda; kırmız
 const NET_MAX=4, NET_PREFIX='turkgoklerinde-v1-';
 const aV1=new THREE.Vector3(), aV2=new THREE.Vector3(), aV3=new THREE.Vector3(), aV4=new THREE.Vector3(), aM4=new THREE.Matrix4(), UPV=new THREE.Vector3(0,1,0);
 const PLY={isPlayer:true,id:'ME',team:'blue',pos:S.pos,fwd:new THREE.Vector3(0,0,-1),speed:0,alive:true,name:'Sen'};
-function aiCfg(){ const c=SETTINGS.ai||{}; return {enemies:c.enemies==null?2:c.enemies, wing:c.wing==null?true:!!c.wing, skill:c.skill==null?1:c.skill}; }
+function aiCfg(){ const c=SETTINGS.ai||{}; return {enemies:c.enemies==null?0:c.enemies, wing:c.wing==null?true:!!c.wing, skill:c.skill==null?1:c.skill, sam:c.sam==null?false:!!c.sam}; }
 function skillOf(){ return SKILL[clamp(aiCfg().skill|0,0,2)]; }
 function myTeam(){ if(!NET.on) return 'blue'; const r=NET.roster.find(function(x){ return x.id===NET.myId; }); return r?r.team:'blue'; }
 function plyEnt(){ PLY.id=NET.myId; PLY.team=myTeam(); fwdOf(S.q,PLY.fwd); PLY.speed=S.speed; PLY.alive=(state==='play'||state==='paused')&&!S.crashed&&!S.onGround; PLY.name=NET.on?NET.name:'Sen'; return PLY; }

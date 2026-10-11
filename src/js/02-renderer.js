@@ -2,7 +2,7 @@
 let renderer;
 try{
   if(!window.THREE) throw new Error('three');
-  renderer = new THREE.WebGLRenderer({canvas:$('gl'), antialias:true, powerPreference:'high-performance'});
+  renderer = new THREE.WebGLRenderer({canvas:$('gl'), antialias:true, powerPreference:'high-performance', logarithmicDepthBuffer:true});   /* log depth: no z-fighting flicker on distant runways, roofs, roads */
 }catch(e){
   $('title').innerHTML = '<div class="box ui"><h1>AY YILDIZ</h1><p class="tag">Bu tarayıcıda 3B grafik başlatılamadı. Donanım hızlandırmayı açıp sayfayı yenile.</p></div>';
   return;

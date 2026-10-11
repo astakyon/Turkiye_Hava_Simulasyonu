@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.50">
+<meta name="game-version" content="V1.51">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -556,6 +556,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
     <div class="airow">
       <label>Düşman uçak<select id="aiEnemy"><option value="0">Yok</option><option value="2">2 uçak</option><option value="4">4 uçak</option></select></label>
       <label>Kanat adamı<select id="aiWing"><option value="1">Açık</option><option value="0">Kapalı</option></select></label>
+      <label>Hava savunma (SAM)<select id="aiSam"><option value="0">Kapalı</option><option value="1">Açık</option></select></label>
       <label>Zorluk<select id="aiSkill"><option value="0">Kolay</option><option value="1">Orta</option><option value="2">Zor</option></select></label>
     </div>
     <h3>Nereden başlamak istersin?</h3>
@@ -613,7 +614,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
           <li><span class="k"><kbd>Fare</kbd></span>Sürükle: kamerayı döndür</li>
           <li><span class="k"><kbd>Tekerlek</kbd></span>Yakınlaş / uzaklaş</li>
           <li><span class="k"><kbd>Y</kbd></span>Yukarı-aşağı ters çevir</li>
-          <li><span class="k"><kbd>M</kbd></span>Sesi aç / kapat</li>
+          <li><span class="k"><kbd>N</kbd></span>Sesi aç / kapat</li>
           <li><span class="k"><kbd>P</kbd><kbd>Esc</kbd></span>Duraklat</li>
         </ul>
         <h3>Üssü gez (yaya / araç)</h3>
@@ -785,7 +786,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <div id="wtouch" class="touch hidden">
   <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wWarp">GİT ▸</button></div>
   <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
-  <div class="tright wright"><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
+  <div class="tright wright"><button type="button" id="wJump" class="tb">ZIPLA</button><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
 </div>
 <div id="fps" class="fps hidden"></div>
 <div id="rotate" class="hidden">Daha rahat oynamak için telefonu yatay çevir</div>
@@ -801,7 +802,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.50', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.51', GAME_DATE='2026-10-11';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -813,7 +814,7 @@ const FONT = '"Chakra Petch","Arial Narrow",system-ui,sans-serif';
 let renderer;
 try{
   if(!window.THREE) throw new Error('three');
-  renderer = new THREE.WebGLRenderer({canvas:$('gl'), antialias:true, powerPreference:'high-performance'});
+  renderer = new THREE.WebGLRenderer({canvas:$('gl'), antialias:true, powerPreference:'high-performance', logarithmicDepthBuffer:true});   /* log depth: no z-fighting flicker on distant runways, roofs, roads */
 }catch(e){
   $('title').innerHTML = '<div class="box ui"><h1>AY YILDIZ</h1><p class="tag">Bu tarayıcıda 3B grafik başlatılamadı. Donanım hızlandırmayı açıp sayfayı yenile.</p></div>';
   return;
@@ -4218,6 +4219,7 @@ function fmtT(t){ const m=Math.floor(t/60), s=t-m*60; return String(m).padStart(
 
 function resetFlight(mode){
   S.crashed=false; S.sink=0; S.pitchIn=S.rollIn=S.yawIn=0; S.g=1; S.ab=false; S.brake=false; S.auto=false; flaresLeft=FLARES[activeId]||0; S.hp=100; clearThreats(); applyLoadout(activeId);
+  S.zoneY=AIRFIELD_Y;
   if(mode==='hangar'){ const dd=displays[activeId]; S.pos.set(dd.x,AIRFIELD_Y+CUR.gearOff,HANGAR.z); S.q.identity(); S.speed=0; S.throttle=0; S.gear=true; S.onGround=true; S.taxi=true; S.clearance=false; startTaxi(); }
   else if(mode==='runway'){ S.pos.set(0,AIRFIELD_Y+CUR.gearOff,1150); S.q.identity(); S.speed=0; S.throttle=0; S.gear=true; S.onGround=true; S.taxi=false; S.clearance=true; }
   else{ S.pos.set(0,1100,900); S.q.identity(); S.speed=CUR.airV; S.throttle=0.75; S.gear=false; S.onGround=false; S.taxi=false; S.clearance=true; if(NET.on&&NET.started) netSpawnMe(); }
@@ -4715,7 +4717,7 @@ function updateMission(dt){
 function refreshMission(){
   Array.prototype.forEach.call($('missionSeg').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.m===missionId)); });
   $('mDesc').textContent=MISSIONS[missionId].desc;
-  if($('aiEnemy')){ const c=aiCfg(); $('aiEnemy').value=String(c.enemies); $('aiWing').value=c.wing?'1':'0'; $('aiSkill').value=String(c.skill); $('aiEnemy').disabled=(missionId==='dogfight'); }
+  if($('aiEnemy')){ const c=aiCfg(); $('aiEnemy').value=String(c.enemies); $('aiWing').value=c.wing?'1':'0'; $('aiSkill').value=String(c.skill); $('aiSam').value=c.sam?'1':'0'; $('aiEnemy').disabled=(missionId==='dogfight'); $('aiSam').disabled=(missionId!=='free'); }
 }
 function selectMission(id){ missionId=id; try{ localStorage.setItem('kaan-sim-mission',id); }catch(e){} refreshMission(); }
 function cycleMission(d){ selectMission(MORDER[(MORDER.indexOf(missionId)+d+MORDER.length)%MORDER.length]); }
@@ -4785,7 +4787,7 @@ function launchSam(o){
 }
 function samBrain(o,dt){
   o.tracking=false; if(!o.alive) return; o.cd-=dt;
-  if(state!=='play'||S.onGround||S.crashed||inSafeZone()){ o.lockT=0; return; }
+  if(state!=='play'||S.onGround||S.crashed||inSafeZone()||(M.id==='free'&&!aiCfg().sam)){ o.lockT=0; return; }
   const d=o.pos.distanceTo(S.pos), agl=S.pos.y-Math.max(0,terrainH(S.pos.x,S.pos.z));
   mvTmp.set(o.pos.x,o.pos.y+6,o.pos.z);
   if(d<4200 && agl>25 && hasLOS(mvTmp,S.pos)){
@@ -4965,6 +4967,17 @@ function noiseBurst(freq,type,vol,dur){
 function gunSound(){ noiseBurst(1100,'bandpass',0.16,0.07); }
 function boomSound(){ noiseBurst(220,'lowpass',0.9,0.9); }
 
+/* ------------------------------------------------------------------ landing zones: anywhere you can touch down, roll and take off.
+   The main air base (round field), the UAV centre and the enemy airfield (flat pads); `m` widens the zone (ground roll tolerance). */
+function landZone(x,z,m){ m=m||0;
+  if(Math.hypot(x,z)<1700+m&&terrainH(x,z)>0) return LZ_MAIN;
+  for(let i=0;i<LZONES.length;i++){ const L=LZONES[i]; if(x>L.x0-m&&x<L.x1+m&&z>L.z0-m&&z<L.z1+m) return L; }
+  return null; }
+const LZ_MAIN={id:'main',name:'Ay Yıldız Hava Üssü',y:AIRFIELD_Y};
+const LZONES=[];
+function initLandZones(){ LZONES.length=0;
+  [['uav','İHA ve Test Merkezi'],['enemy','Kızıl Bölge hava üssü']].forEach(function(e){ const p=PADS.find(function(q){ return q.id===e[0]; }); if(p) LZONES.push({id:e[0],name:e[1],x0:p.x0+20,x1:p.x1-20,z0:p.z0+20,z1:p.z1-20,y:p.y}); }); }
+initLandZones();
 /* ------------------------------------------------------------------ physics */
 const vF=new THREE.Vector3(), vR=new THREE.Vector3(), vU=new THREE.Vector3(), vel=new THREE.Vector3(), prevPos=new THREE.Vector3();
 const dq=new THREE.Quaternion(), eul=new THREE.Euler();
@@ -5023,12 +5036,12 @@ function update(dt){
     const gh=terrainH(S.pos.x,S.pos.z), gl=Math.max(gh,0);
     const off=S.gear?CUR.gearOff:CUR.belly;
     if(S.pos.y<=gl+off){
-      const inField=Math.hypot(S.pos.x,S.pos.z)<1700 && gh>0;
+      const zone=landZone(S.pos.x,S.pos.z), inField=!!zone && gh>0;
       vR.set(1,0,0).applyQuaternion(S.q); vU.set(0,1,0).applyQuaternion(S.q);
       const bank=Math.atan2(-vR.y,vU.y), pitch=Math.asin(clamp(vF.y,-1,1));
       if(S.gear && inField){
         if(-S.vy<=CUR.sinkMax && pitch>-0.06 && pitch<0.36 && Math.abs(bank)<0.35 && S.speed<CUR.landV){
-          S.onGround=true; S.sink=0; S.pos.y=AIRFIELD_Y+CUR.gearOff; toast('İniş tamamlandı','#7dffb0'); rumble(180,0.3,0.6); if(needsService()) toast('Bakım hangarına git (işaretli): onar ve silah yükle','#b8ecff');
+          S.onGround=true; S.sink=0; S.zoneY=zone.y; S.pos.y=zone.y+CUR.gearOff; toast(zone.id==='main'?'İniş tamamlandı':'İniş tamamlandı — '+zone.name,'#7dffb0'); rumble(180,0.3,0.6); if(needsService()) toast('Bakım hangarına git (işaretli): onar ve silah yükle','#b8ecff');
         } else crash(-S.vy>CUR.sinkMax?'Sert iniş':'Hatalı iniş açısı');
       } else if(S.gear && gh<=0) crash('Denize düştün');
       else crash(inField?'İniş takımı kapalıydı':(gh<=0?'Denize düştün':'Yere çarptın'));
@@ -5045,11 +5058,11 @@ function update(dt){
     pitch=clamp(pitch,0,0.38);
     S.q.setFromEuler(eul.set(pitch,-heading,0,'YXZ'));
     S.pos.x+=Math.sin(heading)*S.speed*dt; S.pos.z-=Math.cos(heading)*S.speed*dt;
-    S.pos.y=AIRFIELD_Y+CUR.gearOff; S.vy=0; S.g+=(1-S.g)*(1-Math.exp(-6*dt));
+    const gz=landZone(S.pos.x,S.pos.z); if(gz) S.zoneY=gz.y; S.pos.y=(S.zoneY==null?AIRFIELD_Y:S.zoneY)+CUR.gearOff; S.vy=0; S.g+=(1-S.g)*(1-Math.exp(-6*dt));
     if(!S.clearance) updateTaxi(dt);
     serviceWalls(); serviceStep(dt);
     if(S.speed>CUR.vr && pitch>0.04){ S.onGround=false; S.sink=0; toast('Havalandın!'); }
-    if(Math.hypot(S.pos.x,S.pos.z)>1850) crash('Pist dışına çıktın');
+    if(!landZone(S.pos.x,S.pos.z,150)) crash('Pist dışına çıktın');
   }
 
   obstacleStep();
@@ -5731,8 +5744,8 @@ function refreshSetup(){
   }).join(''):'<tr><td>Bu uçak silah taşımıyor.</td></tr>';
 }
 $('suLoad').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled) setupAdjust(b.dataset.k,+b.dataset.d); });
-function aiSave(){ SETTINGS.ai={enemies:+$('aiEnemy').value,wing:$('aiWing').value==='1',skill:+$('aiSkill').value}; saveSettings(); }
-['aiEnemy','aiWing','aiSkill'].forEach(function(id){ $(id).addEventListener('change',aiSave); });
+function aiSave(){ SETTINGS.ai={enemies:+$('aiEnemy').value,wing:$('aiWing').value==='1',skill:+$('aiSkill').value,sam:$('aiSam').value==='1'}; saveSettings(); }
+['aiEnemy','aiWing','aiSkill','aiSam'].forEach(function(id){ $(id).addEventListener('change',aiSave); });
 $('startSeg').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b) launchFrom(b.dataset.s); });
 $('btnLoadDone').addEventListener('click',loadDone);
 $('btnLoadBack').addEventListener('click',closeLoadPanel);
@@ -6087,7 +6100,7 @@ window.addEventListener('keydown',e=>{
   if(state!=='play') return;
   if(e.code==='KeyC') toggleCam();
   if(e.code==='KeyY') toggleInvert();
-  if(e.code==='KeyM') toggleMute();
+  if(e.code==='KeyN') toggleMute();
   if(e.code==='KeyG') toggleGear();
   if(e.code==='KeyT') toggleAutoTaxi();
   if(e.code==='KeyL') skipTaxi();
@@ -6116,7 +6129,7 @@ const NET_MODES={coop:{name:'İşbirliği',desc:'Herkes aynı takımda; kırmız
 const NET_MAX=4, NET_PREFIX='turkgoklerinde-v1-';
 const aV1=new THREE.Vector3(), aV2=new THREE.Vector3(), aV3=new THREE.Vector3(), aV4=new THREE.Vector3(), aM4=new THREE.Matrix4(), UPV=new THREE.Vector3(0,1,0);
 const PLY={isPlayer:true,id:'ME',team:'blue',pos:S.pos,fwd:new THREE.Vector3(0,0,-1),speed:0,alive:true,name:'Sen'};
-function aiCfg(){ const c=SETTINGS.ai||{}; return {enemies:c.enemies==null?2:c.enemies, wing:c.wing==null?true:!!c.wing, skill:c.skill==null?1:c.skill}; }
+function aiCfg(){ const c=SETTINGS.ai||{}; return {enemies:c.enemies==null?0:c.enemies, wing:c.wing==null?true:!!c.wing, skill:c.skill==null?1:c.skill, sam:c.sam==null?false:!!c.sam}; }
 function skillOf(){ return SKILL[clamp(aiCfg().skill|0,0,2)]; }
 function myTeam(){ if(!NET.on) return 'blue'; const r=NET.roster.find(function(x){ return x.id===NET.myId; }); return r?r.team:'blue'; }
 function plyEnt(){ PLY.id=NET.myId; PLY.team=myTeam(); fwdOf(S.q,PLY.fwd); PLY.speed=S.speed; PLY.alive=(state==='play'||state==='paused')&&!S.crashed&&!S.onGround; PLY.name=NET.on?NET.name:'Sen'; return PLY; }
@@ -6734,8 +6747,11 @@ function walkUpdate(dt){
     let mx=(-sy*inp.f+cy*inp.r), mz=(-cy*inp.f-sy*inp.r); const m=Math.hypot(mx,mz); if(m>1){ mx/=m; mz/=m; }
     WALK.pos.x+=mx*sp*dt; WALK.pos.z+=mz*sp*dt;
     pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes());
-    if(Math.abs(WALK.pos.x)>11000||Math.abs(WALK.pos.z)>11000||groundH(WALK.pos.x,WALK.pos.z)<0.8){ WALK.pos.x-=mx*sp*dt; WALK.pos.z-=mz*sp*dt; }
-    WALK.bob+=m*sp*dt*1.7; WALK.pos.y=groundH(WALK.pos.x,WALK.pos.z)+1.7+Math.sin(WALK.bob)*0.035*Math.min(1,m);
+    if(Math.abs(WALK.pos.x)>14500||Math.abs(WALK.pos.z)>14500||groundH(WALK.pos.x,WALK.pos.z)<0.8){ WALK.pos.x-=mx*sp*dt; WALK.pos.z-=mz*sp*dt; }
+    const gh=groundH(WALK.pos.x,WALK.pos.z)+1.7;
+    if(WALK.jumpQ&&!WALK.air){ WALK.vy=5.4; WALK.air=true; WALK.y=WALK.pos.y; } WALK.jumpQ=false;
+    if(WALK.air){ WALK.vy-=13*dt; WALK.y+=WALK.vy*dt; if(WALK.y<=gh){ WALK.y=gh; WALK.air=false; WALK.vy=0; } WALK.pos.y=WALK.y; }
+    else { WALK.bob+=m*sp*dt*1.7; WALK.pos.y=gh+Math.sin(WALK.bob)*0.035*Math.min(1,m); }
     /* what can I interact with? */
     WALK.near=null; WALK.nearId=null;
     const c=WALK.car; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
@@ -6754,7 +6770,7 @@ function walkUpdate(dt){
     /* three circles along the car body */
     let hit=false; for(const o of [1.5,0,-1.5]){ const p={x:c.x-Math.sin(c.h)*o, z:c.z-Math.cos(c.h)*o}, ox=p.x, oz=p.z; if(pushCircle(p,1.0,WALK.boxes)){ hit=true; c.x+=p.x-ox; c.z+=p.z-oz; } }
     if(hit) c.v*=0.35;
-    if(Math.abs(c.x)>11000||Math.abs(c.z)>11000||groundH(c.x,c.z)<0.8){ c.x-=-Math.sin(c.h)*c.v*dt; c.z-=-Math.cos(c.h)*c.v*dt; c.v*=-0.2; }
+    if(Math.abs(c.x)>14500||Math.abs(c.z)>14500||groundH(c.x,c.z)<0.8){ c.x-=-Math.sin(c.h)*c.v*dt; c.z-=-Math.cos(c.h)*c.v*dt; c.v*=-0.2; }
     placeCar(); WALK.near='car';
     WALK.cy*=Math.exp(-dt*(Math.abs(c.v)>2?1.2:0.15));
   }
@@ -6794,7 +6810,7 @@ function drawWalkHUD(){
   if(msg){ hx.textAlign='center'; hx.font='700 '+Math.round(16*s)+'px "Chakra Petch",system-ui,sans-serif'; const tw=hx.measureText(msg).width+28*s, y=h*0.72;
     hx.fillStyle='rgba(8,15,28,0.6)'; hx.fillRect(w/2-tw/2,y-16*s,tw,32*s); hx.fillStyle='#fff'; hx.fillText(msg,w/2,y); }
   if(WALK.hint>0&&!WALK.tvis){ hx.textAlign='center'; hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.globalAlpha=Math.min(1,WALK.hint); hx.fillStyle='#dfe9f1';
-    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · E etkileşim · M yerler · Esc menü':'W/S gaz-fren · A/D direksiyon · Space el freni · C kamera · E in · M yerler', w/2, h-24*s); hx.globalAlpha=1; }
+    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · Boşluk zıpla · E etkileşim · M yerler · Esc menü':'W/S gaz-fren · A/D direksiyon · Space el freni · C kamera · E in · M yerler', w/2, h-24*s); hx.globalAlpha=1; }
   hx.restore();
 }
 function walkLook(dx,dy){ const s=SETTINGS.sens||1;
@@ -6805,6 +6821,7 @@ function walkKey(e){
   if(e.code==='KeyE'||e.code==='Enter'||e.code==='KeyF'){ walkInteract(); return; }
   if(e.code==='KeyC'&&WALK.mode==='car'){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
   if(e.code==='KeyM') walkWarp();
+  if(e.code==='Space'&&WALK.mode==='foot') WALK.jumpQ=true;
   if(e.code==='CapsLock') WALK.run=!WALK.run;
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.code)>=0) e.preventDefault();
 }
@@ -6817,7 +6834,7 @@ function updateWalkTouch(){
   const foot=WALK.mode==='foot', a=$('wAct');
   const lbl=!foot?'İN':(WALK.near==='car'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
   a.innerHTML=lbl; a.classList.toggle('off',!lbl);
-  $('wRun').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot);
+  $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot);
 }
 (function(){
   const stick=$('wStick'); let sid=null;
@@ -6827,7 +6844,7 @@ function updateWalkTouch(){
   function sEnd(e){ if(e.pointerId!==sid) return; sid=null; WALK.sx=WALK.sy=0; }
   stick.addEventListener('pointerup',sEnd); stick.addEventListener('pointercancel',sEnd);
   function tap(id,fn){ const el=$(id); el.addEventListener('pointerdown',function(e){ e.preventDefault(); fn(); el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); },130); }); }
-  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wWarp',walkWarp);
+  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',walkWarp);
   const glc=$('gl');
   glc.addEventListener('click',function(){ if(state==='walk'&&!touchWanted()&&glc.requestPointerLock){ try{ glc.requestPointerLock(); }catch(e){} } });
   document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });

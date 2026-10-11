@@ -48,8 +48,11 @@ function walkUpdate(dt){
     let mx=(-sy*inp.f+cy*inp.r), mz=(-cy*inp.f-sy*inp.r); const m=Math.hypot(mx,mz); if(m>1){ mx/=m; mz/=m; }
     WALK.pos.x+=mx*sp*dt; WALK.pos.z+=mz*sp*dt;
     pushCircle(WALK.pos,0.35,WALK.boxes); pushCircle(WALK.pos,0.35,carBoxes());
-    if(Math.abs(WALK.pos.x)>11000||Math.abs(WALK.pos.z)>11000||groundH(WALK.pos.x,WALK.pos.z)<0.8){ WALK.pos.x-=mx*sp*dt; WALK.pos.z-=mz*sp*dt; }
-    WALK.bob+=m*sp*dt*1.7; WALK.pos.y=groundH(WALK.pos.x,WALK.pos.z)+1.7+Math.sin(WALK.bob)*0.035*Math.min(1,m);
+    if(Math.abs(WALK.pos.x)>14500||Math.abs(WALK.pos.z)>14500||groundH(WALK.pos.x,WALK.pos.z)<0.8){ WALK.pos.x-=mx*sp*dt; WALK.pos.z-=mz*sp*dt; }
+    const gh=groundH(WALK.pos.x,WALK.pos.z)+1.7;
+    if(WALK.jumpQ&&!WALK.air){ WALK.vy=5.4; WALK.air=true; WALK.y=WALK.pos.y; } WALK.jumpQ=false;
+    if(WALK.air){ WALK.vy-=13*dt; WALK.y+=WALK.vy*dt; if(WALK.y<=gh){ WALK.y=gh; WALK.air=false; WALK.vy=0; } WALK.pos.y=WALK.y; }
+    else { WALK.bob+=m*sp*dt*1.7; WALK.pos.y=gh+Math.sin(WALK.bob)*0.035*Math.min(1,m); }
     /* what can I interact with? */
     WALK.near=null; WALK.nearId=null;
     const c=WALK.car; if(Math.hypot(c.x-WALK.pos.x,c.z-WALK.pos.z)<4) WALK.near='car';
@@ -68,7 +71,7 @@ function walkUpdate(dt){
     /* three circles along the car body */
     let hit=false; for(const o of [1.5,0,-1.5]){ const p={x:c.x-Math.sin(c.h)*o, z:c.z-Math.cos(c.h)*o}, ox=p.x, oz=p.z; if(pushCircle(p,1.0,WALK.boxes)){ hit=true; c.x+=p.x-ox; c.z+=p.z-oz; } }
     if(hit) c.v*=0.35;
-    if(Math.abs(c.x)>11000||Math.abs(c.z)>11000||groundH(c.x,c.z)<0.8){ c.x-=-Math.sin(c.h)*c.v*dt; c.z-=-Math.cos(c.h)*c.v*dt; c.v*=-0.2; }
+    if(Math.abs(c.x)>14500||Math.abs(c.z)>14500||groundH(c.x,c.z)<0.8){ c.x-=-Math.sin(c.h)*c.v*dt; c.z-=-Math.cos(c.h)*c.v*dt; c.v*=-0.2; }
     placeCar(); WALK.near='car';
     WALK.cy*=Math.exp(-dt*(Math.abs(c.v)>2?1.2:0.15));
   }
@@ -108,7 +111,7 @@ function drawWalkHUD(){
   if(msg){ hx.textAlign='center'; hx.font='700 '+Math.round(16*s)+'px "Chakra Petch",system-ui,sans-serif'; const tw=hx.measureText(msg).width+28*s, y=h*0.72;
     hx.fillStyle='rgba(8,15,28,0.6)'; hx.fillRect(w/2-tw/2,y-16*s,tw,32*s); hx.fillStyle='#fff'; hx.fillText(msg,w/2,y); }
   if(WALK.hint>0&&!WALK.tvis){ hx.textAlign='center'; hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.globalAlpha=Math.min(1,WALK.hint); hx.fillStyle='#dfe9f1';
-    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · E etkileşim · M yerler · Esc menü':'W/S gaz-fren · A/D direksiyon · Space el freni · C kamera · E in · M yerler', w/2, h-24*s); hx.globalAlpha=1; }
+    hx.fillText(foot?'WASD yürü · fareyle bak (ekrana tıkla) · Shift koş · Boşluk zıpla · E etkileşim · M yerler · Esc menü':'W/S gaz-fren · A/D direksiyon · Space el freni · C kamera · E in · M yerler', w/2, h-24*s); hx.globalAlpha=1; }
   hx.restore();
 }
 function walkLook(dx,dy){ const s=SETTINGS.sens||1;
@@ -119,6 +122,7 @@ function walkKey(e){
   if(e.code==='KeyE'||e.code==='Enter'||e.code==='KeyF'){ walkInteract(); return; }
   if(e.code==='KeyC'&&WALK.mode==='car'){ WALK.fp=!WALK.fp; WALK.pitch=0; return; }
   if(e.code==='KeyM') walkWarp();
+  if(e.code==='Space'&&WALK.mode==='foot') WALK.jumpQ=true;
   if(e.code==='CapsLock') WALK.run=!WALK.run;
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].indexOf(e.code)>=0) e.preventDefault();
 }
@@ -131,7 +135,7 @@ function updateWalkTouch(){
   const foot=WALK.mode==='foot', a=$('wAct');
   const lbl=!foot?'İN':(WALK.near==='car'?'BİN':(WALK.near==='plane'?'UÇAĞA<br>BİN':''));
   a.innerHTML=lbl; a.classList.toggle('off',!lbl);
-  $('wRun').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot);
+  $('wRun').classList.toggle('hidden',!foot); $('wJump').classList.toggle('hidden',!foot); $('wRun').classList.toggle('on',WALK.run); $('wCam').classList.toggle('hidden',foot);
 }
 (function(){
   const stick=$('wStick'); let sid=null;
@@ -141,7 +145,7 @@ function updateWalkTouch(){
   function sEnd(e){ if(e.pointerId!==sid) return; sid=null; WALK.sx=WALK.sy=0; }
   stick.addEventListener('pointerup',sEnd); stick.addEventListener('pointercancel',sEnd);
   function tap(id,fn){ const el=$(id); el.addEventListener('pointerdown',function(e){ e.preventDefault(); fn(); el.classList.add('on'); setTimeout(function(){ el.classList.remove('on'); },130); }); }
-  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wWarp',walkWarp);
+  tap('wAct',walkInteract); tap('wPause',function(){ walkLeave(); pauseGame(); }); tap('wCam',function(){ WALK.fp=!WALK.fp; WALK.pitch=0; }); tap('wRun',function(){ WALK.run=!WALK.run; }); tap('wJump',function(){ WALK.jumpQ=true; }); tap('wWarp',walkWarp);
   const glc=$('gl');
   glc.addEventListener('click',function(){ if(state==='walk'&&!touchWanted()&&glc.requestPointerLock){ try{ glc.requestPointerLock(); }catch(e){} } });
   document.addEventListener('mousemove',function(e){ if(state==='walk'&&document.pointerLockElement===glc) walkLook(e.movementX*0.6,e.movementY*0.6); });

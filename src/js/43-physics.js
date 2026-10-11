@@ -1,3 +1,14 @@
+/* ------------------------------------------------------------------ landing zones: anywhere you can touch down, roll and take off.
+   The main air base (round field), the UAV centre and the enemy airfield (flat pads); `m` widens the zone (ground roll tolerance). */
+function landZone(x,z,m){ m=m||0;
+  if(Math.hypot(x,z)<1700+m&&terrainH(x,z)>0) return LZ_MAIN;
+  for(let i=0;i<LZONES.length;i++){ const L=LZONES[i]; if(x>L.x0-m&&x<L.x1+m&&z>L.z0-m&&z<L.z1+m) return L; }
+  return null; }
+const LZ_MAIN={id:'main',name:'Ay Yıldız Hava Üssü',y:AIRFIELD_Y};
+const LZONES=[];
+function initLandZones(){ LZONES.length=0;
+  [['uav','İHA ve Test Merkezi'],['enemy','Kızıl Bölge hava üssü']].forEach(function(e){ const p=PADS.find(function(q){ return q.id===e[0]; }); if(p) LZONES.push({id:e[0],name:e[1],x0:p.x0+20,x1:p.x1-20,z0:p.z0+20,z1:p.z1-20,y:p.y}); }); }
+initLandZones();
 /* ------------------------------------------------------------------ physics */
 const vF=new THREE.Vector3(), vR=new THREE.Vector3(), vU=new THREE.Vector3(), vel=new THREE.Vector3(), prevPos=new THREE.Vector3();
 const dq=new THREE.Quaternion(), eul=new THREE.Euler();
@@ -56,12 +67,12 @@ function update(dt){
     const gh=terrainH(S.pos.x,S.pos.z), gl=Math.max(gh,0);
     const off=S.gear?CUR.gearOff:CUR.belly;
     if(S.pos.y<=gl+off){
-      const inField=Math.hypot(S.pos.x,S.pos.z)<1700 && gh>0;
+      const zone=landZone(S.pos.x,S.pos.z), inField=!!zone && gh>0;
       vR.set(1,0,0).applyQuaternion(S.q); vU.set(0,1,0).applyQuaternion(S.q);
       const bank=Math.atan2(-vR.y,vU.y), pitch=Math.asin(clamp(vF.y,-1,1));
       if(S.gear && inField){
         if(-S.vy<=CUR.sinkMax && pitch>-0.06 && pitch<0.36 && Math.abs(bank)<0.35 && S.speed<CUR.landV){
-          S.onGround=true; S.sink=0; S.pos.y=AIRFIELD_Y+CUR.gearOff; toast('İniş tamamlandı','#7dffb0'); rumble(180,0.3,0.6); if(needsService()) toast('Bakım hangarına git (işaretli): onar ve silah yükle','#b8ecff');
+          S.onGround=true; S.sink=0; S.zoneY=zone.y; S.pos.y=zone.y+CUR.gearOff; toast(zone.id==='main'?'İniş tamamlandı':'İniş tamamlandı — '+zone.name,'#7dffb0'); rumble(180,0.3,0.6); if(needsService()) toast('Bakım hangarına git (işaretli): onar ve silah yükle','#b8ecff');
         } else crash(-S.vy>CUR.sinkMax?'Sert iniş':'Hatalı iniş açısı');
       } else if(S.gear && gh<=0) crash('Denize düştün');
       else crash(inField?'İniş takımı kapalıydı':(gh<=0?'Denize düştün':'Yere çarptın'));
@@ -78,11 +89,11 @@ function update(dt){
     pitch=clamp(pitch,0,0.38);
     S.q.setFromEuler(eul.set(pitch,-heading,0,'YXZ'));
     S.pos.x+=Math.sin(heading)*S.speed*dt; S.pos.z-=Math.cos(heading)*S.speed*dt;
-    S.pos.y=AIRFIELD_Y+CUR.gearOff; S.vy=0; S.g+=(1-S.g)*(1-Math.exp(-6*dt));
+    const gz=landZone(S.pos.x,S.pos.z); if(gz) S.zoneY=gz.y; S.pos.y=(S.zoneY==null?AIRFIELD_Y:S.zoneY)+CUR.gearOff; S.vy=0; S.g+=(1-S.g)*(1-Math.exp(-6*dt));
     if(!S.clearance) updateTaxi(dt);
     serviceWalls(); serviceStep(dt);
     if(S.speed>CUR.vr && pitch>0.04){ S.onGround=false; S.sink=0; toast('Havalandın!'); }
-    if(Math.hypot(S.pos.x,S.pos.z)>1850) crash('Pist dışına çıktın');
+    if(!landZone(S.pos.x,S.pos.z,150)) crash('Pist dışına çıktın');
   }
 
   obstacleStep();

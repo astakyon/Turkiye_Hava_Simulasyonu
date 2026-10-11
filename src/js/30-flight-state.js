@@ -13,6 +13,7 @@ function fmtT(t){ const m=Math.floor(t/60), s=t-m*60; return String(m).padStart(
 
 function resetFlight(mode){
   S.crashed=false; S.sink=0; S.pitchIn=S.rollIn=S.yawIn=0; S.g=1; S.ab=false; S.brake=false; S.auto=false; flaresLeft=FLARES[activeId]||0; S.hp=100; clearThreats(); applyLoadout(activeId);
+  S.zoneY=AIRFIELD_Y;
   if(mode==='hangar'){ const dd=displays[activeId]; S.pos.set(dd.x,AIRFIELD_Y+CUR.gearOff,HANGAR.z); S.q.identity(); S.speed=0; S.throttle=0; S.gear=true; S.onGround=true; S.taxi=true; S.clearance=false; startTaxi(); }
   else if(mode==='runway'){ S.pos.set(0,AIRFIELD_Y+CUR.gearOff,1150); S.q.identity(); S.speed=0; S.throttle=0; S.gear=true; S.onGround=true; S.taxi=false; S.clearance=true; }
   else{ S.pos.set(0,1100,900); S.q.identity(); S.speed=CUR.airV; S.throttle=0.75; S.gear=false; S.onGround=false; S.taxi=false; S.clearance=true; if(NET.on&&NET.started) netSpawnMe(); }

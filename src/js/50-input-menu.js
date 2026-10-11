@@ -122,8 +122,8 @@ function refreshSetup(){
   }).join(''):'<tr><td>Bu uçak silah taşımıyor.</td></tr>';
 }
 $('suLoad').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled) setupAdjust(b.dataset.k,+b.dataset.d); });
-function aiSave(){ SETTINGS.ai={enemies:+$('aiEnemy').value,wing:$('aiWing').value==='1',skill:+$('aiSkill').value}; saveSettings(); }
-['aiEnemy','aiWing','aiSkill'].forEach(function(id){ $(id).addEventListener('change',aiSave); });
+function aiSave(){ SETTINGS.ai={enemies:+$('aiEnemy').value,wing:$('aiWing').value==='1',skill:+$('aiSkill').value,sam:$('aiSam').value==='1'}; saveSettings(); }
+['aiEnemy','aiWing','aiSkill','aiSam'].forEach(function(id){ $(id).addEventListener('change',aiSave); });
 $('startSeg').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b) launchFrom(b.dataset.s); });
 $('btnLoadDone').addEventListener('click',loadDone);
 $('btnLoadBack').addEventListener('click',closeLoadPanel);

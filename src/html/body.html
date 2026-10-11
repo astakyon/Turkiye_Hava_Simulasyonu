@@ -122,6 +122,7 @@
     <div class="airow">
       <label>Düşman uçak<select id="aiEnemy"><option value="0">Yok</option><option value="2">2 uçak</option><option value="4">4 uçak</option></select></label>
       <label>Kanat adamı<select id="aiWing"><option value="1">Açık</option><option value="0">Kapalı</option></select></label>
+      <label>Hava savunma (SAM)<select id="aiSam"><option value="0">Kapalı</option><option value="1">Açık</option></select></label>
       <label>Zorluk<select id="aiSkill"><option value="0">Kolay</option><option value="1">Orta</option><option value="2">Zor</option></select></label>
     </div>
     <h3>Nereden başlamak istersin?</h3>
@@ -179,7 +180,7 @@
           <li><span class="k"><kbd>Fare</kbd></span>Sürükle: kamerayı döndür</li>
           <li><span class="k"><kbd>Tekerlek</kbd></span>Yakınlaş / uzaklaş</li>
           <li><span class="k"><kbd>Y</kbd></span>Yukarı-aşağı ters çevir</li>
-          <li><span class="k"><kbd>M</kbd></span>Sesi aç / kapat</li>
+          <li><span class="k"><kbd>N</kbd></span>Sesi aç / kapat</li>
           <li><span class="k"><kbd>P</kbd><kbd>Esc</kbd></span>Duraklat</li>
         </ul>
         <h3>Üssü gez (yaya / araç)</h3>
@@ -351,7 +352,7 @@
 <div id="wtouch" class="touch hidden">
   <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wWarp">GİT ▸</button></div>
   <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
-  <div class="tright wright"><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
+  <div class="tright wright"><button type="button" id="wJump" class="tb">ZIPLA</button><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
 </div>
 <div id="fps" class="fps hidden"></div>
 <div id="rotate" class="hidden">Daha rahat oynamak için telefonu yatay çevir</div>

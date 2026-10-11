@@ -98,7 +98,7 @@ window.addEventListener('keydown',e=>{
   if(state!=='play') return;
   if(e.code==='KeyC') toggleCam();
   if(e.code==='KeyY') toggleInvert();
-  if(e.code==='KeyM') toggleMute();
+  if(e.code==='KeyN') toggleMute();
   if(e.code==='KeyG') toggleGear();
   if(e.code==='KeyT') toggleAutoTaxi();
   if(e.code==='KeyL') skipTaxi();

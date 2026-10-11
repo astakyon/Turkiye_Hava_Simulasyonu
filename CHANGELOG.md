@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.51 — 2026-10-11
+### Düzeltildi
+- **Uzaktan titreşen nesneler:** derinlik hesabı uzak mesafeler için hassaslaştırıldı. Havalimanı zemini, pist çizgileri, yollar, çatılar ve türbinler uzaktan bakınca artık titremiyor.
+- **İHA üssüne iniş:** inişe artık yalnızca ana havalimanında izin verilmiyordu, bu düzeltildi. **Genel pist sistemi** geldi: İHA ve test merkezinin pistine (ve Kızıl Bölge'deki düşman pistine) inilebiliyor, orada yerde sürülebiliyor ve tekrar kalkılabiliyor. Pist alanının dışına çıkınca yine "Pist dışına çıktın" sayılıyor.
+- **Serbest modda düşmanlar:** serbest uçuşta düşman uçak varsayılan olarak **Yok**.
+- **Hava savunma (SAM):** "Uçuşa hazır" ekranına yeni bir **Hava savunma (SAM)** seçeneği geldi, serbest modda varsayılan olarak **Kapalı**. Kapalıyken yerdeki SAM'lar kilitlenmiyor ve füze atmıyor.
+- **Uzak bölgelerde hareket:** yürürken ya da araçla haritanın uzak bölgelerinde (İHA adası gibi) hareket edilemiyordu, düzeltildi.
+### Yeni
+- **Zıplama:** yürürken **Boşluk** tuşu, telefonda **ZIPLA** düğmesi.
+### Değişti
+- **Ses aç/kapat** artık **N** tuşu. M tuşu harita için ayrıldı.
+
 ## V1.50 — 2026-10-11
 ### Yeni — Simge yapılar (Aşama 4 tamamlandı)
 - **Hilal Barajı:** güney dağlarında kemer barajla kapatılmış bir vadi gölü.
