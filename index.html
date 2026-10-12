@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.92">
+<meta name="game-version" content="V1.93">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -1399,7 +1399,7 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.92', GAME_DATE='2026-10-12';
+const GAME_VERSION='V1.93', GAME_DATE='2026-10-12';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -10484,7 +10484,7 @@ const _alMap=drawMap; drawMap=function(x,W,H,mini){ _alMap(x,W,H,mini); if(!AL.a
    Fill in the project URL and the *anon public* key (Project Settings → API) to turn on accounts for every player.
    Both are meant to be public; the database rules in supabase/schema.sql do the protecting. Never put the service_role key here.
    Left empty, the game runs in guest mode; a device can still connect from Ayarlar → Arayüz → Gelişmiş → Bulut bağlantısı. */
-const ACCOUNT_CFG={url:'', key:''};
+const ACCOUNT_CFG={url:'https://dmxglgkunafjxscwyffp.supabase.co', key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRteGdsZ2t1bmFmanhzY3d5ZmZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3NDIxNDMsImV4cCI6MjEwNzMxODE0M30.julbly2HXpHFowUAb-kmFZ7EmuXSS-fpQt_rABGEo5U'};
 /* ------------------------------------------------------------------ accounts, profiles and cloud saves (Supabase)
    Guest mode (no account): local profiles on this device (call sign, unit, emblem, rank/XP), saves in localStorage.
    Signed in: profile row + one JSON save per user, synced both ways (newest wins), pushed a few seconds after any change,

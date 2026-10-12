@@ -114,11 +114,12 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.90 | **Telefon ve kayıt.** Eğerek uçma (jiroskop) ve kalibrasyon, titreşim geri bildirimi. Misafir kaydını dosyayla yedekleme (hesaplılar zaten bulutta). Android paketi hazırlığı (TWA/Capacitor). | Telefon eğilerek uçuyor; yedek başka cihazda açılıyor. | ✅ |
 | V1.91 | **Menü ve hangar düzeltmeleri.** Hızlı oyun menüsü (Hızlı oyun: son araçla anında · Serbest uçuş/sürüş → hangar · Hızlı görev · Üssü gez: üs seçimi), "Uçuşa hazır" penceresi kalkar (görev ayarları Hızlı görev ekranına, başlama yeri mühimmat ekranına), mühimmat hızlı grupları, hangarda tüm araçlar (uçak, helikopter, kara, deniz) ile başlama, hangar üst çubuğu çakışmaları ve tıklanmayan Gerçek veriler/Boya, duraklat menüsünde Ana menü, yönetim simgesi. | Tüm akışlar tek ekrandan geçmeden çalışır; hangarda her araçla başlanır. | ✅ |
 | V1.92 | **Kariyer: ehliyet ve sertifikalar.** Hızlı oyun tamamen açık ve puansız; kariyer sıfırdan: İHA pilotluğu, helikopter pilotluğu, uçak pilotluğu (eğitim → jet → savaş), araç ehliyeti, tank sürücülüğü, kaptanlık için uygulamalı sınavlar; belgeler araç gruplarını, rütbe ağır sistemleri açar; kariyere özel görevler. | Belgesiz araç kullanılamaz; sınavı geçince açılır. | ✅ |
+| V1.93 | **Bulut hesapları açık.** Supabase projesi bağlandı (anon public anahtarı); hesap açma, bulut kaydı, yönetim paneli herkes için çalışır. | Oyunda hesap açılır, ilerleme başka cihazda görünür. | ✅ |
 
 ### Faz 10 — Model yenileme
 | Sürüm | İçerik | Durum |
 |---|---|---|
-| V1.93+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
+| V1.94+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
 
 ### Android yolu
 1. PWA (V1.20 ✅) → 2. Play Store için TWA paketi (Bubblewrap) veya Capacitor → 3. imzalama, mağaza görselleri, gizlilik politikası.

@@ -1,6 +1,11 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.93 — 2026-10-12
+- **Bulut hesapları açıldı.** Oyun, kendi Supabase projesine (Frankfurt) bağlandı. Artık herkes e-posta ile hesap açabiliyor; profil, kariyer, belgeler, rekorlar ve ayarlar buluta kaydediliyor ve başka cihazda da açılıyor.
+- Misafir oynamak eskisi gibi mümkün. Misafir ilerlemesi giriş yapınca hesaba aktarılıyor.
+- Yayımlanan anahtar yalnızca herkese açık "anon public" anahtarı; veriler veritabanı kurallarıyla (RLS) korunuyor.
+
 ## V1.92 — 2026-10-12
 - **Hızlı oyun ve kariyer ayrıldı:** hızlı oyunda her araç ve her görev kısıtsız açık, puan kazanılmıyor. Kariyer sıfırdan bir ilerleme: puan kazanıyorsun ve her araç için belge gerekiyor.
 - **Ehliyet ve Sertifikalar** (Kariyer menüsünde): 8 belge var, her biri uygulamalı sınavla alınıyor:
