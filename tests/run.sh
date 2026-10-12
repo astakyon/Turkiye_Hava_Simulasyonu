@@ -63,3 +63,4 @@ node harness.js /tmp/sim.js menu3.test.js
 node harness.js /tmp/sim.js licenses.test.js
 node harness.js /tmp/sim.js perf.test.js
 node harness.js /tmp/sim.js pcard.test.js
+node harness.js /tmp/sim.js assist.test.js

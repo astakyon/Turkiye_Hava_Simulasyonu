@@ -905,3 +905,22 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .lg-panel .accmsg{ text-align:center; }
 @media (max-width:760px){ #loginUI.lgui{ grid-template-columns:1fr; } .lg-art{ display:none; } .lg-panel{ border-left:0; } }
 @media (max-height:520px) and (orientation:landscape){ #loginUI.lgui{ grid-template-columns:1fr minmax(300px,380px); } .lg-art{ display:flex; } .lg-panel{ gap:6px; padding:10px 22px; zoom:.82; max-height:calc(100vh / .82); } .lg-tabs{ margin:0; } .lg-tabs button{ padding:7px 6px; } .lg-google{ padding:9px; } .lg-or{ display:none; } .lg-f input{ padding:18px 44px 5px 12px; } .lg-f span{ top:12px; } .lg-go{ width:52px; height:52px; font-size:22px; margin:0; border-radius:16px; } .lg-guest{ padding-top:6px; flex-direction:row; justify-content:center; gap:10px; } .lg-brand h1{ font-size:clamp(28px,5vw,48px); } }
+
+/* ---- V1.96 announcements, landing guide, mission log close */
+.annbar{ position:fixed; top:max(12px,env(safe-area-inset-top)); left:50%; transform:translateX(-50%); z-index:60; display:flex; align-items:center; gap:12px; max-width:min(720px,calc(100vw - 32px)); padding:10px 10px 10px 16px; border-radius:12px;
+  background:rgba(10,14,24,.95); border:1px solid rgba(227,10,23,.6); box-shadow:0 12px 40px rgba(0,0,0,.5); color:#fff; animation:annIn .35s var(--ease); }
+.annbar.hidden{ display:none; } .annbar b{ flex:none; font-size:11px; letter-spacing:.2em; color:#ff6b74; } .annbar span{ flex:1; font-size:14px; line-height:1.35; }
+.annbar button{ flex:none; width:32px; height:32px; border-radius:50%; border:1px solid rgba(255,255,255,.2); background:none; color:#fff; cursor:pointer; }
+@keyframes annIn{ from{ transform:translate(-50%,-30px); opacity:0; } to{ transform:translateX(-50%); opacity:1; } }
+.mlog h3{ display:flex; align-items:center; gap:8px; } .mlogx{ margin-left:auto; width:26px; height:26px; border-radius:50%; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.06); color:#fff; cursor:pointer; font-size:12px; flex:none; }
+.mlogx:hover{ background:rgba(227,10,23,.35); } .mlog{ pointer-events:auto; }
+.lndui{ position:fixed; left:max(16px,env(safe-area-inset-left)); top:52%; transform:translateY(-50%); z-index:5; width:200px; padding:10px 12px; border-radius:10px; background:rgba(6,12,22,.72); border:1px solid rgba(125,255,176,.35); color:#dfe9f1; font-size:12px; pointer-events:none; zoom:var(--uiz,1); }
+.lndui.hidden{ display:none; } .lndui .lhd{ font-weight:800; letter-spacing:.12em; color:#7dffb0; font-size:12px; }
+.lndui .lbox{ display:grid; grid-template-columns:22px 1fr; gap:8px; margin:8px 0 6px; align-items:center; }
+.lndui .lgs{ position:relative; height:84px; border-radius:6px; background:linear-gradient(transparent 49%,rgba(125,255,176,.6) 49%,rgba(125,255,176,.6) 51%,transparent 51%),rgba(255,255,255,.06); }
+.lndui .lgs i{ position:absolute; left:50%; width:12px; height:12px; margin:-6px 0 0 -6px; transform:rotate(45deg); background:#ff4fd8; transition:top .2s; }
+.lndui .llat{ position:relative; height:22px; border-radius:6px; background:linear-gradient(90deg,transparent 49%,rgba(125,255,176,.6) 49%,rgba(125,255,176,.6) 51%,transparent 51%),rgba(255,255,255,.06); }
+.lndui .llat i{ position:absolute; top:50%; width:12px; height:12px; margin:-6px 0 0 -6px; transform:rotate(45deg); background:#ff4fd8; transition:left .2s; }
+.lndui .lgl{ font-size:10px; opacity:.6; } .lndui .ltip{ font-weight:700; color:#ffd27a; min-height:1.3em; } .lndui .lsp{ margin-top:4px; opacity:.9; } .lndui b.ok{ color:#7dffb0; } .lndui b.bad{ color:#ff8a7a; }
+.lndui .lau{ display:none; margin-top:6px; padding:3px 8px; border-radius:6px; background:#1c7a4a; color:#fff; font-weight:800; letter-spacing:.14em; text-align:center; } .lndui.auto .lau{ display:block; }
+@media (max-width:760px){ .lndui{ top:auto; bottom:42%; transform:none; width:170px; } }

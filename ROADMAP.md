@@ -117,7 +117,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.93 | **Bulut hesapları açık.** Supabase projesi bağlandı (anon public anahtarı); hesap açma, bulut kaydı, yönetim paneli herkes için çalışır. | Oyunda hesap açılır, ilerleme başka cihazda görünür. | ✅ |
 | V1.94 | **FPS ve siyah dalga düzeltmesi.** Yalnız yakındaki trafik çizilir, sabit nesne grupları ekran dışındaysa atlanır, uzak ormanlar seyrelir (uçuşta üçgen sayısı yarıya indi); akıllı performans basamakları; FPS sınırı (30/60/sınırsız) ve tek dokunuşla Performans modu; telefonda iki katmanlı derinlik çizimi ve deniz yüzeyi düzeltmesi | ✅ |
 | V1.95 | **Giriş ve profil ekranı yenilemesi.** Oyun tarzı sade giriş (tek ekran, büyük düğmeler, misafir olarak devam), oyuncu kartı profili (rütbe rozeti, seviye çubuğu, öne çıkan istatistikler, sekmeli ayrıntı) | ✅ |
-| V1.96 | **Duyurular, iniş yardımı, belge sınavları.** Süreli/anlık duyurular ve oyunculara anında iletim; piste iniş kolaylığı (yaklaşma rehberi, otomatik iniş yardımı); görev günlüğüne kapatma düğmesi; belge sınavlarında tamamlanınca belgenin verilmemesi hatası; araca uygun sınav hedefleri (İHA irtifası vb.) | |
+| V1.96 | **Duyurular, uçuş yardımı, belge düzeltmeleri.** Süreli/anlık duyurular, oyunculara 20 sn içinde iletim; Uçuş yardımı (Yardımlı: iniş göstergesi, otomatik burun kaldırma, hoşgörülü iniş, stol koruması · Otomatik iniş); görev günlüğüne ✕; belge aşamaları profilde (bulutta) saklanır, tekrarla geçilen aşama sayılır; İHA sınavı 150 m | ✅ |
 
 ### Faz 10 — Model yenileme
 | Sürüm | İçerik | Durum |

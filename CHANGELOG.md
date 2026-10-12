@@ -1,6 +1,28 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.96 — 2026-10-12
+- **Duyurular:**
+  - Yönetim → Duyurular'da süre seçiliyor: **Anlık** (oyunda bir kez gösterilir), **10 dakika**, **1 saat**, **1 gün**, **Kalıcı**. Süresi dolan duyuru kendiliğinden kalkar.
+  - Oyunculara en geç 20 saniyede ulaşır (veritabanı canlı yayın açıksa anında). Ekranın üstünde ✕ ile kapatılabilen bir şerit olarak bir kez çıkar.
+  - Yönetim listesinde her duyurunun kalan süresi ve yayında olup olmadığı görünür.
+  - Veritabanında değişiklik gerekmez.
+- **Uçuş yardımı** (Ayarlar → Grafik → Uçuş yardımı):
+  - **Yardımlı** (varsayılan):
+    - Piste yaklaşırken sol tarafta iniş göstergesi: pist ve mesafe, süzülüş ve merkez hattı elmasları, hedef hız, alçalma hızı ve "burnu hafif indir / sola dön / gazı azalt" ipuçları.
+    - Pistin üstünde son metrelerde otomatik burun kaldırma ve gaz kesme.
+    - Daha hoşgörülü iniş sınırları (alçalma hızı, yatış ve burun açısı 1,5 kat).
+    - Stol koruması.
+  - **Otomatik iniş:** takım açık ve çubuk bırakılmışken asistan süzülüş açısını, merkez hattını ve hızı tutarak piste indirir. Çubuğa dokununca kontrol hemen sende. KAAN, Hürjet ve TB2 ile denendi.
+  - Kalkıştan sonraki 20 saniye yaklaşma sayılmaz.
+- **İHA'larda uçuş bilgisayarı:** hız stol sınırına yaklaşınca burun kaldırma kısılır; stolde burun hafifçe indirilir.
+- **Görev günlüğü** köşesinde ✕ ile kapanır.
+- **Belge sınavları:**
+  - Düzeltildi: belgeler buluttaki profile kaydedilmiyordu; hesapla girişte yeniden yüklenince kayboluyordu. Artık profil istatistiklerinde saklanıyor.
+  - Her aşama ayrı hatırlanır. Başarısız bir aşamayı *Tekrar* ile geçmek de sayılır; bütün aşamalar geçilince belge hemen verilir.
+  - Sınava yeniden girince kaldığın aşamadan devam edilir; belge ekranında "Aşama 1 / 2 geçildi" görünür.
+- **İHA sınavı:** TB2 için hedef irtifa 150 m oldu. Ders açıklaması da yavaş tırmanmayı ve hızı korumayı anlatıyor.
+
 ## V1.95 — 2026-10-12
 - **Yeni giriş ekranı** (oyun istemcilerindeki gibi tek ve sade ekran):
   - Solda oyunun adı, sağda giriş paneli: *Giriş yap / Hesap oluştur* sekmesi, büyük **Google ile devam et** düğmesi.

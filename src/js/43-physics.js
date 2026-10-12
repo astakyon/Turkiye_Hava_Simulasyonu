@@ -4,6 +4,7 @@ function landZone(x,z,m){ m=m||0;
   if(Math.hypot(x,z)<1700+m&&terrainH(x,z)>0) return LZ_MAIN;
   for(let i=0;i<LZONES.length;i++){ const L=LZONES[i]; if(x>L.x0-m&&x<L.x1+m&&z>L.z0-m&&z<L.z1+m) return L; }
   return null; }
+function landK(){ return 1; }   /* touchdown tolerance factor (flight assist raises it) */
 const LZ_MAIN={id:'main',name:'Ay Yıldız Hava Üssü',y:AIRFIELD_Y};
 const LZONES=[];
 function initLandZones(){ LZONES.length=0;
@@ -72,9 +73,9 @@ function update(dt){
       vR.set(1,0,0).applyQuaternion(S.q); vU.set(0,1,0).applyQuaternion(S.q);
       const bank=Math.atan2(-vR.y,vU.y), pitch=Math.asin(clamp(vF.y,-1,1));
       if(S.gear && inField){
-        if(-S.vy<=CUR.sinkMax && pitch>-0.06 && pitch<0.36 && Math.abs(bank)<0.35 && S.speed<CUR.landV){
+        const lk=landK(); if(-S.vy<=CUR.sinkMax*lk && pitch>-0.06*lk && pitch<0.36+0.08*(lk-1) && Math.abs(bank)<0.35*lk && S.speed<CUR.landV*(1+0.15*(lk-1))){
           S.onGround=true; S.sink=0; S.zoneY=zone.y; S.pos.y=zone.y+CUR.gearOff; sndPlay('touch'); toast(zone.id==='main'?'İniş tamamlandı':'İniş tamamlandı — '+zone.name,'#7dffb0'); rumble(180,0.3,0.6); if(needsService()) toast('Bakım hangarına git (işaretli): onar ve silah yükle','#b8ecff');
-        } else crash(-S.vy>CUR.sinkMax?'Sert iniş':'Hatalı iniş açısı');
+        } else crash(-S.vy>CUR.sinkMax*landK()?'Sert iniş':'Hatalı iniş açısı');
       } else if(S.gear && gh<=0) crash('Denize düştün');
       else crash(inField?'İniş takımı kapalıydı':(gh<=0?'Denize düştün':'Yere çarptın'));
     }
