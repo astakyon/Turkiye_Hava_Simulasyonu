@@ -1,6 +1,11 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.85 — 2026-10-12
+- **Hangar lambaları uçakları aydınlatıyor:** gece ya da kapalı havada hangardaki uçakların üstü artık kararmıyor. Bekleme hangarına ve bakım hangarına gerçek lamba ışığı eklendi. Hangar ışığı uçak sırası boyunca kamerayı izliyor. Işığın menzili sınırlı olduğu için dışarısı gece karanlık kalıyor.
+- **Hangarın içine yağmur yağmıyor:** bekleme hangarı ve bakım hangarının çatısı altında yağmur ve kar görünmüyor, kapıdan dışarı bakınca yağış sürüyor. İçerideyken yağmur sesi kısılıyor.
+- Yol haritası kaydı: Tekrar izleme V1.86, 3B kokpit V1.87, Telefon ve kayıt V1.88, model yenileme V1.89+ oldu.
+
 ## V1.84 — 2026-10-12
 - **Uçuş konforu:** uçakta ve helikopterde yaşanan yalpalama giderildi.
 - **Türbülans ayarı** (Ayarlar → Hava durumu altında): Kapalı / **Hafif** (varsayılan) / Gerçekçi. Açık havada artık hiç sarsıntı yok. Sarsıntı yavaş ve yumuşak dalgalanmalara indirildi, titreme yapan hızlı bileşenler kaldırıldı. Fırtınada yatış salınımı 4,4°'den Hafif ayarda 1,6°'ye düştü.

@@ -53,3 +53,4 @@ node harness.js /tmp/sim.js editor.test.js
 node harness.js /tmp/sim.js menu2.test.js
 node net_harness.js /tmp/sim.js net_mix.test.js
 node harness.js /tmp/sim.js comfort.test.js
+node harness.js /tmp/sim.js indoor.test.js

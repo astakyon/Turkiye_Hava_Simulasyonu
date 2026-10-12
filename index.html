@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.84">
+<meta name="game-version" content="V1.85">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -1267,7 +1267,7 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.84', GAME_DATE='2026-10-12';
+const GAME_VERSION='V1.85', GAME_DATE='2026-10-12';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -11638,6 +11638,32 @@ const _cfHeliCam=heliCam; heliCam=function(dt){ const H=HELI.cur; if(!H||HELI.fp
 (function(){ const s=$('setTurb'); if(s) s.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.turb=b.dataset.t; saveSettings(); syncSettingsUI(); });
   const c=$('setStab'); if(c) c.addEventListener('change',function(){ SETTINGS.stab=c.checked; saveSettings(); }); })();
 const _cfSync=syncSettingsUI; syncSettingsUI=function(){ _cfSync(); const s=$('setTurb'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.turb||'soft'))); }); const c=$('setStab'); if(c) c.checked=stabOn(); };
+/* ------------------------------------------------------------------ covered areas (V1.85)
+   • No rain or snow under a roof: particles inside the waiting hangar and the maintenance hangar are hidden,
+     and the rain hiss is muffled while the camera is indoors.
+   • Hangar lamps light the aircraft: indoors after dark (or under heavy cloud) the sky light becomes warm lamp light,
+     so the tops of the parked aircraft are no longer black. Fades in and out smoothly at the door. */
+function coveredAt(x,y,z){ const gy=AIRFIELD_Y;
+  if(inHall(x,z)&&y<gy+21.2) return 'hall';
+  if(inService(x,z)&&y<gy+17.6) return 'svc';
+  return null; }
+function camIndoor(){ const c=camera.position; return coveredAt(c.x,c.y,c.z); }
+function nearCovered(){ const c=camera.position; return Math.abs(c.x+280)<420&&c.z>780&&c.z<1160&&c.y<AIRFIELD_Y+120; }
+function coverMask(P,stride){ const n=P.length/stride; let h=0; for(let i=0;i<n;i++){ const o=i*stride; if(P[o+1]<-9e4) continue; if(coveredAt(P[o],P[o+1],P[o+2])||(stride===6&&coveredAt(P[o+3],P[o+4],P[o+5]))){ P[o+1]=-1e5; if(stride===6) P[o+4]=-1e5; h++; } } return h; }
+const _inPrecip=wxPrecip; wxPrecip=function(dt){ _inPrecip(dt); if(!nearCovered()) return;
+  const mask=coverMask;
+  if(WX.rainOn&&WX.lines){ mask(WX.lines.geometry.attributes.position.array,6); WX.lines.geometry.attributes.position.needsUpdate=true; }
+  if(WX.snowOn&&WX.pts){ mask(WX.pts.geometry.attributes.position.array,3); WX.pts.geometry.attributes.position.needsUpdate=true; } };
+const _inAudio=wxAudio; wxAudio=function(){ _inAudio(); if(WX.snd&&WX.snd.g&&AC&&camIndoor()) WX.snd.g.gain.setTargetAtTime(WX.cur.rain*0.025,AC.currentTime,0.4); };
+/* ---- hangar lamps: two point lights (hall follows the camera along the row of aircraft, maintenance hangar fixed).
+   They are created at load with zero intensity so no shader recompiles later; range-limited so the night outside stays dark. */
+const INL={k:0, hall:new THREE.PointLight(0xfff0d6,0,190,1), svc:new THREE.PointLight(0xfff0d6,0,110,1)};
+INL.hall.position.set(-278,AIRFIELD_Y+19,906); INL.svc.position.set(-150,AIRFIELD_Y+15.5,1060); scene.add(INL.hall); scene.add(INL.svc);
+function inDark(){ return clamp((TOD.nightK||0)+(WX.cur?WX.cur.dark*0.6:0),0,1); }
+function indoorStep(dt){ const tgt=inDark(); INL.k+=(tgt-INL.k)*(1-Math.exp(-dt*2));
+  const c=camera.position, near=Math.abs(c.x+280)<600&&c.z>700&&c.z<1250&&c.y<AIRFIELD_Y+300, k=near?INL.k:0;
+  if(HG.X0!=null) INL.hall.position.x=clamp(c.x,HG.X0+70,HG.X1-70);
+  INL.on=k; INL.hall.intensity=1.7*k; INL.svc.intensity=1.4*k; INL.hall.visible=INL.svc.visible=true; }
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) accOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
@@ -11652,7 +11678,7 @@ function frame(now){
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
   netStep(dt); if(typeof netMix==='function') netMix(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
-  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); if(typeof airLifeStep==='function') airLifeStep(dt); marinaStep(dt); if(typeof decksStep==='function') decksStep(); ruralStep(dt); militaryStep(dt); todStep(dt); if(typeof wxStep==='function'){ try{ wxStep(dt); }catch(e){ if(!frame.wxErr){ frame.wxErr=1; console.warn('hava',e); } } } southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); helisIdle(dt); if(VEH_BUILT) vehWeaponsStep(dt); if(typeof callStep==='function') callStep(dt); if(typeof heliOpsStep==='function') heliOpsStep(dt); if(typeof schStep==='function') schStep(dt); if(typeof progStep==='function') progStep(dt); if(typeof raceStep==='function') raceStep(dt); updateTaxiVisuals();
+  placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); if(typeof airLifeStep==='function') airLifeStep(dt); marinaStep(dt); if(typeof decksStep==='function') decksStep(); ruralStep(dt); militaryStep(dt); todStep(dt); if(typeof indoorStep==='function') indoorStep(dt); if(typeof wxStep==='function'){ try{ wxStep(dt); }catch(e){ if(!frame.wxErr){ frame.wxErr=1; console.warn('hava',e); } } } southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); helisIdle(dt); if(VEH_BUILT) vehWeaponsStep(dt); if(typeof callStep==='function') callStep(dt); if(typeof heliOpsStep==='function') heliOpsStep(dt); if(typeof schStep==='function') schStep(dt); if(typeof progStep==='function') progStep(dt); if(typeof raceStep==='function') raceStep(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')||(state==='map'&&MAPV.from==='walk')) walkCam(dt); else cameraUpdate(dt);
   sky.position.copy(camera.position); shadowFollow(); if(state!=='library') cullStep(dt);
   const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.setScalar(pulse);
