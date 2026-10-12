@@ -293,9 +293,10 @@ function hudNetLines(px,y){
   if(!NET.on) { const n=ACT.filter(function(a){ return a.team==='red'&&a.alive; }).length; if(n){ tx('DÜŞMAN UÇAK  '+n,px,y,14,'right','#ff6a6a'); y+=19*sc; } return y; }
   tx(NET_MODES[NET.mode].name+' · '+fmtT(Math.max(0,NET.timeLeft)),px,y,13,'right','#7dffb0'); y+=19*sc;
   if(NET.mode==='coop'){ tx('DALGA  '+NET.wave+'/5',px,y,14,'right',CD); y+=19*sc; }
-  if(NET.mode==='team'){ const sc0=netTeamScore(); tx('MAVİ '+sc0.blue+'  —  '+sc0.red+' KIRMIZI',px,y,14,'right',C); y+=19*sc; }
+  if(NET.mode==='team'||NET.mode==='base'){ const sc0=NET.mode==='base'?NB.sc:netTeamScore(); tx('MAVİ '+sc0.blue+'  —  '+sc0.red+' KIRMIZI',px,y,14,'right',C); y+=19*sc; }
+  if(NET.mode==='base'){ NB_ZONES.forEach(function(Z,i){ const z=NB.zones[i], cap=z.p&&Math.abs(z.p)<1?' %'+Math.round(Math.abs(z.p)*100):''; tx(Z.n+'  '+(z.o==='blue'?'MAVİ':z.o==='red'?'KIRMIZI':'boş')+cap,px,y,12,'right',z.o==='blue'?'#5ab0ff':z.o==='red'?'#ff6a5a':CD); y+=16*sc; }); }
   NET.roster.filter(function(r){ return NET.mode!=='coop'||r.team==='blue'; }).forEach(function(r){ const s=NET.score[r.id]||{k:0,d:0};
-    tx((r.id===NET.myId?'▶ ':'')+r.name+'  '+s.k+'/'+s.d,px,y,12,'right',r.team==='red'?'#ff8a8a':(r.team==='blue'?'#8adfff':C)); y+=16*sc; });
+    tx((r.id===NET.myId?'▶ ':'')+r.name+'  '+(r.role==='atc'?'KULE':s.k+'/'+s.d),px,y,12,'right',r.team==='red'?'#ff8a8a':(r.team==='blue'?'#8adfff':C)); y+=16*sc; });
   return y;
 }
 

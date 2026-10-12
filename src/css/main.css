@@ -725,3 +725,30 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .edprops small{ color:#9fb3c4; line-height:1.4; } .edsetw summary{ cursor:pointer; font:700 11px "Chakra Petch",system-ui,sans-serif; letter-spacing:.12em; color:#ffb25a; margin-bottom:6px; }
 .edbtns{ display:flex; flex-wrap:wrap; gap:5px; } .edbtns .btn.sm,.edbtns label.btn.sm{ padding:5px 10px; font-size:12px; } .edio{ display:flex; flex-direction:column; gap:6px; } .edio textarea{ font-family:monospace; font-size:11px; }
 @media (max-width:760px){ .edwrap{ grid-template-columns:1fr; grid-template-rows:46vh 1fr; } }
+
+/* V1.83 mixed multiplayer: chat, tower, kick */
+.chatbox{ position:fixed; left:max(12px,env(safe-area-inset-left,0px)); bottom:190px; width:min(420px,70vw); z-index:30; pointer-events:none; }
+.chatbox ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:3px; }
+.chatbox li{ font:600 13px/1.3 "Chakra Petch",system-ui,sans-serif; color:#fff; background:rgba(6,14,26,.55); padding:4px 8px; border-radius:6px; text-shadow:0 1px 2px #000; width:fit-content; max-width:100%; }
+.chatbox li.sys{ color:#ffd77a; }
+.chatbox.open ul{ background:rgba(6,14,26,.35); border-radius:8px; padding:4px; }
+.chatbox input{ pointer-events:auto; margin-top:6px; width:100%; box-sizing:border-box; font:600 14px "Chakra Petch",system-ui,sans-serif; padding:8px 10px; border-radius:8px; border:1px solid rgba(184,236,255,.6); background:rgba(6,14,26,.85); color:#fff; }
+.chatbox input.hidden{ display:none; }
+.atcui{ position:fixed; inset:0; z-index:60; background:#06101c; display:grid; grid-template-columns:1fr 300px; grid-template-rows:auto 1fr; color:#e9f4ff; font-family:"Chakra Petch",system-ui,sans-serif; }
+.atcui.hidden{ display:none; }
+.atcHead{ grid-column:1/3; display:flex; gap:12px; align-items:center; padding:10px 14px; border-bottom:1px solid rgba(184,236,255,.25); }
+.atcHead small{ flex:1; opacity:.75; }
+.atcMapW{ position:relative; min-width:0; min-height:0; overflow:hidden; }
+#atcMap{ position:absolute; inset:0; width:100%; height:100%; display:block; cursor:crosshair; }
+.atcui{ overflow:hidden; } .atcSide{ min-height:0; }
+.atcSide{ border-left:1px solid rgba(184,236,255,.25); padding:10px; overflow:auto; display:flex; flex-direction:column; gap:12px; }
+.atcPl,.atcQ{ display:flex; flex-wrap:wrap; gap:6px; }
+.atcPl button,.atcQ button{ font:600 12px "Chakra Petch",sans-serif; color:#fff; background:rgba(184,236,255,.08); border:1px solid rgba(184,236,255,.35); border-radius:6px; padding:6px 8px; text-align:left; }
+.atcQ button{ width:100%; } .atcQ button::first-letter{ text-transform:uppercase; }
+.atcPl button.on{ background:#7dffb0; color:#06121f; }
+.atcPl i{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; background:#5ab0ff; }
+.atcPl i.red{ background:#ff5a4a; }
+.atcTx{ display:flex; gap:6px; } .atcTx input{ flex:1; min-width:0; }
+#netList .kick{ margin-left:auto; padding:2px 8px; font-size:11px; }
+#netRole{ margin-top:8px; width:100%; }
+@media (max-width:700px){ .atcui{ grid-template-columns:1fr; grid-template-rows:auto 55vh 1fr; } .atcHead{ grid-column:1; } .atcHead small{ display:none; } .atcSide{ border-left:0; } .chatbox{ bottom:230px; } }

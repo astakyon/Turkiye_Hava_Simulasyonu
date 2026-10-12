@@ -450,7 +450,7 @@
 <div id="mlog" class="mlog hidden" aria-live="polite"></div>
 <div id="visOv" class="visov hidden" aria-hidden="true"></div>
 <div id="touch" class="touch hidden">
-  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tVis">GÖRÜŞ</button><button type="button" id="tEject" class="hidden warn">FIRLAT</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
+  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tChat" class="hidden">SOHBET</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tVis">GÖRÜŞ</button><button type="button" id="tEject" class="hidden warn">FIRLAT</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
   <div class="ttaxi"><button type="button" id="tAuto" class="hidden">OTO TAKSİ</button><button type="button" id="tSkip" class="hidden">PİSTE GEÇ</button></div>
   <div class="tstick" id="tStick"><div class="tknob" id="tKnob"></div></div>
   <div class="tright" id="tRight">
@@ -462,13 +462,16 @@
   <div class="twpn" id="tWpn"></div>
 </div>
 <div id="wtouch" class="touch hidden">
-  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wSwap" class="hidden">ARAÇ</button><button type="button" id="wWarp">HARİTA</button><button type="button" id="wCall">ÇAĞIR</button><button type="button" id="wVis">GÖRÜŞ</button></div>
+  <div class="ttop"><button type="button" id="wPause" aria-label="Duraklat">❚❚</button><button type="button" id="wChat" class="hidden">SOHBET</button><button type="button" id="wCam" class="hidden">KAMERA</button><button type="button" id="wSwap" class="hidden">ARAÇ</button><button type="button" id="wWarp">HARİTA</button><button type="button" id="wCall">ÇAĞIR</button><button type="button" id="wVis">GÖRÜŞ</button></div>
   <div class="tstick" id="wStick"><div class="tknob" id="wKnob"></div></div>
   <div id="wheli" class="hidden"><button type="button" id="hYL" class="tb">◀ DÖN</button><button type="button" id="hYR" class="tb">DÖN ▶</button><button type="button" id="hDn" class="tb">ALÇAL</button><button type="button" id="hUp" class="tb">YÜKSEL</button></div>
   <div class="tright wright"><button type="button" id="wJump" class="tb">ZIPLA</button><button type="button" id="wRun" class="tb">KOŞ</button><button type="button" id="wAct" class="tb fire off"></button></div>
 </div>
 <div id="fps" class="fps hidden"></div>
 <canvas id="miniMap" class="minimap hidden"></canvas>
+<div id="chatBox" class="chatbox"><ul id="chatLog"></ul><input id="chatIn" class="hidden" maxlength="120" autocomplete="off" placeholder="Mesaj yaz, Enter ile gönder · Esc kapat"></div>
+<div id="atcUI" class="atcui hidden"><div class="atcHead"><b>KULE · Radar</b><small>Oyuncuyu seç, hazır telsiz mesajı gönder ya da haritaya tıklayıp işaret koy (tekerlek: yakınlaştır)</small><button type="button" id="atcLeave" class="btn sm">Odadan çık</button></div>
+<div class="atcMapW"><canvas id="atcMap"></canvas></div><div class="atcSide"><div id="atcPl" class="atcPl"></div><div id="atcQ" class="atcQ"></div><div class="atcTx"><input id="atcTxt" class="inp" maxlength="100" placeholder="Serbest telsiz mesajı"><button type="button" id="atcSend" class="btn sm">Gönder</button></div></div></div>
 <div id="mapUI" class="mapui hidden">
   <canvas id="mapCv"></canvas>
   <div class="mapside ui"><div class="maphead"><b>HARİTA</b><button type="button" class="btn" id="mapClose">✕ Kapat</button></div>

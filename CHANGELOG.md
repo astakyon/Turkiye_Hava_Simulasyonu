@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.83 — 2026-10-12
+- **Karma çok oyunculu:** maç sırasında uçaktan inip (Duraklat → Yürüyerek gez) yürüyebilir, araç, helikopter ya da tekne kullanabilirsin. Diğer oyuncular seni yaya, araç, helikopter veya tekne olarak görür. Bir uçağa binince yeniden uçarsın, maç sürer.
+- **Yeni mod — Üs ele geçirme:** iki takım Hava, Deniz ve Kara üsleri için savaşır. Bölgede kalan takım üssü alır (uçaklar ancak 450 m altında sayılır). Her üs 5 sn'de 1 puan verir, 100 puana ulaşan kazanır. Üs halkaları sahnede ve haritada takım rengine boyanır, skor sağ üstte görünür.
+- **Kule görevlisi rolü:** lobide "Rol: Kule görevlisi" seçen oyuncu uçak yerine radar ekranı görür. Bu ekranda tüm oyuncular yükseklik ve araç simgesiyle izlenir, hazır telsiz komutları (kalkış serbest, pas geç, üsse dön…) ve serbest mesaj gönderilir. Haritaya tıklanan nokta herkese 60 sn'lik işaret olarak düşer.
+- **Yazılı sohbet:** / tuşu (dokunmatikte SOHBET) ile mesaj yazılır. Mesajlar herkese iletilir ve ekranın solunda görünür.
+- **Oyuncu çıkarma:** ev sahibi lobide "Çıkar" düğmesiyle ya da sohbete "/at <ad>" yazarak bir oyuncuyu odadan çıkarabilir.
+- Takımlar tek tarafta toplanmışsa Üs modunda otomatik dengelenir. Oyuncu listesinde rütbe ve ad görünür.
+- Yeni test: 3 oyunculu karma maç (yürüme, üs ele geçirme, sohbet, kule işareti, çıkarma).
+
 ## V1.82 — 2026-10-12
 - **Donma düzeltmesi:** Kar ya da yağmur seçiliyken uçarken oyun donuyordu. Sebep yağış kodundaki bir değişkenin tanımlanmadan önce kullanılmasıydı; düzeltildi. Hava durumu kodunda ileride bir hata olsa bile oyun artık durmuyor.
 - **Yeni ana menü:** Solda yalnızca **Başla** ve **Çok Oyunculu** var. Başla'ya basınca **Hızlı oyun** (Serbest uçuş, Üssü gez, Hangar) ve **Kariyer** açılıyor; Esc ya da "Geri" ile üst menüye dönülüyor.

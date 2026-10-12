@@ -10,7 +10,7 @@ function frame(now){
   if(state==='play') update(dt);
   if(state==='walk') walkUpdate(dt);
   if(state==='play'||(NET.on&&NET.started&&state!=='menu')){ actorsStep(dt); netHostLogic(dt); }
-  netStep(dt);
+  netStep(dt); if(typeof netMix==='function') netMix(dt);
   for(let i=msgs.length-1;i>=0;i--){ if(state==='play') msgs[i].t-=dt; if(msgs[i].t<=0) msgs.splice(i,1); }
   placeModel(dt); skinSync(); updateHangar(dt); airportStep(dt); surroundingsStep(dt); navalStep(dt); landStep(dt); trafficStep(dt); if(typeof airLifeStep==='function') airLifeStep(dt); marinaStep(dt); if(typeof decksStep==='function') decksStep(); ruralStep(dt); militaryStep(dt); todStep(dt); if(typeof wxStep==='function'){ try{ wxStep(dt); }catch(e){ if(!frame.wxErr){ frame.wxErr=1; console.warn('hava',e); } } } southStep(dt); uavStep(dt); enemyStep(dt); landmarksStep(dt); helisIdle(dt); if(VEH_BUILT) vehWeaponsStep(dt); if(typeof callStep==='function') callStep(dt); if(typeof heliOpsStep==='function') heliOpsStep(dt); if(typeof schStep==='function') schStep(dt); if(typeof progStep==='function') progStep(dt); if(typeof raceStep==='function') raceStep(dt); updateTaxiVisuals();
   if(state==='menu') menuCam(dt); else if(state==='walk'||((state==='paused'||state==='map')&&WALK.from==='walk')||(state==='map'&&MAPV.from==='walk')) walkCam(dt); else cameraUpdate(dt);

@@ -100,7 +100,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
 | V1.82 | **Ana menü sadeleştirme ve donma düzeltmesi.** Solda BAŞLA ve ÇOK OYUNCULU. Başla → Hızlı oyun (Serbest uçuş, Üssü gez, Hangar; puan yok, kilit yok) ve Kariyer (Görevler rütbeye göre, Eğitim, Serbest gezi, Hangar; TP ile açılır). Ayarlar, rekorlar, yönetim profilin yanında küçük düğme; model ve ses kütüphanesi yönetim panelinde. Kar/yağmurda donma hatası giderildi. | Menü iki düğmeyle açılıyor; kar ve yağmurda oyun akıyor. | ✅ |
-| V1.83 | **Karma çok oyunculu.** Yaya, araç, helikopter ve uçak aynı oyunda. **Üs ele geçirme** modu (takımlar). **Kule görevlisi** rolü: bir oyuncu kuleden izin verir ve haritayı yönetir. Oyun içi yazılı sohbet. Odalarda profil adı ve rütbe; yönetici odadan çıkarabilir. | 4 oyuncu farklı araçlarda aynı oyunda. | |
+| V1.83 | **Karma çok oyunculu.** Yaya, araç, helikopter ve uçak aynı oyunda. **Üs ele geçirme** modu (takımlar). **Kule görevlisi** rolü: bir oyuncu kuleden izin verir ve haritayı yönetir. Oyun içi yazılı sohbet. Odalarda profil adı ve rütbe; yönetici odadan çıkarabilir. | 4 oyuncu farklı araçlarda aynı oyunda. | ✅ |
 
 ### Faz 9 — Kokpit, paylaşım, telefon
 | Sürüm | İçerik | Kabul ölçütü | Durum |

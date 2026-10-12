@@ -52,8 +52,8 @@ function placeCar(dt){
   for(let i=0;i<m.wheels.length;i++){ const w=m.wheels[i]; w.spin.rotation.x-=(c.v||0)/w.r*(dt||0); if(w.front) w.pivot.rotation.y=-(c.steer||0); }
 }
 function startWalk(){
-  if(NET.on){ toast('Yürüyüş modu çok oyunculu oyunda kullanılamaz','#ffc24a'); return; }
-  initAudio(); aiClear(); clearThreats(); setPrep(false,[],'');
+  if(NET.on&&!NET.started){ toast('Yürüyüş modu yalnızca maç başladıktan sonra kullanılabilir','#ffc24a'); return; }
+  initAudio(); if(!NET.on){ aiClear(); clearThreats(); } setPrep(false,[],'');
   if(activeId!==selectedId) setAircraft(selectedId);
   if(HELI.cur){ const H=HELI.cur; HELI.cur=null; if(!H.ground){ H.x=H.home[0]; H.z=H.home[1]; H.h=H.home[2]; H.y=groundH(H.x,H.z); H.ground=true; H.pitch=H.roll=0; heliPlace(H); } }
   if(BOAT.cur){ BOAT.cur=null; }
