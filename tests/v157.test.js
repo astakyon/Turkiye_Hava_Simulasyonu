@@ -8,6 +8,7 @@ camera.position.set(S.pos.x,S.pos.y+3,S.pos.z+12); nearPlane(); T('near plane sm
 gfxDiag(); T('diagnostics rows',/Ekran kartı/.test($('gdiag').innerHTML));
 // V1.58 resolution: PC never below 85 %
 DEV.mobile=false; SETTINGS.autoPerf=true; SETTINGS.res='auto'; state='play'; PERF.scale=1; for(let k=0;k<400;k++) perfStep(1/20+1e-9);
+T('ladder engaged when slow at the floor',PERF2.lvl>=1,PERF2.lvl); PERF2.lvl=0; PERF.scale=Math.max(PERF.scale,0.85);
 T('PC autoscale floor 0.85',PERF.scale>=0.85-1e-9&&PERF.scale<1,PERF.scale);
 SETTINGS.res='1.5'; applyQuality(); T('fixed res scale',Math.abs(PERF.base-Math.min(2.5,1.5*(window.devicePixelRatio||1)))<1e-6&&PERF.scale===1,PERF.base);
 SETTINGS.res='auto'; applyQuality();

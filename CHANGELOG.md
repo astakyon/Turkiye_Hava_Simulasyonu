@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.94 — 2026-10-12
+- **FPS:** uçuşta kare başına çizilen üçgen sayısı 1,57 milyondan ~0,8 milyona, yürürken 1 milyondan 0,4 milyona indi.
+  - Yol trafiği yalnız kameraya yakın arabaları ekran kartına gönderir; uzaktakiler hesapta sürmeye devam eder (arazi sorgusu yapılmaz).
+  - Sabit nesne grupları (park etmiş arabalar, kayalar, çitler…) gerçek sınır küresi aldı: ekran dışındaysa çizilmez; tek bir parçası birkaç pikselden küçük kalan karolar gizlenir.
+  - Uzak ormanlar mesafeyle seyrelir.
+  - Telefonda çözünürlük çarpanı kaliteye göre sınırlandı (Orta: 1,25x).
+- **Akıllı performans:** çözünürlük en alta indiği hâlde FPS düşük kalırsa önce gölge ve efektler geçici kapanır, sonra uzak ayrıntı ve trafik azalır, en sonda en hafif görüntüye geçilir. Akıcılaşınca adım adım geri gelir.
+- **FPS sınırı** (Ayarlar → Grafik): 30 (pil tasarrufu) · 60 (telefonda varsayılan; 90–120 Hz ekranlarda telefon boşuna ısınmaz) · Sınırsız. **Performans modu** düğmesi en akıcı ayarları tek dokunuşla uygular.
+- **Siyah dalgalar (telefon):** logaritmik derinlik kullanılmayan cihazlarda sahne iki derinlik katmanında çizilir (uzak, sonra derinlik temizlenip yakın). Her katman kendi yakın/uzak düzlemini kullandığı için derinlik hassasiyeti bantları ve titreme oluşmaz. Ayarlar → Grafik → *İki katmanlı derinlik*.
+- Deniz yüzeyi bölümlendi ve sığ kıyılarda zeminin önünde kalacak şekilde hafifçe öne alındı; telefonda köşe başına ışıklandırma kullanır (düşük hassasiyetli ekran kartlarında parlama bantları olmaz).
+- FPS göstergesi artık çizim çağrısı, üçgen sayısı, performans basamağı ve derinlik modunu da gösterir.
+
 ## V1.93 — 2026-10-12
 - **Bulut hesapları açıldı.** Oyun, kendi Supabase projesine (Frankfurt) bağlandı. Artık herkes e-posta ile hesap açabiliyor; profil, kariyer, belgeler, rekorlar ve ayarlar buluta kaydediliyor ve başka cihazda da açılıyor.
 - Misafir oynamak eskisi gibi mümkün. Misafir ilerlemesi giriş yapınca hesaba aktarılıyor.
