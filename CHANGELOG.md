@@ -1,6 +1,21 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.95 — 2026-10-12
+- **Yeni giriş ekranı** (oyun istemcilerindeki gibi tek ve sade ekran):
+  - Solda oyunun adı, sağda giriş paneli: *Giriş yap / Hesap oluştur* sekmesi, büyük **Google ile devam et** düğmesi.
+  - E-posta ve şifre alanları yazınca yukarı kayan etiketli; şifreyi göster düğmesi var.
+  - Tek büyük kırmızı ok düğmesi; Enter ile de devam edilir.
+  - Altta **Misafir olarak oyna**.
+  - Yanlış e-posta ya da kısa şifre anında uyarılır.
+  - Giriş başarılı olunca ekran kendiliğinden kapanır; ilk girişte profil oluşturma açılır.
+  - Telefonda yatay ekrana sığacak şekilde sıkışır.
+- **Oyuncu kartı profili:**
+  - Üstte birlik renginde (Hilal Kanatlar kırmızı, Mavi Kanatlar mavi, Bozkurtlar yeşil) bir afiş: rütbe rozeti, rütbe ve çağrı adı, seviye çubuğu, bulut durumu rozeti ve *Profili düzenle*.
+  - Altında sekmeler: **Özet** (öne çıkan istatistikler, günlük/haftalık görevler, son uçuşlar) · **Kariyer** (belgeler kısayolu, rütbe basamakları, açılanlar) · **Madalyalar** (madalya ve başarımlar) · **İstatistik** · **Hesap** (giriş/çıkış, bu cihazdaki profiller, çağrı adı, birlik kartları, arma).
+  - Son açılan sekme hatırlanır.
+- Oyun ilk açıldığında hesap ekranı yerine yeni giriş ekranı gelir.
+
 ## V1.94 — 2026-10-12
 - **FPS:** uçuşta kare başına çizilen üçgen sayısı 1,57 milyondan ~0,8 milyona, yürürken 1 milyondan 0,4 milyona indi.
   - Yol trafiği yalnız kameraya yakın arabaları ekran kartına gönderir; uzaktakiler hesapta sürmeye devam eder (arazi sorgusu yapılmaz).

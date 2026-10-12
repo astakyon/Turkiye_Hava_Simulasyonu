@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.94">
+<meta name="game-version" content="V1.95">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -861,6 +861,67 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .lic .li{ font-size:26px; text-align:center; } .lic .lt{ display:flex; flex-direction:column; gap:2px; } .lic .lt b{ font-size:15px; } .lic .lt small{ font-size:12px; color:var(--dim); } .lic .lt .lv{ font-size:11px; opacity:.8; }
 .lic .ls{ font-size:12px; color:#7dffb0; white-space:nowrap; } .lic .ls.lock{ color:#ffc24a; }
 @media (max-width:600px){ .lic{ grid-template-columns:34px 1fr; } .lic .ls,.lic .btn{ grid-column:2; justify-self:start; } }
+
+/* ---- V1.95 player card */
+.pcard .pc-wrap{ max-width:980px; margin:0 auto; padding:clamp(58px,10vh,78px) 16px 28px; display:flex; flex-direction:column; gap:14px; zoom:var(--uiz,1); }
+.pc-hero{ --u1:#7a0d16; --u2:#e30a17; position:relative; display:flex; align-items:center; gap:16px; padding:22px 22px 20px; border-radius:var(--r3); overflow:hidden; border:1px solid rgba(255,255,255,.1);
+  background:linear-gradient(115deg,var(--u1) 0%,rgba(10,16,28,.92) 62%),radial-gradient(circle at 85% 20%,rgba(255,255,255,.08),transparent 60%); box-shadow:0 18px 40px rgba(0,0,0,.35); animation:dsIn .26s var(--ease); }
+.pc-hero[data-u="deniz"]{ --u1:#0b3a78; --u2:#2f8cff; } .pc-hero[data-u="kara"]{ --u1:#3b4a1c; --u2:#9bc04a; }
+.pc-hero::after{ content:''; position:absolute; right:-40px; top:-60px; width:260px; height:260px; border-radius:50%; border:28px solid rgba(255,255,255,.04); pointer-events:none; }
+.pc-hero .carhead{ flex:1; min-width:0; } .pc-hero .carhead .rk{ width:96px; height:96px; background:radial-gradient(circle,rgba(0,0,0,.25),rgba(0,0,0,.55)); border:2px solid var(--u2); box-shadow:0 0 0 4px rgba(0,0,0,.25),0 0 24px rgba(0,0,0,.4); }
+.pc-hero .carhead .k{ color:#fff; opacity:.75; letter-spacing:.32em; font-size:11px; font-weight:800; margin:0; }
+.pc-hero .carhead h2{ font-size:clamp(22px,3.6vw,34px); letter-spacing:.01em; margin:2px 0 10px; text-shadow:0 2px 12px rgba(0,0,0,.4); }
+.pc-hero .xpb{ height:8px; border-radius:6px; background:rgba(0,0,0,.35); overflow:hidden; } .pc-hero .xpb i{ display:block; height:100%; background:linear-gradient(90deg,var(--u2),#ffd27a); border-radius:6px; }
+.pc-side{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; z-index:1; }
+.pc-pill{ border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.3); color:#fff; border-radius:999px; padding:6px 12px; font-size:12px; font-weight:700; cursor:default; }
+.pc-pill.on{ border-color:rgba(125,255,176,.5); color:#7dffb0; } .pc-pill.guest{ cursor:pointer; border-color:#ffd27a; color:#ffd27a; } .pc-pill.guest:hover{ background:rgba(255,210,122,.15); }
+.pc-tabs{ display:flex; gap:4px; border-bottom:1px solid var(--edge); overflow-x:auto; scrollbar-width:none; position:sticky; top:0; z-index:2; background:linear-gradient(rgba(6,10,18,.92),rgba(6,10,18,.85)); }
+.pc-tabs::-webkit-scrollbar{ display:none; }
+.pc-tabs button{ flex:none; background:none; border:0; color:var(--dim); font-weight:800; font-size:13px; letter-spacing:.12em; text-transform:uppercase; padding:12px 14px 11px; border-bottom:3px solid transparent; cursor:pointer; }
+.pc-tabs button:hover{ color:var(--ink); } .pc-tabs button[aria-selected="true"]{ color:#fff; border-bottom-color:var(--red); }
+.pc-tab{ display:flex; flex-direction:column; gap:10px; animation:dsIn .22s var(--ease); } .pc-tab.hidden{ display:none; }
+.pc-tab h4{ margin:10px 0 0; font-size:11px; letter-spacing:.28em; color:#ff6b74; font-weight:800; text-transform:uppercase; }
+.pc-tab .carstats{ grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); } .pc-tab .carstats div{ padding:14px 12px; background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02)); }
+.pc-tab .carstats b{ font-size:clamp(20px,2.6vw,26px); }
+.pc-cta{ display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:var(--r3); border:1px solid rgba(255,210,122,.3); background:rgba(255,210,122,.06); }
+.pc-cta div{ flex:1; } .pc-cta b{ display:block; } .pc-cta small{ color:var(--dim); font-size:12px; }
+.pc-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+#pcEditBox.new{ border-color:var(--red); box-shadow:0 0 0 3px rgba(227,10,23,.18); }
+.pc-units{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.pc-units button{ display:flex; flex-direction:column; align-items:center; gap:2px; padding:12px 6px; border-radius:var(--r2); border:1px solid var(--edge); background:rgba(255,255,255,.04); color:var(--ink); cursor:pointer; }
+.pc-units button i{ font-style:normal; font-size:24px; } .pc-units button b{ font-size:12.5px; } .pc-units button small{ font-size:10.5px; color:var(--dim); letter-spacing:.14em; text-transform:uppercase; }
+.pc-units button[aria-pressed="true"]{ border-color:var(--red); background:rgba(227,10,23,.18); }
+.pc-units button[data-u="deniz"][aria-pressed="true"]{ border-color:#2f8cff; background:rgba(47,140,255,.18); } .pc-units button[data-u="kara"][aria-pressed="true"]{ border-color:#9bc04a; background:rgba(155,192,74,.18); }
+@media (max-width:640px){ .pc-hero{ flex-direction:column; align-items:stretch; padding:18px 16px; } .pc-side{ flex-direction:row; justify-content:space-between; align-items:center; } .pc-hero .carhead .rk{ width:72px; height:72px; } .pc-grid{ grid-template-columns:1fr; } }
+/* ---- V1.95 login screen */
+#loginUI.lgui{ display:grid; align-items:stretch; justify-items:stretch; grid-template-columns:1fr minmax(320px,420px); padding:0; background:linear-gradient(90deg,rgba(4,8,16,.25),rgba(4,8,16,.6) 55%,rgba(4,8,16,.94)); }
+#loginUI.lgui.hidden{ display:none; }
+.lg-art{ display:flex; align-items:flex-end; padding:clamp(24px,6vw,64px); }
+.lg-brand small{ letter-spacing:.5em; font-weight:800; color:#ff6b74; font-size:12px; } .lg-brand h1{ margin:6px 0 10px; font-size:clamp(34px,6vw,72px); line-height:.95; letter-spacing:.02em; text-shadow:0 4px 30px rgba(0,0,0,.6); }
+.lg-brand p{ margin:0; max-width:420px; color:rgba(255,255,255,.8); font-size:15px; }
+.lg-panel{ position:relative; display:flex; flex-direction:column; gap:12px; justify-content:safe center; max-height:100vh; box-sizing:border-box; padding:clamp(24px,5vh,48px) clamp(20px,3vw,40px); background:rgba(8,12,20,.96); border-left:1px solid rgba(255,255,255,.08); box-shadow:-20px 0 60px rgba(0,0,0,.45); overflow:auto; animation:lgIn .3s var(--ease); }
+@keyframes lgIn{ from{ transform:translateX(24px); opacity:0; } to{ transform:none; opacity:1; } }
+.lg-x{ position:absolute; top:12px; right:12px; width:36px; height:36px; border-radius:50%; border:1px solid var(--edge); background:none; color:var(--dim); cursor:pointer; font-size:14px; } .lg-x:hover{ color:#fff; }
+.lg-tabs{ display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:4px; border-radius:12px; background:rgba(255,255,255,.05); margin-bottom:6px; }
+.lg-tabs button{ border:0; border-radius:9px; background:none; color:var(--dim); font-weight:800; padding:10px 6px; cursor:pointer; font-size:14px; }
+.lg-tabs button[aria-pressed="true"]{ background:#fff; color:#0b1220; }
+.lg-google{ display:flex; align-items:center; justify-content:center; gap:10px; padding:13px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:#fff; font-weight:700; font-size:15px; cursor:pointer; }
+.lg-google b{ display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:#fff; color:#4285f4; font-weight:900; } .lg-google:hover{ background:rgba(255,255,255,.12); }
+.lg-or{ display:flex; align-items:center; gap:10px; color:var(--dim); font-size:12px; } .lg-or::before,.lg-or::after{ content:''; flex:1; height:1px; background:var(--edge); }
+.lg-f{ position:relative; display:block; } .lg-f input{ width:100%; box-sizing:border-box; padding:22px 44px 8px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); color:#fff; font-size:16px; outline:none; transition:border-color .15s; }
+.lg-f input:focus{ border-color:#fff; background:rgba(255,255,255,.09); }
+.lg-f span{ position:absolute; left:14px; top:15px; color:var(--dim); font-size:15px; pointer-events:none; transition:all .15s var(--ease); }
+.lg-f input:focus + span,.lg-f input:not(:placeholder-shown) + span{ top:7px; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:800; }
+.lg-eye{ position:absolute; right:8px; top:50%; transform:translateY(-50%); width:32px; height:32px; border:0; background:none; cursor:pointer; opacity:.6; font-size:16px; } .lg-eye[aria-pressed="true"]{ opacity:1; }
+.lg-row{ display:flex; justify-content:space-between; align-items:center; } .lg-row small{ color:var(--dim); font-size:12px; } .lg-row small.hidden{ display:none; }
+.lg-go{ align-self:center; width:72px; height:72px; margin:6px 0; border-radius:22px; border:0; background:var(--red); color:#fff; font-size:30px; cursor:pointer; box-shadow:0 10px 30px rgba(227,10,23,.35); transition:transform .12s, filter .12s; }
+.lg-go:hover{ transform:translateY(-2px); filter:brightness(1.1); } .lg-go:active{ transform:scale(.96); } .lg-go.busy{ opacity:.6; pointer-events:none; animation:lgPulse 1s infinite; }
+@keyframes lgPulse{ 50%{ transform:scale(.94); } }
+.lg-guest{ display:flex; flex-direction:column; align-items:center; gap:3px; padding-top:12px; border-top:1px solid var(--edge); }
+.lg-guest button{ border:0; background:none; color:#fff; font-weight:800; font-size:15px; cursor:pointer; text-decoration:underline; text-underline-offset:4px; } .lg-guest small{ color:var(--dim); font-size:12px; }
+.lg-panel .accmsg{ text-align:center; }
+@media (max-width:760px){ #loginUI.lgui{ grid-template-columns:1fr; } .lg-art{ display:none; } .lg-panel{ border-left:0; } }
+@media (max-height:520px) and (orientation:landscape){ #loginUI.lgui{ grid-template-columns:1fr minmax(300px,380px); } .lg-art{ display:flex; } .lg-panel{ gap:6px; padding:10px 22px; zoom:.82; max-height:calc(100vh / .82); } .lg-tabs{ margin:0; } .lg-tabs button{ padding:7px 6px; } .lg-google{ padding:9px; } .lg-or{ display:none; } .lg-f input{ padding:18px 44px 5px 12px; } .lg-f span{ top:12px; } .lg-go{ width:52px; height:52px; font-size:22px; margin:0; border-radius:16px; } .lg-guest{ padding-top:6px; flex-direction:row; justify-content:center; gap:10px; } .lg-brand h1{ font-size:clamp(28px,5vw,48px); } }
 </style>
 </head>
 <body>
@@ -1189,45 +1250,67 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
     <div class="sndlist" id="sndList"></div>
   </div>
 </div>
-<div id="acctUI" class="modal fs hidden">
+<div id="acctUI" class="modal fs hidden pcard">
   <button class="btn back" id="btnAccBack" type="button">← Geri</button>
-  <div class="shdr"><span>■</span> HESAP VE PROFİL</div>
-  <div class="accwrap">
-    <section class="accp car" id="carSec">
+  <div class="pc-wrap">
+    <section class="pc-hero" id="pcHero">
       <div class="carhead" id="carHead"></div>
+      <div class="pc-side"><button type="button" class="pc-pill" id="pcPill"></button><button class="btn" id="pcEdit" type="button">✎ Profili düzenle</button></div>
+    </section>
+    <nav class="pc-tabs" id="pcTabs" role="tablist"><button type="button" data-t="ozet">Özet</button><button type="button" data-t="kariyer">Kariyer</button><button type="button" data-t="madalya">Madalyalar</button><button type="button" data-t="ist">İstatistik</button><button type="button" data-t="hesap">Hesap</button></nav>
+    <section class="pc-tab" data-t="ozet" id="carSec">
       <div class="carstats" id="carStats"></div>
-      <p class="k">GÜNLÜK VE HAFTALIK GÖREVLER</p><div class="cartasks" id="carTasks"></div>
-      <p class="k">MADALYALAR</p><div class="carmed" id="carMedals"></div>
-      <p class="k">BAŞARIMLAR</p><div class="carach" id="carAch"></div>
-      <details class="carrk"><summary>İstatistikler</summary><div class="carst2" id="carStat2"></div></details>
-      <details class="carrk"><summary>Rütbeyle açılanlar</summary><div class="carunl" id="carUnl"></div></details>
-      <p class="k">SON UÇUŞLAR</p><div class="carlog" id="carLog"></div>
-      <details class="carrk"><summary>Rütbe basamakları</summary><div id="carRanks"></div></details>
+      <h4>Günlük ve haftalık görevler</h4><div class="cartasks" id="carTasks"></div>
+      <h4>Son uçuşlar</h4><div class="carlog" id="carLog"></div>
     </section>
-    <section class="accp">
-      <p class="k">HESAP</p>
-      <div class="accst" id="accState"></div>
-      <div id="accLogin">
-        <button class="btn wide gbtn" id="accGoogle" type="button"><b>G</b> Google ile giriş</button>
-        <p class="or">ya da e-posta ile</p>
-        <input id="accMail" class="inp" type="email" placeholder="E-posta" autocomplete="email">
-        <input id="accPass" class="inp" type="password" placeholder="Şifre (en az 6 karakter)" autocomplete="current-password">
-        <div class="accrow"><button class="btn primary" id="accIn" type="button">Giriş yap</button><button class="btn" id="accUp" type="button">Kayıt ol</button><button class="btn link" id="accReset" type="button">Şifremi unuttum</button></div>
+    <section class="pc-tab hidden" data-t="kariyer">
+      <div class="pc-cta"><div><b>Belgeler ve sınavlar</b><small>Ehliyet, kaptanlık, İHA ve pilotluk belgeleri yeni araçların kilidini açar</small></div><button class="btn primary" id="pcLic" type="button">Belgelerim</button></div>
+      <h4>Rütbe basamakları</h4><div id="carRanks"></div>
+      <h4>Rütbeyle açılanlar</h4><div class="carunl" id="carUnl"></div>
+    </section>
+    <section class="pc-tab hidden" data-t="madalya">
+      <h4>Madalyalar</h4><div class="carmed" id="carMedals"></div>
+      <h4>Başarımlar</h4><div class="carach" id="carAch"></div>
+    </section>
+    <section class="pc-tab hidden" data-t="ist"><div class="carst2" id="carStat2"></div></section>
+    <section class="pc-tab hidden" data-t="hesap">
+      <div class="pc-grid">
+        <div class="accp">
+          <p class="k">HESAP</p>
+          <div class="accst" id="accState"></div>
+          <div id="accLogin"><button class="btn primary wide" id="pcLogin" type="button">Giriş yap ya da hesap oluştur</button></div>
+          <p class="ninfo hidden" id="accNoCloud">Bulut hesapları şu an kullanılamıyor; misafir profilleriyle oynayabilirsin. Kayıtların bu cihazda kalır (Ayarlar → Kayıt yedeği ile taşıyabilirsin).</p>
+          <p class="accmsg" id="pcMsg"></p>
+          <div class="accrow"><button class="btn" id="accOut" type="button">Çıkış yap</button></div>
+          <div id="accLocal"><p class="fl">Bu cihazdaki profiller</p><div class="accprofs" id="accProfList"></div></div>
+        </div>
+        <div class="accp" id="pcEditBox">
+          <p class="k" id="accProfTitle">Profil</p>
+          <label class="fl">Çağrı adı<input id="accCs" class="inp" maxlength="20" placeholder="Hilal 1"></label>
+          <p class="fl">Birlik</p>
+          <div class="pc-units" id="accUnit"><button type="button" data-u="hava"><i>☾</i><b>Hilal Kanatlar</b><small>Hava</small></button><button type="button" data-u="deniz"><i>⚓</i><b>Mavi Kanatlar</b><small>Deniz</small></button><button type="button" data-u="kara"><i>🐺</i><b>Bozkurtlar</b><small>Kara</small></button></div>
+          <p class="fl">Arma</p>
+          <div class="accem" id="accEm"></div>
+          <button class="btn primary wide" id="accSave" type="button">Kaydet</button>
+        </div>
       </div>
-      <p class="ninfo hidden" id="accNoCloud">Bulut hesapları için oyunun yöneticisinin Supabase bağlantısını kurması gerekiyor (supabase/KURULUM.md). O zamana kadar misafir profilleriyle oynayabilirsin.</p>
-      <p class="accmsg" id="accMsg"></p>
-      <div class="accrow"><button class="btn" id="accOut" type="button">Çıkış yap</button><button class="btn link" id="accGuest" type="button">Misafir olarak devam et</button></div>
     </section>
-    <section class="accp">
-      <p class="k" id="accProfTitle">Profil</p>
-      <label class="fl">Çağrı adı<input id="accCs" class="inp" maxlength="20" placeholder="Hilal 1"></label>
-      <p class="fl">Birlik</p>
-      <div class="seg wrap" id="accUnit"><button type="button" data-u="hava">Hilal Kanatlar</button><button type="button" data-u="deniz">Mavi Kanatlar</button><button type="button" data-u="kara">Bozkurtlar</button></div>
-      <p class="fl">Arma</p>
-      <div class="accem" id="accEm"></div>
-      <button class="btn primary wide" id="accSave" type="button">Kaydet</button>
-      <div id="accLocal"><p class="fl">Bu cihazdaki profiller</p><div class="accprofs" id="accProfList"></div></div>
-    </section>
+  </div>
+</div>
+<div id="loginUI" class="modal fs hidden lgui">
+  <div class="lg-art"><div class="lg-brand"><small>AY YILDIZ</small><h1>HEDEF<br>KIZIL ELMA</h1><p>Rütbeni, belgelerini ve kayıtlarını her cihazda yanında taşı.</p></div></div>
+  <div class="lg-panel">
+    <button class="lg-x" id="lgClose" type="button" aria-label="Kapat">✕</button>
+    <div class="lg-tabs" id="lgTabs"><button type="button" data-m="in" aria-pressed="true">Giriş yap</button><button type="button" data-m="up">Hesap oluştur</button></div>
+    <button class="lg-google" id="accGoogle" type="button"><b>G</b> Google ile devam et</button>
+    <div class="lg-or"><span>ya da e-posta ile</span></div>
+    <label class="lg-f"><input id="accMail" type="email" placeholder=" " autocomplete="email"><span>E-posta</span></label>
+    <label class="lg-f"><input id="accPass" type="password" placeholder=" " autocomplete="current-password"><span>Şifre</span><button type="button" class="lg-eye" id="lgEye" aria-label="Şifreyi göster">👁</button></label>
+    <div class="lg-row"><button class="btn link" id="accReset" type="button">Şifremi unuttum</button><small id="lgHint">En az 6 karakter</small></div>
+    <p class="accmsg" id="accMsg"></p>
+    <button class="lg-go" id="lgGo" type="button" aria-label="Devam">➜</button>
+    <button class="hidden" id="accIn" type="button"></button><button class="hidden" id="accUp" type="button"></button>
+    <div class="lg-guest"><button id="accGuest" type="button">Misafir olarak oyna</button><small>İlerlemen yalnız bu cihazda saklanır</small></div>
   </div>
 </div>
 <div id="adminUI" class="modal fs hidden">
@@ -1402,7 +1485,7 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.94', GAME_DATE='2026-10-12';
+const GAME_VERSION='V1.95', GAME_DATE='2026-10-12';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -12565,8 +12648,58 @@ const _p2Step=perfStep; perfStep=function(dt){ const before=PERF.n; _p2Step(dt);
   const pm=$('btnPerfMode'); if(pm) pm.addEventListener('click',function(){ SETTINGS.quality=0; SETTINGS.fx=0; SETTINGS.shadows=false; SETTINGS.res='auto'; SETTINGS.autoPerf=true; if(DEV.mobile) SETTINGS.fpsCap=30; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI(); toast('Performans modu: en akıcı ayarlar uygulandı','#7dffb0'); }); })();
 const _p2Sync=syncSettingsUI; syncSettingsUI=function(){ _p2Sync(); const c=$('setCap'); if(c) Array.prototype.forEach.call(c.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.c===fpsCap())); });
   const sp=$('setSplit'); if(sp){ sp.checked=SETTINGS.split!==false; sp.disabled=!!DEV.logDepth; } };
+/* ------------------------------------------------------------------ login and player card (V1.95)
+   Modelled on game clients (Valorant / LoL / Rocket League): the sign-in is its own short screen (Google, e-mail with
+   floating labels and a single big arrow button, "Misafir olarak oyna"), and the profile is a player card — a banner in the
+   unit's colours with the rank badge, call sign and level bar, then tabs (Özet · Kariyer · Madalyalar · İstatistik · Hesap)
+   instead of one long page. All existing element ids stay, so career, medals, licences and cloud code keep working. */
+const PCARD={tab:'ozet', lg:'in'};
+if($('loginUI')) MODALS.push('loginUI');
+try{ const t=localStorage.getItem('ayy-pctab'); if(t) PCARD.tab=t; }catch(e){}
+function pcTab(t){ PCARD.tab=t; try{ localStorage.setItem('ayy-pctab',t); }catch(e){}
+  const ui=$('acctUI'); if(!ui) return; ui.querySelectorAll('.pc-tab').forEach(function(s){ s.classList.toggle('hidden',s.dataset.t!==t); });
+  const nv=$('pcTabs'); if(nv) nv.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-selected',String(b.dataset.t===t)); }); }
+function pcHero(){ const p=accProfile(), h=$('pcHero'); if(!h) return; h.dataset.u=p.unit||'hava';
+  const pill=$('pcPill'); if(pill){ const on=!!ACC.user; pill.className='pc-pill'+(on?' on':ACC.cfg?' guest':''); pill.textContent=on?('☁ '+(ACC_ST[ACC.status]||'Bulutta')):(ACC.cfg?'Misafir · giriş yap':'Misafir'); pill.disabled=on||!ACC.cfg; } }
+/* ---- login screen */
+function loginMode(m){ PCARD.lg=m; const t=$('lgTabs'); if(t) t.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed',String(b.dataset.m===m)); });
+  const pw=$('accPass'); if(pw) pw.setAttribute('autocomplete',m==='up'?'new-password':'current-password'); const h=$('lgHint'); if(h) h.classList.toggle('hidden',m!=='up');
+  const g=$('lgGo'); if(g) g.setAttribute('aria-label',m==='up'?'Hesap oluştur':'Giriş yap'); accMsg(''); }
+function loginOpen(m){ if(!ACC.cfg){ accOpen('hesap'); return; } closeModals(); const el=$('loginUI'); if(!el) return; el.classList.remove('hidden'); loginMode(m||PCARD.lg||'in');
+  setTimeout(function(){ const i=$('accMail'); if(i&&!DEV.mobile) try{ i.focus(); }catch(e){} },60); }
+function loginClose(){ const el=$('loginUI'); if(el) el.classList.add('hidden'); }
+function loginGo(){ const mail=($('accMail').value||'').trim(), pw=$('accPass').value||'';
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){ accMsg('Geçerli bir e-posta adresi yaz',true); return; }
+  if(pw.length<6){ accMsg('Şifre en az 6 karakter olmalı',true); return; }
+  const g=$('lgGo'); if(g) g.classList.add('busy'); accMsg(PCARD.lg==='up'?'Hesap oluşturuluyor…':'Giriş yapılıyor…');
+  Promise.resolve(accEmail(PCARD.lg==='up'?'up':'in',mail,pw)).finally(function(){ if(g) g.classList.remove('busy'); }); }
+/* ---- wrappers around the account screen */
+const _pcOpen=accOpen; accOpen=function(tab){
+  const t=tab==='profile'||tab==='hesap'?'hesap':tab==='career'?'kariyer':(tab&&PCARD_TABS.indexOf(tab)>=0?tab:null);
+  loginClose(); _pcOpen(tab==='hesap'?'profile':tab);
+  pcTab(ACC.user&&!ACC.prof?'hesap':(t||PCARD.tab||'ozet')); pcHero();
+  if(ACC.user&&!ACC.prof){ const c=$('accCs'); if(c) setTimeout(function(){ try{ c.focus(); }catch(e){} },80); } };
+const PCARD_TABS=['ozet','kariyer','madalya','ist','hesap'];
+const _pcRender=accRender; accRender=function(){ _pcRender(); pcHero(); const L=$('accLocal'); if(L) L.classList.toggle('hidden',!!ACC.user);
+  const eb=$('pcEditBox'); if(eb) eb.classList.toggle('new',!!(ACC.user&&!ACC.prof)); };
+const _pcChip=accChip; accChip=function(){ _pcChip(); if(ACC.user){ const el=$('loginUI'); if(el&&!el.classList.contains('hidden')){ loginClose(); if(!ACC.prof) accOpen('hesap'); } } try{ pcHero(); }catch(e){} };
+const _pcMsg=accMsg; accMsg=function(t,err){ _pcMsg(t,err); const el=$('pcMsg'); if(el){ el.textContent=t||''; el.classList.toggle('err',!!err); } };
+(function(){
+  const tabs=$('pcTabs'); if(tabs) tabs.addEventListener('click',function(e){ const b=e.target.closest('button[data-t]'); if(b) pcTab(b.dataset.t); });
+  const ed=$('pcEdit'); if(ed) ed.addEventListener('click',function(){ pcTab('hesap'); try{ $('pcEditBox').scrollIntoView({block:'start',behavior:'smooth'}); $('accCs').focus(); }catch(e){} });
+  const pl=$('pcPill'); if(pl) pl.addEventListener('click',function(){ if(!ACC.user&&ACC.cfg) loginOpen('in'); });
+  const li=$('pcLogin'); if(li) li.addEventListener('click',function(){ loginOpen('in'); });
+  const lc=$('pcLic'); if(lc) lc.addEventListener('click',function(){ accClose(); if(typeof licOpen==='function') licOpen(); });
+  const lt=$('lgTabs'); if(lt) lt.addEventListener('click',function(e){ const b=e.target.closest('button[data-m]'); if(b) loginMode(b.dataset.m); });
+  const go=$('lgGo'); if(go) go.addEventListener('click',loginGo);
+  ['accMail','accPass'].forEach(function(id){ const i=$(id); if(i) i.addEventListener('keydown',function(e){ e.stopPropagation(); if(e.key==='Enter'){ e.preventDefault(); if(id==='accMail') $('accPass').focus(); else loginGo(); } }); });
+  const eye=$('lgEye'); if(eye) eye.addEventListener('click',function(){ const p=$('accPass'); p.type=p.type==='password'?'text':'password'; eye.setAttribute('aria-pressed',String(p.type==='text')); });
+  const x=$('lgClose'); if(x) x.addEventListener('click',function(){ loginClose(); SETTINGS.accPrompted=true; saveSettings(); if(state==='menu') refreshTitle(); });
+  const gu=$('accGuest'); if(gu) gu.addEventListener('click',function(){ loginClose(); toast('Misafir olarak devam ediyorsun — istediğin zaman profilinden giriş yapabilirsin','#b8ecff'); });
+  const cs=$('accCs'); if(cs) cs.addEventListener('keydown',function(e){ e.stopPropagation(); if(e.key==='Enter') $('accSave').click(); });
+})();
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) accOpen(); },1200); });
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){

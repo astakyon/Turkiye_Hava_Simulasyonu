@@ -323,45 +323,67 @@
     <div class="sndlist" id="sndList"></div>
   </div>
 </div>
-<div id="acctUI" class="modal fs hidden">
+<div id="acctUI" class="modal fs hidden pcard">
   <button class="btn back" id="btnAccBack" type="button">← Geri</button>
-  <div class="shdr"><span>■</span> HESAP VE PROFİL</div>
-  <div class="accwrap">
-    <section class="accp car" id="carSec">
+  <div class="pc-wrap">
+    <section class="pc-hero" id="pcHero">
       <div class="carhead" id="carHead"></div>
+      <div class="pc-side"><button type="button" class="pc-pill" id="pcPill"></button><button class="btn" id="pcEdit" type="button">✎ Profili düzenle</button></div>
+    </section>
+    <nav class="pc-tabs" id="pcTabs" role="tablist"><button type="button" data-t="ozet">Özet</button><button type="button" data-t="kariyer">Kariyer</button><button type="button" data-t="madalya">Madalyalar</button><button type="button" data-t="ist">İstatistik</button><button type="button" data-t="hesap">Hesap</button></nav>
+    <section class="pc-tab" data-t="ozet" id="carSec">
       <div class="carstats" id="carStats"></div>
-      <p class="k">GÜNLÜK VE HAFTALIK GÖREVLER</p><div class="cartasks" id="carTasks"></div>
-      <p class="k">MADALYALAR</p><div class="carmed" id="carMedals"></div>
-      <p class="k">BAŞARIMLAR</p><div class="carach" id="carAch"></div>
-      <details class="carrk"><summary>İstatistikler</summary><div class="carst2" id="carStat2"></div></details>
-      <details class="carrk"><summary>Rütbeyle açılanlar</summary><div class="carunl" id="carUnl"></div></details>
-      <p class="k">SON UÇUŞLAR</p><div class="carlog" id="carLog"></div>
-      <details class="carrk"><summary>Rütbe basamakları</summary><div id="carRanks"></div></details>
+      <h4>Günlük ve haftalık görevler</h4><div class="cartasks" id="carTasks"></div>
+      <h4>Son uçuşlar</h4><div class="carlog" id="carLog"></div>
     </section>
-    <section class="accp">
-      <p class="k">HESAP</p>
-      <div class="accst" id="accState"></div>
-      <div id="accLogin">
-        <button class="btn wide gbtn" id="accGoogle" type="button"><b>G</b> Google ile giriş</button>
-        <p class="or">ya da e-posta ile</p>
-        <input id="accMail" class="inp" type="email" placeholder="E-posta" autocomplete="email">
-        <input id="accPass" class="inp" type="password" placeholder="Şifre (en az 6 karakter)" autocomplete="current-password">
-        <div class="accrow"><button class="btn primary" id="accIn" type="button">Giriş yap</button><button class="btn" id="accUp" type="button">Kayıt ol</button><button class="btn link" id="accReset" type="button">Şifremi unuttum</button></div>
+    <section class="pc-tab hidden" data-t="kariyer">
+      <div class="pc-cta"><div><b>Belgeler ve sınavlar</b><small>Ehliyet, kaptanlık, İHA ve pilotluk belgeleri yeni araçların kilidini açar</small></div><button class="btn primary" id="pcLic" type="button">Belgelerim</button></div>
+      <h4>Rütbe basamakları</h4><div id="carRanks"></div>
+      <h4>Rütbeyle açılanlar</h4><div class="carunl" id="carUnl"></div>
+    </section>
+    <section class="pc-tab hidden" data-t="madalya">
+      <h4>Madalyalar</h4><div class="carmed" id="carMedals"></div>
+      <h4>Başarımlar</h4><div class="carach" id="carAch"></div>
+    </section>
+    <section class="pc-tab hidden" data-t="ist"><div class="carst2" id="carStat2"></div></section>
+    <section class="pc-tab hidden" data-t="hesap">
+      <div class="pc-grid">
+        <div class="accp">
+          <p class="k">HESAP</p>
+          <div class="accst" id="accState"></div>
+          <div id="accLogin"><button class="btn primary wide" id="pcLogin" type="button">Giriş yap ya da hesap oluştur</button></div>
+          <p class="ninfo hidden" id="accNoCloud">Bulut hesapları şu an kullanılamıyor; misafir profilleriyle oynayabilirsin. Kayıtların bu cihazda kalır (Ayarlar → Kayıt yedeği ile taşıyabilirsin).</p>
+          <p class="accmsg" id="pcMsg"></p>
+          <div class="accrow"><button class="btn" id="accOut" type="button">Çıkış yap</button></div>
+          <div id="accLocal"><p class="fl">Bu cihazdaki profiller</p><div class="accprofs" id="accProfList"></div></div>
+        </div>
+        <div class="accp" id="pcEditBox">
+          <p class="k" id="accProfTitle">Profil</p>
+          <label class="fl">Çağrı adı<input id="accCs" class="inp" maxlength="20" placeholder="Hilal 1"></label>
+          <p class="fl">Birlik</p>
+          <div class="pc-units" id="accUnit"><button type="button" data-u="hava"><i>☾</i><b>Hilal Kanatlar</b><small>Hava</small></button><button type="button" data-u="deniz"><i>⚓</i><b>Mavi Kanatlar</b><small>Deniz</small></button><button type="button" data-u="kara"><i>🐺</i><b>Bozkurtlar</b><small>Kara</small></button></div>
+          <p class="fl">Arma</p>
+          <div class="accem" id="accEm"></div>
+          <button class="btn primary wide" id="accSave" type="button">Kaydet</button>
+        </div>
       </div>
-      <p class="ninfo hidden" id="accNoCloud">Bulut hesapları için oyunun yöneticisinin Supabase bağlantısını kurması gerekiyor (supabase/KURULUM.md). O zamana kadar misafir profilleriyle oynayabilirsin.</p>
-      <p class="accmsg" id="accMsg"></p>
-      <div class="accrow"><button class="btn" id="accOut" type="button">Çıkış yap</button><button class="btn link" id="accGuest" type="button">Misafir olarak devam et</button></div>
     </section>
-    <section class="accp">
-      <p class="k" id="accProfTitle">Profil</p>
-      <label class="fl">Çağrı adı<input id="accCs" class="inp" maxlength="20" placeholder="Hilal 1"></label>
-      <p class="fl">Birlik</p>
-      <div class="seg wrap" id="accUnit"><button type="button" data-u="hava">Hilal Kanatlar</button><button type="button" data-u="deniz">Mavi Kanatlar</button><button type="button" data-u="kara">Bozkurtlar</button></div>
-      <p class="fl">Arma</p>
-      <div class="accem" id="accEm"></div>
-      <button class="btn primary wide" id="accSave" type="button">Kaydet</button>
-      <div id="accLocal"><p class="fl">Bu cihazdaki profiller</p><div class="accprofs" id="accProfList"></div></div>
-    </section>
+  </div>
+</div>
+<div id="loginUI" class="modal fs hidden lgui">
+  <div class="lg-art"><div class="lg-brand"><small>AY YILDIZ</small><h1>HEDEF<br>KIZIL ELMA</h1><p>Rütbeni, belgelerini ve kayıtlarını her cihazda yanında taşı.</p></div></div>
+  <div class="lg-panel">
+    <button class="lg-x" id="lgClose" type="button" aria-label="Kapat">✕</button>
+    <div class="lg-tabs" id="lgTabs"><button type="button" data-m="in" aria-pressed="true">Giriş yap</button><button type="button" data-m="up">Hesap oluştur</button></div>
+    <button class="lg-google" id="accGoogle" type="button"><b>G</b> Google ile devam et</button>
+    <div class="lg-or"><span>ya da e-posta ile</span></div>
+    <label class="lg-f"><input id="accMail" type="email" placeholder=" " autocomplete="email"><span>E-posta</span></label>
+    <label class="lg-f"><input id="accPass" type="password" placeholder=" " autocomplete="current-password"><span>Şifre</span><button type="button" class="lg-eye" id="lgEye" aria-label="Şifreyi göster">👁</button></label>
+    <div class="lg-row"><button class="btn link" id="accReset" type="button">Şifremi unuttum</button><small id="lgHint">En az 6 karakter</small></div>
+    <p class="accmsg" id="accMsg"></p>
+    <button class="lg-go" id="lgGo" type="button" aria-label="Devam">➜</button>
+    <button class="hidden" id="accIn" type="button"></button><button class="hidden" id="accUp" type="button"></button>
+    <div class="lg-guest"><button id="accGuest" type="button">Misafir olarak oyna</button><small>İlerlemen yalnız bu cihazda saklanır</small></div>
   </div>
 </div>
 <div id="adminUI" class="modal fs hidden">

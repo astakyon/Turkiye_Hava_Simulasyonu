@@ -116,12 +116,13 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.92 | **Kariyer: ehliyet ve sertifikalar.** Hızlı oyun tamamen açık ve puansız; kariyer sıfırdan: İHA pilotluğu, helikopter pilotluğu, uçak pilotluğu (eğitim → jet → savaş), araç ehliyeti, tank sürücülüğü, kaptanlık için uygulamalı sınavlar; belgeler araç gruplarını, rütbe ağır sistemleri açar; kariyere özel görevler. | Belgesiz araç kullanılamaz; sınavı geçince açılır. | ✅ |
 | V1.93 | **Bulut hesapları açık.** Supabase projesi bağlandı (anon public anahtarı); hesap açma, bulut kaydı, yönetim paneli herkes için çalışır. | Oyunda hesap açılır, ilerleme başka cihazda görünür. | ✅ |
 | V1.94 | **FPS ve siyah dalga düzeltmesi.** Yalnız yakındaki trafik çizilir, sabit nesne grupları ekran dışındaysa atlanır, uzak ormanlar seyrelir (uçuşta üçgen sayısı yarıya indi); akıllı performans basamakları; FPS sınırı (30/60/sınırsız) ve tek dokunuşla Performans modu; telefonda iki katmanlı derinlik çizimi ve deniz yüzeyi düzeltmesi | ✅ |
-| V1.95 | **Giriş ve profil ekranı yenilemesi.** Oyun tarzı sade giriş (tek ekran, büyük düğmeler, misafir olarak devam), oyuncu kartı profili (rütbe rozeti, seviye çubuğu, öne çıkan istatistikler, sekmeli ayrıntı) | |
+| V1.95 | **Giriş ve profil ekranı yenilemesi.** Oyun tarzı sade giriş (tek ekran, büyük düğmeler, misafir olarak devam), oyuncu kartı profili (rütbe rozeti, seviye çubuğu, öne çıkan istatistikler, sekmeli ayrıntı) | ✅ |
+| V1.96 | **Duyurular, iniş yardımı, belge sınavları.** Süreli/anlık duyurular ve oyunculara anında iletim; piste iniş kolaylığı (yaklaşma rehberi, otomatik iniş yardımı); görev günlüğüne kapatma düğmesi; belge sınavlarında tamamlanınca belgenin verilmemesi hatası; araca uygun sınav hedefleri (İHA irtifası vb.) | |
 
 ### Faz 10 — Model yenileme
 | Sürüm | İçerik | Durum |
 |---|---|---|
-| V1.96+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
+| V1.97+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
 
 ### Android yolu
 1. PWA (V1.20 ✅) → 2. Play Store için TWA paketi (Bubblewrap) veya Capacitor → 3. imzalama, mağaza görselleri, gizlilik politikası.
