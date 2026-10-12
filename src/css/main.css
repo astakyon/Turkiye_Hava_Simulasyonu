@@ -752,3 +752,41 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 #netList .kick{ margin-left:auto; padding:2px 8px; font-size:11px; }
 #netRole{ margin-top:8px; width:100%; }
 @media (max-width:700px){ .atcui{ grid-template-columns:1fr; grid-template-rows:auto 55vh 1fr; } .atcHead{ grid-column:1; } .atcHead small{ display:none; } .atcSide{ border-left:0; } .chatbox{ bottom:230px; } }
+
+/* V1.86 system inventory */
+#envUI{ color:#e9f4ff; }
+.envw{ display:grid; grid-template-columns:minmax(260px,380px) 1fr; gap:18px; padding:64px max(18px,env(safe-area-inset-right)) 46px max(18px,env(safe-area-inset-left)); height:100%; box-sizing:border-box; }
+.envl{ display:flex; flex-direction:column; gap:8px; min-height:0; }
+.envl .inp{ width:100%; box-sizing:border-box; }
+.envcats{ display:flex; flex-wrap:wrap; gap:6px; }
+.envcats button{ font:600 12px "Chakra Petch",system-ui,sans-serif; color:#dfe9f1; background:rgba(184,236,255,.06); border:1px solid rgba(184,236,255,.25); border-radius:14px; padding:4px 10px; cursor:pointer; }
+.envcats button[aria-pressed="true"]{ background:#ffb25a; color:#10161e; border-color:#ffb25a; }
+.envcats small{ opacity:.7; margin-left:4px; }
+.envbar{ display:flex; gap:8px; align-items:center; } .envbar select{ flex:1; min-width:0; }
+.envchk{ font-size:12px; white-space:nowrap; display:flex; gap:4px; align-items:center; }
+.envcount{ margin:0; font-size:12px; opacity:.7; }
+.envlist{ list-style:none; margin:0; padding:0; overflow:auto; flex:1; min-height:120px; border-top:1px solid rgba(184,236,255,.15); }
+.envlist li{ padding:8px 10px; border-bottom:1px solid rgba(184,236,255,.08); cursor:pointer; display:flex; flex-direction:column; gap:2px; }
+.envlist li:hover,.envlist li:focus-visible{ background:rgba(184,236,255,.07); outline:none; }
+.envlist li.on{ background:rgba(255,178,90,.14); box-shadow:inset 3px 0 #ffb25a; }
+.envlist b{ font-size:14px; } .envlist small{ font-size:11px; opacity:.7; }
+.envlist .g{ color:#7dffb0; font-size:10px; letter-spacing:.08em; margin-left:6px; }
+.envd{ overflow:auto; min-height:0; padding-right:4px; }
+.envd h2{ margin:0 0 4px; font-size:26px; } .envd .k{ margin:0; font-size:12px; letter-spacing:.14em; opacity:.75; text-transform:uppercase; }
+.envbadges{ display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 14px; }
+.envbadges span{ font-size:12px; padding:3px 9px; border-radius:12px; background:rgba(184,236,255,.1); }
+.envbadges .on{ background:rgba(125,255,176,.18); color:#7dffb0; } .envbadges .off{ background:rgba(255,106,90,.18); color:#ff8a7a; }
+.envd h3{ margin:16px 0 6px; font-size:13px; letter-spacing:.12em; color:#ffb25a; text-transform:uppercase; }
+.envd table{ width:100%; border-collapse:collapse; font-size:14px; }
+.envd td{ padding:5px 8px; border-bottom:1px solid rgba(184,236,255,.08); vertical-align:top; } .envd td:first-child{ opacity:.75; width:45%; }
+.envcfg{ display:flex; flex-wrap:wrap; gap:6px; } .envcfg span{ font-size:12px; padding:3px 9px; border-radius:6px; border:1px solid rgba(184,236,255,.25); }
+.envd .envempty{ opacity:.6; margin-top:40px; text-align:center; }
+.envd .envact{ margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; }
+.envd .envcite{ margin-top:18px; font-size:12px; opacity:.7; }
+.envsrc{ position:absolute; left:0; right:0; bottom:max(8px,env(safe-area-inset-bottom)); margin:0; text-align:center; font-size:11px; opacity:.7; padding:0 16px; }
+.envsrc a,.envd a{ color:#b8ecff; }
+#envBack{ display:none; }
+@media (max-width:760px){ .envw{ grid-template-columns:1fr; padding-top:58px; } .envw.det .envl{ display:none; } .envw:not(.det) .envd{ display:none; } #envBack{ display:inline-block; } }
+.linfo .envrow{ grid-column:1/-1; margin-top:8px; }
+.envhb{ margin:6px 0 4px; font-size:12px; padding:5px 10px; }
+@media (max-width:560px){ #envUI .shdr{ padding-left:84px; text-align:left; letter-spacing:.14em; } }

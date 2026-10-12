@@ -62,6 +62,8 @@ Online çok oyunculu plan ve sonraki özellikler: [ROADMAP.md](ROADMAP.md)
 
 ## Yasal not
 Bu bir hayran/eğitim projesidir. TUSAŞ, Baykar veya başka bir kurumla bağlantısı, onayı ya da sponsorluğu yoktur. Uçak adları yalnızca tanıtım amaçlı kullanılır; modeller stilize, uçuş değerleri yaklaşıktır ve gerçek verileri yansıtmaz. Üçüncü taraf bileşenler: [THIRD_PARTY.md](THIRD_PARTY.md).
+
+**Veri kaynağı:** Oyun içi *Sistem Envanteri*'ndeki bilgiler (sistem adı, kategori, üretici, durum, konfigürasyonlar, kullanıcı ülkeler, teknik özellikler) [Defence Turk · Sistem Envanteri](https://www.defenceturk.tr/tr/sistem-envanteri) kaynağından alınmıştır (açık kaynak bilgiler, Ekim 2026). Açıklama metinleri ve görseller alınmamıştır. Veriyi yenilemek için: `python3 tools/dt_import.py ham.json`.
 Lisans: henüz seçilmedi (bkz. aşağıdaki not).
 
 > **Lisans notu:** Lisans eklenmezse kod varsayılan olarak "tüm hakları saklıdır" sayılır ve başkaları kullanamaz/fork'layıp değiştiremez. Açık kaynak istiyorsan `LICENSE` ekle (ör. MIT).

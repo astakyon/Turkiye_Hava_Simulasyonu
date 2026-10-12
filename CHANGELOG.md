@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.86 — 2026-10-12
+- **Yeni: Sistem Envanteri.** Ana menünün sağ üstündeki kitap simgesinden açılıyor ve 418 yerli savunma sistemini içeriyor. Kapsanan alanlar: hava ve uzay, kara, deniz, silah, radar ve elektronik harp, muhabere, güvenlik, simülatör.
+  - Arama Türkçe harflere duyarsız çalışıyor ("kizilelma" yazınca KIZILELMA bulunuyor).
+  - Kategori ve alt kategori filtresi var. "Oyunda olanlar" seçeneği oyundaki 21 sistemi gösteriyor.
+  - Her sistemde şunlar yer alıyor: üretici, aktif/pasif durumu, kullanıcı ülkeler, konfigürasyonlar ve gruplanmış teknik özellikler.
+- **Hangar:** seçili uçağın altına "📖 Gerçek veriler" düğmesi eklendi, envanterde o uçağın sayfasını açıyor.
+- **Model kütüphanesi:** bilgi sekmesinde oyundaki sistemin gerçek değerleri (hız, irtifa, boyutlar, motor gibi) ve "Envanterde aç" düğmesi var.
+- **Kaynak:** veriler Defence Turk Sistem Envanteri'nden (defenceturk.tr) alındı. Atıf her sayfada ve her sistem detayında görünüyor. Yalnızca olgusal bilgiler alındı; açıklama metinleri ve görseller alınmadı.
+- Yol haritası kaydı: Tekrar izleme V1.87, 3B kokpit V1.88, Telefon ve kayıt V1.89, model yenileme V1.90+ oldu.
+
 ## V1.85 — 2026-10-12
 - **Hangar lambaları uçakları aydınlatıyor:** gece ya da kapalı havada hangardaki uçakların üstü artık kararmıyor. Bekleme hangarına ve bakım hangarına gerçek lamba ışığı eklendi. Hangar ışığı uçak sırası boyunca kamerayı izliyor. Işığın menzili sınırlı olduğu için dışarısı gece karanlık kalıyor.
 - **Hangarın içine yağmur yağmıyor:** bekleme hangarı ve bakım hangarının çatısı altında yağmur ve kar görünmüyor, kapıdan dışarı bakınca yağış sürüyor. İçerideyken yağmur sesi kısılıyor.
