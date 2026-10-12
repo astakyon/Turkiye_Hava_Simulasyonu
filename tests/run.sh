@@ -57,3 +57,4 @@ node harness.js /tmp/sim.js indoor.test.js
 node harness.js /tmp/sim.js envanter.test.js
 node harness.js /tmp/sim.js replay.test.js
 node harness.js /tmp/sim.js realperf.test.js
+node harness.js /tmp/sim.js cockpit.test.js

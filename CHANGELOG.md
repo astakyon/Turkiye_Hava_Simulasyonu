@@ -1,6 +1,20 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.89 — 2026-10-12
+- **3B kokpit:** KAAN, HÜRJET ve Hürkuş'ta C tuşuyla kokpit görünümüne geçince artık gerçek bir iç mekân var. T129'da ön koltuk görünümünde de iç mekân görünüyor.
+  - Gösterge paneli ve göz siperliği var. Kanopi çerçevesi ve kenar çubukları (pencere ve yan çerçeveler) ile yan konsollar ve düğmeler eklendi.
+  - Uçaklarda HUD camı var.
+  - Kumanda kolu ve gaz kolu girişlerine göre hareket ediyor.
+- **Çalışan çok işlevli ekranlar** (saniyede 8 kez yenileniyor):
+  - PFD: yapay ufuk, hız, irtifa ve yön.
+  - TAKTİK: çevredeki uçaklar, hava ve yer hedefleri, üs.
+  - SİSTEM: gaz, yakıt, motor, G, iniş takımı, mühimmat ve flare.
+  - KAAN'da bunlar tek geniş ekranda, HÜRJET ve Hürkuş'ta üç ayrı ekranda gösteriliyor. T129'da üçüncü ekran SİLAH ekranı.
+- **Kafa hareketi** (Ayarlar, varsayılan açık): G kuvveti başı aşağı itiyor, baş dönüş yönüne bakıyor, yüksek hızda ve türbülansta hafif titreşim oluyor. Fareyle ya da sürükleyerek etrafa bakmak eskisi gibi çalışıyor.
+- **Işık:** kokpit dışarıdaki güneş, ay ve hava durumuna göre aydınlanıyor. Gece gösterge paneline sıcak renkli ışık geliyor.
+- **Çizim:** iç mekân ayrı bir katmanda çiziliyor, bu yüzden dünyayla iç içe geçmiyor ve titremiyor. Eski düz çerçeve görüntüsü bu uçaklarda kaldırıldı. İHA'larda burun kamerası görünümü aynen duruyor.
+
 ## V1.88 — 2026-10-12
 - **Gerçekçi performans:** Sistem Envanteri'ndeki gerçek değerler oyuna bağlandı.
 - **Gerçek servis tavanı** (Ayarlar, varsayılan açık): uçak, envanterdeki tavanın son %15'inde motor gücünü yitirir ve tavana gelince düzleşir. Tavana yaklaşınca uyarı çıkar.

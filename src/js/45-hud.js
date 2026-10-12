@@ -112,7 +112,7 @@ function drawHUD(){
   camera.getWorldDirection(camFwd); camInv.copy(camera.quaternion).invert();
 
   // cockpit frame
-  if(camMode===1 && !CUR.uav){
+  if(camMode===1 && !CUR.uav && !(typeof CKP_FOR!=='undefined'&&CKP_FOR[activeId])){
     hx.save(); hx.shadowBlur=0; hx.fillStyle='rgba(7,11,17,0.94)';
     hx.beginPath(); hx.moveTo(0,0); hx.lineTo(w*0.16,0); hx.lineTo(w*0.045,h); hx.lineTo(0,h); hx.fill();
     hx.beginPath(); hx.moveTo(w,0); hx.lineTo(w*0.84,0); hx.lineTo(w*0.955,h); hx.lineTo(w,h); hx.fill();

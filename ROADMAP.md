@@ -110,7 +110,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.86 | **Sistem envanteri.** Defence Turk Sistem Envanteri'nden 418 yerli savunma sistemi: arama, kategori/alt kategori, oyundakiler filtresi; üretici, durum, konfigürasyon, kullanıcı ülkeler ve teknik özellikler. Hangarda "Gerçek veriler", model kütüphanesinde gerçek değerler. Her sayfada kaynak atfı; açıklama metinleri ve görseller alınmaz. | 418 sistem açılır, arama Türkçe harflerden bağımsız çalışır, oyundaki 21 sistem eşleşir, kaynak her detayda görünür. | ✅ |
 | V1.87 | **Tekrar izleme.** Son uçuşun kaydı, sinematik kameralar, zaman çubuğu ve yavaş çekim. Fotoğraf ve kısa video kaydı (WebM). | Tekrar izleme ve video indirme çalışıyor. | ✅ |
 | V1.88 | **Gerçekçi performans.** Envanterdeki gerçek değerler: servis tavanı oyunda uygulanır (ayar), hangarda azami/seyir hızı, tırmanma, tavan, havada kalış, menzil, faydalı yük; kaynak gösterilir. | TB2 gerçek tavanında (8.230 m) düzleşir; ayar kapalıyken geçer; hangarda gerçek veriler ve kaynak görünür. | ✅ |
-| V1.89 | **3B kokpit.** KAAN, Hürjet ve T129 için iç görünüm, çok işlevli ekranlar, HUD camı, kafa hareketi. | Kokpitten uçulabiliyor. | |
+| V1.89 | **3B kokpit.** KAAN, Hürjet ve T129 için iç görünüm, çok işlevli ekranlar, HUD camı, kafa hareketi. | Kokpitten uçulabiliyor. | ✅ |
 | V1.90 | **Telefon ve kayıt.** Eğerek uçma (jiroskop) ve kalibrasyon, titreşim geri bildirimi. Misafir kaydını dosyayla yedekleme (hesaplılar zaten bulutta). Android paketi hazırlığı (TWA/Capacitor). | Telefon eğilerek uçuyor; yedek başka cihazda açılıyor. | |
 
 ### Faz 10 — Model yenileme
