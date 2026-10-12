@@ -12,10 +12,9 @@ menuCam(0.05); T('camera near plane',camera.position.distanceTo(planeGroup.posit
 titleAct('missions'); T('missions open',menuMode==='missions'); T('cine in missions',cineOn());
 key('ArrowDown'); T('mis sel moved',misSel===1||misSel===0);
 misSel=MORDER.indexOf('dogfight'); renderMissions(); T('dogfight chips',/3<\/b> dalga/.test(els.misChips.innerHTML));
-misGo(); T('loadout before start (missions)',menuMode==='loadout'&&missionId==='dogfight'); loadDone(); T('start modal from missions',menuMode==='start');
-closeStart(); T('back to missions',menuMode==='missions');
-key('Escape'); T('esc -> title',menuMode==='title');
-titleAct('settings'); T('settings item',true); closeModals(); enterHangar(); selectAircraft('anka'); preFlight('hangar'); T('unarmed skips loadout',menuMode==='start'); closeStart(); selectAircraft('kaan'); enterTitle(); titleAct('missions'); misGo(); T('missions -> loadout',menuMode==='loadout'); loadDone(); T('-> start from missions',menuMode==='start'&&startFrom==='missions'); closeStart(); T('back missions',menuMode==='missions'); enterTitle();
+misGo(); T('loadout before start (missions)',menuMode==='loadout'&&missionId==='dogfight'); selectStart('air'); loadDone(); T('mission starts from the loadout screen',state==='play'&&missionId==='dogfight');
+pauseGame(); toMenuFromPause(); T('pause -> title',menuMode==='title'&&state==='menu');
+titleAct('settings'); T('settings item',true); closeModals(); enterHangar(); selectAircraft('anka'); preFlight('hangar'); T('unarmed: loadout screen with start options',menuMode==='loadout'); closeLoadPanel(); selectAircraft('kaan'); enterTitle(); titleAct('missions'); misGo(); T('missions -> loadout',menuMode==='loadout'); closeLoadPanel(); T('back missions',menuMode==='missions'); enterTitle();
 enterTitle(); selectStart('air'); titleAct('fly'); T('quick fly',state==='play'&&!S.onGround);
 // V1.63 new main menu
 enterTitle(); SETTINGS.ui='auto'; refreshTitle(); T('new menu default',uiStyle()==='C');

@@ -1,6 +1,30 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.91 — 2026-10-12
+- **Hızlı oyun menüsü yenilendi:**
+  - **Hızlı Oyun:** en son kullandığın araçla tek tıkla oyuna girersin. Bu araç uçak, helikopter, tank ya da gemi olabilir.
+  - **Serbest Uçuş / Sürüş:** artık doğrudan başlatmıyor, hangara gidiyor.
+  - **Hızlı Görev:** bütün görevler açık.
+  - **Üssü Gez:** önce başlayacağın üssü seçiyorsun. Seçenekler: Hava, Deniz, Kara, İHA merkezi, Marina, Köy, Hilalkent, Anadolukent.
+  - Hangar düğmesi kaldırıldı.
+- **"Uçuşa hazır" penceresi kaldırıldı:**
+  - Uçağı seçince her zaman silah yükü ekranı geliyor. Başlama yeri (Hangardan / Pistten / Havada) bu ekranın altında seçiliyor ve "▶ Uçuşa başla" ile doğrudan kalkıyorsun.
+  - Düşman uçak, kanat adamı, hava savunma, zorluk ve başlangıç havaalanı ayarları görev ekranına taşındı (Görev ayarları).
+- **Hızlı gruplar:** silah yükü ekranında "+ Bu yükü kaydet" ile kendi yük gruplarını oluşturabilirsin (uçak başına 6 tane).
+  - Gruba tıklayınca o adetler uçağa yükleniyor.
+  - Çift tıklayınca adını değiştirebilirsin, × ile silebilirsin.
+- **Hangarda bütün araçlar:**
+  - ‹ › okları artık uçaklardan sonra helikopterlere, kara araçlarına ve deniz araçlarına geçiyor.
+  - Kara araçları (Bozkurtlar sekmesi): Altay, Fırtına, Pars, Kirpi, Korkut, Hisar, 4×4, kamyon, SUV ve itfaiye. Hangarın içinde sergileniyor.
+  - Deniz araçları (Mavi Kanatlar sekmesi): Hücumbot, Ada sınıfı korvet, TCG Anadolu, römorkör, balıkçı teknesi ve yelkenli. Deniz üssünün önünde sergileniyor.
+  - Hepsiyle "Sürmeye başla" ya da "Dümene geç" diyerek doğrudan oyuna giriyorsun. TCG Anadolu artık sürülebiliyor.
+- **Hangar ekranı düzeltmeleri:**
+  - Ana menü düğmesi, filtreler ve Hilal / Mavi / Bozkurtlar sekmeleri artık üst üste binmiyor.
+  - "Gerçek veriler" ve boya düğmeleri yeniden tıklanabiliyor.
+- **Duraklat menüsü:** "Ana menü" düğmesi eklendi.
+- **Ana menü:** yönetim simgesi düzeltildi; artık diğer yuvarlak düğmelerle aynı görünüyor.
+
 ## V1.90 — 2026-10-12
 - **Eğerek uç (telefon):** Ayarlar → Oynanış'tan açılıyor. Telefonu sağa-sola ve öne-arkaya eğerek uçağı yönlendirebilirsin.
   - Ekran yatay ya da dikey olsun, doğru çalışıyor.

@@ -90,6 +90,7 @@
     <p class="k" id="misK"></p><h2 id="misName"></h2><p class="d" id="misDesc"></p>
     <div class="mchips" id="misChips"></div>
     <div class="brief" id="misBrief"></div>
+    <div class="misopts" id="misOpts"><p class="k">GÖREV AYARLARI</p></div>
     <div class="mrow2"><button class="btn primary" id="btnMisGo" type="button">▶ Göreve başla</button><button class="btn" id="btnMisAc" type="button"></button></div>
   </div>
   <div class="sbar"><span id="sbAc2"></span><span class="v">↑ ↓ görev · Enter başla · Esc geri</span></div>
@@ -129,9 +130,13 @@
       <table class="svc"><tbody id="suLoad"></tbody></table>
       <div class="lwt"><div class="lwtbar"><i id="suWtBar"></i></div><small id="suWt"></small></div>
     </section>
+    <div class="lgrp" id="suGrp"></div>
+    <section class="sustart"><h3>Başlama yeri</h3><div class="startopts sm" id="suStart"></div></section>
     <div class="lrow"><button class="btn" id="btnLoadBack" type="button">← Geri</button><button class="btn primary go" id="btnLoadDone" type="button">Devam →</button></div>
   </div>
 </div>
+
+<div id="baseUI" class="modal hidden"><div class="card ui"><button class="xbtn" id="btnBaseX" type="button" aria-label="Kapat">✕</button><h2>Üssü gez</h2><p class="sub">Nerede başlamak istersin?</p><div class="baselist" id="baseList"></div></div></div>
 
 <div id="startUI" class="modal start hidden">
   <div class="card startcard ui">

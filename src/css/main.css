@@ -812,3 +812,26 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 /* V1.90 phone + save */
 .srowc{ display:flex; gap:6px; align-items:center; } .srowc.wrap{ flex-wrap:wrap; justify-content:flex-end; max-width:60%; }
 .savetxt{ width:100%; box-sizing:border-box; font:12px monospace; margin:4px 0 10px; resize:vertical; } .savetxt.hidden{ display:none; }
+
+/* V1.91 menu / hangar fixes */
+.c-ibtns .admonly{ display:none; } html.is-admin .c-ibtns .admonly{ display:grid; }
+#hangarUI .clsrow{ top:calc(max(12px,env(safe-area-inset-top)) + 70px); }
+#hangarUI .grptabs{ top:max(12px,env(safe-area-inset-top)); }
+#hangarUI .back{ top:max(12px,env(safe-area-inset-top)); }
+@media (max-width:1100px){ #hangarUI .grptabs{ left:auto; right:max(14px,env(safe-area-inset-right)); transform:none; } }
+@media (max-width:700px){ #hangarUI .grptabs{ top:max(12px,env(safe-area-inset-top)); } #hangarUI .grptabs button small{ display:none; } #hangarUI .grptabs button{ padding:6px 9px; font-size:11px; } }
+#hangarUI .hpaint,#hangarUI .envhb,#hangarUI .hinfo button{ pointer-events:auto; }
+.misopts{ margin:8px 0 10px; } .misopts .k{ margin:0 0 6px; font-size:11px; letter-spacing:.12em; color:var(--dim); }
+.misopts .airow{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; } .misopts .airow label,.misopts .splace{ display:flex; flex-direction:column; gap:3px; font-size:11px; color:var(--dim); }
+.misopts select{ width:100%; } .misopts .splace{ margin-top:6px; } @media (max-width:700px){ .misopts .airow{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.lgrp{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:8px 0; } .lgrp.hidden{ display:none; }
+.lgrp .lgk{ font-size:11px; letter-spacing:.12em; color:var(--dim); text-transform:uppercase; margin-right:2px; }
+.lgrp .lg{ display:inline-flex; } .lgrp button{ font:600 12px "Chakra Petch",system-ui,sans-serif; color:#e9f4ff; background:rgba(255,178,90,.12); border:1px solid rgba(255,178,90,.45); border-radius:6px 0 0 6px; padding:5px 9px; cursor:pointer; }
+.lgrp .lg .x{ border-radius:0 6px 6px 0; border-left:0; padding:5px 7px; background:rgba(255,90,74,.12); border-color:rgba(255,120,100,.4); }
+.lgrp .add{ border-radius:6px; background:none; border-style:dashed; border-color:rgba(184,236,255,.4); } .lgin{ font-size:12px; padding:4px 6px; width:160px; }
+.sustart h3{ margin:6px 0 6px; } .startopts.sm{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; } .startopts.sm button{ padding:7px 8px; text-align:left; }
+.startopts.sm button b{ display:block; font-size:13px; } .startopts.sm button small{ font-size:10px; } .startopts.sm button[aria-pressed="true"]{ border-color:var(--red); background:rgba(227,10,23,.18); }
+.baselist{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:10px; }
+.baselist button{ text-align:left; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:inherit; cursor:pointer; display:flex; flex-direction:column; gap:2px; font:inherit; }
+.baselist button:hover,.baselist button:focus-visible{ border-color:var(--red); background:rgba(227,10,23,.14); outline:none; } .baselist b{ font-size:14px; } .baselist small{ font-size:11px; color:var(--dim); }
+.misopts .splace select{ background:rgba(8,15,28,.85); color:#e9f4ff; border:1px solid var(--line); border-radius:6px; padding:5px 6px; font:inherit; font-size:12px; }
