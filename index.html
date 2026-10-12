@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.83">
+<meta name="game-version" content="V1.84">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -968,6 +968,8 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
       <div class="srow"><div class="sl"><b>Gün saati</b><small>Döngü: 20 dakikada bir tam gün (sabah, öğle, akşam, gece)</small></div><div class="seg" id="setTod"><button type="button" data-t="dawn">Sabah</button><button type="button" data-t="day">Öğle</button><button type="button" data-t="dusk">Akşam</button><button type="button" data-t="night">Gece</button><button type="button" data-t="cycle">Döngü</button></div></div>
       <div class="srow"><div class="sl"><b>Hava durumu</b><small>Değişken: birkaç dakikada bir kendiliğinden değişir · rüzgâr ve türbülans uçuşu etkiler</small></div><div class="seg wrap" id="setWx"><button type="button" data-w="clear">Açık</button><button type="button" data-w="cloudy">Bulutlu</button><button type="button" data-w="rain">Yağmur</button><button type="button" data-w="storm">Fırtına</button><button type="button" data-w="snow">Kar</button><button type="button" data-w="fog">Sis</button><button type="button" data-w="auto">Değişken</button></div></div>
+      <div class="srow"><div class="sl"><b>Türbülans</b><small>Hafif: fırtınada bile rahat uçuş · Gerçekçi: güçlü sarsıntı · açık havada hiç yok</small></div><div class="seg" id="setTurb"><button type="button" data-t="off">Kapalı</button><button type="button" data-t="soft">Hafif</button><button type="button" data-t="real">Gerçekçi</button></div></div>
+      <div class="srow"><div class="sl"><b>Otomatik denge</b><small>Kumandayı bırakınca uçak kanatlarını yavaşça düzler (35°'ye kadar yatışta)</small></div><label class="tgl"><input type="checkbox" id="setStab"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Canlı üs</b><small>Kalkıp inen yapay zekâ uçakları, yer personeli ve yayalar</small></div><label class="tgl"><input type="checkbox" id="setLife"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Görsel efektler</b><small>Düşük: renk düzeltme, hız bulanıklığı, kenar yumuşatma. Yüksek: + ışık parlaması (bloom). Telefonda FPS düşürebilir</small></div><div class="seg" id="setFx"><button type="button" data-f="0">Kapalı</button><button type="button" data-f="1">Düşük</button><button type="button" data-f="2">Yüksek</button></div></div>
       <div class="srow"><div class="sl"><b>Model kütüphanesi</b><small>Bütün modelleri 3B incele, renk ve kamuflaj değiştir, kendi modelini (.glb, .fbx, .obj, .stl, .dae) yükle</small></div><button class="btn" id="btnLibOpen" type="button">Aç</button></div>
@@ -1265,7 +1267,7 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.83', GAME_DATE='2026-10-12';
+const GAME_VERSION='V1.84', GAME_DATE='2026-10-12';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -11605,13 +11607,44 @@ const _nbLeave=netLeave; netLeave=function(s){ atcStop(); NB.chat=[]; nbChatRend
 function netMix(dt){ netMixStep(dt); nbMarkUpd(dt); }
 (function(){ const w=$('wChat'); if(w) w.addEventListener('pointerdown',function(e){ e.preventDefault(); nbChatOpen(); }); })();
 setInterval(function(){ const on=NET.on&&NET.started; ['tChat','wChat'].forEach(function(id){ const b=$(id); if(b) b.classList.toggle('hidden',!on); }); },1000);
+/* ------------------------------------------------------------------ flight comfort (V1.84)
+   • Türbülans: Kapalı / Hafif (default) / Gerçekçi. Clear weather is calm; only slow, smooth gust motion (no jitter).
+   • Otomatik denge (default on): with the roll stick centred the aircraft gently levels its wings (below ~35° bank).
+   • Helicopter: wind only drifts it when hover assist is off; the chase camera follows the heading smoothly.
+   • Frame pacing: the simulation step is smoothed so a single slow frame does not jerk the view. */
+const TURB_K={off:0,soft:0.35,real:1};
+function turbK(){ const v=SETTINGS.turb||'soft'; return TURB_K[v]==null?0.35:TURB_K[v]; }
+function stabOn(){ return SETTINGS.stab!==false; }
+wxAir=function(dt){ if(S.crashed||S.onGround) return; const kT=turbK(); wxVec(wxW); const g=wxGust(), wk=kT===0?0.35:(kT<1?0.7:1);
+  S.pos.x+=wxW.x*g*wk*dt; S.pos.z+=wxW.z*g*wk*dt;
+  const base=Math.max(0,WX.cur.turb-0.08), tb=base*kT*Math.min(1,S.speed/120)*(S.pos.y-Math.max(terrainH(S.pos.x,S.pos.z),0)<800?1:0.55); if(tb<0.004) return;
+  const n1=Math.sin(T*1.7)+Math.sin(T*3.1+2)*0.5, n2=Math.sin(T*1.3+1)+Math.sin(T*2.9)*0.5, n3=Math.sin(T*2.1+3)*0.7;
+  wxE.set(n1*tb*0.07*dt,n3*tb*0.02*dt,n2*tb*0.13*dt,'YXZ'); wxQ.setFromEuler(wxE); S.q.multiply(wxQ).normalize(); S.pos.y+=(n1+n2)*tb*0.6*dt; };
+wxHeli=function(dt){ const H=HELI.cur; if(!H||H.ground||H.crashT>0) return; const kT=turbK(); wxVec(wxW); const g=wxGust(), wk=(typeof HO!=='undefined'&&HO.assist)?0.12:(kT===0?0.35:0.7);
+  H.x+=wxW.x*g*wk*dt; H.z+=wxW.z*g*wk*dt;
+  const tb=Math.max(0,WX.cur.turb-0.08)*kT; if(tb>0.004){ H.roll+=Math.sin(T*1.9)*tb*0.25*dt; H.pitch+=Math.sin(T*1.5+1)*tb*0.2*dt; H.y+=Math.sin(T*1.3)*tb*0.5*dt; } };
+/* ---- aircraft: automatic wing levelling */
+const cfR=new THREE.Vector3(), cfU=new THREE.Vector3(), cfQ=new THREE.Quaternion(), cfE=new THREE.Euler();
+function planeBank(){ cfR.set(1,0,0).applyQuaternion(S.q); cfU.set(0,1,0).applyQuaternion(S.q); return Math.atan2(-cfR.y,cfU.y); }
+function stabStep(dt){ if(!stabOn()||S.crashed||S.onGround||state!=='play') return; if(typeof EJ!=='undefined'&&EJ.on) return; if(Math.abs(S.rollIn)>0.05) return;
+  const b=planeBank(); if(Math.abs(b)>0.62||Math.abs(b)<0.002) return; const r=clamp(b*1.3,-0.45,0.45)*Math.min(1,S.speed/80);
+  cfE.set(0,0,r*dt,'YXZ'); cfQ.setFromEuler(cfE); S.q.multiply(cfQ).normalize(); }
+const _cfUpd=update; update=function(dt){ _cfUpd(dt); stabStep(dt); };
+/* ---- helicopter chase camera: smooth heading */
+const HCAM={h:null};
+const _cfHeliCam=heliCam; heliCam=function(dt){ const H=HELI.cur; if(!H||HELI.fp||!(dt>0)){ HCAM.h=H?H.h:null; return _cfHeliCam(dt); }
+  if(HCAM.h==null||HCAM.H!==H){ HCAM.h=H.h; HCAM.H=H; } let d=H.h-HCAM.h; d=Math.atan2(Math.sin(d),Math.cos(d)); HCAM.h+=d*(1-Math.exp(-dt*4)); const real=H.h; H.h=HCAM.h; try{ _cfHeliCam(dt); } finally { H.h=real; } };
+/* ---- settings */
+(function(){ const s=$('setTurb'); if(s) s.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.turb=b.dataset.t; saveSettings(); syncSettingsUI(); });
+  const c=$('setStab'); if(c) c.addEventListener('change',function(){ SETTINGS.stab=c.checked; saveSettings(); }); })();
+const _cfSync=syncSettingsUI; syncSettingsUI=function(){ _cfSync(); const s=$('setTurb'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.turb||'soft'))); }); const c=$('setStab'); if(c) c.checked=stabOn(); };
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) accOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
   requestAnimationFrame(frame);
-  let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; perfStep(Math.min(dt,0.5)); dt=Math.min(dt,0.05);
+  let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; perfStep(Math.min(dt,0.5)); dt=Math.min(dt,0.05); frame.sdt=frame.sdt?frame.sdt+(dt-frame.sdt)*0.35:dt; dt=frame.sdt;
   T+=dt; pollPad();
   if(state==='library'){ libStep(dt); libRender(); drawHUD(); return; }
   if(state==='play') update(dt);

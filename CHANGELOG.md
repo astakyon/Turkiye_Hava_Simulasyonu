@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.84 — 2026-10-12
+- **Uçuş konforu:** uçakta ve helikopterde yaşanan yalpalama giderildi.
+- **Türbülans ayarı** (Ayarlar → Hava durumu altında): Kapalı / **Hafif** (varsayılan) / Gerçekçi. Açık havada artık hiç sarsıntı yok. Sarsıntı yavaş ve yumuşak dalgalanmalara indirildi, titreme yapan hızlı bileşenler kaldırıldı. Fırtınada yatış salınımı 4,4°'den Hafif ayarda 1,6°'ye düştü.
+- **Otomatik denge** (varsayılan açık): kumandayı bırakınca uçak kanatlarını yavaşça düzler (35°'ye kadar yatışta). Dik dönüşlere ve akrobasiye karışmaz. İstersen ayarlardan kapatabilirsin.
+- **Helikopter:** rüzgâr artık askı yardımı (J) açıkken helikopteri sürüklemiyor. Askıda 10 saniyedeki kayma açık havada 25 m'den 4 m'ye, fırtınada 91 m'den 15 m'ye indi. Türbülans yatışı 5°'den 1,6°'ye düştü. Takip kamerası yön değişimlerini yumuşak izliyor.
+- **Kare süresi yumuşatma:** tek bir yavaş kare artık görüntüyü sarsmıyor.
+- Yol haritası kaydı: Tekrar izleme V1.85, 3B kokpit V1.86, Telefon ve kayıt V1.87, model yenileme V1.88+ oldu.
+
 ## V1.83 — 2026-10-12
 - **Karma çok oyunculu:** maç sırasında uçaktan inip (Duraklat → Yürüyerek gez) yürüyebilir, araç, helikopter ya da tekne kullanabilirsin. Diğer oyuncular seni yaya, araç, helikopter veya tekne olarak görür. Bir uçağa binince yeniden uçarsın, maç sürer.
 - **Yeni mod — Üs ele geçirme:** iki takım Hava, Deniz ve Kara üsleri için savaşır. Bölgede kalan takım üssü alır (uçaklar ancak 450 m altında sayılır). Her üs 5 sn'de 1 puan verir, 100 puana ulaşan kazanır. Üs halkaları sahnede ve haritada takım rengine boyanır, skor sağ üstte görünür.

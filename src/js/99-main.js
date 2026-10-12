@@ -4,7 +4,7 @@ try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\
 let lastT=performance.now();
 function frame(now){
   requestAnimationFrame(frame);
-  let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; perfStep(Math.min(dt,0.5)); dt=Math.min(dt,0.05);
+  let dt=(now-lastT)/1000; lastT=now; if(!(dt>0)) dt=0.016; perfStep(Math.min(dt,0.5)); dt=Math.min(dt,0.05); frame.sdt=frame.sdt?frame.sdt+(dt-frame.sdt)*0.35:dt; dt=frame.sdt;
   T+=dt; pollPad();
   if(state==='library'){ libStep(dt); libRender(); drawHUD(); return; }
   if(state==='play') update(dt);
