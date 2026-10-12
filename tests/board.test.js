@@ -1,4 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
+playMode('quick');
 BF.cat='all'; BF.diff=0; BF.dur='all'; BF.sort='def';
 T('board has aircraft and helicopter missions',boardList().length===boardAll().length&&boardAll().filter(function(e){ return e.kind==='air'; }).length===MORDER.length&&boardAll().filter(function(e){ return e.kind==='heli'; }).length===HMIS.length,boardList().length);
 BF.cat='heli'; T('category filter',boardList().length===HMIS.length&&boardList().every(function(e){ return e.kind==='heli'; }));
