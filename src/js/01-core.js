@@ -1,4 +1,4 @@
-const GAME_VERSION='V1.81', GAME_DATE='2026-10-11';
+const GAME_VERSION='V1.82', GAME_DATE='2026-10-12';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;

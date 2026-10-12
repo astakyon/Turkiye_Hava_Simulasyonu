@@ -50,3 +50,4 @@ node harness.js /tmp/sim.js school.test.js
 node harness.js /tmp/sim.js progress.test.js
 node harness.js /tmp/sim.js races.test.js
 node harness.js /tmp/sim.js editor.test.js
+node harness.js /tmp/sim.js menu2.test.js

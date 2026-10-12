@@ -99,19 +99,20 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 ### Faz 8 — Çok oyunculu
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.82 | **Karma çok oyunculu.** Yaya, araç, helikopter ve uçak aynı oyunda. **Üs ele geçirme** modu (takımlar). **Kule görevlisi** rolü: bir oyuncu kuleden izin verir ve haritayı yönetir. Oyun içi yazılı sohbet. Odalarda profil adı ve rütbe; yönetici odadan çıkarabilir. | 4 oyuncu farklı araçlarda aynı oyunda. | |
+| V1.82 | **Ana menü sadeleştirme ve donma düzeltmesi.** Solda BAŞLA ve ÇOK OYUNCULU. Başla → Hızlı oyun (Serbest uçuş, Üssü gez, Hangar; puan yok, kilit yok) ve Kariyer (Görevler rütbeye göre, Eğitim, Serbest gezi, Hangar; TP ile açılır). Ayarlar, rekorlar, yönetim profilin yanında küçük düğme; model ve ses kütüphanesi yönetim panelinde. Kar/yağmurda donma hatası giderildi. | Menü iki düğmeyle açılıyor; kar ve yağmurda oyun akıyor. | ✅ |
+| V1.83 | **Karma çok oyunculu.** Yaya, araç, helikopter ve uçak aynı oyunda. **Üs ele geçirme** modu (takımlar). **Kule görevlisi** rolü: bir oyuncu kuleden izin verir ve haritayı yönetir. Oyun içi yazılı sohbet. Odalarda profil adı ve rütbe; yönetici odadan çıkarabilir. | 4 oyuncu farklı araçlarda aynı oyunda. | |
 
 ### Faz 9 — Kokpit, paylaşım, telefon
 | Sürüm | İçerik | Kabul ölçütü | Durum |
 |---|---|---|---|
-| V1.83 | **Tekrar izleme.** Son uçuşun kaydı, sinematik kameralar, zaman çubuğu ve yavaş çekim. Fotoğraf ve kısa video kaydı (WebM). | Tekrar izleme ve video indirme çalışıyor. | |
-| V1.84 | **3B kokpit.** KAAN, Hürjet ve T129 için iç görünüm, çok işlevli ekranlar, HUD camı, kafa hareketi. | Kokpitten uçulabiliyor. | |
-| V1.85 | **Telefon ve kayıt.** Eğerek uçma (jiroskop) ve kalibrasyon, titreşim geri bildirimi. Misafir kaydını dosyayla yedekleme (hesaplılar zaten bulutta). Android paketi hazırlığı (TWA/Capacitor). | Telefon eğilerek uçuyor; yedek başka cihazda açılıyor. | |
+| V1.84 | **Tekrar izleme.** Son uçuşun kaydı, sinematik kameralar, zaman çubuğu ve yavaş çekim. Fotoğraf ve kısa video kaydı (WebM). | Tekrar izleme ve video indirme çalışıyor. | |
+| V1.85 | **3B kokpit.** KAAN, Hürjet ve T129 için iç görünüm, çok işlevli ekranlar, HUD camı, kafa hareketi. | Kokpitten uçulabiliyor. | |
+| V1.86 | **Telefon ve kayıt.** Eğerek uçma (jiroskop) ve kalibrasyon, titreşim geri bildirimi. Misafir kaydını dosyayla yedekleme (hesaplılar zaten bulutta). Android paketi hazırlığı (TWA/Capacitor). | Telefon eğilerek uçuyor; yedek başka cihazda açılıyor. | |
 
 ### Faz 10 — Model yenileme
 | Sürüm | İçerik | Durum |
 |---|---|---|
-| V1.86+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
+| V1.87+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
 
 ### Android yolu
 1. PWA (V1.20 ✅) → 2. Play Store için TWA paketi (Bubblewrap) veya Capacitor → 3. imzalama, mağaza görselleri, gizlilik politikası.

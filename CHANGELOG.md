@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.82 — 2026-10-12
+- **Donma düzeltmesi:** Kar ya da yağmur seçiliyken uçarken oyun donuyordu. Sebep yağış kodundaki bir değişkenin tanımlanmadan önce kullanılmasıydı; düzeltildi. Hava durumu kodunda ileride bir hata olsa bile oyun artık durmuyor.
+- **Yeni ana menü:** Solda yalnızca **Başla** ve **Çok Oyunculu** var. Başla'ya basınca **Hızlı oyun** (Serbest uçuş, Üssü gez, Hangar) ve **Kariyer** açılıyor; Esc ya da "Geri" ile üst menüye dönülüyor.
+- **Hızlı oyun:** Puan kazandırmaz; bütün uçaklar, araçlar, boyalar ve görevler açık.
+- **Kariyer:** Görevler, Eğitim, Serbest gezi ve Hangar. Tecrübe puanı burada kazanılıyor. Görevler rütbeye göre açılıyor (ör. İt dalaşı Astsubay, Yer hedefleri Uzman Çavuş); kilitli görevin yanında gereken rütbe yazıyor. Kariyer hangarında uçaklar, araçlar ve boyalar rütbeyle açılıyor.
+- **Üst sağ:** Ayarlar, Rekorlar ve (yöneticiye) Yönetim artık profil düğmesinin yanında küçük simgeler. Ayrı Kariyer düğmesi kaldırıldı; profil düğmesi aynı sayfayı açıyor.
+- **Kütüphaneler:** Model ve Ses kütüphanesi ana menüden kaldırıldı, Yönetim panelinin üstündeki "Kütüphaneler" satırından açılıyor.
+- Yol haritası: Karma çok oyunculu V1.83'e, sonraki sürümler birer numara ileri kaydı.
+
 ## V1.81 — 2026-10-11
 - **Görev editörü:** Görev panosunda "Özel" kategorisi ve "＋ Yeni görev oluştur" girişi var. Editörde ada haritasına yer hedefi (kamyon, radar, depo, sığınak, SAM), hava hedefi, düşman uçağı, geçiş noktası, keşif noktası ve başlangıç yeri (yön ve irtifa ile) yerleştirilebiliyor. Öğeler sürüklenip taşınıyor; özellikleri (tür, irtifa, yarıçap, yön) yandaki panelden ayarlanıyor.
 - **Aşamalar (tetikleyiciler):** Her öğeye 1–5 arası bir aşama veriliyor. 1. aşama baştan var; bir aşamadaki her şey bitince sıradaki aşamanın öğeleri belirir (örneğin "radarı vur → düşman uçakları gelsin → keşif yap").

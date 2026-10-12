@@ -1,3 +1,12 @@
+/* V1.82 menu v2 */
+.c-top{ align-items:flex-start; } .c-ibtns{ display:flex; gap:6px; margin-left:auto; margin-right:8px; align-self:center; }
+.c-ibtns button{ width:40px; height:40px; border-radius:50%; display:grid; place-items:center; border:1px solid rgba(255,255,255,.14); background:rgba(8,15,28,.6); color:#dfe9f1; padding:0; cursor:pointer; }
+.c-ibtns button svg{ width:20px; height:20px; } .c-ibtns button:hover,.c-ibtns button:focus-visible{ border-color:#ffb25a; color:#ffb25a; outline:none; }
+.c-nav .mg small{ font-weight:500; letter-spacing:.02em; opacity:.6; text-transform:none; }
+.c-nav .mitem.bk{ opacity:.75; } .c-nav .mitem.bk .mt small{ display:none; } .c-nav .mitem.car .mi-ic{ color:#ffd27a; }
+.mlist.mis .mitem.lock{ opacity:.55; }
+@media (max-width:560px){ .c-ibtns{ gap:4px; margin-right:4px; } .c-ibtns button{ width:32px; height:32px; } .c-ibtns button svg{ width:16px; height:16px; } #title .c-brand h1{ font-size:20px; } #title .c-brand p{ display:none; } .c-prof .pn small{ display:none; } .c-prof{ padding:4px 10px 4px 4px; } }
+.admlibs{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:8px 0; font-size:12px; } .admlibs b{ font-size:10.5px; letter-spacing:.14em; color:#ffb25a; }
 :root{
   --bg:#060b14; --ink:#eef3f8; --dim:#9aaec2; --line:rgba(190,220,245,.2); --glass:rgba(8,15,28,.78);
   --red:#e30a17; --red-hi:#ff2a38; --hud:#b8ecff; --amber:#ffc24a; --ok:#7dffb0;

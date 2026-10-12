@@ -32,7 +32,7 @@ function wxPrecip(dt){
   WX.rainOn=rain>0.02&&!under; WX.snowOn=snow>0.02&&!under; WX.lines.visible=WX.rainOn; WX.pts.visible=WX.snowOn;
   if(!WX.rainOn&&!WX.snowOn) return;
   const cp=camera.position, wr=WX.dir*Math.PI/180, wx=-Math.sin(wr)*c.wind, wz=-Math.cos(wr)*c.wind, D=WX.d, N=WX.N;
-  const nR=Math.floor(N*rain*(state==='play'&&mv>60?0.5:1)), nS=Math.floor(N*snow), fall=rain>0?24:2.2, mv=(state==='play'?S.speed:0), fv=new THREE.Vector3(); if(state==='play') fwdOf(S.q,fv);
+  const mv=(state==='play'?S.speed:0), nR=Math.floor(N*rain*(state==='play'&&mv>60?0.5:1)), nS=Math.floor(N*snow), fall=rain>0?24:2.2, fv=new THREE.Vector3(); if(state==='play') fwdOf(S.q,fv);
   /* rain: streaks stretched along the relative wind (fast flight → near horizontal) */
   if(WX.rainOn){ const P=WX.lines.geometry.attributes.position.array;
     const rx=wx-fv.x*mv, ry=-fall-fv.y*mv, rz=wz-fv.z*mv, rl=Math.hypot(rx,ry,rz)||1, L=Math.min(state==='play'?3.2:6,1.6+rl*0.02);
