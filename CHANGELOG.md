@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.87 — 2026-10-12
+- **Tekrar izleme:** her uçuşun son 5 dakikası saniyede 10 kez kaydediliyor. Kayda girenler: uçağın konumu, duruşu, hızı, gaz ayarı, iniş takımı, art yakıcı, silah atışı, düşüş anı ve çevredeki en fazla 12 uçak.
+- **Açmak için:** Duraklat menüsünde ya da görev sonu ekranında "Tekrar izle" düğmesine bas veya F3'e bas.
+- **Zaman çubuğu:** ileri-geri sarabilir, 5 saniye atlayabilir (← →, Shift ile 1 sn), oynatıp durdurabilirsin (Boşluk). Hızı ¼×, ½×, 1×, 2× ve 4× arasında değiştirebilirsin (- / + tuşları).
+- **Kameralar** (1–4 tuşları):
+  - Takip
+  - Kokpit
+  - Sinematik: 6 saniyede bir yandan, önden geçiş, kuleden, yukarıdan ve takip çekimleri arasında geçiyor.
+  - Serbest: sürükleyerek etrafında dön, tekerlekle yaklaş.
+- **Fotoğraf ve video:** yazısız ekran görüntüsü alabilirsin. Oyun ekranını WebM video olarak kaydedip izleyebilir ve indirebilirsin.
+- **Çıkış:** tekrardan çıkınca oyun bıraktığın yere, yani duraklatma ekranına ya da görev sonu ekranına aynen döner.
+
 ## V1.86 — 2026-10-12
 - **Yeni: Sistem Envanteri.** Ana menünün sağ üstündeki kitap simgesinden açılıyor ve 418 yerli savunma sistemini içeriyor. Kapsanan alanlar: hava ve uzay, kara, deniz, silah, radar ve elektronik harp, muhabere, güvenlik, simülatör.
   - Arama Türkçe harflere duyarsız çalışıyor ("kizilelma" yazınca KIZILELMA bulunuyor).

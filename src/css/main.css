@@ -790,3 +790,16 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .linfo .envrow{ grid-column:1/-1; margin-top:8px; }
 .envhb{ margin:6px 0 4px; font-size:12px; padding:5px 10px; }
 @media (max-width:560px){ #envUI .shdr{ padding-left:84px; text-align:left; letter-spacing:.14em; } }
+
+/* V1.87 replay */
+.rpbar{ position:fixed; left:50%; transform:translateX(-50%); bottom:max(12px,env(safe-area-inset-bottom)); width:min(860px,calc(100vw - 24px)); z-index:35; background:rgba(6,12,22,.82); border:1px solid rgba(184,236,255,.22); border-radius:12px; padding:8px 10px; display:flex; flex-direction:column; gap:6px; box-sizing:border-box; backdrop-filter:blur(6px); }
+.rpbar.hidden{ display:none; }
+.rprow{ display:flex; align-items:center; gap:6px; } .rprow.wrap{ flex-wrap:wrap; }
+.rpbar button{ font:600 12px "Chakra Petch",system-ui,sans-serif; color:#e9f4ff; background:rgba(184,236,255,.08); border:1px solid rgba(184,236,255,.25); border-radius:7px; padding:5px 9px; cursor:pointer; min-height:30px; }
+.rpbar button[aria-pressed="true"]{ background:#ffb25a; color:#10161e; border-color:#ffb25a; }
+.rpbar button.pri{ min-width:44px; font-size:14px; } .rpbar button.ex{ border-color:rgba(255,120,100,.5); } .rpbar button.rec{ background:#c0221c; border-color:#ff6a5a; }
+.rpbar input[type=range]{ flex:1; min-width:80px; accent-color:#ffb25a; }
+.rptime{ font:600 12px "Chakra Petch",monospace; color:#b8ecff; min-width:86px; text-align:right; }
+.rplbl{ font-size:11px; letter-spacing:.1em; opacity:.6; margin-left:4px; text-transform:uppercase; } .rpsp{ flex:1; }
+#rpVidOut{ width:100%; max-height:52vh; background:#000; border-radius:8px; margin:6px 0; }
+@media (max-width:560px){ .rplbl{ display:none; } .rpbar button{ padding:4px 7px; font-size:11px; } }

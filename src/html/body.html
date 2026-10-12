@@ -487,6 +487,16 @@
 </div>
 <div id="fps" class="fps hidden"></div>
 <canvas id="miniMap" class="minimap hidden"></canvas>
+<div id="rpBar" class="rpbar ui hidden">
+  <div class="rprow"><button type="button" id="rpBack" title="5 sn geri (←)">⏪</button><button type="button" id="rpPlay" class="pri" title="Oynat / durdur (Boşluk)">❚❚</button><button type="button" id="rpFwd" title="5 sn ileri (→)">⏩</button>
+    <input type="range" id="rpT" min="0" max="1000" value="0" aria-label="Zaman çubuğu"><span id="rpTime" class="rptime">0:00</span></div>
+  <div class="rprow wrap"><span class="rplbl">Hız</span><button type="button" data-sp="0.25">¼×</button><button type="button" data-sp="0.5">½×</button><button type="button" data-sp="1">1×</button><button type="button" data-sp="2">2×</button><button type="button" data-sp="4">4×</button>
+    <span class="rplbl">Kamera</span><button type="button" data-cam="chase">Takip</button><button type="button" data-cam="cockpit">Kokpit</button><button type="button" data-cam="cine">Sinematik</button><button type="button" data-cam="orbit">Serbest</button>
+    <span class="rpsp"></span><button type="button" id="rpHud" aria-pressed="true" title="Yazıları göster/gizle">Aa</button><button type="button" id="rpShot">📷 Fotoğraf</button><button type="button" id="rpVid">⏺ Video</button><button type="button" id="rpExit" class="ex">✕ Çık</button></div>
+</div>
+<div id="rpVidUI" class="modal hidden"><div class="card"><h2>Tekrar videosu</h2><video id="rpVidOut" controls playsinline></video>
+  <p class="sub">WebM · <span id="rpVidSize"></span>. Bilgisayarda doğrudan indirebilirsin; tarayıcı izin vermezse videoya sağ tıklayıp "Videoyu farklı kaydet"i seç.</p>
+  <div class="btnrow"><a class="btn primary" id="rpVidDl" href="#" download>⭳ Videoyu indir</a><button class="btn" id="rpVidClose" type="button">Kapat</button></div></div></div>
 <div id="chatBox" class="chatbox"><ul id="chatLog"></ul><input id="chatIn" class="hidden" maxlength="120" autocomplete="off" placeholder="Mesaj yaz, Enter ile gönder · Esc kapat"></div>
 <div id="atcUI" class="atcui hidden"><div class="atcHead"><b>KULE · Radar</b><small>Oyuncuyu seç, hazır telsiz mesajı gönder ya da haritaya tıklayıp işaret koy (tekerlek: yakınlaştır)</small><button type="button" id="atcLeave" class="btn sm">Odadan çık</button></div>
 <div class="atcMapW"><canvas id="atcMap"></canvas></div><div class="atcSide"><div id="atcPl" class="atcPl"></div><div id="atcQ" class="atcQ"></div><div class="atcTx"><input id="atcTxt" class="inp" maxlength="100" placeholder="Serbest telsiz mesajı"><button type="button" id="atcSend" class="btn sm">Gönder</button></div></div></div>

@@ -55,3 +55,4 @@ node net_harness.js /tmp/sim.js net_mix.test.js
 node harness.js /tmp/sim.js comfort.test.js
 node harness.js /tmp/sim.js indoor.test.js
 node harness.js /tmp/sim.js envanter.test.js
+node harness.js /tmp/sim.js replay.test.js
