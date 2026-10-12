@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.88 — 2026-10-12
+- **Gerçekçi performans:** Sistem Envanteri'ndeki gerçek değerler oyuna bağlandı.
+- **Gerçek servis tavanı** (Ayarlar, varsayılan açık): uçak, envanterdeki tavanın son %15'inde motor gücünü yitirir ve tavana gelince düzleşir. Tavana yaklaşınca uyarı çıkar.
+  - Tavanlar: Hürkuş 10.577 m, TB2 8.230 m, ANKA 9.144 m, AKSUNGUR ve Akıncı 12.192 m, KIZILELMA 10.668 m, TB3 10.058 m.
+  - KAAN, HÜRJET ve ANKA-3'ün envanterde tavan verisi olmadığı için bu uçaklarda sınır yok.
+- **Hangar:** performans çubuklarının altında "GERÇEK" satırı var. Satırda azami ve seyir hızı, tırmanma, servis tavanı, havada kalış süresi, menzil ve faydalı yük ile kaynak (Defence Turk) gösteriliyor. Verisi olmayan uçaklarda oyun değerlerinin kullanıldığı yazıyor.
+- Oyundaki hız değerlerini envanterle karşılaştırdım. Hürkuş 574 km/sa, Akıncı 195 knot, T129 145 knot ve HÜRJET art yakıcıyla 1,2 Mach; değerler zaten uyumluydu, değiştirmedim.
+- Yol haritası kaydı: 3B kokpit V1.89, Telefon ve kayıt V1.90, model yenileme V1.91+ oldu.
+
 ## V1.87 — 2026-10-12
 - **Tekrar izleme:** her uçuşun son 5 dakikası saniyede 10 kez kaydediliyor. Kayda girenler: uçağın konumu, duruşu, hızı, gaz ayarı, iniş takımı, art yakıcı, silah atışı, düşüş anı ve çevredeki en fazla 12 uçak.
 - **Açmak için:** Duraklat menüsünde ya da görev sonu ekranında "Tekrar izle" düğmesine bas veya F3'e bas.

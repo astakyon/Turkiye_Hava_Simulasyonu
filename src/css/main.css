@@ -803,3 +803,8 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .rplbl{ font-size:11px; letter-spacing:.1em; opacity:.6; margin-left:4px; text-transform:uppercase; } .rpsp{ flex:1; }
 #rpVidOut{ width:100%; max-height:52vh; background:#000; border-radius:8px; margin:6px 0; }
 @media (max-width:560px){ .rplbl{ display:none; } .rpbar button{ padding:4px 7px; font-size:11px; } }
+
+/* V1.88 real performance */
+.realp{ grid-column:1/-1; margin-top:6px; max-width:440px; display:flex; flex-wrap:wrap; gap:2px 10px; font-size:11px; line-height:1.35; color:#e9f4ff; }
+.realp b{ color:#ffb25a; letter-spacing:.08em; font-weight:700; } .realp i{ font-style:normal; color:#8ea4b8; } .realp .na{ color:#8ea4b8; } .realp small{ color:#8ea4b8; opacity:.75; }
+@media (max-width:700px),(max-height:560px){ .realp{ display:none; } }
