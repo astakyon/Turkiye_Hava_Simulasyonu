@@ -65,7 +65,7 @@ const listeners={};
 const store={};
 const win={innerWidth:1280,innerHeight:720,devicePixelRatio:1,addEventListener(t,f){(listeners[t]=listeners[t]||[]).push(f)},removeEventListener(){},
  requestAnimationFrame(){return 0},cancelAnimationFrame(){},matchMedia:()=>({matches:false,addEventListener(){}}),navigator:{getGamepads:()=>[],maxTouchPoints:0,userAgent:'node'},
- localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]}}};
+ localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]??null,get length(){return Object.keys(store).length}}};
 const doc={getElementById:el,createElement:()=>el('c'+Math.random()),body:el('body'),documentElement:el('html'),addEventListener(t,f){(listeners[t]=listeners[t]||[]).push(f)},querySelector:()=>el('q'),querySelectorAll:()=>[],hidden:false,fullscreenElement:null,exitPointerLock(){},title:''};
 let src=fs.readFileSync(process.argv[2]||'/tmp/sim.js','utf8');
 const tests=fs.readFileSync(process.argv[3],'utf8');

@@ -1,6 +1,20 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.90 — 2026-10-12
+- **Eğerek uç (telefon):** Ayarlar → Oynanış'tan açılıyor. Telefonu sağa-sola ve öne-arkaya eğerek uçağı yönlendirebilirsin.
+  - Ekran yatay ya da dikey olsun, doğru çalışıyor.
+  - "Sıfırla" düğmesi telefonu o anki tutuşunda düz uçuş kabul ediyor.
+  - Duyarlılık Az / Orta / Çok olarak seçilebiliyor; öne-arka eğim için ters çevirme seçeneği var.
+  - iPhone ilk açılışta hareket sensörü izni istiyor.
+  - Ekrandaki çubuğa dokunurken eğim devre dışı kalıyor.
+- **Titreşim:** gamepad titreşimi veren her olay (atış, isabet, iniş, düşüş, uyarılar) artık telefonu da titretiyor. Bu, Android'de çalışıyor; iPhone tarayıcıları titreşimi desteklemiyor. Ayarlar → Erişilebilirlik → Kumanda titreşimi ile açılıp kapanıyor.
+- **Kayıt yedeği:** Ayarlar → Arayüz'den yapılıyor. Profil, kariyer, rekorlar, ayarlar, boyalar, görevler ve kontroller dosyaya ya da kopyalanabilir bir koda aktarılabiliyor. Bu yedek başka cihazda ya da tarayıcıda yüklenebiliyor.
+  - Türkçe karakterler korunuyor ve diğer sitelerin verilerine dokunulmuyor.
+  - Hesap açanların ilerlemesi zaten bulutta saklanıyor.
+- **Android hazırlığı:** docs/ANDROID.md eklendi. İçinde iki yol anlatılıyor: TWA (Bubblewrap, önerilen) ve Capacitor. Digital Asset Links ve Play Console adımları da var.
+- Yol haritası: V1.91 Menü ve hangar düzeltmeleri, V1.92 Kariyer (ehliyet ve sertifikalar) eklendi. Model yenileme V1.93'ten başlıyor.
+
 ## V1.89 — 2026-10-12
 - **3B kokpit:** KAAN, HÜRJET ve Hürkuş'ta C tuşuyla kokpit görünümüne geçince artık gerçek bir iç mekân var. T129'da ön koltuk görünümünde de iç mekân görünüyor.
   - Gösterge paneli ve göz siperliği var. Kanopi çerçevesi ve kenar çubukları (pencere ve yan çerçeveler) ile yan konsollar ve düğmeler eklendi.
