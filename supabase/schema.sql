@@ -55,10 +55,11 @@ language sql stable security definer set search_path = public as $$
 $$;
 
 -- oyuncu kendi rolünü, yasak durumunu değiştiremez; rütbe yalnız yükselebilir ya da yönetici değiştirir
+-- (yalnız oyundan gelen isteklerde: Supabase panelinden / SQL Editor'den yapılan değişikliklere karışmaz)
 create or replace function public.profiles_guard() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
-  if not public.is_admin() then
+  if coalesce(auth.role(),'') in ('authenticated','anon') and not public.is_admin() then
     new.role := old.role;
     new.banned := old.banned;
     if new.rank < old.rank then new.rank := old.rank; end if;
