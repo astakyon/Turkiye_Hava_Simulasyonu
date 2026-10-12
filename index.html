@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V1.96">
+<meta name="game-version" content="V1.97">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#0a1220">
@@ -941,6 +941,13 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .lndui .lgl{ font-size:10px; opacity:.6; } .lndui .ltip{ font-weight:700; color:#ffd27a; min-height:1.3em; } .lndui .lsp{ margin-top:4px; opacity:.9; } .lndui b.ok{ color:#7dffb0; } .lndui b.bad{ color:#ff8a7a; }
 .lndui .lau{ display:none; margin-top:6px; padding:3px 8px; border-radius:6px; background:#1c7a4a; color:#fff; font-weight:800; letter-spacing:.14em; text-align:center; } .lndui.auto .lau{ display:block; }
 @media (max-width:760px){ .lndui{ top:auto; bottom:42%; transform:none; width:170px; } }
+
+/* ---- V1.97 picture problem test */
+.gtpanel{ position:fixed; left:max(12px,env(safe-area-inset-left)); top:max(70px,env(safe-area-inset-top)); z-index:70; width:min(330px,calc(100vw - 24px)); max-height:80vh; overflow:auto; padding:12px; border-radius:12px; background:rgba(8,12,20,.94); border:1px solid rgba(255,210,122,.5); color:#fff; font-size:12px; display:flex; flex-direction:column; gap:8px; }
+.gtpanel.hidden{ display:none; } .gtpanel b{ color:#ffd27a; letter-spacing:.08em; } .gtpanel small{ color:var(--dim); }
+.gtpanel .gtl{ display:grid; grid-template-columns:1fr 1fr; gap:6px; } .gtpanel .gtl button{ padding:9px 6px; border-radius:8px; border:1px solid rgba(125,255,176,.4); background:rgba(125,255,176,.08); color:#fff; font-weight:700; font-size:12px; cursor:pointer; text-align:left; }
+.gtpanel .gtl button[aria-pressed="false"]{ border-color:rgba(255,106,90,.6); background:rgba(255,106,90,.15); color:#ffb0a6; }
+.gtpanel .gti{ margin:0; font-size:10.5px; color:var(--dim); word-break:break-word; } .gtpanel .gtr{ display:flex; gap:8px; justify-content:flex-end; }
 </style>
 </head>
 <body>
@@ -1164,6 +1171,7 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
       <div class="srow"><div class="sl"><b>Derinlik hassasiyeti</b><small>Otomatik: bilgisayarda logaritmik (uzakta titreme yok), telefonda standart (siyah dalgalanma yok). Değişiklik sayfa yenilenince uygulanır</small></div><div class="seg" id="setDepth"><button type="button" data-d="auto">Otomatik</button><button type="button" data-d="log">Logaritmik</button><button type="button" data-d="std">Standart</button></div></div>
       <div class="srow"><div class="sl"><b>İki katmanlı derinlik</b><small>Standart derinlikte (telefonlarda) sahne yakın ve uzak olarak iki kez çizilir: siyah dalgalanma ve titreme olmaz. Logaritmik derinlikte gerekmez</small></div><label class="tgl"><input type="checkbox" id="setSplit"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Güvenli grafik modu</b><small>Görüntü bozuluyorsa: efektler, gölgeler, kenar yumuşatma kapanır, kalite düşük olur (sayfa yenilenir)</small></div><button class="btn" id="btnSafe" type="button">Güvenli mod</button></div>
+      <div class="srow"><div class="sl"><b>Görüntü sorunu testi</b><small>Siyah dalga, titreme, bozuk renk gibi sorunlarda: oyun sürerken deniz, gökyüzü, gölge, efekt gibi katmanları tek tek kapatıp sorunun kaynağını bul</small></div><button class="btn" id="btnGtest" type="button">Testi aç</button></div>
       <div class="srow"><div class="sl"><b>Grafik tanılama</b><small>Cihaz, ekran kartı ve çizim bilgileri — sorun bildirirken ekran görüntüsünü paylaş</small></div><button class="btn" id="btnDiag" type="button">Göster</button></div>
       <div id="gdiag" class="gdiag hidden"></div>
       <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
@@ -1506,7 +1514,7 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V1.96', GAME_DATE='2026-10-12';
+const GAME_VERSION='V1.97', GAME_DATE='2026-10-12';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -10650,7 +10658,7 @@ function accPushProfile(){ if(!ACC.sb||!ACC.prof) return; const p=ACC.prof; ACC.
 function accPayload(){ return {v:1, t:Date.now(), settings:SETTINGS, ctrl:{kb:CTRL.kb,pad:CTRL.pad}, liv:(typeof LIV!=='undefined'?LIV.data:{}), load:LOADOUTS, rec:RECORDS, snd:SND.user}; }
 function accApply(d){
   if(!d) return;
-  if(d.settings){ const keep={safeMode:SETTINGS.safeMode,depth:SETTINGS.depth}; Object.assign(SETTINGS,d.settings,DEV.mobile?keep:{}); saveSettings(); }
+  if(d.settings){ const keep={}; ['safeMode','depth','quality','shadows','fx','res','aa','fpsCap','split','autoPerf'].forEach(function(k){ keep[k]=SETTINGS[k]; }); Object.assign(SETTINGS,d.settings,keep);   /* graphics stay per device (a PC's shadows / effects must not land on a phone) */ saveSettings(); }
   if(d.ctrl){ if(d.ctrl.kb) CTRL.kb=d.ctrl.kb; if(d.ctrl.pad) CTRL.pad=d.ctrl.pad; ctrlSave(); }
   if(d.liv&&typeof LIV!=='undefined'){ LIV.data=d.liv; livSave(); }
   if(d.load){ Object.keys(LOADOUTS).forEach(function(k){ delete LOADOUTS[k]; }); Object.assign(LOADOUTS,d.load); saveLoadouts(); }
@@ -12839,6 +12847,30 @@ const _lfOpen=licOpen; licOpen=function(hi){ _lfOpen(hi); const pr=licProg(), ha
 (function(){ const a=$('setAssist'); if(a) a.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.assist=b.dataset.a; saveSettings(); syncSettingsUI(); }); })();
 const _asSync=syncSettingsUI; syncSettingsUI=function(){ _asSync(); const a=$('setAssist'); if(a) Array.prototype.forEach.call(a.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.a===assistMode())); }); };
 const _asCull=cullStep; cullStep=function(dt){ _asCull(dt); try{ lndStep(); }catch(e){} annStep(dt||0); };
+/* ------------------------------------------------------------------ picture problem test (V1.97)
+   For artefacts we cannot reproduce here (e.g. black waves on some Android phones): a small floating panel switches single
+   layers off live — sea, sky, clouds, shadows, effects, trees, terrain, depth split, resolution — so the player can see which
+   one makes the problem disappear and report it. Nothing is saved; closing the panel restores everything. */
+const GT={open:false, off:{}, keep:{}};
+const GT_ITEMS=[['su','Deniz'],['sky','Gökyüzü'],['bulut','Bulutlar'],['golge','Gölgeler'],['efekt','Efektler'],['agac','Ağaçlar'],['arazi','Arazi'],['bolme','İki katmanlı derinlik'],['cozu','Düşük çözünürlük']];
+function gtTerrain(){ if(GT.ter) return GT.ter; let best=null, br=0; scene.children.forEach(function(o){ if(!o.isMesh||!o.material||!o.material.vertexColors||!o.geometry) return; const g=o.geometry; if(!g.boundingSphere) g.computeBoundingSphere(); const r=g.boundingSphere?g.boundingSphere.radius:0; if(r>br){ br=r; best=o; } }); GT.ter=best; return best; }
+function gtApply(){ const off=GT.off;
+  if(GFX.water) GFX.water.visible=!off.su; if(typeof sky!=='undefined') sky.visible=!off.sky; if(GFX.clouds) GFX.clouds.visible=!off.bulut;
+  (GFX.treeChunks||[]).forEach(function(m){ m.visible=!off.agac; }); const t=gtTerrain(); if(t) t.visible=!off.arazi;
+  if(off.golge){ renderer.shadowMap.enabled=false; sunLight.castShadow=false; } else applyShadows();
+  if(off.efekt){ FX.on=false; } else applyFX();
+  SETTINGS.split=off.bolme?false:(GT.keep.split===undefined?SETTINGS.split:GT.keep.split);
+  renderer.setPixelRatio(off.cozu?0.6:PERF.base*PERF.scale); resize(); gtRender(); }
+function gtRender(){ const el=$('gtPanel'); if(!el) return; el.querySelector('.gtl').innerHTML=GT_ITEMS.map(function(it){ return '<button type="button" data-g="'+it[0]+'" aria-pressed="'+(!GT.off[it[0]])+'">'+(GT.off[it[0]]?'✕ ':'✓ ')+it[1]+'</button>'; }).join('');
+  el.querySelector('.gti').textContent=DEV.kind+' · '+DEV.gpu+' · '+DEV.webgl+' · hassasiyet '+(DEV.hp||'?')+' · derinlik '+(DEV.depthBits||'?')+' bit · '+(DEV.logDepth?'logaritmik':(SETTINGS.split!==false?'2 katman':'standart'))+' · kalite '+SETTINGS.quality+' · gölge '+(renderer.shadowMap.enabled?'açık':'kapalı')+' · efekt '+(FX.on?'açık':'kapalı')+' · '+GAME_VERSION; }
+function gtOpen(){ let el=$('gtPanel'); if(!el){ el=document.createElement('div'); el.id='gtPanel'; el.className='gtpanel';
+    el.innerHTML='<b>Görüntü sorunu testi</b><small>Sorun görünürken katmanları tek tek kapat. Hangisi kapanınca sorun kayboluyorsa onu bildir.</small><div class="gtl"></div><p class="gti"></p><div class="gtr"><button type="button" class="btn sm" data-k="all">Hepsini aç</button><button type="button" class="btn sm primary" data-k="close">Kapat</button></div>';
+    document.body.appendChild(el);
+    el.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; e.stopPropagation(); if(b.dataset.g){ GT.off[b.dataset.g]=!GT.off[b.dataset.g]; gtApply(); } else if(b.dataset.k==='all'){ GT.off={}; gtApply(); } else if(b.dataset.k==='close') gtClose(); });
+    ['pointerdown','touchstart','mousedown'].forEach(function(ev){ el.addEventListener(ev,function(e){ e.stopPropagation(); },{passive:true}); }); }
+  GT.keep={split:SETTINGS.split}; GT.open=true; el.classList.remove('hidden'); gtRender(); }
+function gtClose(){ GT.off={}; gtApply(); GT.open=false; const el=$('gtPanel'); if(el) el.classList.add('hidden'); }
+(function(){ const b=$('btnGtest'); if(b) b.addEventListener('click',function(){ closeModals(); gtOpen(); if(state==='paused') resumeGame(); toast('Test paneli açık: katmanları kapatarak sorunu ara','#b8ecff'); }); })();
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}

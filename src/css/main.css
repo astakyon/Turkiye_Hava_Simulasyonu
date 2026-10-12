@@ -924,3 +924,10 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .lndui .lgl{ font-size:10px; opacity:.6; } .lndui .ltip{ font-weight:700; color:#ffd27a; min-height:1.3em; } .lndui .lsp{ margin-top:4px; opacity:.9; } .lndui b.ok{ color:#7dffb0; } .lndui b.bad{ color:#ff8a7a; }
 .lndui .lau{ display:none; margin-top:6px; padding:3px 8px; border-radius:6px; background:#1c7a4a; color:#fff; font-weight:800; letter-spacing:.14em; text-align:center; } .lndui.auto .lau{ display:block; }
 @media (max-width:760px){ .lndui{ top:auto; bottom:42%; transform:none; width:170px; } }
+
+/* ---- V1.97 picture problem test */
+.gtpanel{ position:fixed; left:max(12px,env(safe-area-inset-left)); top:max(70px,env(safe-area-inset-top)); z-index:70; width:min(330px,calc(100vw - 24px)); max-height:80vh; overflow:auto; padding:12px; border-radius:12px; background:rgba(8,12,20,.94); border:1px solid rgba(255,210,122,.5); color:#fff; font-size:12px; display:flex; flex-direction:column; gap:8px; }
+.gtpanel.hidden{ display:none; } .gtpanel b{ color:#ffd27a; letter-spacing:.08em; } .gtpanel small{ color:var(--dim); }
+.gtpanel .gtl{ display:grid; grid-template-columns:1fr 1fr; gap:6px; } .gtpanel .gtl button{ padding:9px 6px; border-radius:8px; border:1px solid rgba(125,255,176,.4); background:rgba(125,255,176,.08); color:#fff; font-weight:700; font-size:12px; cursor:pointer; text-align:left; }
+.gtpanel .gtl button[aria-pressed="false"]{ border-color:rgba(255,106,90,.6); background:rgba(255,106,90,.15); color:#ffb0a6; }
+.gtpanel .gti{ margin:0; font-size:10.5px; color:var(--dim); word-break:break-word; } .gtpanel .gtr{ display:flex; gap:8px; justify-content:flex-end; }

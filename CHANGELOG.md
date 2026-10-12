@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.97 — 2026-10-12
+- **Görüntü sorunu testi** (Ayarlar → Grafik → *Görüntü sorunu testi* → Testi aç): oyun sürerken sol üstte bir panel açılır.
+  - Kapatılabilen katmanlar: deniz, gökyüzü, bulutlar, gölgeler, efektler, ağaçlar, arazi, iki katmanlı derinlik ve çözünürlük. Hangisi kapanınca sorun kayboluyorsa kaynağı odur.
+  - Panelin altında cihaz, ekran kartı, hassasiyet, derinlik bitleri ve sürüm yazar.
+  - Hiçbir şey kaydedilmez; *Kapat* her şeyi geri açar.
+- **Grafik ayarları artık cihaza özel:** hesapla girişte buluttaki kayıt kalite, gölge, efekt, çözünürlük, kenar yumuşatma, FPS sınırı ve derinlik ayarlarını değiştirmez. Önceden bilgisayardaki gölge/efekt ayarları telefona da geliyordu; telefonda gölge ve efekt sorunlarının olası kaynaklarından biri buydu.
+
 ## V1.96 — 2026-10-12
 - **Duyurular:**
   - Yönetim → Duyurular'da süre seçiliyor: **Anlık** (oyunda bir kez gösterilir), **10 dakika**, **1 saat**, **1 gün**, **Kalıcı**. Süresi dolan duyuru kendiliğinden kalkar.

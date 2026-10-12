@@ -55,7 +55,7 @@ function accPushProfile(){ if(!ACC.sb||!ACC.prof) return; const p=ACC.prof; ACC.
 function accPayload(){ return {v:1, t:Date.now(), settings:SETTINGS, ctrl:{kb:CTRL.kb,pad:CTRL.pad}, liv:(typeof LIV!=='undefined'?LIV.data:{}), load:LOADOUTS, rec:RECORDS, snd:SND.user}; }
 function accApply(d){
   if(!d) return;
-  if(d.settings){ const keep={safeMode:SETTINGS.safeMode,depth:SETTINGS.depth}; Object.assign(SETTINGS,d.settings,DEV.mobile?keep:{}); saveSettings(); }
+  if(d.settings){ const keep={}; ['safeMode','depth','quality','shadows','fx','res','aa','fpsCap','split','autoPerf'].forEach(function(k){ keep[k]=SETTINGS[k]; }); Object.assign(SETTINGS,d.settings,keep);   /* graphics stay per device (a PC's shadows / effects must not land on a phone) */ saveSettings(); }
   if(d.ctrl){ if(d.ctrl.kb) CTRL.kb=d.ctrl.kb; if(d.ctrl.pad) CTRL.pad=d.ctrl.pad; ctrlSave(); }
   if(d.liv&&typeof LIV!=='undefined'){ LIV.data=d.liv; livSave(); }
   if(d.load){ Object.keys(LOADOUTS).forEach(function(k){ delete LOADOUTS[k]; }); Object.assign(LOADOUTS,d.load); saveLoadouts(); }

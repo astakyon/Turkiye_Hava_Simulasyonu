@@ -26,8 +26,8 @@ localStorage.setItem('ayy-supa',JSON.stringify({url:'https://abc.supabase.co',ke
   await accCreateProfile('Kartal 5','kara','kurt'); T('profile created',ACC.prof&&ACC.prof.callsign==='Kartal 5'&&DB.profiles.u1.unit==='kara');
   T('local save pushed',DB.saves.u1&&DB.saves.u1.data&&DB.saves.u1.data.settings.quality===1,JSON.stringify(DB.saves.u1&&DB.saves.u1.data&&DB.saves.u1.data.settings&&DB.saves.u1.data.settings.quality));
   /* another device saved later: pull applies it */
-  DB.saves.u1.data=Object.assign({},DB.saves.u1.data,{t:Date.now()+60000,settings:Object.assign({},DB.saves.u1.data.settings,{quality:3})});
-  await accPull(); T('newer cloud save applied',SETTINGS.quality===3,SETTINGS.quality);
+  DB.saves.u1.data=Object.assign({},DB.saves.u1.data,{t:Date.now()+60000,settings:Object.assign({},DB.saves.u1.data.settings,{quality:3,sens:1.7})});
+  await accPull(); T('newer cloud save applied (graphics stay per device)',SETTINGS.sens===1.7&&SETTINGS.quality===1,SETTINGS.sens+' '+SETTINGS.quality);
   saveSettings(); T('change marks dirty',ACC.dirtyT>0);
   DB.profiles.u1.role='admin'; await accAfterLogin(); T('admin role from server',accIsAdmin());
   await accSignOut(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); T('signed out',!ACC.user&&ACC.status==='guest');

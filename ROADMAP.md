@@ -118,11 +118,12 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.94 | **FPS ve siyah dalga düzeltmesi.** Yalnız yakındaki trafik çizilir, sabit nesne grupları ekran dışındaysa atlanır, uzak ormanlar seyrelir (uçuşta üçgen sayısı yarıya indi); akıllı performans basamakları; FPS sınırı (30/60/sınırsız) ve tek dokunuşla Performans modu; telefonda iki katmanlı derinlik çizimi ve deniz yüzeyi düzeltmesi | ✅ |
 | V1.95 | **Giriş ve profil ekranı yenilemesi.** Oyun tarzı sade giriş (tek ekran, büyük düğmeler, misafir olarak devam), oyuncu kartı profili (rütbe rozeti, seviye çubuğu, öne çıkan istatistikler, sekmeli ayrıntı) | ✅ |
 | V1.96 | **Duyurular, uçuş yardımı, belge düzeltmeleri.** Süreli/anlık duyurular, oyunculara 20 sn içinde iletim; Uçuş yardımı (Yardımlı: iniş göstergesi, otomatik burun kaldırma, hoşgörülü iniş, stol koruması · Otomatik iniş); görev günlüğüne ✕; belge aşamaları profilde (bulutta) saklanır, tekrarla geçilen aşama sayılır; İHA sınavı 150 m | ✅ |
+| V1.97 | **Görüntü sorunu testi.** Oyun sürerken katmanları (deniz, gökyüzü, bulut, gölge, efekt, ağaç, arazi, iki katmanlı derinlik, çözünürlük) tek tek kapatan panel; grafik ayarları bulut kaydıyla cihazlar arasında taşınmaz | ✅ |
 
 ### Faz 10 — Model yenileme
 | Sürüm | İçerik | Durum |
 |---|---|---|
-| V1.97+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
+| V1.98+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
 
 ### Android yolu
 1. PWA (V1.20 ✅) → 2. Play Store için TWA paketi (Bubblewrap) veya Capacitor → 3. imzalama, mağaza görselleri, gizlilik politikası.
