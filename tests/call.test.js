@@ -1,4 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
+playMode('quick');
 AC_ORDER.forEach(function(id){ displays[id].ox=0; displays[id].oz=0; displays[id].len=12; });
 enterHangar(); startWalk(); const n0=VEHS.length;
 WALK.mode='foot'; WALK.pos.set(900,groundH(900,-7380)+1.7,-7380); WALK.yaw=0;

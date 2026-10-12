@@ -11,6 +11,6 @@ T('medals',(p.stats.medals||[]).indexOf('first')>=0&&(p.stats.medals||[]).indexO
 enterTitle(); careerStep(0.016); T('flight logged',(p.stats.log||[]).length===1,JSON.stringify(p.stats.log));
 /* rank locks for players (cloud on, not admin) */
 ACC.cfg={url:'x',key:'y'}; ACC.role='player'; p.rank=0; T('kaan locked for a new player',rankLocked('kaan')); T('hurjet free',!rankLocked('hurjet'));
-ACC.role='admin'; T('admin flies everything',!rankLocked('kaan')); ACC.cfg=null; ACC.role='player';
+ACC.role='admin'; playMode('quick'); T('quick play flies everything',!rankLocked('kaan')); playMode('career'); ACC.cfg=null; ACC.role='player';
 careerRender(); T('career page',/Uçuş süresi/.test($('carStats').innerHTML)&&/Pilot kanadı/.test($('carMedals').innerHTML));
 console.log('pass',ok,'fail',bad);
