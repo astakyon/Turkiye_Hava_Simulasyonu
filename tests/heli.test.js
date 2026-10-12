@@ -1,4 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
+playMode("quick");
 T('helis built',HELI.list.length===7&&HELI.list.every(function(H){ return H.m&&H.m.rotor; }));
 T('both types',HELI.list.some(function(H){ return H.id==='t129'; })&&HELI.list.some(function(H){ return H.id==='t625'; }));
 HELI.list.forEach(function(H){ T('on ground '+H.at,Math.abs(H.y-groundH(H.x,H.z))<0.01&&groundH(H.x,H.z)>1,H.y); });

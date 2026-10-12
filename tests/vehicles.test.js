@@ -1,4 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
+playMode("quick");
 AC_ORDER.forEach(function(id){ displays[id].ox=0; displays[id].oz=0; displays[id].len=12; });
 enterHangar(); startWalk(); T('fleet built',VEHS.length>=VEH_SPOTS.length,VEHS.length);
 T('every kind builds',CAR_KINDS.every(function(k){ const m=carBuild(k.id); return m&&m.g&&m.wb>0; }));

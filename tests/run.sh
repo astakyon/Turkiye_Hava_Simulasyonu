@@ -60,3 +60,4 @@ node harness.js /tmp/sim.js realperf.test.js
 node harness.js /tmp/sim.js cockpit.test.js
 node harness.js /tmp/sim.js phone.test.js
 node harness.js /tmp/sim.js menu3.test.js
+node harness.js /tmp/sim.js licenses.test.js

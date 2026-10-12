@@ -1,6 +1,22 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.92 — 2026-10-12
+- **Hızlı oyun ve kariyer ayrıldı:** hızlı oyunda her araç ve her görev kısıtsız açık, puan kazanılmıyor. Kariyer sıfırdan bir ilerleme: puan kazanıyorsun ve her araç için belge gerekiyor.
+- **Ehliyet ve Sertifikalar** (Kariyer menüsünde): 8 belge var, her biri uygulamalı sınavla alınıyor:
+  - **Araç ehliyeti:** SUV ile kontrol noktalı sürüş sınavı, 4 dakika sınırlı. Açtığı araçlar: SUV, 4×4, kamyon, itfaiye, Kirpi.
+  - **Tank sürücülüğü** (önce araç ehliyeti gerekiyor): Altay ile sürüş sınavı, 5 dakika. Açtığı araçlar: Altay, Fırtına, Pars, Korkut, Hisar.
+  - **Kaptanlık:** Hücumbotla şamandıra turu, 5 dakika. Açtığı araçlar: bütün tekneler ve gemiler (TCG Anadolu dahil).
+  - **İHA pilotluğu:** TB2 ile kalkış ve iniş. Açtığı araçlar: TB2, ANKA, AKSUNGUR, TB3, Akıncı, ANKA-3, KIZILELMA.
+  - **Temel pilotluk:** Hürkuş ile kalkış, trafik turu ve iniş. Açtığı uçak: Hürkuş.
+  - **Jet pilotluğu** (önce temel pilotluk gerekiyor): Hürjet kalkışı, silah kullanımı ve yan rüzgârda iniş. Açtığı uçak: HÜRJET.
+  - **Savaş pilotluğu** (önce jet pilotluğu gerekiyor): KAAN ile atış ve iniş. Açtığı uçak: KAAN.
+  - **Helikopter pilotluğu:** askıda kalma, askı yükü ve gemiye iniş. Açtığı helikopterler: T129, T625.
+- **Belgesiz kullanım engelleniyor:** hangarda başlat düğmesinde ve araç kartlarında hangi belgenin gerektiği yazıyor. Görev panosunda helikopter görevleri, yarışlar ve konvoy görevleri ilgili belge olmadan kilitli. Yürürken belgesiz araca binilemiyor. Ağır sistemlerde rütbe şartı da sürüyor.
+- **Sınav işleyişi:** sınavlar aşamalı ilerliyor. Bir aşamayı geçince sıradaki kendiliğinden başlıyor. Kaza yaparsan ya da süreyi aşarsan sınavdan kalıyorsun ve tekrar deneyebiliyorsun. Belgeyi alınca tecrübe puanı ve madalya kazanıyorsun.
+- **Önceki dersler sayılıyor:** uçuş okulunun kalkış, tur ve iniş derslerini bitirenler temel pilotluğu; askıda kalma, askı yükü ve gemiye iniş derslerini bitirenler helikopter pilotluğunu kendiliğinden aldı.
+- Testler yeni kurala uyarlandı: araç testleri hızlı oyunda çalışıyor, kariyer testi belge şartını da denetliyor.
+
 ## V1.91 — 2026-10-12
 - **Hızlı oyun menüsü yenilendi:**
   - **Hızlı Oyun:** en son kullandığın araçla tek tıkla oyuna girersin. Bu araç uçak, helikopter, tank ya da gemi olabilir.

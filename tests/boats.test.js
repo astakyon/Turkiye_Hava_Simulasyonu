@@ -1,4 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
+playMode("quick");
 AC_ORDER.forEach(function(id){ displays[id].ox=0; displays[id].oz=0; displays[id].len=12; });
 enterHangar(); startWalk(); T('boats built',BOATS.length===5,BOATS.length); T('ship decks',SHIPDECKS.length>=5,SHIPDECKS.length);
 const pb=BOATS.find(function(b){ return b.id==='patrol'; }); WALK.pos.set(-2090,groundH(-2090,-3456)+1.7,-3456); walkUpdate(0.016);

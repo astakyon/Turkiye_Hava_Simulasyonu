@@ -1,4 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
+playMode("quick");
 AC_ORDER.forEach(function(id){ displays[id].ox=0; displays[id].oz=0; displays[id].len=12; }); // stub Box3 has no real bounds
 enterHangar(); startWalk();
 T('walk state',state==='walk'&&WALK.mode==='foot');
