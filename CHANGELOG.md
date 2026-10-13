@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.05 — 2026-10-13
+- **Çarpışmalar:** yaya ve araçlar için artık şunlar katı:
+  - Park hâlindeki bütün uçaklar (gövde boyunca, uçağın yönüne göre). Örneğin İHA üssünde uçakların içinden geçilmiyor.
+  - Apronda taksi yapan yapay zekâ uçakları.
+  - Trafik arabaları.
+  - Kasabalardaki ve marinadaki park etmiş arabalar.
+  - İskeledeki tekneler ve gemiler.
+- **Trafik:** önünde araban ya da sen varsan araba frenleyip durur, bir süre bekleyince korna çalar.
+- **Araç kazaları:** sert çarpmada çarpışma sesi, titreşim ve "Çarpışma! (hız)" uyarısı; araç geri itilir ve yavaşlar.
+- **Taksi:** yerdeki uçak park hâlindeki bir uçağa ya da araca değerse durur; 9 m/s (~32 km/s) üstünde kaza olur.
+- **Park etmiş arabalara binme:** kasabadaki ve marinadaki park hâlindeki bir arabanın yanına gidince araba gerçek, sürülebilir bir araca dönüşür ve "E — araca bin" çıkar.
+- Performans: yalnız oyuncunun 160 m çevresindeki nesneler denetlenir; park etmiş arabalar bölge ızgarasında tutulur.
+
 ## V2.04 — 2026-10-13
 - **Park hâlindeki her uçağa binme:** İHA ve Test Merkezi'ndeki TB2, TB3, Akıncı, Kızılelma ve ANKA, apronda çekiciye bağlı Hürjet ve dünyada duran diğer uçak modelleri artık binilebilir.
   - Yanına yürüyünce "E — … ile uç" (dokunmatikte *UÇAĞA BİN*) çıkar.

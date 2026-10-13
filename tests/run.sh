@@ -73,3 +73,4 @@ node harness.js /tmp/sim.js install.test.js
 node harness.js /tmp/sim.js touch2.test.js
 node harness.js /tmp/sim.js misui.test.js
 node harness.js /tmp/sim.js board.test.js
+node harness.js /tmp/sim.js collide.test.js
