@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.06 — 2026-10-13
+- **Gözden geçirme:** bütün ana ekranlar telefonda (yatay) ve bilgisayarda tek tek kontrol edildi. Rapor `docs/GOZDEN-GECIRME.md` dosyasında.
+- **Hangar (telefon):** uçak adı artık sınıf filtreleriyle üst üste binmiyor.
+  - Filtreler "Ana menü" düğmesinin yanında tek satırda, kaydırılabilir.
+  - Boya seçimi renk noktalarıyla gösteriliyor; başlık küçüldü.
+- **Duraklatma menüsü (telefon):** iki sütunlu düzen; bütün düğmeler ekrana sığıyor.
+- **Harita:** yer adları artık sağdaki liste panelinin üstüne taşmıyor.
+- **Sesli sohbet:** çok oyunculu pencerede *Açık mikrofon* (tuşa basmadan konuş) ve *Ses düzeyi* ayarı. Açık mikrofonda da konuşan göstergesi çalışır.
+
 ## V2.05 — 2026-10-13
 - **Çarpışmalar:** yaya ve araçlar için artık şunlar katı:
   - Park hâlindeki bütün uçaklar (gövde boyunca, uçağın yönüne göre). Örneğin İHA üssünde uçakların içinden geçilmiyor.

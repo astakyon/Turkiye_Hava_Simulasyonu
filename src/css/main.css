@@ -1005,3 +1005,15 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
   #missionsUI.mis2 .mlist.mis .mitem{ min-height:44px; padding:6px 10px; } #missionsUI.mis2 .bfilt .bseg[data-k="cat"] button,#missionsUI.mis2 .bftg{ padding:6px 11px; font-size:12px; } #missionsUI.mis2 .bmap{ height:110px; } }
 @media (max-width:640px){ #missionsUI.mis2:not(.hidden){ grid-template-columns:1fr; grid-template-rows:auto 34vh minmax(0,1fr); } #missionsUI.mis2 .misdet{ top:auto; bottom:auto; left:auto; } }
 #missionsUI.mis2 .bseg button.bcamp{ border-color:#ffd27a; color:#ffd27a; }
+
+/* ---- V2.06 review fixes (phones in landscape) */
+@media (max-height:520px) and (orientation:landscape){
+  #hangarUI .clsrow{ top:max(12px,env(safe-area-inset-top)); left:calc(max(14px,env(safe-area-inset-left)) + 128px); max-width:calc(100vw - 560px); overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; }
+  #hangarUI .clsrow::-webkit-scrollbar{ display:none; } #hangarUI .clsrow .seg{ flex-wrap:nowrap; } #hangarUI .clsrow .cnt{ display:none; }
+  #hangarUI .hinfo h2{ font-size:24px; margin:0 0 4px; } #hangarUI .hinfo .hk{ margin:0; }
+  #hangarUI .hpaint .hmh{ display:none; } #hangarUI .pchips span{ display:none; } #hangarUI .pchips button{ padding:4px; }
+  #pause .card{ width:min(620px,94vw); } #pause .stack{ display:grid; grid-template-columns:1fr 1fr; gap:8px; } #pause .stack > :first-child{ grid-column:1/-1; }
+  #pause h2{ font-size:22px; margin:0; } #pause .sub{ margin:2px 0 10px; font-size:12px; }
+}
+.mapside{ background:rgba(6,12,22,.96)!important; z-index:5; }
+.vopts{ display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin:2px 0 6px 24px; font-size:12.5px; } .vopts .vvol{ display:flex; align-items:center; gap:6px; color:var(--dim); } .vopts input[type=range]{ width:110px; }

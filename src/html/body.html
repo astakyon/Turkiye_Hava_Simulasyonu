@@ -445,11 +445,13 @@
       <p class="mdesc" id="netModeDesc"></p>
       <label class="check"><input type="checkbox" id="netBots" checked> Boş yerleri yapay zekâ ile doldur</label>
       <label class="check"><input type="checkbox" id="netVoice"> Sesli sohbet (mikrofon, bas-konuş)</label>
+      <div class="vopts"><label class="check"><input type="checkbox" class="netOpen" id="netOpen"> Açık mikrofon (tuşa basmadan konuş)</label><label class="vvol">Ses düzeyi <input type="range" class="netVol" id="netVol" min="0" max="200" value="100"></label></div>
       <button class="btn primary wide" id="btnNetHost" type="button">▶ Oda kur</button>
     </div>
     <div class="npan">
       <p class="k">ODAYA KATIL</p>
       <label class="check"><input type="checkbox" id="netVoice2"> Sesli sohbet (mikrofon, bas-konuş)</label>
+      <div class="vopts"><label class="check"><input type="checkbox" class="netOpen" id="netOpen2"> Açık mikrofon (tuşa basmadan konuş)</label><label class="vvol">Ses düzeyi <input type="range" class="netVol" id="netVol2" min="0" max="200" value="100"></label></div>
       <div class="joinrow"><input id="netCode" class="inp code" maxlength="6" placeholder="KOD" autocomplete="off" autocapitalize="characters"><button class="btn" id="btnNetJoin" type="button">Katıl</button></div>
       <p class="ninfo">Arkadaşının verdiği 5 harfli kodu yaz ya da paylaştığı bağlantıyla gir. En fazla 4 oyuncu; odayı kuran oyuncu maçı yönetir. Bağlantı doğrudan oyuncular arasında kurulur (internet gerekir).</p>
     </div>

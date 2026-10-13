@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V2.05">
+<meta name="game-version" content="V2.06">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#a10d1c">
@@ -1023,6 +1023,18 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
   #missionsUI.mis2 .mlist.mis .mitem{ min-height:44px; padding:6px 10px; } #missionsUI.mis2 .bfilt .bseg[data-k="cat"] button,#missionsUI.mis2 .bftg{ padding:6px 11px; font-size:12px; } #missionsUI.mis2 .bmap{ height:110px; } }
 @media (max-width:640px){ #missionsUI.mis2:not(.hidden){ grid-template-columns:1fr; grid-template-rows:auto 34vh minmax(0,1fr); } #missionsUI.mis2 .misdet{ top:auto; bottom:auto; left:auto; } }
 #missionsUI.mis2 .bseg button.bcamp{ border-color:#ffd27a; color:#ffd27a; }
+
+/* ---- V2.06 review fixes (phones in landscape) */
+@media (max-height:520px) and (orientation:landscape){
+  #hangarUI .clsrow{ top:max(12px,env(safe-area-inset-top)); left:calc(max(14px,env(safe-area-inset-left)) + 128px); max-width:calc(100vw - 560px); overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; }
+  #hangarUI .clsrow::-webkit-scrollbar{ display:none; } #hangarUI .clsrow .seg{ flex-wrap:nowrap; } #hangarUI .clsrow .cnt{ display:none; }
+  #hangarUI .hinfo h2{ font-size:24px; margin:0 0 4px; } #hangarUI .hinfo .hk{ margin:0; }
+  #hangarUI .hpaint .hmh{ display:none; } #hangarUI .pchips span{ display:none; } #hangarUI .pchips button{ padding:4px; }
+  #pause .card{ width:min(620px,94vw); } #pause .stack{ display:grid; grid-template-columns:1fr 1fr; gap:8px; } #pause .stack > :first-child{ grid-column:1/-1; }
+  #pause h2{ font-size:22px; margin:0; } #pause .sub{ margin:2px 0 10px; font-size:12px; }
+}
+.mapside{ background:rgba(6,12,22,.96)!important; z-index:5; }
+.vopts{ display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin:2px 0 6px 24px; font-size:12.5px; } .vopts .vvol{ display:flex; align-items:center; gap:6px; color:var(--dim); } .vopts input[type=range]{ width:110px; }
 </style>
 </head>
 <body>
@@ -1473,11 +1485,13 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
       <p class="mdesc" id="netModeDesc"></p>
       <label class="check"><input type="checkbox" id="netBots" checked> Boş yerleri yapay zekâ ile doldur</label>
       <label class="check"><input type="checkbox" id="netVoice"> Sesli sohbet (mikrofon, bas-konuş)</label>
+      <div class="vopts"><label class="check"><input type="checkbox" class="netOpen" id="netOpen"> Açık mikrofon (tuşa basmadan konuş)</label><label class="vvol">Ses düzeyi <input type="range" class="netVol" id="netVol" min="0" max="200" value="100"></label></div>
       <button class="btn primary wide" id="btnNetHost" type="button">▶ Oda kur</button>
     </div>
     <div class="npan">
       <p class="k">ODAYA KATIL</p>
       <label class="check"><input type="checkbox" id="netVoice2"> Sesli sohbet (mikrofon, bas-konuş)</label>
+      <div class="vopts"><label class="check"><input type="checkbox" class="netOpen" id="netOpen2"> Açık mikrofon (tuşa basmadan konuş)</label><label class="vvol">Ses düzeyi <input type="range" class="netVol" id="netVol2" min="0" max="200" value="100"></label></div>
       <div class="joinrow"><input id="netCode" class="inp code" maxlength="6" placeholder="KOD" autocomplete="off" autocapitalize="characters"><button class="btn" id="btnNetJoin" type="button">Katıl</button></div>
       <p class="ninfo">Arkadaşının verdiği 5 harfli kodu yaz ya da paylaştığı bağlantıyla gir. En fazla 4 oyuncu; odayı kuran oyuncu maçı yönetir. Bağlantı doğrudan oyuncular arasında kurulur (internet gerekir).</p>
     </div>
@@ -1594,7 +1608,7 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V2.05', GAME_DATE='2026-10-13';
+const GAME_VERSION='V2.06', GAME_DATE='2026-10-13';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -13416,6 +13430,20 @@ const _colWalk=walkUpdate; walkUpdate=function(dt){ COL.t+=dt; if(COL.t>0.5) col
 const _colUpd=update; update=function(dt){ _colUpd(dt); if(state!=='play'||!S.onGround||S.crashed||S.speed<0.5) return; COL.t+=dt; if(COL.t>0.5) colRefresh();
   const p={x:S.pos.x,z:S.pos.z}, ox=p.x, oz=p.z, r=Math.max(2.2,(parseFloat(String(CUR.span||'10').replace(',','.'))||10)*0.18), B=COL.near.concat(colTraffic(p.x,p.z,100),typeof vehBoxes==='function'?_colVB(null):[]);
   if(pushCircle(p,r,B)){ if(S.speed>9){ crash('Yerde bir araca çarptın'); return; } S.pos.x=p.x; S.pos.z=p.z; S.speed=0; S.throttle=Math.min(S.throttle,0.2); if(COL.hitT<=0){ COL.hitT=2; toast('Önünde engel var — dur ve etrafından dolaş','#ffc24a'); } } COL.hitT-=dt; };
+/* ------------------------------------------------------------------ review fixes (V2.06)
+   • Voice chat: open-microphone option (no push-to-talk; the talk indicator still shows) and an overall voice volume.
+   • Layout fixes on phones in landscape (hangar class filter row, paint swatches, two-column pause menu, opaque map panel)
+     are in the stylesheet. */
+voicePlay=function(id,stream){ const a=document.createElement('audio'); a.muted=true; a.autoplay=true; a.srcObject=stream; a.style.display='none'; document.body.appendChild(a); VOICE.els.push(a);
+  if(!AC) return null; const src=AC.createMediaStreamSource(stream), f=AC.createBiquadFilter(), f2=AC.createBiquadFilter(), g=AC.createGain(); f.type='highpass'; f.frequency.value=300; f2.type='lowpass'; f2.frequency.value=3400;
+  g.gain.value=1.4*(SETTINGS.voiceVol==null?1:SETTINGS.voiceVol); src.connect(f); f.connect(f2); f2.connect(g); g.connect(sndOut('radio')); VOICE.inc[id]=src; (VOICE.gains||(VOICE.gains=[])).push(g); return src; };
+function voiceVolSet(v){ SETTINGS.voiceVol=v; saveSettings(); (VOICE.gains||[]).forEach(function(g){ try{ g.gain.value=1.4*v; }catch(e){} }); }
+function voiceOpenApply(){ if(!VOICE.on||!VOICE.mic) return; if(SETTINGS.voiceOpen){ voicePTT(true); } else if(VOICE.talk){ voicePTT(false); } }
+const _rvVoiceEn=voiceEnable; voiceEnable=function(on){ const r=_rvVoiceEn(on); if(on&&r&&r.then) r.then(function(ok){ if(ok) voiceOpenApply(); }); return r; };
+/* push-to-talk release does nothing while the open microphone is on */
+const _rvPTT=voicePTT; voicePTT=function(on){ if(SETTINGS.voiceOpen&&!on) return; return _rvPTT(on); };
+(function(){ Array.prototype.forEach.call(document.querySelectorAll?document.querySelectorAll('.netOpen'):[],function(el){ el.checked=!!SETTINGS.voiceOpen; el.addEventListener('change',function(){ SETTINGS.voiceOpen=el.checked; saveSettings(); Array.prototype.forEach.call(document.querySelectorAll('.netOpen'),function(o){ o.checked=el.checked; }); if(!el.checked&&VOICE.talk) _rvPTT(false); voiceOpenApply(); }); });
+  Array.prototype.forEach.call(document.querySelectorAll?document.querySelectorAll('.netVol'):[],function(el){ el.value=Math.round((SETTINGS.voiceVol==null?1:SETTINGS.voiceVol)*100); el.addEventListener('input',function(){ voiceVolSet(+el.value/100); Array.prototype.forEach.call(document.querySelectorAll('.netVol'),function(o){ o.value=el.value; }); }); }); })();
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
