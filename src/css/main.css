@@ -931,3 +931,22 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .gtpanel .gtl{ display:grid; grid-template-columns:1fr 1fr; gap:6px; } .gtpanel .gtl button{ padding:9px 6px; border-radius:8px; border:1px solid rgba(125,255,176,.4); background:rgba(125,255,176,.08); color:#fff; font-weight:700; font-size:12px; cursor:pointer; text-align:left; }
 .gtpanel .gtl button[aria-pressed="false"]{ border-color:rgba(255,106,90,.6); background:rgba(255,106,90,.15); color:#ffb0a6; }
 .gtpanel .gti{ margin:0; font-size:10.5px; color:var(--dim); word-break:break-word; } .gtpanel .gtr{ display:flex; gap:8px; justify-content:flex-end; }
+
+/* ---- V1.98 campaign */
+.campwrap{ max-width:1040px; margin:0 auto; padding:clamp(58px,10vh,78px) 16px 28px; display:flex; flex-direction:column; gap:14px; zoom:var(--uiz,1); }
+.camphd{ position:relative; padding:20px 22px; border-radius:var(--r3); overflow:hidden; border:1px solid rgba(255,255,255,.1); background:linear-gradient(115deg,#5a0a12,rgba(10,16,28,.94) 65%); }
+.camphd .k{ margin:0; letter-spacing:.4em; font-size:11px; font-weight:800; color:#ff9a8a; } .camphd h2{ margin:4px 0 6px; font-size:clamp(28px,5vw,46px); letter-spacing:.06em; }
+.camphd .csum{ margin:0 0 8px; color:rgba(255,255,255,.8); font-size:13px; } .cbar{ height:6px; border-radius:4px; background:rgba(0,0,0,.4); overflow:hidden; } .cbar i{ display:block; height:100%; background:linear-gradient(90deg,#e30a17,#ffd27a); }
+.campgrid{ display:grid; grid-template-columns:minmax(220px,300px) 1fr; gap:14px; }
+.camplist{ display:flex; flex-direction:column; gap:6px; position:relative; }
+.cch{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--r2); border:1px solid var(--edge); background:rgba(255,255,255,.03); color:var(--ink); text-align:left; cursor:pointer; }
+.cch .cn{ display:grid; place-items:center; width:30px; height:30px; flex:none; border-radius:50%; border:1px solid rgba(255,255,255,.25); font-weight:800; font-size:13px; }
+.cch .ct{ flex:1; min-width:0; } .cch b{ display:block; font-size:14px; } .cch small{ color:var(--dim); font-size:11px; } .cch .stars{ font-size:11px; }
+.cch.done .cn{ background:#1c7a4a; border-color:#3fd68a; } .cch.lock{ opacity:.5; } .cch.on{ border-color:var(--red); background:rgba(227,10,23,.14); } .cch:hover:not(.lock){ background:rgba(255,255,255,.07); }
+.campdet{ padding:18px 20px; border-radius:var(--r3); border:1px solid var(--edge); background:var(--surf); display:flex; flex-direction:column; gap:10px; animation:dsIn .22s var(--ease); }
+.campdet .k{ margin:0; font-size:11px; letter-spacing:.28em; font-weight:800; color:#ff6b74; } .campdet h3{ margin:0; font-size:clamp(22px,3vw,30px); }
+.cstory{ margin:0; font-size:15px; line-height:1.6; color:rgba(255,255,255,.9); border-left:3px solid var(--red); padding-left:12px; }
+.cobj b,.cveh b{ font-size:12px; letter-spacing:.12em; color:var(--dim); text-transform:uppercase; } .cobj ul{ margin:6px 0 0; padding-left:18px; } .cobj li{ margin:3px 0; }
+.cveh,.crw{ margin:0; font-size:13px; } .crw{ color:#ffd27a; } .clock{ margin:0; color:var(--dim); } .cfin{ margin:0; padding:10px; border-radius:8px; background:rgba(255,210,122,.12); color:#ffd27a; font-weight:700; }
+@media (max-width:700px){ .campgrid{ grid-template-columns:1fr; } .camplist{ flex-direction:row; overflow-x:auto; } .cch{ flex:none; width:200px; } }
+@media (max-height:520px) and (orientation:landscape){ .camphd{ padding:10px 16px; } .camphd h2{ font-size:24px; margin:2px 0 4px; } .campwrap{ padding-top:52px; gap:10px; } .cstory{ font-size:13.5px; } }

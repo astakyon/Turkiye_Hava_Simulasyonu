@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.98 — 2026-10-13
+- **Harekât: Kızıl Elma**: sekiz bölümlük hikâyeli kampanya. Ana menüde hem Hızlı Oyun'da hem Kariyer'de yer alıyor.
+  - Bölümler: 1 *Uyanış* (İHA ile üç noktayı tara) · 2 *Sessiz Sürü* (kamikaze İHA sürüsünü önle) · 3 *Kalkan* (Anadolukent'e yakın hava desteği, görev ortasında yeni SAM) · 4 *Enkaz Altında* (T625 ile Hilal Barajı'ndan yaralı kurtarma) · 5 *Mavi Hat* (batı açıklarında deniz devriyesi ve gemi tanımlama, hava bozar) · 6 *Gölge Avı* (T129 ile Antik kentteki birliği temizle) · 7 *Hava Köprüsü* (nakliye uçağına refakat) · 8 *Kızıl Elma* (Kızıl Bölge'ye final taarruzu).
+  - Her bölümde hikâye metni, görev listesi ve araç bilgisi var. Başlarken Karargâh, Kartal Gözü ve Kule telsizden brifing verir, bitince değerlendirme yapar.
+  - Bölümler sırayla açılır; 1–3 yıldız alınır. İlerleme profilde (hesaplıysan bulutta) saklanır. Bölüm bitince ana menüde harekât ekranı sıradaki bölüm seçili açılır.
+  - Kariyerde ilk tamamlamada görev TP'sine ek olarak hikâye bonusu verilir (150–600 TP). Finali bitiren *Kızıl Elma* madalyasını alır.
+  - Uygun araç kendiliğinden seçilir (bölüm 1'de İHA, bölüm 2'de avcı…). Kariyerde gereken belge yoksa hangisinin gerektiği söylenir.
+
 ## V1.97 — 2026-10-12
 - **Görüntü sorunu testi** (Ayarlar → Grafik → *Görüntü sorunu testi* → Testi aç): oyun sürerken sol üstte bir panel açılır.
   - Kapatılabilen katmanlar: deniz, gökyüzü, bulutlar, gölgeler, efektler, ağaçlar, arazi, iki katmanlı derinlik ve çözünürlük. Hangisi kapanınca sorun kayboluyorsa kaynağı odur.
