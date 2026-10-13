@@ -1,6 +1,6 @@
 # Ay Yıldız: Hedef Kızıl Elma — Düzen yol haritası V2.12 → V2.30
 
-Son güncelleme: 14 Ekim 2026 · Yayındaki sürüm: V2.11
+Son güncelleme: 14 Ekim 2026 (Android oyun performansı rehberiyle güncellendi) · Yayındaki sürüm: V2.11
 
 Model yenileme serisi bu yol haritası bitene kadar bekliyor. Sıra: **önce ölçüm**, sonra **optimizasyon**, sonra **grafik ayarları**, sonra **teknik borç**, en son **genel gözden geçirme**.
 
@@ -39,18 +39,53 @@ Bulgular:
 5. **Doku belleği zayıf telefon için fazla:** ~111 MB. Tabela dokuları tek başına 2048×256 boyutunda, her biri 2,7 MB.
 6. **Malzeme sayısı yüksek (1 342).** Bu hem birleştirmeyi zorlaştırıyor hem shader geçişlerini artırıyor.
 7. **Arazi tek parça:** her kalitede ~180 bin üçgen.
-8. **Bilgisayarda 25 fps, telefonda 45 fps.** Bilgisayarın telefondan yavaş olması büyük ihtimalle yüksek ekran çözünürlüğünden (doluluk), Ultra gölge haritasından (4096) ve efektlerden geliyor. Bunu V2.12'deki ölçerle doğrulayacağız.
+8. **Bilgisayarda 25 fps, telefonda 45 fps.** En güçlü aday **logaritmik derinlik**. Bilgisayarda varsayılan olarak açık, telefonda kapalı. Bu yöntem her pikselde derinliği shader içinden yazıyor (`gl_FragDepth`); Android rehberine göre bu, GPU'nun gizli pikselleri baştan elemesini (erken derinlik testi, Early-Z) kapatıyor. Sonuçta binaların, ağaçların ve arazinin arkasında kalan her piksel de tam maliyetle boyanıyor. Diğer adaylar: yüksek ekran çözünürlüğü, Ultra gölge haritası (4096) ve 3–4 tam ekran efekt geçişi (parlama, renk düzeltme, FXAA). V2.12 testi derinlik modunu da açıp kapatarak bunu doğrulayacak.
+9. **Çift yüzlü malzeme:** 73 yerde arka yüzler de çiziliyor (`DoubleSide`). Rehber, katı nesnelerde arka yüz elemesinin açık olmasını istiyor.
+10. **Doku süzme:** dokularda 8× anizotropik süzme var. Rehbere göre mobilde 2×'in üstü çok pahalı; doku süzme GPU enerjisinin yarısına kadarını tüketebiliyor.
+11. **Birleştirilmiş hücreler 65 535 köşeyi aşabiliyor.** Rehber bu sınırın altında kalmayı öneriyor; bazı eski GPU'larda büyük ağlar eksik ya da hiç çizilmeyebiliyor.
 
 ## Hedef bütçeler
 
 | Kademe | Çizim çağrısı | Üçgen | Doku belleği | FPS hedefi | Açılış |
 |---|---|---|---|---|---|
-| Düşük (eski / ucuz telefon) | ≤ 180 | ≤ 350 bin | ≤ 50 MB | 30 sabit | ≤ 6 sn |
+| Düşük (eski / ucuz telefon) | ≤ 180 | ≤ 250 bin | ≤ 50 MB | 30 sabit | ≤ 6 sn |
 | Orta (çoğu telefon, tablet) | ≤ 250 | ≤ 500 bin | ≤ 70 MB | 45–60 | ≤ 5 sn |
 | Yüksek (bilgisayar) | ≤ 350 | ≤ 800 bin | ≤ 120 MB | 60 sabit | ≤ 4 sn |
 | Ultra (güçlü bilgisayar) | ≤ 450 | ≤ 1,2 milyon | ≤ 200 MB | 60+ | ≤ 4 sn |
 
+FPS hedefleri ortalamaya göre değil, **P90 ve P99'a** göre ölçülür. P90, karelerin %90'ının bu değerin üstünde olduğu FPS; P99 ise takılmaları gösterir. Ortalama 60 olup P99'u 15 olan oyun takılıyor demektir. Google Play'in "yavaş oturum" ölçütü de eklenir: karelerin %25'inden fazlası 20 fps'in altındaysa oturum yavaş sayılır. Düşük kademe için üçgen bütçesi Android rehberindeki örneğe göre düşürüldü: telefonda 30 fps'te ~210 bin üçgen.
+
 Bu bütçeler V2.26'da yayın kapısına eklenecek: bütçe aşılırsa yayın durur.
+
+## Android oyun performansı rehberinden çıkanlar
+
+Google'ın [oyun performansı rehberi](https://developer.android.com/games/optimize/gameperformance?hl=tr) ve alt sayfaları incelendi. Rehberin önerdiği yöntem altı adımlık bir döngü: sahne sahne ölç → darboğaz CPU'da mı GPU'da mı bul → CPU'yu iyileştir → GPU'yu iyileştir → önce/sonra (A/B) karşılaştır → hedefe ulaşana kadar tekrarla. Bu yol haritası aynı döngüyü izliyor: V2.12 ölçüm, V2.13–V2.19 iyileştirme, her sürümde önce/sonra karşılaştırması.
+
+| Rehberin önerisi | Bizdeki durum | Nereye eklendi |
+|---|---|---|
+| Sahne sahne ölç; ortalama, P90, P99 FPS | Yalnızca anlık FPS göstergesi var | V2.12 |
+| CPU mu GPU mu, önce bunu belirle | Ölçüm: JS kare başına < 1 ms, yani GPU tarafı | V2.12 (cihazda doğrulanır) |
+| Erken derinlik testini (Early-Z) bozma: `gl_FragDepth`, gereksiz `discard` yok | Bilgisayarda logaritmik derinlik açık; ağaç ve çitlerde alfa testi (`discard`) var | V2.16 |
+| Gereksiz render geçişlerini kaldır, geçişleri birleştir | Parlama + renk düzeltme + FXAA ayrı tam ekran geçişler | V2.16 |
+| Efekt tamponlarında yarım hassasiyetli (half-float) biçim | Yalnızca HDR'de kullanılıyor | V2.16 |
+| Katı nesnelerde arka yüz elemesi | 73 çift yüzlü malzeme | V2.15 |
+| Uzak ve küçük nesnede az üçgen; her LOD kademesinde ~%50 azaltma; 10 pikselden küçük üçgenden kaçın | Uzak nesneler tam ayrıntılı | V2.14, V2.19 |
+| Ağ başına en çok 65 535 köşe | Birleştirilmiş hücreler aşabiliyor | V2.13 |
+| Sabit nesneleri topla (batch) | Birleştirme %42 kapsamda | V2.13 |
+| Doku sıkıştırma (ASTC, ETC2) bellekte 8 kata kadar kazanç | Dokular sıkıştırılmamış | V2.17 |
+| Sabit mesafede görülen dokuda mipmap yok (+%33 bellek) | Bütün dokularda mipmap var | V2.17 |
+| Anizotropik süzme mobilde en çok 2× | 8× | V2.17 |
+| Tek renkli yüzeyde gri doku + köşe rengi | Kısmen (birleştirmede köşe rengi var) | V2.17 |
+| Opak malzemeyi tercih et, üst üste saydamlığı azalt | 16–21 saydam nesne görüşte | V2.13 |
+| Renk ve UV için düşük hassasiyet (mediump) | Her yerde highp | V2.16 (Düşük kademede deneme) |
+| Ekranı kaplayan arayüzün arkasında dünyayı çizme | Menüde 10 fps çiziliyor | V2.16 (tamamen durur) |
+| Ekran yenileme hızını hedef FPS'e eşle | 120 Hz telefonda oyun 120 fps'e çıkmaya çalışıyor | V2.16 |
+| Isınmayı izle, sürdürülebilir kaliteye in | İzlenmiyor | V2.12 (ölçüm), V2.16 (tepki) |
+
+Web oyununa uymayan öneriler:
+- **Vulkan, Swappy kare düzenleyicisi, ADPF ısı API'si ve Oyun Modu API'si** yalnızca Android'in yerel uygulamaları içindir. Tarayıcı oyunu bunlara erişemez.
+- Bunların yerine şunlar kullanılacak: ısınmayı kare süresinin zaman içindeki eğiliminden çıkarmak, FPS sınırını ekran yenileme hızına göre seçmek, kaliteyi kendiliğinden ayarlamak.
+- Vulkan'ın tarayıcıdaki karşılığı **WebGPU**. Android'de WebGPU, Vulkan üzerinden çalışıyor. Bu, three.js sürüm yükseltme kararına bağlı uzun vadeli bir seçenek (V2.26 karar raporu).
 
 ---
 
@@ -58,12 +93,12 @@ Bu bütçeler V2.26'da yayın kapısına eklenecek: bütçe aşılırsa yayın d
 
 | Sürüm | Başlık | İçerik | Başarı ölçütü |
 |---|---|---|---|
-| V2.12 | **Performans ölçer ve cihaz raporu** | **Oyun içi ölçüm:** Ayarlar → Grafik → "Performans testi". 60 saniyelik sabit uçuş rotası ve 30 saniyelik şehir yürüyüşü kendiliğinden oynar. Ölçülenler: ortalama FPS, en kötü %1 FPS, kare süresi grafiği, takılma sayısı (50 ms üstü kareler), çizim, üçgen, doku belleği, GPU adı, ekran çözünürlüğü, piksel oranı. Her özelliğin (gölge, efekt, çözünürlük, ağaç) maliyeti tek tek kapatılıp ölçülür. **Rapor gönderme:** senin onayınla Supabase'e anonim rapor olarak gider; yönetim panelinde cihaz cihaz listelenir. Böylece senin bilgisayarının ve telefonunun gerçek darboğazı görülür. **Ekranda canlı gösterge:** FPS göstergesi kare süresi çizgisi ve çizim sayısıyla genişler. | Senin bilgisayarından ve telefonundan birer rapor gelmiş olması; her özelliğin ms cinsinden maliyeti bilinmesi |
-| V2.13 | **Birleştirme 2.0** | Kapsam %42'den %85+'ya çıkar: hücre başına en az nesne sınırı 3'ten 2'ye iner; küçük ve orta nesnelerde hücre 800 m'den 1,6 km'ye büyür; çok malzemeli ağlar malzeme başına parçalanıp birleştirilir. **Bozulma nedeni bulunur:** hücreleri sürekli çözen nesneler (gece-gündüz ışıkları, LOD geçişleri, animasyonlu tabelalar) tespit edilip birleştirmeden çıkarılır, böylece hücreler kalıcı olur. Saydam nesneler (cam, su kenarı) kendi aralarında birleşir. **Malzeme önbelleği:** aynı ayarlı malzemeler tek malzemeye iner (1 342'den ~300'e). | Uçuşta Yüksek'te 460 → ≤ 300 çizim; hücre çözülmesi 0; görsel fark yok (önce/sonra ekran görüntüsü) |
-| V2.14 | **Araç ve uçak modellerinde parça birleştirme** | **Oyuncu uçağı:** hareketli yüzeyler (dümen, flap, iniş takımı, kanopi) ayrı kalır, gövdenin geri kalanı renk başına tek parça olur: KAAN'da 126'dan ~15 parçaya. **Park ve sergi uçakları:** tek parça. Uzakta sade sürüm (az üçgenli), çok uzakta düz resim (impostor) gösterilir. **Yapay zekâ ve trafik uçakları, araçlar, gemiler:** aynı yöntem. Binince parçalı hale döner, inince yine birleşir. | İHA üssünde yürürken 499 → ≤ 300 çizim; oyuncu uçağı ≤ 20 çizim |
-| V2.15 | **Gölge 2.0** | Gölgeyi yalnızca büyük ve yakın nesneler düşürür (bina, uçak, araç, ağaç kümesi); bank, tabela, lamba gibi küçük nesneler düşürmez. Gölge haritası her karede değil, kamera ya da güneş belirgin hareket edince güncellenir. Gölge kalitesi 4 kademe olur: Kapalı · Düşük (1024) · Orta (2048) · Yüksek (4096, yalnız bilgisayar). Telefonda yumuşak gölge kapalıdır. | Gölge geçişinin eklediği çizim +100–160 → ≤ +40; gölge açıkken FPS kaybı ≤ %15 |
-| V2.16 | **Çözünürlük ve dinamik çözünürlük** | Bilgisayardaki 25 fps sorunu için. **Piksel oranı sınırı:** telefonda kademeye göre 1,0–1,5, bilgisayarda en çok 1,5 (4K ekranda her pikseli çizmek yerine). **Dinamik çözünürlük:** kare süresi hedefi aşınca iç çözünürlük %100'den adım adım %50'ye iner, düzelince geri çıkar; titremesin diye bekleme payı var. **Efektler:** parlama (bloom) yarı çözünürlükte çizilir, FXAA yerine telefonda kenar yumuşatma kapalı. Menü, harita ve duraklatma ekranında 3B sahne durur. | Bilgisayarında ≥ 55 fps (V2.12 raporuyla doğrulanır); telefonda kademesinin FPS hedefi sabit |
-| V2.17 | **Bellek ve dokular** | Tabela ve yazı dokuları tek doku atlasında toplanır. Telefonda doku boyutları yarıya iner (2048×256 → 1024×128). Arayüzde kullanılan dokulardan gereksiz mipmap kaldırılır. Kademeye bağlı "Doku kalitesi" gelir. **Geometri paylaşımı:** aynı şekiller tek geometriyi kullanır (846 geometri hedefi ≤ 400). **Sızıntı denetimi:** 10 görev art arda açılıp kapatılınca bellek artmamalı; artarsa test yakalar. | Doku belleği Düşük'te ≤ 50 MB, Yüksek'te ≤ 120 MB; 10 görev sonunda bellek artışı ≤ %5 |
+| V2.12 | **Performans ölçer ve cihaz raporu** | **Oyun içi ölçüm:** Ayarlar → Grafik → "Performans testi". 60 saniyelik sabit uçuş rotası ve 30 saniyelik şehir yürüyüşü kendiliğinden oynar. Sahneler: uçuş, alçak uçuş, şehir, İHA üssü, liman, orman. Ölçülenler: ortalama, P90 ve P99 FPS, "yavaş oturum" oranı (20 fps altı kare yüzdesi), kare süresi grafiği, takılma sayısı (50 ms üstü kareler), JS süresi ile toplam kare süresi karşılaştırması (CPU mu GPU mu; tarayıcı destekliyorsa GPU zaman sorgusu da), isteğe bağlı 5–10 dakikalık ısınma testi, çizim, üçgen, doku belleği, GPU adı, ekran çözünürlüğü, piksel oranı. Her özelliğin (gölge, efekt, çözünürlük, ağaç, **derinlik modu**) maliyeti tek tek kapatılıp ölçülür. **Rapor gönderme:** senin onayınla Supabase'e anonim rapor olarak gider; yönetim panelinde cihaz cihaz listelenir. Böylece senin bilgisayarının ve telefonunun gerçek darboğazı görülür. **Ekranda canlı gösterge:** FPS göstergesi kare süresi çizgisi ve çizim sayısıyla genişler. | Senin bilgisayarından ve telefonundan birer rapor gelmiş olması; her özelliğin ms cinsinden maliyeti bilinmesi |
+| V2.13 | **Birleştirme 2.0** | Kapsam %42'den %85+'ya çıkar: hücre başına en az nesne sınırı 3'ten 2'ye iner; küçük ve orta nesnelerde hücre 800 m'den 1,6 km'ye büyür; çok malzemeli ağlar malzeme başına parçalanıp birleştirilir. **Bozulma nedeni bulunur:** hücreleri sürekli çözen nesneler (gece-gündüz ışıkları, LOD geçişleri, animasyonlu tabelalar) tespit edilip birleştirmeden çıkarılır, böylece hücreler kalıcı olur. Saydam nesneler (cam, su kenarı) kendi aralarında birleşir; mümkün olanlar opak olur. **Her birleştirilmiş ağ 65 535 köşenin altında tutulur** (16 bitlik indeks, eski GPU'larla uyum). **Malzeme önbelleği:** aynı ayarlı malzemeler tek malzemeye iner (1 342'den ~300'e). | Uçuşta Yüksek'te 460 → ≤ 300 çizim; hücre çözülmesi 0; görsel fark yok (önce/sonra ekran görüntüsü) |
+| V2.14 | **Araç ve uçak modellerinde parça birleştirme** | **Oyuncu uçağı:** hareketli yüzeyler (dümen, flap, iniş takımı, kanopi) ayrı kalır, gövdenin geri kalanı renk başına tek parça olur: KAAN'da 126'dan ~15 parçaya. **Park ve sergi uçakları:** tek parça. Uzakta sade sürüm, çok uzakta düz resim (impostor) gösterilir. Her ayrıntı kademesinde üçgen sayısı ~%50 azalır, siluet korunur. Ekranda 10 pikselden küçük üçgen kalmaz. **Yapay zekâ ve trafik uçakları, araçlar, gemiler:** aynı yöntem. Binince parçalı hale döner, inince yine birleşir. | İHA üssünde yürürken 499 → ≤ 300 çizim; oyuncu uçağı ≤ 20 çizim |
+| V2.15 | **Gölge 2.0** | Gölgeyi yalnızca büyük ve yakın nesneler düşürür (bina, uçak, araç, ağaç kümesi); bank, tabela, lamba gibi küçük nesneler düşürmez. Gölge haritası her karede değil, kamera ya da güneş belirgin hareket edince güncellenir. Gölge kalitesi 4 kademe olur: Kapalı · Düşük (1024) · Orta (2048) · Yüksek (4096, yalnız bilgisayar). Telefonda yumuşak gölge kapalıdır. **Arka yüz elemesi:** 73 çift yüzlü malzeme taranır; yalnızca gerçekten ince yüzeylerde (bayrak, yaprak, tabela) çift yüz kalır. | Gölge geçişinin eklediği çizim +100–160 → ≤ +40; gölge açıkken FPS kaybı ≤ %15 |
+| V2.16 | **Derinlik, çözünürlük ve efekt geçişleri** | Bilgisayardaki 25 fps sorunu için. **Derinlik:** logaritmik derinlik kaldırılır. Uzak pist titremesi telefonlardaki gibi hareketli yakın düzlem ve iki katmanlı derinlikle çözülür; böylece erken derinlik testi (Early-Z) bilgisayarda da çalışır. Ağaç ve çitlerdeki alfa testi (`discard`) yalnızca gereken yerde kalır. **Efekt geçişleri:** renk düzeltme ve FXAA tek geçişte birleşir; parlama çeyrek çözünürlükte ve daha az kademeyle çizilir; efekt tamponları yarım hassasiyetli olur. **Piksel oranı sınırı:** telefonda kademeye göre 1,0–1,5, bilgisayarda en çok 1,5 (4K ekranda her pikseli çizmek yerine). **Dinamik çözünürlük:** kare süresi hedefi aşınca iç çözünürlük %100'den adım adım %50'ye iner, düzelince geri çıkar; titremesin diye bekleme payı var. **Efektler:** parlama (bloom) yarı çözünürlükte çizilir, FXAA yerine telefonda kenar yumuşatma kapalı. Menü, harita ve duraklatma ekranında 3B sahne tamamen durur. **FPS sınırı ekran yenileme hızına göre:** 120 Hz'de 60/40/30, 90 Hz'de 45/30, 60 Hz'de 60/30; böylece kareler eşit aralıklı gelir ve pil boşa harcanmaz. **Sürdürülebilir kalite:** kare süresi birkaç dakika boyunca yükselirse (ısınma) kalite bir kademe iner ve orada kalır; ileri-geri zıplamaz. **Hassasiyet:** Düşük kademede renk hesapları için mediump denenir (büyük haritada konum hatası yoksa kalır). | Bilgisayarında P90 ≥ 55 fps (V2.12 raporuyla doğrulanır); telefonda kademesinin FPS hedefi 10 dakika boyunca sabit |
+| V2.17 | **Bellek ve dokular** | Tabela ve yazı dokuları tek doku atlasında toplanır. Telefonda doku boyutları yarıya iner (2048×256 → 1024×128). Sabit mesafeden görülen dokularda (arayüz, gösterge, yakın tabela) mipmap kaldırılır (her biri %33 tasarruf). Anizotropik süzme telefonda 2×, bilgisayarda 4–8× olur. Doku boyutları ikinin kuvveti yapılır. Dışarıdan yüklenen modellerin dokuları sıkıştırılmış biçimde (KTX2/Basis; telefonda ASTC ya da ETC2'ye dönüşür) yüklenir. Tek renkli yüzeylerde renkli doku yerine gri doku ve köşe rengi kullanılır. Kademeye bağlı "Doku kalitesi" gelir. **Geometri paylaşımı:** aynı şekiller tek geometriyi kullanır (846 geometri hedefi ≤ 400). **Sızıntı denetimi:** 10 görev art arda açılıp kapatılınca bellek artmamalı; artarsa test yakalar. | Doku belleği Düşük'te ≤ 50 MB, Yüksek'te ≤ 120 MB; 10 görev sonunda bellek artışı ≤ %5 |
 | V2.18 | **Açılış hızı** | **Aşamalı kurulum:** önce ada, üs ve oyuncu uçağı kurulur, oyun açılır; uzak köyler, şehirler ve süs nesneleri arka planda parça parça eklenir. **Shader ön derleme:** malzemeler yükleme ekranında tarayıcının paralel derleme özelliğiyle (KHR_parallel_shader_compile) takılmadan derlenir. Böylece ilk kez görülen nesnede donma olmaz. **Envanter verisi** (416 KB) yalnızca kütüphane açılınca yüklenir. Yükleme çubuğu gerçek ilerlemeyi gösterir. İkinci açılış service worker önbelleğinden gelir. | Açılış ≤ 5 sn (orta telefon); oyun içinde ilk görüşte donma (50 ms+) sayısı 0 |
 | V2.19 | **Arazi ayrıntı kademeleri** | Tek parça arazi (180 bin üçgen) parçalara bölünür. Yakın parça ayrıntılı, uzak parça sade çizilir (3 kademe), parça kenarlarında yarık kalmaz. Yükseklik hesabı çizilen ağdan ayrılır (yükseklik haritası), yani arazi sadeleşince uçak ve araçlar yere gömülmez. Deniz yüzeyi de kademeli olur. | Arazi üçgeni ≤ 60 bin (Düşük) / ≤ 120 bin (Yüksek); yer teması testleri geçer |
 
@@ -111,3 +146,11 @@ Amaç: şimdiye kadar yapılan 90'dan fazla sürümün derli toplu, tutarlı ve 
 - [three.js forum: doku performansı](https://discourse.threejs.org/t/texture-performance/24297)
 - [three.js forum: uygulamayı otomatik ölçekleme](https://discourse.threejs.org/t/how-do-you-automatically-scale-your-webgl-applications/3592): dinamik çözünürlük
 - [detect-gpu (pmndrs)](https://github.com/pmndrs/detect-gpu): GPU'ya göre kademe seçimi
+- [Android: Oyun performansı iş akışı](https://developer.android.com/games/optimize/gameperformance?hl=tr)
+- [Android: CPU ve GPU optimizasyon ipuçları](https://developer.android.com/games/optimize/optimization-tips?hl=tr): Early-Z, render geçişleri, ASTC, hassasiyet, arka yüz elemesi
+- [Android: Kare hızı](https://developer.android.com/games/optimize/framerate?hl=tr): P90/P99, yavaş oturum
+- [Android: Geometri](https://developer.android.com/games/optimize/geometry?hl=tr): 65 535 köşe, küçük üçgen, LOD
+- [Android: Dokular](https://developer.android.com/games/optimize/textures?hl=tr): sıkıştırma, mipmap, anizotropi
+- [Android: Malzemeler](https://developer.android.com/games/optimize/materials?hl=tr): opaklık, aşırı çizim, shader maliyeti
+- [Android: Isı (ADPF)](https://developer.android.com/games/optimize/adpf/thermal?hl=tr)
+- [Android: Güç verimliliği](https://developer.android.com/games/optimize/power?hl=tr)
