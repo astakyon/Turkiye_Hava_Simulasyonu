@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.04 — 2026-10-13
+- **Park hâlindeki her uçağa binme:** İHA ve Test Merkezi'ndeki TB2, TB3, Akıncı, Kızılelma ve ANKA, apronda çekiciye bağlı Hürjet ve dünyada duran diğer uçak modelleri artık binilebilir.
+  - Yanına yürüyünce "E — … ile uç" (dokunmatikte *UÇAĞA BİN*) çıkar.
+  - Uçuş tam o noktadan ve uçağın baktığı yönden başlar; park hâlindeki model sen uçarken gizlenir, inip çıkınca yerine döner.
+  - Binilebilir uçak listesi oyunun model kaydından okunur: ileride eklenen her uçak modeli kendiliğinden binilebilir olur.
+  - Gökyüzünde dolaşan İHA ve hareket hâlindeki hava trafiği hariç.
+  - Kariyerde belge kuralı geçerli: belgesi olmayan uçağa binilemez.
+
 ## V2.03 — 2026-10-13
 - **Görev ekranı yenilendi**: tek ekran, iki sütun, üst üste binme yok.
   - Üstte tek satırlık kategori sekmeleri: Tümü · ★ Harekât · Eğitim · Hava · Taarruz · Keşif · Helikopter · Dinamik · Okul · Yarış · Kara · Deniz. Satır kaydırılabilir.
