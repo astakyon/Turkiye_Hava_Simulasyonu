@@ -44,6 +44,7 @@ aksi halde "before initialization" hatası olur.
 Ana döngü (`99-main.js`): giriş → `update` (uçuş) / `walkUpdate` (yaya) → yapay zekâ ve ağ → modeller → kamera → `renderFrame` → HUD.
 
 ## Araç (uçak) ekleme
+Ayrıntılı rehber: [docs/MODEL-EKLEME.md](MODEL-EKLEME.md) — `defineAircraft('id',{...})` tek çağrıyla hangar, kütüphane, görev panosu, binme ve çarpışma listelerine ekler; Ayarlar → Arayüz → Araçlar → **Model ölçü denetimi** ölçüleri gerçek değerlerle karşılaştırır.
 1. `12-models.js` içine kodla model fonksiyonu yaz (`build…()`): `{group, flames, strobe, gear, spinners}` döndürür.
    Eksenler: **−Z ileri, +Y yukarı, birim metre**, orijin yaklaşık ağırlık merkezi.
 2. `13-registry.js` içinde `AIRCRAFT` (uçuş değerleri) ve `REG` (grup, sınıf, üretici, silahlar) kaydı ekle.

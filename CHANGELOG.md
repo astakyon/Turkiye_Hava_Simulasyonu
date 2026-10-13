@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.11 — 2026-10-13 · Model altyapısı
+- **Tek çağrıyla yeni uçak:** `defineAircraft('id',{...})` yeni bir aracı benzer bir uçaktan kopyalayıp üzerine yazar. Uçuş verisi, sınıf, üretici, ehliyet, rütbe kilidi, envanter kartı ve gerçek performans bu tek çağrıdan gelir. Araç kendiliğinden hangara, model kütüphanesine, görev panosuna, binme listesine ve çarpışma kutularına girer.
+- **.glb modeller:** kod yerine bir .glb dosyası verilebilir; model gerçek boyuna ölçeklenerek yüklenir. Dışarıdan yüklenen modeller de artık uçağın gerçek uzunluğuna göre boyutlanıyor.
+- **Model ölçü denetimi:** Ayarlar → Arayüz → Araçlar → **Model ölçü denetimi**. Her modelin boyu ve kanat açıklığı gerçek değerlerle karşılaştırılır; %8'den fazla fark işaretlenir. İlk ölçümde ANKA-3 (boy +%37), Hürjet (+%17) ve Kızılelma (+%18) çıktı; bunlar model yenileme serisinde düzeltilecek.
+- **Rehber:** docs/MODEL-EKLEME.md (yeni model nasıl eklenir, veri kaynakları ve atıf kuralları).
+
 ## V2.10 — 2026-10-13 · Kanat adamı komutları
 - **Kanat adamına emir:** uçuşta **F8** (dokunmatikte TELSİZ menüsünün altındaki KANAT ADAMI bölümü) ile Kılıç 2'ye emir verilir:
   - **Saldır:** kilitli hedefine (kilit yoksa sana en yakın düşmana) saldırır, hedef düşünce yanına döner.

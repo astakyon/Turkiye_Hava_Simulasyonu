@@ -1036,3 +1036,8 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
 .radiomenu{ max-height:calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow:auto; -webkit-overflow-scrolling:touch; }
 #radioMenu .wrow{ display:grid; grid-template-columns:1fr 1fr; gap:4px; } #radioMenu .wrow button{ border-color:var(--line); justify-content:center; }
 @media (max-height:500px){ .radiomenu button{ padding:5px 8px; font-size:12px; } }
+
+/* ---- V2.10 model size audit */
+.mrcard{ width:min(760px,96vw)!important; } .mrtbl{ max-height:60vh; overflow:auto; } .mrtbl table{ width:100%; border-collapse:collapse; font-size:13px; }
+.mrtbl th{ text-align:left; color:var(--dim); font-weight:600; padding:6px; border-bottom:1px solid var(--edge); position:sticky; top:0; background:var(--surf,#0c1422); }
+.mrtbl td{ padding:6px; border-bottom:1px solid rgba(255,255,255,.06); } .mrtbl tr.ok td:last-child{ color:#7dffb0; } .mrtbl tr.bad td:last-child,.mrtbl tr.bad small{ color:#ffb25a; } .mrtbl small{ color:var(--dim); }

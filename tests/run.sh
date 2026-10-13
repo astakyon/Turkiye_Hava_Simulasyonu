@@ -79,3 +79,4 @@ node harness.js /tmp/sim.js evade.test.js
 node harness.js /tmp/sim.js perf2.test.js
 node harness.js /tmp/sim.js notes.test.js
 node harness.js /tmp/sim.js wing.test.js
+node harness.js /tmp/sim.js modelreg.test.js
