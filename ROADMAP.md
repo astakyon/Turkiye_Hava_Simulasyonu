@@ -121,13 +121,6 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.97 | **Görüntü sorunu testi.** Oyun sürerken katmanları (deniz, gökyüzü, bulut, gölge, efekt, ağaç, arazi, iki katmanlı derinlik, çözünürlük) tek tek kapatan panel; grafik ayarları bulut kaydıyla cihazlar arasında taşınmaz | ✅ |
 | V1.98 | **Harekât: Kızıl Elma.** Sekiz bölümlük hikâyeli kampanya (İHA keşfi, önleme, yakın hava desteği, arama-kurtarma, deniz devriyesi, T129 taarruzu, refakat, final taarruzu); telsiz brifingleri, yıldızlar, sırayla açılan bölümler, hikâye bonusu, Kızıl Elma madalyası | ✅ |
 | V1.99 | **Kara ve deniz görevleri.** Görev panosunda Kara ve Deniz sekmeleri: Altay ile konvoy savunması, Kirpi ile keşif, Pars ile atış tatbikatı, hücumbotla kaçakçı takibi ve liman devriyesi, korvet topçu atışı, TCG Anadolu ile çıkarma; tank ve gemi mermileri görev hedeflerini vurur | ✅ |
-| V2.00 | **Ekip iletişimi.** Çok oyunculuda hızlı telsiz çarkı, haritaya işaret koyma, sesli sohbet iyileştirmeleri | |
-| V2.01 | **Android paketi.** Play Store için .aab (TWA), simge, açılış ekranı, gizlilik politikası sayfası | |
-
-### Faz 10 — Model yenileme
-| Sürüm | İçerik | Durum |
-|---|---|---|
-| V2.02+ | Uçak modellerini fotoğraf benzerliğinde yenileme serisi: KAAN → ANKA-3 → Akıncı → TB3 → Hürjet → diğerleri; her modelden sonra onay | |
 
 ### Android yolu
 1. PWA (V1.20 ✅) → 2. Play Store için TWA paketi (Bubblewrap) veya Capacitor → 3. imzalama, mağaza görselleri, gizlilik politikası.
@@ -179,3 +172,64 @@ GitHub Pages yalnızca statik dosya sunar; oyun sunucusu ayrı barınmalıdır. 
 
 ## Sürümleme kuralı
 Her güncelleme → yeni sürüm (V1.01, V1.02 …; büyük kilometre taşı V2.00). Online çalışma başlayınca istemci–sunucu sürümü eşleşmek zorunda.
+
+
+Her madde ayrı bir sürüm olarak çıkar. Her sürüm testten geçer, GitHub'a gönderilir ve oyun sayfası güncellenir. Model sürümleri (V2.12+) her modelden sonra onay bekler.
+
+### Faz 11 — İletişim ve paketleme
+
+| Sürüm | Başlık | İçerik | Durum |
+|---|---|---|---|
+| V2.00 | Ekip iletişimi | **İşaret çarkı:** F4'e ya da orta fare tuşuna basılı tut, dokunmatikte 📍 düğmesi. Seçenekler: Hedef burada · Tehlike · Buraya git · Yardım lazım · Savunuyorum · Anlaşıldı. İşaret baktığın noktaya ya da kilitli hedefe konur; 3B işaret, mesafe ve haritada görünür, takım arkadaşlarına anında gider. **Haritaya işaret:** haritada uzun bas ya da sağ tıkla → "Buraya git" işareti. **Tek oyunculu:** kanat adamı işaretlenen hedefe yönelir ve telsizden yanıt verir. **Sesli sohbet:** konuşan oyuncunun adı ekranda görünür. (Açık mikrofon ve oyuncu başına ses düzeyi V2.06 gözden geçirmesine eklendi.) | ✅ |
+| V2.01 | Android paketi ve simge | Yeni uygulama simgesi (Android uyarlanabilir simge: ön plan ve arka plan katmanı, yuvarlak/kare/damla maskelerine uygun) ve açılış ekranı. PWA bildirim çubuğu rengi, kısayollar (Hızlı Oyun, Harekât, Görevler). Play Store için TWA ayarları ve .aab üretme rehberi; gizlilik politikası sayfası. Ana ekrana eklemeyi öneren düğme. | |
+| V2.02 | Dokunmatik kumandalar 2.0 | **Düzen:** sol yarıda serbest konumlu sanal çubuk (parmağın değdiği yerde açılır), sağ yarıda bağlama göre değişen düğmeler (uçak: ateş · füze · bomba · flare · gaz; tank: ateş · nişan; gemi: ateş · gaz). **Gaz:** sol kenarda dikey kaydırıcı. **Kamera:** sağ yarıda sürükle. **Düzenleyici:** düğmeleri sürükleyip taşıma, boyutlandırma, saydamlık, sol el düzeni. **Hazır düzenler:** Klasik · Eğerek uç · Tek el. Düğmelere titreşim; ilk açılışta 30 saniyelik dokunmatik eğitimi. | |
+
+### Faz 12 — Ekranlar ve oynanış iyileştirmeleri
+
+| Sürüm | Başlık | İçerik | Durum |
+|---|---|---|---|
+| V2.03 | Görev ekranı yenilemesi | Tek sütunlu sade düzen. **Üstte sekmeler:** Harekât · Uçak · Helikopter · Kara · Deniz · Dinamik · Yarış · Eğitim. **Görev kartları:** büyük kart (görsel, ad, süre, zorluk, ödül, yıldız). **Ayrıntı:** kart açılınca yandan panel (harita, hedefler, tehditler, önerilen araç ve yük). Filtreler tek "Filtre" düğmesine toplanır. Düşman, kanat adamı ve zorluk ayarları "Gelişmiş" altında. Kilitli görevlerde nedeni ve nasıl açılacağı yazar. | |
+| V2.04 | Her araca binme | İHA ve Test Merkezi'ndeki, Kızıl Bölge'deki, apronlardaki bütün park hâlindeki uçaklar, İHA'lar, helikopterler, kara araçları ve gemiler binilebilir. Yanına gidince "E: bin" çıkar. Bindikten sonra uçak oradan kalkar; inince park yerine bırakılabilir. Kayıt sistemi: sahnedeki her araç, türü ve konumuyla tek listede tutulur, yeni eklenen araç kendiliğinden binilebilir olur. | |
+| V2.05 | Çarpışmalar | Yayalar araç, uçak ve gemilerin içinden geçemez (gövde kutuları). Trafikteki arabalar, yerdeki ve havadaki trafik uçakları, gemiler oyuncunun aracıyla çarpışır: hasar, savrulma, kaza. Trafik arabaları önlerindeki araç ya da yayayı görünce yavaşlar ve durur. Uçak yerdeyken park hâlindeki araçlara çarpar. Hangar ve bina duvarları yaya ve araçlar için katıdır. Performans için yakın nesneler bölge ızgarasıyla kontrol edilir. | |
+| V2.06 | Mevcut özellik gözden geçirmesi | Bütün menüler, ayarlar ve görevler tek tek denenir. Hata, karışık metin ve gereksiz ayar ayıklanır. Ayarlar sadeleştirilir (Temel / Gelişmiş). Kaydın hesaplar arasında doğru taşındığı denetlenir. Telefon ve bilgisayarda performans ölçümü. Sesli sohbete açık mikrofon seçeneği ve oyuncu başına ses düzeyi. Sonuç bir rapor olarak yazılır. | |
+
+### Faz 13 — Uçuş: akrobasi ve füzeden kaçış
+
+| Sürüm | Başlık | İçerik | Durum |
+|---|---|---|---|
+| V2.07 | Akrobasi altyapısı | Uçuş verisinden manevra tanıyıcı: yatış, yunuslama, yön ve irtifa değişimi zaman penceresinde izlenir. **Tanınan hareketler:** tonoz (aileron roll), fıçı tonoz (barrel roll), looping, Immelmann, Split-S, Cuban 8, hammerhead (stall turn), sırtüstü uçuş, bıçak sırtı (knife edge). Yapılan hareketin adı ve puanı ekranda çıkar. Renkli duman (kırmızı/beyaz, T tuşu). **Akrobasi modu:** sıralı figür görevi ("Türk Yıldızları" tarzı), hakem puanı (düzgünlük, irtifa kaybı, hız). Kanat adamlarıyla kol uçuşu altyapısı (sabit düzen tutma). | |
+| V2.08 | Füzeden kaçış | **Füze modeli:** füzenin enerjisi (yakıt bitince yavaşlar), dönüş sınırı, arayıcı başlık açısı ve flare'e kanma olasılığı. **Kaçış hareketleri:** sert kırılış (break turn), füzeyi yandan alma (beaming/notching), alçalarak dalış ve arazi maskeleme, doğru zamanlı flare/chaff. **Uyarı sistemi:** füzenin yönünü ve mesafesini gösteren RWR, "FÜZE – SAAT 4" sesli uyarı, kaçış önerisi ("SOLA KIR + FLARE"). **Otomatik kaçış yardımı** (Uçuş yardımı açıkken): tek tuşla en iyi kaçış hareketini yapar. Düşman yapay zekâsı da aynı hareketlerle kaçar. Eğitim dersi: "Füzeden kaçış". | |
+| V2.09 | Kanat adamı komutları | Kanat adamına emir: saldır, kolla, düzene gir, üsse dön. Akrobaside kol uçuşu. | |
+
+### Faz 14 — Model altyapısı ve veri
+
+| Sürüm | Başlık | İçerik | Durum |
+|---|---|---|---|
+| V2.10 | Model kayıt sistemi | Her araç tek bir tanım dosyasıyla eklenir: kimlik, ad, sınıf, gerçek ölçüler (Defence Turk envanteri ve diğer açık kaynaklar), performans, silahlar, kokpit, ses, model kurucu ya da .glb dosyası. Yeni tanım kendiliğinden hangara, model kütüphanesine, görev panosuna, binme listesine ve çarpışma kutularına eklenir. **Ölçü denetimi:** modelin uzunluk ve kanat açıklığı gerçek veriyle karşılaştırılır, uyarı verir. Kütüphanede "veri kartı" ve kaynak atfı. | |
+| V2.11 | Model yükleme hattı | Dışarıda hazırlanan .glb modellerin (Blender) kütüphaneye yüklenip oyuna bağlanması: döndürme, ölçek, pivot ve iniş takımı ayarı, renk/kamuflaj bölgeleri, hareketli parçalar (dümen, takım, pervane, taret). Yönetici panelinden herkese yayınlama. Rehber: "Yeni model nasıl eklenir". | |
+
+### Faz 15 — Model yenileme serisi (her model onaya sunulur)
+
+Her model Defence Turk sayfasındaki fotoğraflara bakılarak ve gerçek ölçülerle yeniden yapılır. Fotoğraflar oyuna konmaz, yalnız görsel kaynak olarak kullanılır; sayısal veriler atıfla kullanılır. Her modelden sonra önce/sonra karşılaştırması gönderilir ve onay beklenir.
+
+| Sürüm | Model | Durum |
+|---|---|---|
+| V2.12 | TUSAŞ KAAN | |
+| V2.13 | Bayraktar TB2 | |
+| V2.14 | Bayraktar TB3 | |
+| V2.15 | Bayraktar Akıncı | |
+| V2.16 | Baykar Kızılelma | |
+| V2.17 | TUSAŞ ANKA ve ANKA-3 | |
+| V2.18 | TUSAŞ Aksungur | |
+| V2.19 | TUSAŞ Hürjet ve Hürkuş | |
+| V2.20 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
+
+## Sonraki öneriler (sırası sonra belirlenecek)
+
+- Sezonluk etkinlikler (29 Ekim, 30 Ağustos)
+- Liderlik tabloları ve birlik yarışı
+- Filo (klan) sistemi
+- Gerçekçi uçuş modu (motor çalıştırma kontrol listesi, kule izni)
+- En iyi anı video olarak paylaşma
+- Gece görev paketi (NVG ile)
+- Tıklanabilir kokpit düğmeleri

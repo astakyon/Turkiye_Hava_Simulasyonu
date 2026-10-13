@@ -54,7 +54,7 @@ function lndGeom(){ if(state!=='play'||S.onGround||S.crashed) return null; const
   return best; }
 function lndStep(){ const ui=$('lndUI'), m=assistMode(); LND.on=false; LND.auto=false; const now=performance.now(); if(state==='play'&&S.onGround) LND.lastGround=now;
   const g=m!=='off'?lndGeom():null;
-  if(g&&(S.gear||g.D<5000)&&S.pos.y-AIRFIELD_Y<1500&&!(LND.lastGround&&now-LND.lastGround<20000)){   /* not right after take-off */ LND.on=true; LND.rw=g.R; LND.D=g.D; LND.x=S.pos.x;
+  if(g&&(S.gear||(g.D<5000&&S.speed<CUR.landV*1.2&&S.pos.y-AIRFIELD_Y<600))&&S.pos.y-AIRFIELD_Y<1500&&!(LND.lastGround&&now-LND.lastGround<20000)){   /* not right after take-off */ LND.on=true; LND.rw=g.R; LND.D=g.D; LND.x=S.pos.x;
     const ht=AIRFIELD_Y+CUR.gearOff+Math.tan(3*Math.PI/180)*Math.max(0,g.D); LND.dev=S.pos.y-ht; LND.vapp=lndVapp(); }
   if(!ui) return; ui.classList.toggle('hidden',!LND.on); if(!LND.on) return;
   const gs=clamp(LND.dev/Math.max(15,LND.D*0.02),-1,1), lat=clamp(LND.x/Math.max(20,LND.D*0.05),-1,1);

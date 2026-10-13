@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.00 — 2026-10-13
+- **İşaret çarkı** (F4 ya da orta fare tuşu; dokunmatikte sağdaki 📍 düğmesi):
+  - Kısa basınca baktığın yere (kilitli hedef varsa hedefin üstüne) **🎯 Hedef burada** işareti konur.
+  - Basılı tutunca çark açılır: Hedef burada · ⚠ Tehlike · ➜ Buraya git · 🆘 Yardım lazım · 🛡 Savunuyorum · ✓ Anlaşıldı. Fareyle ya da 1–6 tuşlarıyla seçilir.
+  - İşaretler ekranda simge, mesafe ve koyan oyuncunun adıyla, haritada ve mini haritada renkli nokta olarak görünür. Her oyuncunun tek işareti olur; 25 saniyede söner.
+  - Çok oyunculuda takım arkadaşlarına anında gider; takım modunda karşı takım görmez.
+- **Haritaya işaret:** haritada sağ tıkla ya da uzun bas → "Buraya git".
+- **Tek oyunculu:** kanat adamı işaretlenen hava hedefine yönelir ve telsizden yanıt verir; yardım ya da tehlike işaretine "Geliyorum" der.
+- **Sesli sohbet:** bas-konuş kullanan oyuncunun adı sol üstte 🎙 ile görünür.
+- İniş göstergesi artık yalnız gerçekten yaklaşırken çıkar (takım açık ya da alçak ve yavaş).
+- Yol haritası V2.20'ye kadar genişletildi (ROADMAP.md).
+
 ## V1.99 — 2026-10-13
 - **Kara ve deniz görevleri:** görev panosuna **Kara** ve **Deniz** sekmeleri eklendi.
   - *Konvoy savunması* (Altay): Kara Üssü'nden Güneş santralindeki konvoya git, saldıran araçları topla imha et.

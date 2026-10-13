@@ -950,3 +950,13 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .cveh,.crw{ margin:0; font-size:13px; } .crw{ color:#ffd27a; } .clock{ margin:0; color:var(--dim); } .cfin{ margin:0; padding:10px; border-radius:8px; background:rgba(255,210,122,.12); color:#ffd27a; font-weight:700; }
 @media (max-width:700px){ .campgrid{ grid-template-columns:1fr; } .camplist{ flex-direction:row; overflow-x:auto; } .cch{ flex:none; width:200px; } }
 @media (max-height:520px) and (orientation:landscape){ .camphd{ padding:10px 16px; } .camphd h2{ font-size:24px; margin:2px 0 4px; } .campwrap{ padding-top:52px; gap:10px; } .cstory{ font-size:13.5px; } }
+
+/* ---- V2.00 ping wheel */
+.pwheel{ position:fixed; left:50%; top:50%; width:min(360px,80vmin); height:min(360px,80vmin); transform:translate(-50%,-50%); z-index:65; border-radius:50%; background:radial-gradient(circle,rgba(6,10,18,.2) 0 22%,rgba(6,10,18,.78) 23% 70%,transparent 71%); pointer-events:auto; }
+.pwheel.hidden{ display:none; }
+.pwheel button{ position:absolute; transform:translate(-50%,-50%); width:84px; padding:8px 4px; border-radius:12px; border:1.5px solid rgba(255,255,255,.18); background:rgba(10,16,28,.85); color:#fff; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; transition:transform .1s; }
+.pwheel button i{ font-style:normal; font-size:22px; } .pwheel button small{ font-size:11px; font-weight:700; } .pwheel button kbd{ font-size:9px; opacity:.5; }
+.pwheel button.on{ border-color:var(--c); background:rgba(255,255,255,.12); transform:translate(-50%,-50%) scale(1.12); box-shadow:0 0 18px var(--c); }
+.pwheel .pwc{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:11px; letter-spacing:.25em; font-weight:800; color:rgba(255,255,255,.7); pointer-events:none; }
+.tping{ position:fixed; right:max(14px,env(safe-area-inset-right)); top:42%; z-index:9; width:48px; height:48px; border-radius:50%; border:1.5px solid rgba(255,255,255,.35); background:rgba(8,14,24,.55); font-size:22px; touch-action:none; }
+.tping.hidden{ display:none; }
