@@ -1,6 +1,20 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.08 — 2026-10-13
+- **Gerçekçi füze modeli:**
+  - Roket motoru 8 saniye yanar, sonra sürtünme füzeyi yavaşlatır; ~200 m/s altında füze enerjisini yitirir.
+  - Arayıcı başlık yalnız burnun ±55° çevresini görür: doğru anda sert dönüş füzenin kilidi kaybetmesini sağlar.
+  - Radar güdümlü SAM füzeleri alçakta (500 m altında) füzenin görüş hattına dik uçan hedefi *çentikte* kaybedebilir.
+  - Füze ile aranda arazi kalırsa kilit kopar.
+  - Sert dönüş sırasında (4 G üstü) 400–1 800 m'de atılan flare'ler çok daha etkili.
+- **Füze uyarısı:**
+  - Ekranda kırmızı halka üzerinde füzenin geldiği yön ok olarak görünür; üstünde "FÜZE · SAAT 4 · 1,2 km" yazar.
+  - Altındaki öneri satırı: "SAĞA KIR + FLARE + ALÇAL".
+  - Kartal Gözü telsizden "Füze! Saat 4, 2,3 kilometre!" der. Füze kaçırılınca nedeni söylenir (kilidi kaybetti / enerjisini yitirdi / çentikte kaybetti / arazinin arkasında kaldın).
+- **Kaçış yardımı:** F7 (dokunmatikte füze gelirken yanıp sönen *KAÇ!*). Uçuş yardımı açıkken 5 saniye boyunca füzeyi yana alan sert dönüşü uçar, gazı tam açar ve uygun anda flare atar.
+- **Yeni görev, Füzeden kaçış** (Eğitim): iki SAM bataryasının attığı üç füzeden kurtul; yıldız kalan cana göre.
+
 ## V2.07 — 2026-10-13
 - **Akrobasi tanıyıcı:** uçuş saniyede 10 kez izlenir (gövde eksenlerindeki dönüş, yön, burun, yatış, irtifa, hız). Bir figür tamamlanınca ekranın üstünde adı, kalitesi (Mükemmel / İyi / Geçer) ve puanı çıkar.
   - Tanınan figürler: **Tonoz**, **Fıçı tonoz**, **Looping**, **Immelmann**, **Split-S**, **Cuban 8**, **Hammerhead**, **Sırtüstü uçuş**, **Bıçak sırtı**.
