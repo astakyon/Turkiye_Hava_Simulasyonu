@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="38%" cy="30%" r="85%"><stop offset="0" stop-color="#e3172a"/><stop offset=".55" stop-color="#a10d1c"/><stop offset="1" stop-color="#4a0710"/></radialGradient>
+    <linearGradient id="trail" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".6"/></linearGradient>
+    <mask id="cres"><rect x="-80" y="-80" width="160" height="160" fill="#fff"/><circle cx="14" r="44" fill="#000"/></mask>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g id="art" transform="translate(51.2 51.2) scale(.8)">
+    <path d="M70 450 L250 270 L266 286 L86 466 Z" fill="url(#trail)"/>
+    <g transform="translate(150 140)">
+      <circle r="55" fill="#fff" mask="url(#cres)"/>
+      <polygon fill="#fff" transform="translate(44 0) rotate(-90) scale(.21)" points="0,-100 22.4,-30.9 95.1,-30.9 36.3,11.8 58.8,80.9 0,38.2 -58.8,80.9 -36.3,11.8 -95.1,-30.9 -22.4,-30.9"/>
+    </g>
+    <g transform="translate(315 238) rotate(45) scale(1.05)">
+      <path fill="#fff" d="M0 -118 C10 -96 14 -70 15 -46 L18 -30 L92 22 L92 40 L22 26 L20 52 L48 74 L48 88 L14 82 L6 98 L-6 98 L-14 82 L-48 88 L-48 74 L-20 52 L-22 26 L-92 40 L-92 22 L-18 -30 L-15 -46 C-14 -70 -10 -96 0 -118 Z"/>
+      <path fill="#1b2533" d="M0 -84 C6 -72 7 -60 7 -50 L-7 -50 C-7 -60 -6 -72 0 -84 Z"/>
+    </g>
+  </g>
+</svg>

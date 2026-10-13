@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.01 — 2026-10-13
+- **Yeni uygulama simgesi:** kırmızı zemin üzerinde ay yıldız ve iz bırakan beyaz savaş uçağı.
+  - Android'in yuvarlak, damla ve kare maskelerine uyan *maskelenebilir* sürüm, Android 13+ temalı simgeler için tek renkli sürüm, 48–512 piksel boyutlar ve SVG kaynak.
+  - Bildirim çubuğu rengi artık kırmızı.
+- **Ana ekran kısayolları:** uygulama simgesine uzun basınca *Hızlı Oyun*, *Harekât* ve *Görevler* ile doğrudan açılır.
+- **Uygulamayı yükle düğmesi:** tarayıcı izin verdiğinde ana menünün sağ üstünde yeşil ⬇ düğmesi çıkar (Android Chrome, bilgisayarda Chrome/Edge). iPhone'da "Paylaş → Ana Ekrana Ekle" yolunu gösterir. Uygulama olarak açıkken gizlenir.
+- **Play Store hazırlığı:**
+  - `twa-manifest.json`: paket adı, yatay tam ekran, simgeler, kısayollar ve renkler hazır; `bubblewrap update` ile .aab üretilir.
+  - `privacy.html`: Play Store için gizlilik politikası.
+  - `docs/ANDROID.md` adım adım güncellendi.
+- Testlere, aynı adlı iki üst düzey işlevi yakalayan bir denetim eklendi (V2.00 hazırlığında kanat adamının hedef seçimini bozan bir ad çakışmasını bu tür bir hata yakalamıştı).
+
 ## V2.00 — 2026-10-13
 - **İşaret çarkı** (F4 ya da orta fare tuşu; dokunmatikte sağdaki 📍 düğmesi):
   - Kısa basınca baktığın yere (kilitli hedef varsa hedefin üstüne) **🎯 Hedef burada** işareti konur.

@@ -960,3 +960,6 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 .pwheel .pwc{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:11px; letter-spacing:.25em; font-weight:800; color:rgba(255,255,255,.7); pointer-events:none; }
 .tping{ position:fixed; right:max(14px,env(safe-area-inset-right)); top:42%; z-index:9; width:48px; height:48px; border-radius:50%; border:1.5px solid rgba(255,255,255,.35); background:rgba(8,14,24,.55); font-size:22px; touch-action:none; }
 .tping.hidden{ display:none; }
+
+/* ---- V2.01 install button */
+.c-ibtns button.cinst{ border-color:rgba(125,255,176,.5); color:#7dffb0; } .c-ibtns button.cinst.hidden{ display:none; }

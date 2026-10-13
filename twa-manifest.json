@@ -1,0 +1,30 @@
+{
+  "packageId": "tr.ayyildiz.hedefkizilelma",
+  "host": "astakyon.github.io",
+  "name": "Ay Yıldız: Hedef Kızıl Elma",
+  "launcherName": "Ay Yıldız",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "themeColor": "#a10d1c",
+  "navigationColor": "#0a1220",
+  "backgroundColor": "#0a1220",
+  "enableNotifications": false,
+  "startUrl": "/Turkiye_Hava_Simulasyonu/?src=app",
+  "iconUrl": "https://astakyon.github.io/Turkiye_Hava_Simulasyonu/icon-512.png",
+  "maskableIconUrl": "https://astakyon.github.io/Turkiye_Hava_Simulasyonu/icons/icon-maskable-512.png",
+  "monochromeIconUrl": "https://astakyon.github.io/Turkiye_Hava_Simulasyonu/icons/icon-mono-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "shortcuts": [
+    { "name": "Hızlı Oyun", "shortName": "Hızlı", "url": "/Turkiye_Hava_Simulasyonu/?act=q_quick", "chosenIconUrl": "https://astakyon.github.io/Turkiye_Hava_Simulasyonu/icons/icon-96.png" },
+    { "name": "Harekât", "shortName": "Harekât", "url": "/Turkiye_Hava_Simulasyonu/?act=q_camp", "chosenIconUrl": "https://astakyon.github.io/Turkiye_Hava_Simulasyonu/icons/icon-96.png" },
+    { "name": "Görevler", "shortName": "Görevler", "url": "/Turkiye_Hava_Simulasyonu/?act=q_mis", "chosenIconUrl": "https://astakyon.github.io/Turkiye_Hava_Simulasyonu/icons/icon-96.png" }
+  ],
+  "appVersionName": "2.01",
+  "appVersionCode": 201,
+  "minSdkVersion": 21,
+  "fallbackType": "customtabs",
+  "features": {},
+  "isChromeOSOnly": false,
+  "signingKey": { "path": "./android.keystore", "alias": "ayyildiz" },
+  "generatorApp": "bubblewrap-cli"
+}
