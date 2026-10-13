@@ -197,7 +197,7 @@ Her madde ayrı bir sürüm olarak çıkar. Her sürüm testten geçer, GitHub'a
 
 | Sürüm | Başlık | İçerik | Durum |
 |---|---|---|---|
-| V2.09 | Optimizasyon 2.0 | Ekranın ortasında ağaç ve nesnelerin kaybolması düzeltildi (örnekli grupların sınır küresi). Sabit nesne birleştirme (boyut sınıflı hücreler, kendini onaran), hücre bazında mesafe ayıklaması, cihaz kademesi (telefon/tablet/PC ilk açılışta), menüde 10 FPS çizim, ayıklama listesinde O(n²) takılma giderildi. Gerçek tarayıcıda yayın kapısı (tools/browser-check.js). Ayarlar yeniden düzenlendi: Grafik / Uçuş / Dünya sekmeleri, "Sorun giderme" ve "Telefon: eğerek uç" grupları. Sürüm notları oyunda duyuru olarak (süre ayarlı) ve "Yenilikler" penceresi. | |
+| V2.09 | Optimizasyon 2.0 | Ekranın ortasında ağaç ve nesnelerin kaybolması düzeltildi (örnekli grupların sınır küresi). Sabit nesne birleştirme (boyut sınıflı hücreler, kendini onaran), hücre bazında mesafe ayıklaması, cihaz kademesi (telefon/tablet/PC ilk açılışta), menüde 10 FPS çizim, ayıklama listesinde O(n²) takılma giderildi. Gerçek tarayıcıda yayın kapısı (tools/browser-check.js). Ayarlar yeniden düzenlendi: Grafik / Uçuş / Dünya sekmeleri, "Sorun giderme" ve "Telefon: eğerek uç" grupları. Sürüm notları oyunda duyuru olarak (süre ayarlı) ve "Yenilikler" penceresi. | ✅ |
 
 ### Faz 13 — Uçuş: akrobasi ve füzeden kaçış
 
