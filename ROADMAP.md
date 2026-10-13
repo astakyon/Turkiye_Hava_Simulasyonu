@@ -213,21 +213,47 @@ Her madde ayrı bir sürüm olarak çıkar. Her sürüm testten geçer, GitHub'a
 |---|---|---|---|
 | V2.11 | Model altyapısı (kayıt + yükleme hattı) | Her araç tek bir tanım dosyasıyla eklenir: kimlik, ad, sınıf, gerçek ölçüler (Defence Turk envanteri ve diğer açık kaynaklar), performans, silahlar, kokpit, ses, model kurucu ya da .glb dosyası. Yeni tanım kendiliğinden hangara, model kütüphanesine, görev panosuna, binme listesine ve çarpışma kutularına eklenir. **Ölçü denetimi:** modelin uzunluk ve kanat açıklığı gerçek veriyle karşılaştırılır, uyarı verir. Kütüphanede "veri kartı" ve kaynak atfı. Dışarıda hazırlanan .glb modellerin (Blender) kütüphaneye yüklenip oyuna bağlanması: döndürme, ölçek, pivot ve iniş takımı ayarı, renk/kamuflaj bölgeleri, hareketli parçalar (dümen, takım, pervane, taret). Yönetici panelinden herkese yayınlama. Rehber: "Yeni model nasıl eklenir". | ✅ |
 
-### Faz 15 — Model yenileme serisi (her model onaya sunulur)
+### Faz 15 — Düzen: ölçüm, optimizasyon, grafik ayarları, teknik borç, gözden geçirme
+
+Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: [docs/YOL-HARITASI-DUZEN.md](docs/YOL-HARITASI-DUZEN.md).
+
+| Sürüm | Başlık | Durum |
+|---|---|---|
+| V2.12 | Performans ölçer ve cihaz raporu | |
+| V2.13 | Birleştirme 2.0 | |
+| V2.14 | Araç ve uçak modellerinde parça birleştirme | |
+| V2.15 | Gölge 2.0 | |
+| V2.16 | Çözünürlük ve dinamik çözünürlük | |
+| V2.17 | Bellek ve dokular | |
+| V2.18 | Açılış hızı | |
+| V2.19 | Arazi ayrıntı kademeleri | |
+| V2.20 | Grafik ayarları 2.0 | |
+| V2.21 | Bütün ayarların gözden geçirmesi | |
+| V2.22 | Kanca (olay) sistemi | |
+| V2.23 | Kod düzeni | |
+| V2.24 | Kayıt ve depolama düzeni | |
+| V2.25 | Girdi yöneticisi | |
+| V2.26 | Test ve yayın hattı | |
+| V2.27 | Özellik envanteri | |
+| V2.28 | Ekran ve akış sadeleştirme | |
+| V2.29 | Oynanış ve metin tutarlılığı | |
+| V2.30 | Belgeler ve sürüm geçmişi | |
+
+### Faz 16 — Model yenileme serisi (her model onaya sunulur; düzen yol haritasından sonra)
 
 Her model Defence Turk sayfasındaki fotoğraflara bakılarak ve gerçek ölçülerle yeniden yapılır. Fotoğraflar oyuna konmaz, yalnız görsel kaynak olarak kullanılır; sayısal veriler atıfla kullanılır. Her modelden sonra önce/sonra karşılaştırması gönderilir ve onay beklenir.
 
 | Sürüm | Model | Durum |
 |---|---|---|
-| V2.12 | TUSAŞ KAAN | |
-| V2.13 | Bayraktar TB2 | |
-| V2.14 | Bayraktar TB3 | |
-| V2.15 | Bayraktar Akıncı | |
-| V2.16 | Baykar Kızılelma | |
-| V2.17 | TUSAŞ ANKA ve ANKA-3 | |
-| V2.18 | TUSAŞ Aksungur | |
-| V2.19 | TUSAŞ Hürjet ve Hürkuş | |
-| V2.20 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
+| V2.31 | TUSAŞ KAAN | |
+| V2.32 | Bayraktar TB2 | |
+| V2.33 | Bayraktar TB3 | |
+| V2.34 | Bayraktar Akıncı | |
+| V2.35 | Baykar Kızılelma | |
+| V2.36 | TUSAŞ ANKA ve ANKA-3 | |
+| V2.37 | TUSAŞ Aksungur | |
+| V2.38 | TUSAŞ Hürjet ve Hürkuş | |
+| V2.39 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
 
 ## Sonraki öneriler (sırası sonra belirlenecek)
 
