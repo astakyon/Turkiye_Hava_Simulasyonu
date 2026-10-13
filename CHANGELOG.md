@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.13 — 2026-10-13 · Efekt zinciri ve akıllı kalite
+- **İlk gerçek ölçüme göre efekt zinciri yenilendi.** Bilgisayar raporunda (Intel UHD, Ultra) karenin %61'ini görsel efektler alıyordu: sahne 8 kat kenar yumuşatmalı, yüksek hassasiyetli bir ara görüntüye çiziliyor, üstüne tam çözünürlükte parlama ekleniyordu.
+  - **Tümleşik ekran kartlarında** (Intel, AMD tümleşik): yüksek hassasiyetli ara görüntü ve otomatik 8× kenar yumuşatma yok, yerine FXAA. Elle 8× seçilirse 4×'e iner. Parlama çeyrek çözünürlükten hesaplanır ve yalnız Ultra'da açılır.
+  - Diğer ekran kartlarında da parlama yarım çözünürlükten başlıyor. Ultra ve ayrı ekran kartında tam çözünürlük korunuyor.
+- **Kare zamanlaması:** FPS sınırına **Otomatik** seçeneği eklendi (varsayılan). 60 Hz ekranda 60'ı tutamayan cihaz, 33 ve 50 ms arasında gidip gelen titrek kareler yerine eşit aralıklı 30 FPS'e sabitlenir. 20 saniyede bir sınırsız dener; 60 tutarsa sınır kalkar.
+- **Performans testi sonucunda "Önerilen ayarları uygula":** ölçülen maliyetlere göre hedef FPS'e ulaştıran ayar seti tek dokunuşla uygulanır. Darboğaz işlemcideyse bunu söyler ve ayarlarla çözülemediğini belirtir.
+- **Tümleşik ekran kartı uyarısı:** oyun güçlü bir dizüstünde tümleşik kartla çalışıyorsa test sonucu ve ilk açılış, tarayıcının NVIDIA/AMD karta nasıl geçirileceğini anlatır (Windows Ayarlar → Sistem → Ekran → Grafik → Yüksek performans).
+- Düzeltme: telefonda zaten düşük çözünürlükte çizilirken öneri çözünürlüğü yükseltebiliyordu.
+- Yol haritası: ilk iki gerçek cihaz raporu (MSI Katana 15 ve Exynos 2200'lü Samsung telefon) belgeye eklendi; efekt zinciri öne alındı.
+
 ## V2.12 — 2026-10-13 · Performans testi ve cihaz raporu
 - **Performans testi:** Ayarlar → Grafik → **Performans testi**. Oyun yaklaşık 2 dakika boyunca kendi kendine sabit bir rota oynar; her cihaz aynı sahneyi çizdiği için sonuçlar karşılaştırılabilir:
   - ekranın yenileme hızı (60 / 90 / 120 Hz),

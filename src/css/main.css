@@ -1062,3 +1062,7 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
 .ptrow{ cursor:pointer; } .ptrow:hover td{ background:rgba(255,255,255,.04); }
 @media (max-height:500px){ .ptcard{ display:block; max-height:96vh; overflow:auto; -webkit-overflow-scrolling:touch; } .ptcard .ptscroll{ overflow:visible; } }
 @media (max-width:700px),(max-height:500px){ .ptsum{ grid-template-columns:repeat(2,1fr); } .ptsum b{ font-size:16px; } .ptsend{ grid-template-columns:1fr; } .ptbar i{ display:none; } }
+/* V2.13 recommended settings */
+.ptrec{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin:8px 0 4px; padding:10px 12px; border-radius:10px; background:rgba(125,255,176,.07); border:1px solid rgba(125,255,176,.35); font-size:13.5px; }
+.ptrec ul{ margin:4px 0 0; padding-left:18px; } .ptrec small{ color:var(--dim); } .ptrec .btn{ flex:none; }
+@media (max-width:700px){ .ptrec{ flex-direction:column; align-items:stretch; } }
