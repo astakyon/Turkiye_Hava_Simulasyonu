@@ -113,7 +113,7 @@ function campRender(){ const P=campProg(), n=campDoneN(); $('campSum').textConte
   $('campList').addEventListener('click',function(e){ const b=e.target.closest('button[data-i]'); if(!b) return; CAMP.sel=+b.dataset.i; campRender(); });
   $('campDet').addEventListener('click',function(e){ if(e.target.closest('#campGo')) campStart(CAMP.sel); });
   $('btnCampX').addEventListener('click',function(){ campClose(); if(state==='menu') refreshTitle(); }); })();
-if(typeof MEDALS!=='undefined'&&!MEDALS.some(function(m){ return m[0]==='kizilelma'; })) MEDALS.push(['kizilelma','Kızıl Elma','Harekât kampanyasını tamamla']);
+if(typeof MEDALS!=='undefined'&&!MEDALS.some(function(m){ return m[0]==='kizilelma'; })) MEDALS.push(['kizilelma','Kızıl Elma','Harekât kampanyasını tamamla',function(st){ return !!(st&&st.camp&&CAMP_CH.every(function(c){ return st.camp[c.id]>0; })); }]);
 /* ---- title menu entries */
 NAV_IC.camp='<path d="M4 20l6-14 4 8 3-5 3 11z"/>';
 const _cmNav=navRender; navRender=function(){ _cmNav(); const el=$('cNav'); if(!el) return; const h=el.innerHTML; if(h.indexOf('_camp"')>=0) return;

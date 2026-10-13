@@ -1,6 +1,20 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V1.99 — 2026-10-13
+- **Kara ve deniz görevleri:** görev panosuna **Kara** ve **Deniz** sekmeleri eklendi.
+  - *Konvoy savunması* (Altay): Kara Üssü'nden Güneş santralindeki konvoya git, saldıran araçları topla imha et.
+  - *Kirpi ile keşif*: Gölet, Güneş santrali ve Köy kontrol noktaları.
+  - *Pars ile atış tatbikatı*: poligondaki beş hedef.
+  - *Kaçakçı takibi* (hücumbot): açıkta dolaşan kaçakçı teknesine yetiş ve batır.
+  - *Liman devriyesi* (hücumbot): üç deniz devriye noktası.
+  - *Korvet topçu atışı* (Ada sınıfı): üç hedef dubası.
+  - *TCG Anadolu ile çıkarma*: dev gemiyi toplanma ve çıkarma noktalarına götür.
+  - Görevler hedef, süre, işaret, bitiş ekranı ve *Tekrar* ile çalışır. Gemide de hedef paneli görünür.
+  - Tank ve gemi mermileri artık görev hedeflerine hasar verir.
+  - Kariyerde ilgili belge gerekir (tank sürücülüğü, araç ehliyeti, kaptanlık).
+- **Düzeltme:** V1.98'deki Kızıl Elma madalyası eksik tanımlıydı; TP kazanıldığında hata çıkıp kariyer puanı yazılmıyordu.
+
 ## V1.98 — 2026-10-13
 - **Harekât: Kızıl Elma**: sekiz bölümlük hikâyeli kampanya. Ana menüde hem Hızlı Oyun'da hem Kariyer'de yer alıyor.
   - Bölümler: 1 *Uyanış* (İHA ile üç noktayı tara) · 2 *Sessiz Sürü* (kamikaze İHA sürüsünü önle) · 3 *Kalkan* (Anadolukent'e yakın hava desteği, görev ortasında yeni SAM) · 4 *Enkaz Altında* (T625 ile Hilal Barajı'ndan yaralı kurtarma) · 5 *Mavi Hat* (batı açıklarında deniz devriyesi ve gemi tanımlama, hava bozar) · 6 *Gölge Avı* (T129 ile Antik kentteki birliği temizle) · 7 *Hava Köprüsü* (nakliye uçağına refakat) · 8 *Kızıl Elma* (Kızıl Bölge'ye final taarruzu).

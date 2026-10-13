@@ -66,3 +66,4 @@ node harness.js /tmp/sim.js pcard.test.js
 node harness.js /tmp/sim.js assist.test.js
 node harness.js /tmp/sim.js gfxtest.test.js
 node harness.js /tmp/sim.js campaign.test.js
+node harness.js /tmp/sim.js groundsea.test.js

@@ -120,7 +120,7 @@ Her sürüm: kod + test + GitHub + yayın; telefon ve PC ekran görüntüsüyle 
 | V1.96 | **Duyurular, uçuş yardımı, belge düzeltmeleri.** Süreli/anlık duyurular, oyunculara 20 sn içinde iletim; Uçuş yardımı (Yardımlı: iniş göstergesi, otomatik burun kaldırma, hoşgörülü iniş, stol koruması · Otomatik iniş); görev günlüğüne ✕; belge aşamaları profilde (bulutta) saklanır, tekrarla geçilen aşama sayılır; İHA sınavı 150 m | ✅ |
 | V1.97 | **Görüntü sorunu testi.** Oyun sürerken katmanları (deniz, gökyüzü, bulut, gölge, efekt, ağaç, arazi, iki katmanlı derinlik, çözünürlük) tek tek kapatan panel; grafik ayarları bulut kaydıyla cihazlar arasında taşınmaz | ✅ |
 | V1.98 | **Harekât: Kızıl Elma.** Sekiz bölümlük hikâyeli kampanya (İHA keşfi, önleme, yakın hava desteği, arama-kurtarma, deniz devriyesi, T129 taarruzu, refakat, final taarruzu); telsiz brifingleri, yıldızlar, sırayla açılan bölümler, hikâye bonusu, Kızıl Elma madalyası | ✅ |
-| V1.99 | **Kara ve deniz görevleri.** Tank, Kirpi, hücumbot ve TCG Anadolu ile görevler (konvoy savunması, keşif, kaçakçı takibi, gemiden helikopter operasyonu) | |
+| V1.99 | **Kara ve deniz görevleri.** Görev panosunda Kara ve Deniz sekmeleri: Altay ile konvoy savunması, Kirpi ile keşif, Pars ile atış tatbikatı, hücumbotla kaçakçı takibi ve liman devriyesi, korvet topçu atışı, TCG Anadolu ile çıkarma; tank ve gemi mermileri görev hedeflerini vurur | ✅ |
 | V2.00 | **Ekip iletişimi.** Çok oyunculuda hızlı telsiz çarkı, haritaya işaret koyma, sesli sohbet iyileştirmeleri | |
 | V2.01 | **Android paketi.** Play Store için .aab (TWA), simge, açılış ekranı, gizlilik politikası sayfası | |
 
