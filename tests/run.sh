@@ -70,3 +70,4 @@ node harness.js /tmp/sim.js groundsea.test.js
 node harness.js /tmp/sim.js comms.test.js
 sh decl.sh
 node harness.js /tmp/sim.js install.test.js
+node harness.js /tmp/sim.js touch2.test.js

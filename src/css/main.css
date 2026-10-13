@@ -963,3 +963,19 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 
 /* ---- V2.01 install button */
 .c-ibtns button.cinst{ border-color:rgba(125,255,176,.5); color:#7dffb0; } .c-ibtns button.cinst.hidden{ display:none; }
+
+/* ---- V2.02 touch 2.0 */
+.touch .tzone{ position:absolute; left:0; top:16%; width:44%; bottom:0; pointer-events:auto; touch-action:none; }
+.touch.lefty .tzone{ left:auto; right:0; }
+.tstick.tfloat{ transition:none; opacity:.95; } .tstick.tgyro{ display:none; }
+body.tedit .touch{ pointer-events:none; z-index:61; } body.tedit .touch .tzone{ display:none; }
+body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body.tedit .touch .ttop,body.tedit .tping,body.tedit .touch .wright{ outline:2px dashed #ffd27a; outline-offset:4px; cursor:move; pointer-events:auto; }
+.tdrag{ opacity:.7; }
+.tedbar{ position:fixed; top:max(10px,env(safe-area-inset-top)); left:50%; transform:translateX(-50%); z-index:70; display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center; padding:8px 12px; border-radius:12px; background:rgba(8,12,20,.95); border:1px solid #ffd27a; color:#fff; font-size:12px; max-width:calc(100vw - 24px); }
+.tedbar.hidden{ display:none; } .tedbar b{ color:#ffd27a; letter-spacing:.14em; } .tedbar span{ color:var(--dim); }
+.tguide{ position:fixed; inset:0; z-index:66; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; }
+.tguide .tgp{ position:fixed; width:220px; padding:8px 10px; border-radius:10px; background:rgba(8,12,20,.95); border:1px solid #39e6ff; color:#fff; font-size:12px; line-height:1.4; }
+.tguide .tgp b{ display:inline-grid; place-items:center; width:20px; height:20px; margin-right:6px; border-radius:50%; background:#39e6ff; color:#06101c; font-size:11px; }
+.tping.inbar{ position:static; width:auto; height:auto; border-radius:999px; font-size:16px; padding:0 14px; pointer-events:auto; }
+.tguide #tgOk{ position:fixed; left:50%; top:24%; transform:translateX(-50%); }
+.tedbar{ top:30%; }

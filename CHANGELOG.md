@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.02 — 2026-10-13
+- **Serbest çubuk:** uçuşta ve yürürken/sürerken, ekranın sol tarafında nereye dokunursan yön çubuğu orada açılır; parmağını kaldırınca yerine döner. Ayarlar → Kontroller → Dokunmatik → *Serbest çubuk* ile kapatılabilir.
+- **Düzen düzenleyici** (Ayarlar → Kontroller → Dokunmatik → *Düzenle*):
+  - Yön çubuğu, gaz, ateş/flare/dümen kümesi, üst düğmeler, işaret düğmesi ve yürüme düzeni sürüklenip istenen yere taşınır.
+  - Konumlar cihaza kaydedilir; *Sıfırla* ile varsayılana dönülür.
+- **Hazır düzenler:** Klasik · Sol el (çubuk sağda, düğmeler solda) · Eğerek uç (telefonu eğerek yönlendirme, çubuk gizli).
+- **Dokunmatik rehberi:** dokunmatik kumanda ilk açıldığında yön çubuğu, gaz, ateş ve flare için dört kısa ipucu çıkar; ayarlardan tekrar gösterilebilir.
+- Her dokunmatik düğmede kısa bir titreşim (Android).
+- İşaret (📍) düğmesi üst düğme çubuğuna taşındı; mini haritanın üstüne binmiyor.
+
 ## V2.01 — 2026-10-13
 - **Yeni uygulama simgesi:** kırmızı zemin üzerinde ay yıldız ve iz bırakan beyaz savaş uçağı.
   - Android'in yuvarlak, damla ve kare maskelerine uyan *maskelenebilir* sürüm, Android 13+ temalı simgeler için tek renkli sürüm, 48–512 piksel boyutlar ve SVG kaynak.

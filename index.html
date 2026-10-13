@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V2.01">
+<meta name="game-version" content="V2.02">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#a10d1c">
@@ -981,6 +981,22 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 
 /* ---- V2.01 install button */
 .c-ibtns button.cinst{ border-color:rgba(125,255,176,.5); color:#7dffb0; } .c-ibtns button.cinst.hidden{ display:none; }
+
+/* ---- V2.02 touch 2.0 */
+.touch .tzone{ position:absolute; left:0; top:16%; width:44%; bottom:0; pointer-events:auto; touch-action:none; }
+.touch.lefty .tzone{ left:auto; right:0; }
+.tstick.tfloat{ transition:none; opacity:.95; } .tstick.tgyro{ display:none; }
+body.tedit .touch{ pointer-events:none; z-index:61; } body.tedit .touch .tzone{ display:none; }
+body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body.tedit .touch .ttop,body.tedit .tping,body.tedit .touch .wright{ outline:2px dashed #ffd27a; outline-offset:4px; cursor:move; pointer-events:auto; }
+.tdrag{ opacity:.7; }
+.tedbar{ position:fixed; top:max(10px,env(safe-area-inset-top)); left:50%; transform:translateX(-50%); z-index:70; display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center; padding:8px 12px; border-radius:12px; background:rgba(8,12,20,.95); border:1px solid #ffd27a; color:#fff; font-size:12px; max-width:calc(100vw - 24px); }
+.tedbar.hidden{ display:none; } .tedbar b{ color:#ffd27a; letter-spacing:.14em; } .tedbar span{ color:var(--dim); }
+.tguide{ position:fixed; inset:0; z-index:66; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; }
+.tguide .tgp{ position:fixed; width:220px; padding:8px 10px; border-radius:10px; background:rgba(8,12,20,.95); border:1px solid #39e6ff; color:#fff; font-size:12px; line-height:1.4; }
+.tguide .tgp b{ display:inline-grid; place-items:center; width:20px; height:20px; margin-right:6px; border-radius:50%; background:#39e6ff; color:#06101c; font-size:11px; }
+.tping.inbar{ position:static; width:auto; height:auto; border-radius:999px; font-size:16px; padding:0 14px; pointer-events:auto; }
+.tguide #tgOk{ position:fixed; left:50%; top:24%; transform:translateX(-50%); }
+.tedbar{ top:30%; }
 </style>
 </head>
 <body>
@@ -1238,6 +1254,10 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
           <div class="srow"><div class="sl"><b>Saydamlık</b><small><output id="tchOpV"></output></small></div><input type="range" id="tchOp" min="30" max="100"></div>
           <div class="srow"><div class="sl"><b>Çubuk hassasiyeti</b><small><output id="tchStickV"></output></small></div><input type="range" id="tchStick" min="50" max="200"></div>
           <div class="srow"><div class="sl"><b>Solak düzeni</b><small>Çubuk sağda, düğmeler solda</small></div><label class="tgl"><input type="checkbox" id="tchLeft"><i></i></label></div>
+          <div class="srow"><div class="sl"><b>Hazır düzen</b><small>Klasik · Sol el (çubuk sağda) · Eğerek uç (telefonu eğerek yönlendir, çubuk gizli)</small></div><div class="seg" id="tchPreset"><button type="button" data-p="klasik">Klasik</button><button type="button" data-p="solel">Sol el</button><button type="button" data-p="egim">Eğerek uç</button></div></div>
+          <div class="srow"><div class="sl"><b>Serbest çubuk</b><small>Sol tarafta nereye dokunursan çubuk orada açılır</small></div><label class="tgl"><input type="checkbox" id="tchFloat"><i></i></label></div>
+          <div class="srow"><div class="sl"><b>Düzeni düzenle</b><small>Çubuğu, gazı, düğmeleri ve üst çubuğu sürükleyip istediğin yere taşı</small></div><button class="btn" id="btnTchEdit" type="button">Düzenle</button></div>
+          <div class="srow"><div class="sl"><b>Dokunmatik rehberi</b><small>İlk uçuştaki kısa anlatımı tekrar göster</small></div><button class="btn" id="btnTchTut" type="button">Tekrar göster</button></div>
         </div>
       </div>
     </section>
@@ -1548,7 +1568,7 @@ html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="li
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V2.01', GAME_DATE='2026-10-13';
+const GAME_VERSION='V2.02', GAME_DATE='2026-10-13';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -13202,6 +13222,78 @@ setTimeout(instBtn,800);
 /* launcher shortcuts: index.html?act=q_quick / q_camp / q_mis */
 (function(){ let act=null; try{ act=new URLSearchParams(location.search).get('act'); }catch(e){} if(!act||!/^q_(quick|camp|mis|free|walk)$/.test(act)) return;
   setTimeout(function(){ try{ if(state==='menu'){ if(typeof loginClose==='function') loginClose(); titleAct(act); } }catch(e){} try{ history.replaceState(null,'',location.pathname); }catch(e){} },1600); })();
+/* ------------------------------------------------------------------ touch controls 2.0 (V2.02)
+   • Floating stick: touching anywhere in the free left part of the screen puts the stick under the finger (flight and on foot /
+     in vehicles). Off in Ayarlar → Kontroller → Dokunmatik if a fixed stick is preferred.
+   • Layout editor: Ayarlar → Kontroller → Dokunmatik → "Düzeni düzenle": drag the stick, throttle, button cluster, top bar
+     and ping button anywhere; positions are saved per device. "Sıfırla" returns to the default layout.
+   • Ready-made layouts: Klasik · Sol el · Eğerek uç (tilt flying, stick hidden).
+   • A short vibration on every touch button; a 4-step first-time guide the first time the touch controls appear in flight. */
+const TED={on:false, drag:null};
+const TED_ITEMS=[['tStick','Yön çubuğu'],['tThr','Gaz'],['tRight','Ateş · flare · dümen'],['ttopF','Üst düğmeler'],['tPing','İşaret'],['wStick','Yürüme / sürüş çubuğu'],['wRight','Eylem düğmeleri']];
+function t2Opt(){ const t=SETTINGS.tch||{}; return {float:t.float!==false, pos:t.pos||{}, preset:t.preset||'klasik'}; }
+function t2El(id){ if(id==='ttopF') return document.querySelector('#touch .ttop'); if(id==='wRight') return document.querySelector('#wtouch .wright'); return $(id); }
+/* ---- saved positions */
+function t2Apply(){ const P=t2Opt().pos; TED_ITEMS.forEach(function(it){ const el=t2El(it[0]); if(!el||!el.style) return; const p=P[it[0]];
+    if(p){ el.style.left=(p[0]*100).toFixed(2)+'vw'; el.style.top=(p[1]*100).toFixed(2)+'vh'; el.style.right='auto'; el.style.bottom='auto'; el.classList.add('tmoved'); }
+    else if(el.classList.contains('tmoved')){ el.style.left=el.style.top=el.style.right=el.style.bottom=''; el.classList.remove('tmoved'); } });
+  const egim=t2Opt().preset==='egim'; const st=$('tStick'); if(st) st.classList.toggle('tgyro',egim); }
+const _t2Opt=applyTouchOpt; applyTouchOpt=function(){ _t2Opt(); try{ t2Apply(); }catch(e){} };
+/* ---- floating stick */
+function t2Zone(host,stickId){ const h=$(host), st=$(stickId); if(!h||!st||!document.createElement||typeof h.insertBefore!=='function') return; const z=document.createElement('div'); z.className='tzone'; h.insertBefore(z,h.firstChild);
+  z.addEventListener('pointerdown',function(e){ if(!t2Opt().float||TED.on) return; if(stickId==='tStick'&&st.classList.contains('tgyro')) return; e.preventDefault();
+    const r=st.getBoundingClientRect(); st.style.left=(e.clientX-r.width/2)+'px'; st.style.top=(e.clientY-r.height/2)+'px'; st.style.right='auto'; st.style.bottom='auto'; st.classList.add('tfloat');
+    try{ st.dispatchEvent(new PointerEvent('pointerdown',{pointerId:e.pointerId,clientX:e.clientX,clientY:e.clientY,bubbles:true,cancelable:true,pointerType:e.pointerType,isPrimary:true})); }catch(err){} });
+  const back=function(){ if(!st.classList.contains('tfloat')) return; st.classList.remove('tfloat'); st.style.left=st.style.top=st.style.right=st.style.bottom=''; t2Apply(); };
+  st.addEventListener('pointerup',back); st.addEventListener('pointercancel',back); }
+t2Zone('touch','tStick'); t2Zone('wtouch','wStick');
+/* ---- haptics on touch buttons */
+document.addEventListener('pointerdown',function(e){ if(e.pointerType!=='touch'||TED.on) return; const b=e.target&&e.target.closest&&e.target.closest('.touch button, .tping'); if(!b) return; try{ if(typeof hapticOK==='function'&&hapticOK()) navigator.vibrate(8); }catch(err){} },true);
+/* ---- layout editor */
+function tedOpen(){ closeModals(); TED.on=true; document.body.classList.add('tedit'); ['touch','wtouch'].forEach(function(id){ const el=$(id); if(el) el.classList.add('hidden'); });
+  const t=$('touch'); t.classList.remove('hidden'); const tp=$('tPing'); if(tp) tp.classList.remove('hidden');
+  let bar=$('tedBar'); if(!bar){ bar=document.createElement('div'); bar.id='tedBar'; bar.className='tedbar'; bar.innerHTML='<b>DÜZEN DÜZENLEYİCİ</b><span>Öğeleri sürükleyip istediğin yere bırak</span><button type="button" class="btn sm" id="tedWalk">Yürüme düzeni</button><button type="button" class="btn sm" id="tedReset">Sıfırla</button><button type="button" class="btn sm primary" id="tedDone">Bitti</button>'; document.body.appendChild(bar);
+    bar.querySelector('#tedReset').addEventListener('click',function(){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.pos={}; saveSettings(); t2Apply(); toast('Dokunmatik düzen varsayılana döndü','#b8ecff'); });
+    bar.querySelector('#tedDone').addEventListener('click',tedClose);
+    bar.querySelector('#tedWalk').addEventListener('click',function(){ const a=$('touch'), w=$('wtouch'), walk=a.classList.contains('hidden'); a.classList.toggle('hidden',!walk); w.classList.toggle('hidden',walk); this.textContent=walk?'Yürüme düzeni':'Uçuş düzeni'; }); }
+  bar.classList.remove('hidden'); t2Apply(); }
+function tedClose(){ TED.on=false; document.body.classList.remove('tedit'); const bar=$('tedBar'); if(bar) bar.classList.add('hidden'); ['touch','wtouch'].forEach(function(id){ const el=$(id); if(el) el.classList.add('hidden'); });
+  TOUCH.vis=false; saveSettings(); toast('Dokunmatik düzen kaydedildi','#7dffb0'); }
+function tedItemAt(t){ for(let i=0;i<TED_ITEMS.length;i++){ const el=t2El(TED_ITEMS[i][0]); if(el&&el.contains&&el.contains(t)) return TED_ITEMS[i][0]; } return null; }
+document.addEventListener('pointerdown',function(e){ if(!TED.on) return; const id=tedItemAt(e.target); if(!id) return; e.preventDefault(); e.stopImmediatePropagation();
+  const el=t2El(id), r=el.getBoundingClientRect(); TED.drag={id:id,el:el,dx:e.clientX-r.left,dy:e.clientY-r.top,pid:e.pointerId}; el.classList.add('tdrag'); },true);
+document.addEventListener('pointermove',function(e){ const d=TED.drag; if(!TED.on||!d||e.pointerId!==d.pid) return; e.preventDefault(); e.stopImmediatePropagation();
+  const W=window.innerWidth, H=window.innerHeight, r=d.el.getBoundingClientRect(); const x=clamp(e.clientX-d.dx,0,W-r.width), y=clamp(e.clientY-d.dy,0,H-r.height);
+  d.el.style.left=x+'px'; d.el.style.top=y+'px'; d.el.style.right='auto'; d.el.style.bottom='auto'; d.x=x/W; d.y=y/H; },true);
+document.addEventListener('pointerup',function(e){ const d=TED.drag; if(!TED.on||!d) return; e.stopImmediatePropagation(); d.el.classList.remove('tdrag'); TED.drag=null;
+  if(d.x!=null){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.pos=Object.assign({},SETTINGS.tch.pos||{}); SETTINGS.tch.pos[d.id]=[d.x,d.y]; saveSettings(); t2Apply(); } },true);
+['click','pointercancel'].forEach(function(ev){ document.addEventListener(ev,function(e){ if(TED.on&&tedItemAt(e.target)){ e.stopImmediatePropagation(); e.preventDefault(); } },true); });
+/* keep the touch layers visible while editing */
+const _t2Upd=updateTouchUI; updateTouchUI=function(){ if(TED.on) return; _t2Upd(); };
+/* ---- presets */
+function t2Preset(k){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.preset=k; SETTINGS.tch.left=(k==='solel'); SETTINGS.tch.pos={};
+  if(k==='egim'){ SETTINGS.gyro=true; try{ gyroStart(); }catch(e){} } else if(SETTINGS.gyro&&k!=='egim'){ SETTINGS.gyro=false; try{ gyroStop(); }catch(e){} }
+  saveSettings(); applyTouchOpt(); syncSettingsUI(); toast({klasik:'Klasik düzen',solel:'Sol el düzeni: çubuk sağda, düğmeler solda',egim:'Eğerek uç: telefonu eğerek yönlendir, çubuk gizli'}[k],'#b8ecff'); }
+/* ---- first-time guide */
+function t2Guide(){ if(SETTINGS.tchTut||TED.on) return; const st=$('tStick'); if(!st||!TOUCH.vis) return; const g=document.createElement('div'); g.className='tguide';
+  const pts=[['tStick','Yön çubuğu: sol tarafta nereye dokunursan orada açılır. Yukarı = burun aşağı'],['tThr','Gaz: yukarı kaydır. En üst bölge art yakıcı'],['tFire','Ateş: seçili silah. Silah değiştirmek için alttaki silah kutularına dokun'],['tFlare','Flare: füze uyarısında bas']];
+  const W=window.innerWidth, H=window.innerHeight, used=[];
+  g.innerHTML=pts.map(function(p,i){ const el=$(p[0]); if(!el) return ''; const r=el.getBoundingClientRect(), right=r.left+r.width/2>W/2;
+    let left=right?r.left-232:r.right+12, top=r.top+r.height/2-34; left=clamp(left,8,W-228);
+    for(let k=0;k<6;k++){ if(used.some(function(u){ return Math.abs(u[0]-left)<220&&Math.abs(u[1]-top)<74; })) top-=78; else break; } top=clamp(top,8,H-80); used.push([left,top]);
+    return '<div class="tgp" style="left:'+left+'px;top:'+top+'px"><b>'+(i+1)+'</b>'+p[1]+'</div>'; }).join('')+'<button type="button" class="btn primary" id="tgOk">Anladım</button>';
+  document.body.appendChild(g); g.querySelector('#tgOk').addEventListener('click',function(){ g.remove(); SETTINGS.tchTut=true; saveSettings(); }); }
+const _t2Upd2=updateTouchUI; updateTouchUI=function(){ const was=TOUCH.vis; _t2Upd2(); if(!was&&TOUCH.vis) setTimeout(t2Guide,1200); };
+/* ---- settings UI */
+(function(){ const fl=$('tchFloat'); if(fl) fl.addEventListener('change',function(){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.float=fl.checked; saveSettings(); });
+  const ed=$('btnTchEdit'); if(ed) ed.addEventListener('click',tedOpen);
+  const pr=$('tchPreset'); if(pr) pr.addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(b) t2Preset(b.dataset.p); });
+  const tg=$('btnTchTut'); if(tg) tg.addEventListener('click',function(){ SETTINGS.tchTut=false; saveSettings(); toast('Rehber bir sonraki uçuşta açılacak','#b8ecff'); }); })();
+const _t2Sync=syncSettingsUI; syncSettingsUI=function(){ _t2Sync(); const o=t2Opt(), fl=$('tchFloat'); if(fl) fl.checked=o.float; const pr=$('tchPreset'); if(pr) Array.prototype.forEach.call(pr.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.p===o.preset)); }); };
+setTimeout(function(){ try{ t2Apply(); }catch(e){} },0);
+/* the ping button sits in the top bar of whichever touch layer is visible */
+const _t2Upd3=updateTouchUI; updateTouchUI=function(){ _t2Upd3(); const b=$('tPing'); if(!b||TED.on) return; const bar=TOUCH.vis?document.querySelector('#touch .ttop'):(WALK.tvis?document.querySelector('#wtouch .ttop'):null);
+  if(bar&&b.parentNode!==bar&&bar.appendChild){ bar.appendChild(b); b.classList.add('inbar'); } };
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
