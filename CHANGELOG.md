@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.07 — 2026-10-13
+- **Akrobasi tanıyıcı:** uçuş saniyede 10 kez izlenir (gövde eksenlerindeki dönüş, yön, burun, yatış, irtifa, hız). Bir figür tamamlanınca ekranın üstünde adı, kalitesi (Mükemmel / İyi / Geçer) ve puanı çıkar.
+  - Tanınan figürler: **Tonoz**, **Fıçı tonoz**, **Looping**, **Immelmann**, **Split-S**, **Cuban 8**, **Hammerhead**, **Sırtüstü uçuş**, **Bıçak sırtı**.
+  - Kalite irtifa ve yön tutarlılığından hesaplanır.
+- **Akrobasi dumanı:** F6 (dokunmatikte üst çubukta *DUMAN*) ile kırmızı/beyaz yumuşak duman izi; 25 saniyede söner.
+- **Yeni görev, Akrobasi gösterisi** (Eğitim): Türk Yıldızları tarzında tonoz → looping → Immelmann → Split-S → fıçı tonoz sırasıyla uçulur.
+  - Her figür için ipucu görünür; hakemler puan verir, yıldız puana göre belirlenir.
+  - Görev 900 m'de dumanı açık başlar.
+- Altyapı genel yazıldı: kol uçuşu ve kanat adamı düzeni (V2.09) aynı tanıyıcıyı kullanabilir.
+
 ## V2.06 — 2026-10-13
 - **Gözden geçirme:** bütün ana ekranlar telefonda (yatay) ve bilgisayarda tek tek kontrol edildi. Rapor `docs/GOZDEN-GECIRME.md` dosyasında.
 - **Hangar (telefon):** uçak adı artık sınıf filtreleriyle üst üste binmiyor.

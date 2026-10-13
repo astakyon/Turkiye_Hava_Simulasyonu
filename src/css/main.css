@@ -1017,3 +1017,4 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
 }
 .mapside{ background:rgba(6,12,22,.96)!important; z-index:5; }
 .vopts{ display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin:2px 0 6px 24px; font-size:12.5px; } .vopts .vvol{ display:flex; align-items:center; gap:6px; color:var(--dim); } .vopts input[type=range]{ width:110px; }
+#tSmoke.on{ border-color:#ffd27a; color:#ffd27a; }
