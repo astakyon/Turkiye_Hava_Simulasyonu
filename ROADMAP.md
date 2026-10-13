@@ -219,7 +219,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 
 | Sürüm | Başlık | Durum |
 |---|---|---|
-| V2.12 | Performans ölçer ve cihaz raporu | |
+| V2.12 | Performans ölçer ve cihaz raporu | ✅ |
 | V2.13 | Birleştirme 2.0 | |
 | V2.14 | Araç ve uçak modellerinde parça birleştirme | |
 | V2.15 | Gölge 2.0 | |
