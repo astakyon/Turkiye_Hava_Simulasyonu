@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.03 — 2026-10-13
+- **Görev ekranı yenilendi**: tek ekran, iki sütun, üst üste binme yok.
+  - Üstte tek satırlık kategori sekmeleri: Tümü · ★ Harekât · Eğitim · Hava · Taarruz · Keşif · Helikopter · Dinamik · Okul · Yarış · Kara · Deniz. Satır kaydırılabilir.
+  - Zorluk, süre ve sıralama **⚙ Filtre** düğmesinin altında; düğmede kaç filtre seçili olduğu yazar.
+  - Görevler kart olarak listelenir. Her kategorinin kendi rengi var (hava kırmızı, eğitim turkuaz, kara yeşil, deniz mavi…); süre, zorluk ve ödül kartın altında renkli yazar.
+  - Sağ panelde harita, hedefler, tehditler ve araç bulunur. *Başla* düğmesi hep altta görünür.
+  - Düşman, kanat adamı, zorluk ve başlangıç yeri ayarları *Gelişmiş ayarlar* başlığının altına katlandı.
+  - ★ Harekât sekmesi Kızıl Elma kampanyasını açar.
+  - Telefonda yatay ekrana sığacak şekilde sıkışır.
+
 ## V2.02 — 2026-10-13
 - **Serbest çubuk:** uçuşta ve yürürken/sürerken, ekranın sol tarafında nereye dokunursan yön çubuğu orada açılır; parmağını kaldırınca yerine döner. Ayarlar → Kontroller → Dokunmatik → *Serbest çubuk* ile kapatılabilir.
 - **Düzen düzenleyici** (Ayarlar → Kontroller → Dokunmatik → *Düzenle*):

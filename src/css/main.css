@@ -979,3 +979,29 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
 .tping.inbar{ position:static; width:auto; height:auto; border-radius:999px; font-size:16px; padding:0 14px; pointer-events:auto; }
 .tguide #tgOk{ position:fixed; left:50%; top:24%; transform:translateX(-50%); }
 .tedbar{ top:30%; }
+
+/* ---- V2.03 mission screen 2 */
+#missionsUI.mis2:not(.hidden){ display:grid; grid-template-columns:minmax(260px,36%) minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); gap:10px 18px; box-sizing:border-box;
+  padding:calc(max(12px,env(safe-area-inset-top)) + 46px) max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left)); pointer-events:auto; }
+#missionsUI.mis2 .bfilt{ position:static; grid-column:1/-1; width:auto; display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+#missionsUI.mis2 .bfilt .bseg{ display:none; } #missionsUI.mis2 .bfilt .bseg[data-k="cat"]{ display:flex; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; gap:4px; flex:1; min-width:0; padding-bottom:2px; }
+#missionsUI.mis2 .bfilt .bseg[data-k="cat"]::-webkit-scrollbar{ display:none; }
+#missionsUI.mis2 .bfilt .bseg[data-k="cat"] button{ flex:none; padding:8px 14px; border-radius:999px; font-size:13px; font-weight:700; }
+#missionsUI.mis2 .bfilt.open .bseg:not([data-k="cat"]){ display:flex; flex-wrap:wrap; gap:4px; flex-basis:100%; order:3; }
+#missionsUI.mis2 .bftg{ flex:none; order:2; padding:8px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.18); background:rgba(8,15,28,.7); color:#dfe9f1; font-weight:700; font-size:12.5px; cursor:pointer; }
+#missionsUI.mis2 .bftg[aria-pressed="true"]{ border-color:#ffb25a; color:#ffb25a; }
+#missionsUI.mis2 .mlist.mis{ position:static; width:auto; max-height:none; min-height:0; overflow:auto; margin:0; padding:2px 4px 8px 0; display:flex; flex-direction:column; gap:6px; }
+#missionsUI.mis2 .mlist.mis li{ list-style:none; }
+#missionsUI.mis2 .mlist.mis .mitem{ height:auto; min-height:54px; padding:10px 12px 10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.09); border-left:4px solid var(--cc,#9fb0c2); background:rgba(8,15,28,.72); }
+#missionsUI.mis2 .mlist.mis .mitem > span:first-child{ display:none; }
+#missionsUI.mis2 .mlist.mis .mitem.kf,#missionsUI.mis2 .mlist.mis .mitem:hover{ background:linear-gradient(90deg,rgba(227,10,23,.28),rgba(8,15,28,.85)); border-color:rgba(255,255,255,.2); border-left-color:var(--cc,#9fb0c2); }
+#missionsUI.mis2 .mlist.mis .bt{ font-size:14px; letter-spacing:.02em; } #missionsUI.mis2 .mlist.mis .bc{ font-size:11px; margin-top:3px; color:var(--cc,#9fb0c2); opacity:.9; }
+#missionsUI.mis2 .misdet{ position:static; width:auto; max-height:none; min-height:0; overflow:auto; }
+#missionsUI.mis2 .misopts{ border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:8px 10px; }
+#missionsUI.mis2 .misopts .k{ cursor:pointer; margin:0; } #missionsUI.mis2 .misopts:not(.collapsed) .k{ margin-bottom:8px; }
+#missionsUI.mis2 .misopts.collapsed > :not(.k){ display:none; }
+#missionsUI.mis2 .sbar{ position:fixed; }
+@media (max-height:520px) and (orientation:landscape){ #missionsUI.mis2:not(.hidden){ grid-template-columns:minmax(220px,40%) minmax(0,1fr); padding-top:calc(max(8px,env(safe-area-inset-top)) + 40px); padding-bottom:30px; gap:6px 12px; }
+  #missionsUI.mis2 .mlist.mis .mitem{ min-height:44px; padding:6px 10px; } #missionsUI.mis2 .bfilt .bseg[data-k="cat"] button,#missionsUI.mis2 .bftg{ padding:6px 11px; font-size:12px; } #missionsUI.mis2 .bmap{ height:110px; } }
+@media (max-width:640px){ #missionsUI.mis2:not(.hidden){ grid-template-columns:1fr; grid-template-rows:auto 34vh minmax(0,1fr); } #missionsUI.mis2 .misdet{ top:auto; bottom:auto; left:auto; } }
+#missionsUI.mis2 .bseg button.bcamp{ border-color:#ffd27a; color:#ffd27a; }
