@@ -1031,3 +1031,8 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
 .relbody ul{ margin:4px 0; padding-left:20px; } .relbody li{ margin:3px 0; line-height:1.4; font-size:14px; } .relbody code{ font-size:12px; background:rgba(255,255,255,.08); padding:1px 4px; border-radius:4px; }
 .annbar button.relmore{ width:auto; height:32px; padding:0 12px; border-radius:16px; font-size:13px; background:rgba(255,209,102,.15); border-color:rgba(255,209,102,.5); color:#ffd166; white-space:nowrap; }
 @media (max-height:500px){ .relcard{ max-height:94vh; } .relbody li{ font-size:13px; } }
+/* V2.10 wingman orders */
+.radiomenu.wingmenu{ left:auto; right:max(14px,env(safe-area-inset-right)); } .radiomenu b.wsub{ display:block; margin-top:6px; } .wingmenu button.on{ border-color:#7dffb0; color:#7dffb0; }
+.radiomenu{ max-height:calc(100vh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow:auto; -webkit-overflow-scrolling:touch; }
+#radioMenu .wrow{ display:grid; grid-template-columns:1fr 1fr; gap:4px; } #radioMenu .wrow button{ border-color:var(--line); justify-content:center; }
+@media (max-height:500px){ .radiomenu button{ padding:5px 8px; font-size:12px; } }

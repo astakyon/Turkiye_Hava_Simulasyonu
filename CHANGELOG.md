@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.10 — 2026-10-13 · Kanat adamı komutları
+- **Kanat adamına emir:** uçuşta **F8** (dokunmatikte TELSİZ menüsünün altındaki KANAT ADAMI bölümü) ile Kılıç 2'ye emir verilir:
+  - **Saldır:** kilitli hedefine (kilit yoksa sana en yakın düşmana) saldırır, hedef düşünce yanına döner.
+  - **Kolla:** varsayılan; düzende kalır, sana yaklaşan tehditlerle çatışır.
+  - **Düzene gir:** sağ kanadına sıkı kol düzeninde girer, hedeflerle uğraşmaz (akrobasi ve alçak geçişler için).
+  - **Üsse dön:** ayrılır, üsse gidip iner.
+- Emir telsizden karşılıklı konuşmayla onaylanır; geçerli emir kanat adamının işaretinin üstünde yazar (SALDIRIYOR · DÜZENDE · ÜSSE DÖNÜYOR).
+- F8 tuşu Ayarlar → Kontroller'den değiştirilebilir; menüde 1–4 ile seçilir.
+- Telsiz menüsü kısa (yatay) telefon ekranlarında artık kayıyor, taşmıyor.
+
 ## V2.09 — 2026-10-13 · Optimizasyon 2.0, ayarlar düzeni, sürüm notları
 - **Kaybolan ağaçlar ve nesneler düzeltildi:** ekranın ortasındaki ağaç, kaya ve park etmiş araç grupları artık kaybolmuyor. Grupların görünürlük küresi her karede yeniden hesaplanıp küçülüyordu; asıl küre korunuyor ve her adımda denetleniyor.
 - **Optimizasyon 2.0:**
