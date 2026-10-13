@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V2.08">
+<meta name="game-version" content="V2.09">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#a10d1c">
@@ -1037,6 +1037,18 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
 .vopts{ display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin:2px 0 6px 24px; font-size:12.5px; } .vopts .vvol{ display:flex; align-items:center; gap:6px; color:var(--dim); } .vopts input[type=range]{ width:110px; }
 #tSmoke.on{ border-color:#ffd27a; color:#ffd27a; }
 .ttop .tevade{ border-color:#ff5a4a; color:#ff8a7a; font-weight:800; animation:tevBlink .6s infinite alternate; } .ttop .tevade.hidden{ display:none; } @keyframes tevBlink{ to{ background:rgba(255,58,42,.35); } }
+/* V2.10 — settings groups, release notes */
+.sgrp{ margin:18px 0 6px; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted,#8fa3bf); border-top:1px solid var(--line,rgba(255,255,255,.12)); padding-top:12px; }
+.relcard{ max-width:min(760px,calc(100vw - 32px)); max-height:min(86vh,900px); display:flex; flex-direction:column; position:relative; }
+.relcard h2{ margin:0 48px 10px 0; }
+.relbody{ overflow:auto; padding-right:6px; -webkit-overflow-scrolling:touch; }
+.relbody section{ padding:10px 0 14px; border-bottom:1px solid var(--line,rgba(255,255,255,.12)); }
+.relbody section:last-child{ border-bottom:0; }
+.relbody h3{ margin:0 0 4px; font-size:17px; color:#ffd166; } .relbody h3 small{ font-size:12px; color:var(--muted,#8fa3bf); font-weight:400; margin-left:6px; }
+.relbody .rt{ margin:0 0 6px; font-weight:600; }
+.relbody ul{ margin:4px 0; padding-left:20px; } .relbody li{ margin:3px 0; line-height:1.4; font-size:14px; } .relbody code{ font-size:12px; background:rgba(255,255,255,.08); padding:1px 4px; border-radius:4px; }
+.annbar button.relmore{ width:auto; height:32px; padding:0 12px; border-radius:16px; font-size:13px; background:rgba(255,209,102,.15); border-color:rgba(255,209,102,.5); color:#ffd166; white-space:nowrap; }
+@media (max-height:500px){ .relcard{ max-height:94vh; } .relbody li{ font-size:13px; } }
 </style>
 </head>
 <body>
@@ -1235,36 +1247,48 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
 <div id="settings" class="modal fs hidden">
   <button class="btn back" id="btnSetClose" type="button">← Geri</button>
   <div class="shdr"><span>■</span> AYARLAR</div>
-  <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="o" aria-selected="false">Oynanış</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button><button type="button" data-tab="e" aria-selected="false">Erişilebilirlik</button></div>
+  <div class="stabs" id="setTabs" role="tablist"><button type="button" data-tab="g" aria-selected="true">Grafik</button><button type="button" data-tab="u" aria-selected="false">Uçuş</button><button type="button" data-tab="d" aria-selected="false">Dünya</button><button type="button" data-tab="k" aria-selected="false">Kontroller</button><button type="button" data-tab="s" aria-selected="false">Ses</button><button type="button" data-tab="a" aria-selected="false">Arayüz</button><button type="button" data-tab="e" aria-selected="false">Erişilebilirlik</button></div>
   <div class="spanel">
     <div class="stool"><input type="search" id="setSearch" class="inp" placeholder="Ayar ara…" autocomplete="off" aria-label="Ayar ara"><label class="chk"><input type="checkbox" id="setAdv"> Gelişmiş</label><button type="button" class="btn" id="btnSetUndo" disabled title="Bu pencere açıldığından beri yapılan değişiklikleri geri al">↶ Geri al</button><button type="button" class="btn" id="btnSetDef" title="Tüm ayarları varsayılana döndür (kontrol tuşları ve çağrı adı korunur)">Varsayılanlar</button></div>
     <p class="snores hidden" id="setNoRes">Aramana uyan ayar yok.</p>
     <section data-tab="g">
+      <div class="srow"><div class="sl"><b>Cihaza göre ayarla</b><small>Ekran kartını, belleği ve işlemciyi tanıyıp bu cihaz için en uygun hazır ayarı seçer</small></div><button class="btn" id="btnTier" type="button">Ayarla</button></div>
       <div class="srow"><div class="sl"><b>Grafik kalitesi</b><small id="setQInfo">Hazır ayar: çözünürlük, ağaç ve bulut yoğunluğu, gölge, efektler, kenar yumuşatma ve uzak nesne ayrıntısını birlikte ayarlar</small></div><div class="seg" id="setQ"><button type="button" data-q="0">Düşük</button><button type="button" data-q="1">Orta</button><button type="button" data-q="2">Yüksek</button><button type="button" data-q="3">Ultra</button></div></div>
+      <div class="srow"><div class="sl"><b>Performans modu</b><small>Tek dokunuşla en akıcı ayarlar: düşük kalite, gölge ve efektler kapalı (telefonda 30 FPS sınırı)</small></div><button class="btn" id="btnPerfMode" type="button">Uygula</button></div>
       <div class="srow"><div class="sl"><b>Gölgeler</b><small>Güneş gölgeleri. Telefonda varsayılan kapalı; açınca FPS düşebilir</small></div><div class="seg" id="setShadow"><button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Açık</button></div></div>
-      <div class="srow"><div class="sl"><b>Gün saati</b><small>Döngü: 20 dakikada bir tam gün (sabah, öğle, akşam, gece)</small></div><div class="seg" id="setTod"><button type="button" data-t="dawn">Sabah</button><button type="button" data-t="day">Öğle</button><button type="button" data-t="dusk">Akşam</button><button type="button" data-t="night">Gece</button><button type="button" data-t="cycle">Döngü</button></div></div>
-      <div class="srow"><div class="sl"><b>Hava durumu</b><small>Değişken: birkaç dakikada bir kendiliğinden değişir · rüzgâr ve türbülans uçuşu etkiler</small></div><div class="seg wrap" id="setWx"><button type="button" data-w="clear">Açık</button><button type="button" data-w="cloudy">Bulutlu</button><button type="button" data-w="rain">Yağmur</button><button type="button" data-w="storm">Fırtına</button><button type="button" data-w="snow">Kar</button><button type="button" data-w="fog">Sis</button><button type="button" data-w="auto">Değişken</button></div></div>
-      <div class="srow"><div class="sl"><b>Türbülans</b><small>Hafif: fırtınada bile rahat uçuş · Gerçekçi: güçlü sarsıntı · açık havada hiç yok</small></div><div class="seg" id="setTurb"><button type="button" data-t="off">Kapalı</button><button type="button" data-t="soft">Hafif</button><button type="button" data-t="real">Gerçekçi</button></div></div>
-      <div class="srow"><div class="sl"><b>Otomatik denge</b><small>Kumandayı bırakınca uçak kanatlarını yavaşça düzler (35°'ye kadar yatışta)</small></div><label class="tgl"><input type="checkbox" id="setStab"><i></i></label></div>
-      <div class="srow"><div class="sl"><b>Uçuş yardımı</b><small>Yardımlı: iniş göstergesi, son metrelerde otomatik burun kaldırma, hoşgörülü iniş, stol koruması · Otomatik iniş: takım açık ve çubuk bırakılmışken yaklaşmayı asistan uçar</small></div><div class="seg" id="setAssist"><button type="button" data-a="off">Kapalı</button><button type="button" data-a="help">Yardımlı</button><button type="button" data-a="auto">Otomatik iniş</button></div></div>
-      <div class="srow"><div class="sl"><b>Gerçek servis tavanı</b><small>Uçaklar envanterdeki gerçek tavanlarında motor gücünü yitirir (ör. TB2 8.230 m, Hürkuş 10.577 m)</small></div><label class="tgl"><input type="checkbox" id="setRealP"><i></i></label></div>
-      <div class="srow"><div class="sl"><b>Kafa hareketi (kokpit)</b><small>Kokpitte G kuvveti başı aşağı iter, baş dönüşe doğru bakar, yüksek hızda ve türbülansta hafif titreşim</small></div><label class="tgl"><input type="checkbox" id="setCkpHead"><i></i></label></div>
-      <div class="srow"><div class="sl"><b>Canlı üs</b><small>Kalkıp inen yapay zekâ uçakları, yer personeli ve yayalar</small></div><label class="tgl"><input type="checkbox" id="setLife"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Görsel efektler</b><small>Düşük: renk düzeltme, hız bulanıklığı, kenar yumuşatma. Yüksek: + ışık parlaması (bloom). Telefonda FPS düşürebilir</small></div><div class="seg" id="setFx"><button type="button" data-f="0">Kapalı</button><button type="button" data-f="1">Düşük</button><button type="button" data-f="2">Yüksek</button></div></div>
-      <div class="srow"><div class="sl"><b>Model kütüphanesi</b><small>Bütün modelleri 3B incele, renk ve kamuflaj değiştir, kendi modelini (.glb, .fbx, .obj, .stl, .dae) yükle</small></div><button class="btn" id="btnLibOpen" type="button">Aç</button></div>
       <div class="srow"><div class="sl"><b>Çözünürlük</b><small>Otomatik: akıcılık için gerektiğinde biraz düşer (bilgisayarda en az %85). %125–150 bilgisayarda daha keskin görüntü verir, FPS düşürür</small></div><div class="seg" id="setRes"><button type="button" data-r="auto">Otomatik</button><button type="button" data-r="0.75">%75</button><button type="button" data-r="1">%100</button><button type="button" data-r="1.25">%125</button><button type="button" data-r="1.5">%150</button></div></div>
       <div class="srow"><div class="sl"><b>Kenar yumuşatma</b><small>Görsel efektler açıkken: MSAA en temiz kenarları verir, FXAA daha hafiftir. Telefonda otomatik FXAA</small></div><div class="seg" id="setAA"><button type="button" data-a="auto">Otomatik</button><button type="button" data-a="fxaa">FXAA</button><button type="button" data-a="msaa4">MSAA 4x</button><button type="button" data-a="msaa8">MSAA 8x</button></div></div>
       <div class="srow"><div class="sl"><b>Akıllı performans</b><small>FPS düşerse önce çözünürlük küçük adımlarla düşer; yetmezse gölge ve efektler geçici kapanır, uzak ayrıntı azalır. Akıcılaşınca geri gelir</small></div><label class="tgl"><input type="checkbox" id="setAuto"><i></i></label></div>
       <div class="srow"><div class="sl"><b>FPS sınırı</b><small>30: pil tasarrufu, telefon daha az ısınır · 60: telefonda varsayılan · Sınırsız: yüksek yenileme hızlı ekranlar için</small></div><div class="seg" id="setCap"><button type="button" data-c="30">30</button><button type="button" data-c="60">60</button><button type="button" data-c="0">Sınırsız</button></div></div>
-      <div class="srow"><div class="sl"><b>Performans modu</b><small>Tek dokunuşla en akıcı ayarlar: düşük kalite, gölge ve efektler kapalı (telefonda 30 FPS sınırı)</small></div><button class="btn" id="btnPerfMode" type="button">Uygula</button></div>
       <div class="srow"><div class="sl"><b>FPS göstergesi</b><small>Ekranın altında kare hızı</small></div><label class="tgl"><input type="checkbox" id="setFps"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
+      <p class="sgrp">Sorun giderme</p>
       <div class="srow"><div class="sl"><b>Derinlik hassasiyeti</b><small>Otomatik: bilgisayarda logaritmik (uzakta titreme yok), telefonda standart (siyah dalgalanma yok). Değişiklik sayfa yenilenince uygulanır</small></div><div class="seg" id="setDepth"><button type="button" data-d="auto">Otomatik</button><button type="button" data-d="log">Logaritmik</button><button type="button" data-d="std">Standart</button></div></div>
       <div class="srow"><div class="sl"><b>İki katmanlı derinlik</b><small>Standart derinlikte (telefonlarda) sahne yakın ve uzak olarak iki kez çizilir: siyah dalgalanma ve titreme olmaz. Logaritmik derinlikte gerekmez</small></div><label class="tgl"><input type="checkbox" id="setSplit"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Güvenli grafik modu</b><small>Görüntü bozuluyorsa: efektler, gölgeler, kenar yumuşatma kapanır, kalite düşük olur (sayfa yenilenir)</small></div><button class="btn" id="btnSafe" type="button">Güvenli mod</button></div>
       <div class="srow"><div class="sl"><b>Görüntü sorunu testi</b><small>Siyah dalga, titreme, bozuk renk gibi sorunlarda: oyun sürerken deniz, gökyüzü, gölge, efekt gibi katmanları tek tek kapatıp sorunun kaynağını bul</small></div><button class="btn" id="btnGtest" type="button">Testi aç</button></div>
       <div class="srow"><div class="sl"><b>Grafik tanılama</b><small>Cihaz, ekran kartı ve çizim bilgileri — sorun bildirirken ekran görüntüsünü paylaş</small></div><button class="btn" id="btnDiag" type="button">Göster</button></div>
       <div id="gdiag" class="gdiag hidden"></div>
-      <div class="srow"><div class="sl"><b>Tam ekran</b><small>Tarayıcı çubuklarını gizler</small></div><button class="btn" id="btnFull" type="button">Tam ekran</button></div>
+    </section>
+    <section data-tab="u" class="hidden">
+      <div class="srow"><div class="sl"><b>Uçuş yardımı</b><small>Yardımlı: iniş göstergesi, son metrelerde otomatik burun kaldırma, hoşgörülü iniş, stol koruması · Otomatik iniş: takım açık ve çubuk bırakılmışken yaklaşmayı asistan uçar</small></div><div class="seg" id="setAssist"><button type="button" data-a="off">Kapalı</button><button type="button" data-a="help">Yardımlı</button><button type="button" data-a="auto">Otomatik iniş</button></div></div>
+      <div class="srow"><div class="sl"><b>Otomatik denge</b><small>Kumandayı bırakınca uçak kanatlarını yavaşça düzler (35°'ye kadar yatışta)</small></div><label class="tgl"><input type="checkbox" id="setStab"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Türbülans</b><small>Hafif: fırtınada bile rahat uçuş · Gerçekçi: güçlü sarsıntı · açık havada hiç yok</small></div><div class="seg" id="setTurb"><button type="button" data-t="off">Kapalı</button><button type="button" data-t="soft">Hafif</button><button type="button" data-t="real">Gerçekçi</button></div></div>
+      <div class="srow"><div class="sl"><b>Gerçek servis tavanı</b><small>Uçaklar envanterdeki gerçek tavanlarında motor gücünü yitirir (ör. TB2 8.230 m, Hürkuş 10.577 m)</small></div><label class="tgl"><input type="checkbox" id="setRealP"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Kafa hareketi (kokpit)</b><small>Kokpitte G kuvveti başı aşağı iter, baş dönüşe doğru bakar, yüksek hızda ve türbülansta hafif titreşim</small></div><label class="tgl"><input type="checkbox" id="setCkpHead"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Yakıt tüketimi</b><small>Gerçekçi: iki kat hızlı tükenir · Kapalı: yakıt sınırsız</small></div><div class="seg" id="setFuel"><button type="button" data-f="off">Kapalı</button><button type="button" data-f="on">Normal</button><button type="button" data-f="real">Gerçekçi</button></div></div>
+      <div class="srow"><div class="sl"><b>Bomba yardımı</b><small>Güdümlü: kilitli hedefe yönelir</small></div><div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
+      <div class="srow"><div class="sl"><b>Otomatik hedef kilidi</b><small>Uyarı panosu ile (K tuşu)</small></div><label class="tgl"><input type="checkbox" id="setLock"><i></i></label></div>
+      <p class="sgrp">Telefon: eğerek uç</p>
+      <div class="srow"><div class="sl"><b>Eğerek uç (telefon)</b><small>Telefonu sağa-sola ve öne-arkaya eğerek uçağı yönlendir. iPhone ilk açılışta izin ister</small></div><label class="tgl"><input type="checkbox" id="setGyro"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Eğim ayarı</b><small>Sıfırla: telefonu şu anki tutuşunda düz uçuş kabul eder · Duyarlılık: tam sapma için gereken eğim</small></div><div class="srowc"><button type="button" class="btn sm" id="btnGyroCal">Sıfırla</button><div class="seg" id="setGyroSens"><button type="button" data-f="35">Az</button><button type="button" data-f="25">Orta</button><button type="button" data-f="15">Çok</button></div></div></div>
+      <div class="srow"><div class="sl"><b>Eğimde öne-arka ters</b><small>Telefonu kendine doğru eğince burun aşağı insin</small></div><label class="tgl"><input type="checkbox" id="setGyroInv"><i></i></label></div>
+    </section>
+    <section data-tab="d" class="hidden">
+      <div class="srow"><div class="sl"><b>Gün saati</b><small>Döngü: 20 dakikada bir tam gün (sabah, öğle, akşam, gece)</small></div><div class="seg" id="setTod"><button type="button" data-t="dawn">Sabah</button><button type="button" data-t="day">Öğle</button><button type="button" data-t="dusk">Akşam</button><button type="button" data-t="night">Gece</button><button type="button" data-t="cycle">Döngü</button></div></div>
+      <div class="srow"><div class="sl"><b>Hava durumu</b><small>Değişken: birkaç dakikada bir kendiliğinden değişir · rüzgâr ve türbülans uçuşu etkiler</small></div><div class="seg wrap" id="setWx"><button type="button" data-w="clear">Açık</button><button type="button" data-w="cloudy">Bulutlu</button><button type="button" data-w="rain">Yağmur</button><button type="button" data-w="storm">Fırtına</button><button type="button" data-w="snow">Kar</button><button type="button" data-w="fog">Sis</button><button type="button" data-w="auto">Değişken</button></div></div>
+      <div class="srow"><div class="sl"><b>Canlı üs</b><small>Kalkıp inen yapay zekâ uçakları, yer personeli ve yayalar</small></div><label class="tgl"><input type="checkbox" id="setLife"><i></i></label></div>
     </section>
     <section data-tab="k" class="hidden">
       <div id="ctlUI">
@@ -1311,14 +1335,6 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
       <div class="srow mixrow"><div class="sl"><b>Kanal karışımı</b><small>Müzik, efekt, arayüz, telsiz ve ortam sesleri</small></div><div class="sndmix" id="setMix"></div></div>
       <div class="srow"><div class="sl"><b>Ses kütüphanesi</b><small>Kanal karışımı (müzik, efekt, arayüz, telsiz, ortam), her sesi dinle, ayarla ya da kendi ses dosyanla değiştir</small></div><button class="btn" id="btnSndOpen" type="button">Aç</button></div>
     </section>
-    <section data-tab="o" class="hidden">
-      <div class="srow"><div class="sl"><b>Yakıt tüketimi</b><small>Gerçekçi: iki kat hızlı tükenir · Kapalı: yakıt sınırsız</small></div><div class="seg" id="setFuel"><button type="button" data-f="off">Kapalı</button><button type="button" data-f="on">Normal</button><button type="button" data-f="real">Gerçekçi</button></div></div>
-      <div class="srow"><div class="sl"><b>Bomba yardımı</b><small>Güdümlü: kilitli hedefe yönelir</small></div><div class="seg" id="setBomb"><button type="button" data-b="off">Kapalı</button><button type="button" data-b="easy">Kolay</button><button type="button" data-b="guided">Güdümlü</button></div></div>
-      <div class="srow"><div class="sl"><b>Otomatik hedef kilidi</b><small>Uyarı panosu ile (K tuşu)</small></div><label class="tgl"><input type="checkbox" id="setLock"><i></i></label></div>
-          <div class="srow"><div class="sl"><b>Eğerek uç (telefon)</b><small>Telefonu sağa-sola ve öne-arkaya eğerek uçağı yönlendir. iPhone ilk açılışta izin ister</small></div><label class="tgl"><input type="checkbox" id="setGyro"><i></i></label></div>
-      <div class="srow"><div class="sl"><b>Eğim ayarı</b><small>Sıfırla: telefonu şu anki tutuşunda düz uçuş kabul eder · Duyarlılık: tam sapma için gereken eğim</small></div><div class="srowc"><button type="button" class="btn sm" id="btnGyroCal">Sıfırla</button><div class="seg" id="setGyroSens"><button type="button" data-f="35">Az</button><button type="button" data-f="25">Orta</button><button type="button" data-f="15">Çok</button></div></div></div>
-      <div class="srow"><div class="sl"><b>Eğimde öne-arka ters</b><small>Telefonu kendine doğru eğince burun aşağı insin</small></div><label class="tgl"><input type="checkbox" id="setGyroInv"><i></i></label></div>
-    </section>
     <section data-tab="e" class="hidden">
       <div class="srow"><div class="sl"><b>Yazı ve arayüz boyutu</b><small>Menü, ayar ve bilgi panellerinin büyüklüğü</small></div><div class="seg" id="setUiz"><button type="button" data-z="0.9">Küçük</button><button type="button" data-z="1">Normal</button><button type="button" data-z="1.15">Büyük</button><button type="button" data-z="1.3">Çok büyük</button></div></div>
       <div class="srow"><div class="sl"><b>Renk körlüğü düzeltmesi</b><small>Görüntünün renklerini ayırt etmesi kolay olacak biçimde kaydırır (oyun ve gösterge)</small></div><div class="seg" id="setCb"><button type="button" data-c="off">Kapalı</button><button type="button" data-c="p">Protanopi</button><button type="button" data-c="d">Döteranopi</button><button type="button" data-c="t">Tritanopi</button></div></div>
@@ -1333,6 +1349,10 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
       <div class="srow"><div class="sl"><b>Kayıt yedeği</b><small id="saveInfo">İlerlemeni dosyaya ya da koda aktar, başka cihazda yükle (misafir oyuncular için; hesaplar zaten bulutta)</small></div><div class="srowc wrap"><button type="button" class="btn sm" id="btnSaveFile">⭳ Dosyaya indir</button><button type="button" class="btn sm" id="btnSaveOpen">Dosyadan yükle</button><button type="button" class="btn sm" id="btnSaveCode">Kodu kopyala</button><button type="button" class="btn sm" id="btnSaveLoad">Kodu yükle</button><input type="file" id="saveFile" accept=".json,application/json" hidden></div></div>
       <textarea id="saveTxt" class="inp savetxt hidden" rows="3" spellcheck="false"></textarea>
       <div class="srow"><div class="sl"><b>Bulut bağlantısı</b><small>Supabase proje adresi ve "anon public" anahtarı (supabase/KURULUM.md). Boş bırakıp Bağlan'a basınca bağlantı kaldırılır</small></div><div class="supa"><input id="setSupaUrl" class="inp" placeholder="https://xxxx.supabase.co" autocomplete="off"><input id="setSupaKey" class="inp" placeholder="anon public anahtar" autocomplete="off"><button class="btn" id="btnSupa" type="button">Bağlan</button></div></div>
+      <div class="srow"><div class="sl"><b>Sürüm notları</b><small>Yeni sürümden sonraki ilk açılışta yenilikler duyuru olarak ne kadar görünsün</small></div><div class="seg" id="setNotes"><button type="button" data-n="0">Kapalı</button><button type="button" data-n="10">10 sn</button><button type="button" data-n="30">30 sn</button><button type="button" data-n="-1">Kapatana kadar</button></div></div>
+      <div class="srow"><div class="sl"><b>Yenilikler</b><small>Son sürümlerin notları</small></div><button class="btn" id="btnNotes" type="button">Göster</button></div>
+      <p class="sgrp">Araçlar</p>
+      <div class="srow"><div class="sl"><b>Model kütüphanesi</b><small>Bütün modelleri 3B incele, renk ve kamuflaj değiştir, kendi modelini (.glb, .fbx, .obj, .stl, .dae) yükle</small></div><button class="btn" id="btnLibOpen" type="button">Aç</button></div>
       <div class="srow"><div class="sl"><b>Sürüm</b><small>Modeller stilizedir; uçuş değerleri oynanış için ayarlanmıştır. Gerçek veriler: Sistem Envanteri (Defence Turk).</small></div><span id="setVer"></span></div>
     </section>
   </div>
@@ -1610,7 +1630,7 @@ body.tedit .touch .tstick,body.tedit .touch .tthr,body.tedit .touch .tright,body
 <script>
 (function(){
 'use strict';
-const GAME_VERSION='V2.08', GAME_DATE='2026-10-13';
+const GAME_VERSION='V2.09', GAME_DATE='2026-10-13';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -6879,7 +6899,7 @@ function cullCollect(){
     L.push(o);
   });
   /* objects dropped from the list must be visible again */
-  CULL.list.forEach(function(o){ if(L.indexOf(o)<0) o.layers.enable(0); });
+  const keep=new Set(L); CULL.list.forEach(function(o){ if(!keep.has(o)) o.layers.enable(0); });   /* Set: indexOf here was O(n²), a 10–20 ms hitch every 4 s on phones */
   CULL.list=L; CULL.i=0;
 }
 function cullStep(dt){
@@ -12726,7 +12746,7 @@ function instPrep(){
   scene.traverse(function(o){ if(!o.isInstancedMesh||dyn.has(o)||o.userData.noCull||!o.geometry||!o.instanceMatrix) return; const g=o.geometry;
     let p=o.parent; while(p){ if(p===planeGroup||p.userData.noCull) return; p=p.parent; }
     if(o.userData.full){ /* chunk made by chunkInstances: its geometry sphere covers the tile; measure one object */
-      if(o.userData.ir==null){ const keep=g.boundingSphere; g.computeBoundingSphere(); const gr=g.boundingSphere.radius; g.boundingSphere=keep; let sm=1; for(let i=0;i<Math.min(o.count,64);i++){ o.getMatrixAt(i,mt); sm=Math.max(sm,mt.getMaxScaleOnAxis()); } o.userData.ir=gr*sm; }
+      if(o.userData.ir==null){ const keep=g.boundingSphere.clone(); g.computeBoundingSphere(); const gr=g.boundingSphere.radius; g.boundingSphere=keep;   /* computeBoundingSphere overwrites the same Sphere object: keep a copy (V2.09 fix) */ let sm=1; for(let i=0;i<Math.min(o.count,64);i++){ o.getMatrixAt(i,mt); sm=Math.max(sm,mt.getMaxScaleOnAxis()); } o.userData.ir=gr*sm; }
     } else {
       if(o.frustumCulled!==false||o.count<8) return;
       if(!g.boundingSphere) g.computeBoundingSphere(); const gr=g.boundingSphere.radius; if(!isFinite(gr)) return;
@@ -12734,14 +12754,14 @@ function instPrep(){
       cx/=n; cy/=n; cz/=n; let R=0; for(let i=0;i<n;i++){ o.getMatrixAt(i,mt); v.setFromMatrixPosition(mt); R=Math.max(R,Math.hypot(v.x-cx,v.y-cy,v.z-cz)); }
       if(!(R>0)&&n>1) return; const ng=g.clone(); ng.boundingSphere=new THREE.Sphere(new THREE.Vector3(cx,cy,cz),R+gr*sm); o.geometry=ng;
       o.frustumCulled=true; o.userData.full=n; o.userData.ir=gr*sm; o.userData.bounded=true; }
-    o.userData.bv=o.instanceMatrix.version; o.userData.noCull=true; L.push(o); });   /* the general size cull leaves these to instStep */
+    o.userData.bv=o.instanceMatrix.version; o.userData.noCull=true; o.userData.bs0=o.geometry.boundingSphere.clone(); L.push(o); });   /* the general size cull leaves these to instStep */
   PERF2.inst=L; PERF2.ii=0; return L.length; }
 const _p2Chunk=chunkInstances; chunkInstances=function(){ const r=_p2Chunk(); try{ waterFix(); instPrep(); }catch(e){ console.warn('perf',e); } return r; };
 function treeDensity(){ return [0.35,0.7,1,1][SETTINGS.quality||0]*(PERF2.lvl>=2?0.6:1); }
 function instStep(){
   const L=PERF2.inst, n=L.length; if(!n||!camera) return; const k=HH/(2*Math.tan(camera.fov*Math.PI/360)), cp=camera.position, px=(typeof CULL!=='undefined'?CULL.px:2.5)*1.4, v=instStep.v||(instStep.v=new THREE.Vector3()), td=treeDensity(), mob=DEV.mobile;
   const per=Math.max(24,Math.ceil(n/4));
-  for(let c=0;c<per;c++){ if(PERF2.ii>=n) PERF2.ii=0; const o=L[PERF2.ii++], g=o.geometry, bs=g&&g.boundingSphere; if(!bs) continue;
+  for(let c=0;c<per;c++){ if(PERF2.ii>=n) PERF2.ii=0; const o=L[PERF2.ii++], g=o.geometry; if(o.userData.bs0&&g&&(!g.boundingSphere||!g.boundingSphere.equals(o.userData.bs0))) g.boundingSphere=o.userData.bs0.clone(); const bs=g&&g.boundingSphere; if(!bs) continue;
     if(o.userData.bounded&&o.instanceMatrix.version!==o.userData.bv){ o.frustumCulled=false; o.layers.enable(0); L.splice(PERF2.ii-1,1); PERF2.ii--; return; }   /* it moves after all: draw it as before */
     v.copy(bs.center).applyMatrix4(o.matrixWorld); const d=Math.max(1,v.distanceTo(cp)-bs.radius), show=(o.userData.ir||1)*k/d>=px;
     if(show) o.layers.enable(0); else o.layers.disable(0);
@@ -13585,6 +13605,123 @@ const _evSetup=setupMission; setupMission=function(){ const r=_evSetup(); if(mis
 const _evUpdM=updateMission; updateMission=function(dt){ if(M&&M.id==='kacis'){ if(!M.done&&state==='play'){ M.started=true; M.t+=dt; if(EV.evaded>=3) endMission(true); else if(M.t>MISSIONS.kacis.limit) endMission(false); } return; } return _evUpdM(dt); };
 const _evObj=bObjective; bObjective=function(){ if(state==='play'&&M&&M.id==='kacis'&&!M.done) return {name:'Füzeden kaçış',txt:'Kurtulduğun füze: '+EV.evaded+' / 3',rem:Math.max(0,MISSIONS.kacis.limit-M.t),tgt:null}; return _evObj(); };
 const _evStars=bStarsFor; bStarsFor=function(ok){ if(M&&M.id==='kacis'){ if(!ok) return 0; return S.hp>=90?3:S.hp>=50?2:1; } return _evStars(ok); };
+/* ------------------------------------------------------------------ optimisation 2.0 (V2.09)
+   Draw calls are what phones choke on (a common guide: <100–300 per frame on mobile; the island used 500–800).
+   • Static merge: a few seconds after start, every small static mesh (props, signs, lamps, fences, building parts …) is
+     merged into one mesh per material per 800 m cell (large pieces such as baked building blocks per 4 km cell). Originals stay in the scene but are switched off. A watchdog checks
+     the originals every 2 s; if the game moves, hides or removes one, that cell is un-merged at once (self-healing), so
+     doors, lights and destructible targets keep working.
+   • Device tier: on the first start the GPU name, memory and CPU cores pick the starting preset (phone / tablet / PC).
+     Ayarlar → Grafik → "Cihaza göre ayarla" applies it again.
+   • Menus: while a full-screen menu covers the 3D scene it is drawn at 10 FPS instead of 60 (battery, heat).
+   • Bounding-sphere guard for instanced groups (the cause of trees vanishing in V1.94–V2.08) lives in 98d-perf. */
+const MRG={done:false, cells:new Map(), src:[], t:0, ix:0, stats:{meshes:0,merged:0,cells:0}, v:new THREE.Vector3()};
+function mrgExcluded(){ const S0=new Set(); const add=function(g){ if(g) S0.add(g); };
+  try{ add(planeGroup); add(sky); }catch(e){}
+  try{ for(const id in MODELS.inst) MODELS.inst[id].forEach(function(m){ add(m.group); }); }catch(e){}
+  try{ for(const k in displays) add(displays[k].g); }catch(e){}
+  try{ HELI.list.forEach(function(H){ add(H.m&&H.m.g); }); }catch(e){} try{ VEHS.forEach(function(c){ add(c.mesh); }); }catch(e){} try{ BOATS.forEach(function(b){ add(b.g); }); }catch(e){}
+  try{ AP.movers.forEach(function(m){ add(m.g); }); }catch(e){} try{ gtargets.forEach(function(o){ add(o.g); }); }catch(e){} try{ targets.forEach(function(o){ add(o.g); }); }catch(e){}
+  try{ HTGT.forEach(function(o){ add(o.g); }); }catch(e){} try{ rings.forEach(function(r){ add(r.mesh); }); }catch(e){} try{ AL.ai.forEach(function(a){ add(a.m&&a.m.group); }); AL.crew.forEach(function(c){ add(c.g); }); }catch(e){}
+  try{ if(AP.flag) add(AP.flag.m); if(AP.radar) add(AP.radar); AP.socks.forEach(add); }catch(e){}
+  return S0; }
+function mrgCandidate(o,EX){ if(!o.isMesh||o.isInstancedMesh||o.isSkinnedMesh||!o.geometry||!o.geometry.attributes||!o.geometry.attributes.position) return false;
+  const m=o.material; if(!m||Array.isArray(m)||m.transparent||m.isShaderMaterial||m.isRawShaderMaterial||m.wireframe) return false; if(o.onBeforeRender&&o.onBeforeRender.toString().length>40) return false;
+  if(o.userData.noMerge||o.userData.noCull||o.userData.merged) return false; if(o.morphTargetInfluences) return false;
+  let p=o; while(p){ if(!p.visible||EX.has(p)||p.userData.noMerge) return false; if(p===scene) break; p=p.parent; } if(p!==scene) return false;
+  const g=o.geometry; if(!g.boundingSphere) g.computeBoundingSphere(); const bs=g.boundingSphere; if(!bs||!isFinite(bs.radius)) return false;
+  const r=bs.radius*o.matrixWorld.getMaxScaleOnAxis(); if(r>2500) return false; o.userData._mr=r;
+  return true; }
+function mrgMatKey(m){ const c=function(x){ return x&&x.getHexString?x.getHexString():''; }; return [m.type,c(m.color),c(m.emissive),m.map?m.map.uuid:'',m.emissiveMap?m.emissiveMap.uuid:'',m.vertexColors?1:0,m.flatShading?1:0,m.side,m.alphaTest||0,m.fog?1:0,m.polygonOffset?(m.polygonOffsetFactor+':'+m.polygonOffsetUnits):'',m.shininess||'',m.emissiveIntensity==null?'':m.emissiveIntensity,m.opacity].join(':'); }
+/* untextured materials that differ only by colour merge together: the colour goes into the vertices */
+function mrgVC(m){ return !m.map&&!m.emissiveMap&&!m.alphaMap&&!m.normalMap&&(m.isMeshLambertMaterial||m.isMeshPhongMaterial||m.isMeshStandardMaterial); }
+function mrgGroupKey(m){ if(!mrgVC(m)) return mrgMatKey(m); const c=function(x){ return x&&x.getHexString?x.getHexString():''; }; return ['VC',m.type,c(m.emissive),m.flatShading?1:0,m.side,m.fog?1:0,m.polygonOffset?(m.polygonOffsetFactor+':'+m.polygonOffsetUnits):'',m.shininess||'',m.roughness==null?'':m.roughness,m.metalness==null?'':m.metalness].join(':'); }
+function mrgSig(g){ const a=g.attributes; return (a.normal?'n':'')+(a.uv?'u':'')+(a.color?'c'+a.color.itemSize:''); }
+function mrgBuild(list,vc){ /* list of meshes with the same material / attributes → one geometry in world space */
+  let n=0, ni=0; list.forEach(function(o){ const g=o.geometry; n+=g.attributes.position.count; ni+=g.index?g.index.count:g.attributes.position.count; });
+  const a0=list[0].geometry.attributes, P=new Float32Array(n*3), N=list.every(function(o){ return o.geometry.attributes.normal; })?new Float32Array(n*3):null, U=(!vc&&a0.uv)?new Float32Array(n*2):null, cs=vc?3:(a0.color?a0.color.itemSize:0), C=cs?new Float32Array(n*cs):null;
+  const I=n>65535?new Uint32Array(ni):new Uint16Array(ni); let vo=0, io=0; const v=new THREE.Vector3(), nm=new THREE.Matrix3();
+  list.forEach(function(o){ const g=o.geometry, A=g.attributes, c=A.position.count, M=o.matrixWorld; nm.getNormalMatrix(M);
+    for(let i=0;i<c;i++){ v.fromBufferAttribute(A.position,i).applyMatrix4(M); P[(vo+i)*3]=v.x; P[(vo+i)*3+1]=v.y; P[(vo+i)*3+2]=v.z;
+      if(N){ v.fromBufferAttribute(A.normal,i).applyMatrix3(nm).normalize(); N[(vo+i)*3]=v.x; N[(vo+i)*3+1]=v.y; N[(vo+i)*3+2]=v.z; }
+      if(U){ U[(vo+i)*2]=A.uv.getX(i); U[(vo+i)*2+1]=A.uv.getY(i); }
+      if(C){ if(vc){ const mc=o.material.color, vcol=o.material.vertexColors&&A.color; C[(vo+i)*3]=mc.r*(vcol?A.color.getX(i):1); C[(vo+i)*3+1]=mc.g*(vcol?A.color.getY(i):1); C[(vo+i)*3+2]=mc.b*(vcol?A.color.getZ(i):1); } else for(let k=0;k<cs;k++) C[(vo+i)*cs+k]=A.color.array[i*cs+k]; } }
+    if(g.index){ const X=g.index.array; for(let k=0;k<X.length;k++) I[io+k]=X[k]+vo; io+=X.length; } else { for(let k=0;k<c;k++) I[io+k]=vo+k; io+=c; }
+    vo+=c; });
+  const bg=new THREE.BufferGeometry(); bg.setAttribute('position',new THREE.BufferAttribute(P,3)); if(N) bg.setAttribute('normal',new THREE.BufferAttribute(N,3)); if(U) bg.setAttribute('uv',new THREE.BufferAttribute(U,2)); if(C) bg.setAttribute('color',new THREE.BufferAttribute(C,cs));
+  bg.setIndex(new THREE.BufferAttribute(I,1)); bg.computeBoundingSphere(); return bg; }
+/* size class in the key: small props share a cell only with small props, so the whole cell can be hidden by distance the way
+   the per-object size cull hid them before merging (otherwise far cells drew every bench and sign — triangles went up ~25 %) */
+function mrgCellKey(r,v){ const sc=r<3?'S':r<20?'M':r<150?'L':'B', T=sc==='B'?4000:800; return sc+Math.floor(v.x/T)+','+Math.floor(v.z/T); }
+function mrgRun(){ if(MRG.done||!scene||!scene.traverse) return; MRG.done=true; scene.updateMatrixWorld(true); const EX=mrgExcluded(), by=new Map(); let cnt=0;
+  scene.traverse(function(o){ if(!mrgCandidate(o,EX)) return; cnt++; const bs=o.geometry.boundingSphere; MRG.v.copy(bs.center).applyMatrix4(o.matrixWorld);
+    const vc=mrgVC(o.material), key=mrgGroupKey(o.material)+'|'+(vc?'vc':mrgSig(o.geometry))+'|'+(o.castShadow?1:0)+(o.receiveShadow?1:0)+'|'+mrgCellKey(o.userData._mr,MRG.v); let L=by.get(key); if(!L){ L=[]; by.set(key,L); } L.push(o); });
+  MRG.stats.meshes=cnt;
+  by.forEach(function(L,key){ if(L.length<(key.indexOf('|B')>0?2:3)) return; let rMax=0; L.forEach(function(o){ rMax=Math.max(rMax,o.userData._mr||0); }); const vc=key.indexOf('|vc|')>0; let geo; try{ geo=mrgBuild(L,vc); }catch(e){ return; }
+    let mat=L[0].material; if(vc){ mat=mat.clone(); mat.color.setRGB(1,1,1); mat.vertexColors=true; mat.needsUpdate=true; }
+    const m=new THREE.Mesh(geo,mat); m.castShadow=L[0].castShadow; m.receiveShadow=L[0].receiveShadow; m.userData.rs=L[0].userData.rs; m.userData.cs=L[0].userData.cs; m.userData.noMerge=true; m.userData.mergedCell=key; m.matrixAutoUpdate=false; m.updateMatrix();
+    scene.add(m); const cell={key:key,mesh:m,rMax:rMax,c:geo.boundingSphere.center.clone(),R:geo.boundingSphere.radius,src:L.map(function(o){ return {o:o,mw:o.matrixWorld.elements.slice(),parent:o.parent,mat:o.material,mk:mrgMatKey(o.material)}; })};
+    L.forEach(function(o){ o.userData.merged=cell; o.userData.noCull=true; o.layers.disable(0); });
+    MRG.cells.set(key,cell); MRG.stats.merged+=L.length; MRG.stats.cells++; });
+  if(typeof CULL!=='undefined') CULL.list=CULL.list.filter(function(o){ return !o.userData.merged; });   /* else the size cull's refresh would switch the originals back on */ }
+function mrgUnmerge(cell){ if(!MRG.cells.has(cell.key)) return; MRG.cells.delete(cell.key); scene.remove(cell.mesh); try{ cell.mesh.geometry.dispose(); }catch(e){}
+  cell.src.forEach(function(s){ s.o.userData.merged=null; s.o.userData.noCull=false; s.o.layers.enable(0); }); MRG.stats.cells--; MRG.stats.merged-=cell.src.length; }
+function mrgChanged(s){ const o=s.o; if(o.parent!==s.parent||o.material!==s.mat) return true; if(s.chk=(s.chk||0)+1, s.chk%4===0&&mrgMatKey(o.material)!==s.mk) return true; let p=o; while(p){ if(!p.visible) return true; if(p===scene) break; p=p.parent; } if(p!==scene) return true;
+  const e=o.matrixWorld.elements; for(let k=12;k<15;k++) if(Math.abs(e[k]-s.mw[k])>0.01) return true; for(let k=0;k<11;k++) if(Math.abs(e[k]-s.mw[k])>1e-4) return true; return false; }
+/* watchdog: a slice of cells every frame, all cells about every 2 s */
+function mrgShow(cells){ if(!camera) return; const on=typeof CULL==='undefined'||CULL.on, k=HH/(2*Math.tan(camera.fov*Math.PI/360)), px=on?CULL.px:0, cp=camera.position;
+  for(let i=0;i<cells.length;i++){ const c=cells[i], d=Math.max(1,c.c.distanceTo(cp)-c.R); if(!on||c.rMax*k/d>=px) c.mesh.layers.enable(0); else c.mesh.layers.disable(0); } }
+function mrgStep(dt){ if(!MRG.done) return; MRG.t+=dt; const cells=Array.from(MRG.cells.values()); if(!cells.length) return; mrgShow(cells); const per=Math.max(1,Math.ceil(cells.length*dt/2));
+  for(let k=0;k<per;k++){ const c=cells[MRG.ix++%cells.length]; if(!c) continue; let bad=false; for(let i=0;i<c.src.length&&!bad;i++){ if(c.src[i].o.layers.test(camera.layers)) c.src[i].o.layers.disable(0); if(mrgChanged(c.src[i])) bad=true; } if(bad) mrgUnmerge(c); } }
+if(SETTINGS.merge!==false)setTimeout(function(){ try{ mrgRun(); }catch(e){ console.warn('birleştirme',e); } },2500);
+const _mrgCull=cullStep; cullStep=function(dt){ _mrgCull(dt); try{ mrgStep(dt||0); }catch(e){} };
+/* ---- device tier → starting preset */
+function devTier(){ const g=String(DEV.gpu||'').toLowerCase(), mem=navigator.deviceMemory||4, cores=navigator.hardwareConcurrency||4;
+  if(DEV.mobile){ if(/mali-(4|t[678])|adreno[^0-9]*([34]\d\d|50\d|51\d)|powervr|sgx|videocore/.test(g)||mem<=3||cores<=4) return 0;
+    if(/apple|adreno[^0-9]*(6[4-9]\d|7\d\d|8\d\d)|mali-g(7[1-9]|[89]\d\d?)|immortalis|xclipse/.test(g)&&mem>=6) return DEV.tablet?2:1; return 1; }
+  if(/swiftshader|llvmpipe|softpipe|microsoft basic/.test(g)) return 0;
+  if(/intel/.test(g)&&!/arc/.test(g)) return 1; if(/rtx|radeon rx|gtx 1[06]\d0|apple m[1-9]|arc a/.test(g)||mem>=16) return 3; return 2; }
+function devTierApply(silent){ const q=devTier(); SETTINGS.quality=q; SETTINGS.fx=null; SETTINGS.shadows=null; SETTINGS.res='auto'; SETTINGS.autoPerf=true; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI();
+  if(!silent) toast('Cihaza göre ayarlandı: '+['Düşük','Orta','Yüksek','Ultra'][q]+' ('+DEV.kind+(DEV.gpu&&DEV.gpu!=='?'?' · '+String(DEV.gpu).slice(0,40):'')+')','#7dffb0'); }
+const _p3Load=loadStore; loadStore=function(){ let first=false; try{ first=!localStorage.getItem('kaan-sim-settings'); }catch(e){} _p3Load(); if(first){ try{ SETTINGS.quality=devTier(); SETTINGS.tierAuto=true; }catch(e){} } };
+(function(){ const b=$('btnTier'); if(b) b.addEventListener('click',function(){ devTierApply(false); }); })();
+/* ---- full-screen menus: draw the scene at 10 FPS */
+function menuCovered(){ if(state!=='menu'||!document.querySelector) return false; return !!document.querySelector('.modal.fs:not(.hidden), #settings:not(.hidden), #records:not(.hidden), #campUI:not(.hidden)'); }
+const _p3Frame=frame; frame=function(now){ if(menuCovered()&&now){ if(now-(frame._mt||0)<95){ requestAnimationFrame(frame); return; } frame._mt=now; } _p3Frame(now); };
+/* ------------------------------------------------------------------ release notes in the game (V2.10)
+   The release script writes the newest CHANGELOG entries into RELNOTES (98w-relnotes-data.js). After an update the first
+   start shows the new version's notes as an announcement strip ("V2.10 yenilikleri … Tümünü gör"); how long it stays is
+   chosen in Ayarlar → Arayüz → Sürüm notları (Kapalı · 10 sn · 30 sn · Kapatana kadar). "Yenilikler" (Arayüz tab and the
+   ★ button on the title screen) opens the full notes of the last versions. */
+function relDur(){ const d=SETTINGS.notesDur; return d==null?30:d; }   /* seconds; 0 = off, -1 = until closed */
+function relMd(md){ const esc=function(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<i>$1</i>').replace(/`(.+?)`/g,'<code>$1</code>'); };
+  const L=String(md||'').split('\n'); let h='', depth=0; const close=function(to){ while(depth>to){ h+='</li></ul>'; depth--; } };
+  L.forEach(function(l){ const m=/^(\s*)- (.*)$/.exec(l); if(!m){ if(l.trim()){ close(0); h+='<p>'+esc(l.trim())+'</p>'; } return; }
+    const d=Math.min(Math.floor(m[1].length/2)+1,depth+1); if(d>depth){ h+='<ul>'; depth=d; } else { close(d); h+='</li>'; } h+='<li>'+esc(m[2]); });
+  close(0); return h; }
+function relFirstLine(md){ /* first bullet that says something (not a bare "**Heading:**" line); "**Name:** text" → "Name: text" */
+  const L=String(md||'').split('\n').map(function(l){ const m=/^\s*- (.+)$/.exec(l); return m?m[1].replace(/\*\*/g,'').replace(/\*/g,'').replace(/`/g,'').trim():''; }).filter(function(x){ return x&&!/:$/.test(x); });
+  const t=L[0]||''; return t.length>150?t.slice(0,147)+'…':t; }
+function relOpen(){ let el=$('relUI'); if(!el&&document.createElement){ el=document.createElement('div'); el.id='relUI'; el.className='modal hidden'; el.innerHTML='<div class="card wide relcard"><button class="xbtn" type="button" id="relX" aria-label="Kapat">✕</button><h2>Yenilikler</h2><div class="relbody" id="relBody"></div></div>'; document.body.appendChild(el); MODALS.push('relUI'); el.querySelector('#relX').addEventListener('click',function(){ el.classList.add('hidden'); }); }
+  if(!el) return; const R=(typeof RELNOTES!=='undefined'?RELNOTES:[]); $('relBody').innerHTML=R.length?R.map(function(r){ return '<section><h3>'+r.v+' <small>'+(r.d||'')+'</small></h3>'+(r.t?'<p class="rt">'+r.t+'</p>':'')+relMd(r.md)+'</section>'; }).join(''):'<p>Sürüm notu bulunamadı.</p>';
+  closeModals(); try{ annHide(); }catch(e){} el.classList.remove('hidden'); }
+function relShow(){ const R=(typeof RELNOTES!=='undefined'?RELNOTES:[]), cur=R[0]; if(!cur||cur.v!==GAME_VERSION) return; if(SETTINGS.notesSeen===GAME_VERSION) return; const dur=relDur(); SETTINGS.notesSeen=GAME_VERSION; saveSettings(); if(dur===0) return;
+  if(typeof annShow!=='function') return; annShow({id:'rel-'+cur.v,text:'🆕 '+cur.v+(cur.t?' — '+cur.t:': '+relFirstLine(cur.md)),flash:false,sec:dur>0?dur:0});
+  if(typeof ANN!=='undefined'){ ANN.t=dur>0?dur:1e9; } const bar=$('annBar'); if(bar&&!bar.querySelector('.relmore')){ const b=document.createElement('button'); b.type='button'; b.className='relmore'; b.textContent='Tümünü gör'; b.addEventListener('click',function(){ relOpen(); try{ annHide(); }catch(e){} }); bar.insertBefore(b,bar.lastChild); } }
+/* the "Tümünü gör" button only belongs to the release-notes strip */
+if(typeof annShow==='function'){ const _rnAnn=annShow; annShow=function(o){ _rnAnn(o); const b=$('annBar'), m=b&&b.querySelector('.relmore'); if(m&&!(o&&String(o.id).indexOf('rel-')===0)) m.remove(); }; }
+setTimeout(function(){ try{ relShow(); }catch(e){} },3500);
+(function(){ const s=$('setNotes'); if(s) s.addEventListener('click',function(e){ const b=e.target.closest('button[data-n]'); if(!b) return; SETTINGS.notesDur=+b.dataset.n; saveSettings(); syncSettingsUI(); });
+  const o=$('btnNotes'); if(o) o.addEventListener('click',relOpen); })();
+const _rnSync=syncSettingsUI; syncSettingsUI=function(){ _rnSync(); const s=$('setNotes'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.n===relDur())); }); };
+/* "Yenilikler" entry on the title menu (root level, under Çok Oyunculu) */
+NAV_IC.news='<path d="M4 5h13v14H6a2 2 0 01-2-2z"/><path d="M17 9h3v8a2 2 0 01-2 2M8 9h5M8 13h5"/>';
+NAV_D.notes=['OYNA','Yenilikler','Son sürümlerde nelerin değiştiğini oku. Yeni sürümden sonraki ilk açılışta özet duyuru olarak da gösterilir; süresi Ayarlar → Arayüz → Sürüm notları.',[],'Notları aç'];
+const _rnNav=navRender; navRender=function(){ _rnNav(); if(NAV.level!=='root') return; const el=$('cNav'); if(!el) return; const h=el.innerHTML; if(h.indexOf('data-act="notes"')>=0) return;
+  const k=h.indexOf('data-act="net"'); if(k<0) return; const j=h.indexOf('</button>',k)+9; el.innerHTML=h.slice(0,j)+navBtn('notes','Yenilikler',GAME_VERSION+' sürüm notları','news')+h.slice(j); tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); };
+const _rnAct=titleAct; titleAct=function(act){ if(act==='notes'&&state==='menu') return relOpen(); return _rnAct(act); };
+/* generated by tools/relnotes.py from CHANGELOG.md — do not edit */
+const RELNOTES=[{"v": "V2.09", "d": "2026-10-13", "t": "Optimizasyon 2.0, ayarlar düzeni, sürüm notları", "md": "- **Kaybolan ağaçlar ve nesneler düzeltildi:** ekranın ortasındaki ağaç, kaya ve park etmiş araç grupları artık kaybolmuyor. Grupların görünürlük küresi her karede yeniden hesaplanıp küçülüyordu; asıl küre korunuyor ve her adımda denetleniyor.\n- **Optimizasyon 2.0:**\n  - Sabit nesne birleştirme: küçük sabit nesneler (bank, lamba, tabela, çit, bina parçaları) malzeme ve boyut sınıfına göre tek parçada çiziliyor. Yüksek kalitede çizim çağrısı %10–20 azaldı.\n  - Uzaktaki birleştirilmiş hücreler ekranda birkaç pikselden küçük kalınca gizleniyor.\n  - Hareket eden, gizlenen ya da yok edilen nesnenin hücresi kendiliğinden çözülüyor; kapılar, ışıklar ve hedefler eskisi gibi çalışıyor.\n  - Uzak nesne listesindeki 4 saniyede bir takılma giderildi.\n  - Tam ekran menüler açıkken sahne 10 FPS çiziliyor (pil, ısınma).\n  - Ölçüm (Düşük kalite): uçuşta ~250, şehirde ~300 çizim çağrısı.\n- **Cihaza göre ayar:** ilk açılışta ekran kartı, bellek ve işlemciye bakılarak telefon, tablet ya da bilgisayar için hazır ayar seçiliyor. Ayarlar → Grafik → **Cihaza göre ayarla** ile yeniden uygulanabilir.\n- **Ayarlar yeniden düzenlendi:**\n  - **Grafik** sekmesinde yalnız grafik ayarları var; hata ayıklama ayarları **Sorun giderme** grubunda.\n  - Yeni **Uçuş** sekmesi: uçuş yardımı, otomatik denge, türbülans, gerçek servis tavanı, kafa hareketi, yakıt, bomba yardımı, hedef kilidi ve **Telefon: eğerek uç** grubu.\n  - Yeni **Dünya** sekmesi: günün saati, hava durumu, yaşam (trafik, insanlar).\n  - **Arayüz** sekmesinde Sürüm notları, Yenilikler ve Araçlar (Model kütüphanesi).\n- **Sürüm notları oyunda:**\n  - Yeni sürümden sonraki ilk açılışta yenilikler duyuru şeridinde gösteriliyor (\"Tümünü gör\" ile tamamı açılır).\n  - Süresi Ayarlar → Arayüz → **Sürüm notları** ile seçiliyor: Kapalı · 10 sn · 30 sn · Kapatana kadar.\n  - Ana menüde **Yenilikler**: son 8 sürümün notları.\n- **Teknik:** gerçek tarayıcıda yayın denetimi (tools/browser-check.js) eklendi; kaybolan nesne ya da sayfa hatası varsa yayın durur. docs/MIMARI.md'ye performans ve teknik borç bölümü eklendi."}, {"v": "V2.08", "d": "2026-10-13", "t": "", "md": "- **Gerçekçi füze modeli:**\n  - Roket motoru 8 saniye yanar, sonra sürtünme füzeyi yavaşlatır; ~200 m/s altında füze enerjisini yitirir.\n  - Arayıcı başlık yalnız burnun ±55° çevresini görür: doğru anda sert dönüş füzenin kilidi kaybetmesini sağlar.\n  - Radar güdümlü SAM füzeleri alçakta (500 m altında) füzenin görüş hattına dik uçan hedefi *çentikte* kaybedebilir.\n  - Füze ile aranda arazi kalırsa kilit kopar.\n  - Sert dönüş sırasında (4 G üstü) 400–1 800 m'de atılan flare'ler çok daha etkili.\n- **Füze uyarısı:**\n  - Ekranda kırmızı halka üzerinde füzenin geldiği yön ok olarak görünür; üstünde \"FÜZE · SAAT 4 · 1,2 km\" yazar.\n  - Altındaki öneri satırı: \"SAĞA KIR + FLARE + ALÇAL\".\n  - Kartal Gözü telsizden \"Füze! Saat 4, 2,3 kilometre!\" der. Füze kaçırılınca nedeni söylenir (kilidi kaybetti / enerjisini yitirdi / çentikte kaybetti / arazinin arkasında kaldın).\n- **Kaçış yardımı:** F7 (dokunmatikte füze gelirken yanıp sönen *KAÇ!*). Uçuş yardımı açıkken 5 saniye boyunca füzeyi yana alan sert dönüşü uçar, gazı tam açar ve uygun anda flare atar.\n- **Yeni görev, Füzeden kaçış** (Eğitim): iki SAM bataryasının attığı üç füzeden kurtul; yıldız kalan cana göre."}, {"v": "V2.07", "d": "2026-10-13", "t": "", "md": "- **Akrobasi tanıyıcı:** uçuş saniyede 10 kez izlenir (gövde eksenlerindeki dönüş, yön, burun, yatış, irtifa, hız). Bir figür tamamlanınca ekranın üstünde adı, kalitesi (Mükemmel / İyi / Geçer) ve puanı çıkar.\n  - Tanınan figürler: **Tonoz**, **Fıçı tonoz**, **Looping**, **Immelmann**, **Split-S**, **Cuban 8**, **Hammerhead**, **Sırtüstü uçuş**, **Bıçak sırtı**.\n  - Kalite irtifa ve yön tutarlılığından hesaplanır.\n- **Akrobasi dumanı:** F6 (dokunmatikte üst çubukta *DUMAN*) ile kırmızı/beyaz yumuşak duman izi; 25 saniyede söner.\n- **Yeni görev, Akrobasi gösterisi** (Eğitim): Türk Yıldızları tarzında tonoz → looping → Immelmann → Split-S → fıçı tonoz sırasıyla uçulur.\n  - Her figür için ipucu görünür; hakemler puan verir, yıldız puana göre belirlenir.\n  - Görev 900 m'de dumanı açık başlar.\n- Altyapı genel yazıldı: kol uçuşu ve kanat adamı düzeni (V2.09) aynı tanıyıcıyı kullanabilir."}, {"v": "V2.06", "d": "2026-10-13", "t": "", "md": "- **Gözden geçirme:** bütün ana ekranlar telefonda (yatay) ve bilgisayarda tek tek kontrol edildi. Rapor `docs/GOZDEN-GECIRME.md` dosyasında.\n- **Hangar (telefon):** uçak adı artık sınıf filtreleriyle üst üste binmiyor.\n  - Filtreler \"Ana menü\" düğmesinin yanında tek satırda, kaydırılabilir.\n  - Boya seçimi renk noktalarıyla gösteriliyor; başlık küçüldü.\n- **Duraklatma menüsü (telefon):** iki sütunlu düzen; bütün düğmeler ekrana sığıyor.\n- **Harita:** yer adları artık sağdaki liste panelinin üstüne taşmıyor.\n- **Sesli sohbet:** çok oyunculu pencerede *Açık mikrofon* (tuşa basmadan konuş) ve *Ses düzeyi* ayarı. Açık mikrofonda da konuşan göstergesi çalışır."}, {"v": "V2.05", "d": "2026-10-13", "t": "", "md": "- **Çarpışmalar:** yaya ve araçlar için artık şunlar katı:\n  - Park hâlindeki bütün uçaklar (gövde boyunca, uçağın yönüne göre). Örneğin İHA üssünde uçakların içinden geçilmiyor.\n  - Apronda taksi yapan yapay zekâ uçakları.\n  - Trafik arabaları.\n  - Kasabalardaki ve marinadaki park etmiş arabalar.\n  - İskeledeki tekneler ve gemiler.\n- **Trafik:** önünde araban ya da sen varsan araba frenleyip durur, bir süre bekleyince korna çalar.\n- **Araç kazaları:** sert çarpmada çarpışma sesi, titreşim ve \"Çarpışma! (hız)\" uyarısı; araç geri itilir ve yavaşlar.\n- **Taksi:** yerdeki uçak park hâlindeki bir uçağa ya da araca değerse durur; 9 m/s (~32 km/s) üstünde kaza olur.\n- **Park etmiş arabalara binme:** kasabadaki ve marinadaki park hâlindeki bir arabanın yanına gidince araba gerçek, sürülebilir bir araca dönüşür ve \"E — araca bin\" çıkar.\n- Performans: yalnız oyuncunun 160 m çevresindeki nesneler denetlenir; park etmiş arabalar bölge ızgarasında tutulur."}, {"v": "V2.04", "d": "2026-10-13", "t": "", "md": "- **Park hâlindeki her uçağa binme:** İHA ve Test Merkezi'ndeki TB2, TB3, Akıncı, Kızılelma ve ANKA, apronda çekiciye bağlı Hürjet ve dünyada duran diğer uçak modelleri artık binilebilir.\n  - Yanına yürüyünce \"E — … ile uç\" (dokunmatikte *UÇAĞA BİN*) çıkar.\n  - Uçuş tam o noktadan ve uçağın baktığı yönden başlar; park hâlindeki model sen uçarken gizlenir, inip çıkınca yerine döner.\n  - Binilebilir uçak listesi oyunun model kaydından okunur: ileride eklenen her uçak modeli kendiliğinden binilebilir olur.\n  - Gökyüzünde dolaşan İHA ve hareket hâlindeki hava trafiği hariç.\n  - Kariyerde belge kuralı geçerli: belgesi olmayan uçağa binilemez."}, {"v": "V2.03", "d": "2026-10-13", "t": "", "md": "- **Görev ekranı yenilendi**: tek ekran, iki sütun, üst üste binme yok.\n  - Üstte tek satırlık kategori sekmeleri: Tümü · ★ Harekât · Eğitim · Hava · Taarruz · Keşif · Helikopter · Dinamik · Okul · Yarış · Kara · Deniz. Satır kaydırılabilir.\n  - Zorluk, süre ve sıralama **⚙ Filtre** düğmesinin altında; düğmede kaç filtre seçili olduğu yazar.\n  - Görevler kart olarak listelenir. Her kategorinin kendi rengi var (hava kırmızı, eğitim turkuaz, kara yeşil, deniz mavi…); süre, zorluk ve ödül kartın altında renkli yazar.\n  - Sağ panelde harita, hedefler, tehditler ve araç bulunur. *Başla* düğmesi hep altta görünür.\n  - Düşman, kanat adamı, zorluk ve başlangıç yeri ayarları *Gelişmiş ayarlar* başlığının altına katlandı.\n  - ★ Harekât sekmesi Kızıl Elma kampanyasını açar.\n  - Telefonda yatay ekrana sığacak şekilde sıkışır."}, {"v": "V2.02", "d": "2026-10-13", "t": "", "md": "- **Serbest çubuk:** uçuşta ve yürürken/sürerken, ekranın sol tarafında nereye dokunursan yön çubuğu orada açılır; parmağını kaldırınca yerine döner. Ayarlar → Kontroller → Dokunmatik → *Serbest çubuk* ile kapatılabilir.\n- **Düzen düzenleyici** (Ayarlar → Kontroller → Dokunmatik → *Düzenle*):\n  - Yön çubuğu, gaz, ateş/flare/dümen kümesi, üst düğmeler, işaret düğmesi ve yürüme düzeni sürüklenip istenen yere taşınır.\n  - Konumlar cihaza kaydedilir; *Sıfırla* ile varsayılana dönülür.\n- **Hazır düzenler:** Klasik · Sol el (çubuk sağda, düğmeler solda) · Eğerek uç (telefonu eğerek yönlendirme, çubuk gizli).\n- **Dokunmatik rehberi:** dokunmatik kumanda ilk açıldığında yön çubuğu, gaz, ateş ve flare için dört kısa ipucu çıkar; ayarlardan tekrar gösterilebilir.\n- Her dokunmatik düğmede kısa bir titreşim (Android).\n- İşaret (📍) düğmesi üst düğme çubuğuna taşındı; mini haritanın üstüne binmiyor."}];
 /* ------------------------------------------------------------------ loop */
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); });
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}

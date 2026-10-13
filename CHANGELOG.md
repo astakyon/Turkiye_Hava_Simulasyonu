@@ -1,6 +1,27 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.09 — 2026-10-13 · Optimizasyon 2.0, ayarlar düzeni, sürüm notları
+- **Kaybolan ağaçlar ve nesneler düzeltildi:** ekranın ortasındaki ağaç, kaya ve park etmiş araç grupları artık kaybolmuyor. Grupların görünürlük küresi her karede yeniden hesaplanıp küçülüyordu; asıl küre korunuyor ve her adımda denetleniyor.
+- **Optimizasyon 2.0:**
+  - Sabit nesne birleştirme: küçük sabit nesneler (bank, lamba, tabela, çit, bina parçaları) malzeme ve boyut sınıfına göre tek parçada çiziliyor. Yüksek kalitede çizim çağrısı %10–20 azaldı.
+  - Uzaktaki birleştirilmiş hücreler ekranda birkaç pikselden küçük kalınca gizleniyor.
+  - Hareket eden, gizlenen ya da yok edilen nesnenin hücresi kendiliğinden çözülüyor; kapılar, ışıklar ve hedefler eskisi gibi çalışıyor.
+  - Uzak nesne listesindeki 4 saniyede bir takılma giderildi.
+  - Tam ekran menüler açıkken sahne 10 FPS çiziliyor (pil, ısınma).
+  - Ölçüm (Düşük kalite): uçuşta ~250, şehirde ~300 çizim çağrısı.
+- **Cihaza göre ayar:** ilk açılışta ekran kartı, bellek ve işlemciye bakılarak telefon, tablet ya da bilgisayar için hazır ayar seçiliyor. Ayarlar → Grafik → **Cihaza göre ayarla** ile yeniden uygulanabilir.
+- **Ayarlar yeniden düzenlendi:**
+  - **Grafik** sekmesinde yalnız grafik ayarları var; hata ayıklama ayarları **Sorun giderme** grubunda.
+  - Yeni **Uçuş** sekmesi: uçuş yardımı, otomatik denge, türbülans, gerçek servis tavanı, kafa hareketi, yakıt, bomba yardımı, hedef kilidi ve **Telefon: eğerek uç** grubu.
+  - Yeni **Dünya** sekmesi: günün saati, hava durumu, yaşam (trafik, insanlar).
+  - **Arayüz** sekmesinde Sürüm notları, Yenilikler ve Araçlar (Model kütüphanesi).
+- **Sürüm notları oyunda:**
+  - Yeni sürümden sonraki ilk açılışta yenilikler duyuru şeridinde gösteriliyor ("Tümünü gör" ile tamamı açılır).
+  - Süresi Ayarlar → Arayüz → **Sürüm notları** ile seçiliyor: Kapalı · 10 sn · 30 sn · Kapatana kadar.
+  - Ana menüde **Yenilikler**: son 8 sürümün notları.
+- **Teknik:** gerçek tarayıcıda yayın denetimi (tools/browser-check.js) eklendi; kaybolan nesne ya da sayfa hatası varsa yayın durur. docs/MIMARI.md'ye performans ve teknik borç bölümü eklendi.
+
 ## V2.08 — 2026-10-13
 - **Gerçekçi füze modeli:**
   - Roket motoru 8 saniye yanar, sonra sürtünme füzeyi yavaşlatır; ~200 m/s altında füze enerjisini yitirir.

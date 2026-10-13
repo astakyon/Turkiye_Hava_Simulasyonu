@@ -193,20 +193,25 @@ Her madde ayrı bir sürüm olarak çıkar. Her sürüm testten geçer, GitHub'a
 | V2.05 | Çarpışmalar | Yayalar araç, uçak ve gemilerin içinden geçemez (gövde kutuları). Trafikteki arabalar, yerdeki ve havadaki trafik uçakları, gemiler oyuncunun aracıyla çarpışır: hasar, savrulma, kaza. Trafik arabaları önlerindeki araç ya da yayayı görünce yavaşlar ve durur. Uçak yerdeyken park hâlindeki araçlara çarpar. Hangar ve bina duvarları yaya ve araçlar için katıdır. Performans için yakın nesneler bölge ızgarasıyla kontrol edilir. | ✅ |
 | V2.06 | Mevcut özellik gözden geçirmesi | Bütün menüler, ayarlar ve görevler tek tek denenir. Hata, karışık metin ve gereksiz ayar ayıklanır. Ayarlar sadeleştirilir (Temel / Gelişmiş). Kaydın hesaplar arasında doğru taşındığı denetlenir. Telefon ve bilgisayarda performans ölçümü. Sesli sohbete açık mikrofon seçeneği ve oyuncu başına ses düzeyi. Sonuç bir rapor olarak yazılır. | ✅ |
 
+### Ara sürüm — Optimizasyon 2.0, ayarlar, sürüm notları
+
+| Sürüm | Başlık | İçerik | Durum |
+|---|---|---|---|
+| V2.09 | Optimizasyon 2.0 | Ekranın ortasında ağaç ve nesnelerin kaybolması düzeltildi (örnekli grupların sınır küresi). Sabit nesne birleştirme (boyut sınıflı hücreler, kendini onaran), hücre bazında mesafe ayıklaması, cihaz kademesi (telefon/tablet/PC ilk açılışta), menüde 10 FPS çizim, ayıklama listesinde O(n²) takılma giderildi. Gerçek tarayıcıda yayın kapısı (tools/browser-check.js). Ayarlar yeniden düzenlendi: Grafik / Uçuş / Dünya sekmeleri, "Sorun giderme" ve "Telefon: eğerek uç" grupları. Sürüm notları oyunda duyuru olarak (süre ayarlı) ve "Yenilikler" penceresi. | |
+
 ### Faz 13 — Uçuş: akrobasi ve füzeden kaçış
 
 | Sürüm | Başlık | İçerik | Durum |
 |---|---|---|---|
 | V2.07 | Akrobasi altyapısı | Uçuş verisinden manevra tanıyıcı: yatış, yunuslama, yön ve irtifa değişimi zaman penceresinde izlenir. **Tanınan hareketler:** tonoz (aileron roll), fıçı tonoz (barrel roll), looping, Immelmann, Split-S, Cuban 8, hammerhead (stall turn), sırtüstü uçuş, bıçak sırtı (knife edge). Yapılan hareketin adı ve puanı ekranda çıkar. Renkli duman (kırmızı/beyaz, T tuşu). **Akrobasi modu:** sıralı figür görevi ("Türk Yıldızları" tarzı), hakem puanı (düzgünlük, irtifa kaybı, hız). Kanat adamlarıyla kol uçuşu altyapısı (sabit düzen tutma). | ✅ |
 | V2.08 | Füzeden kaçış | **Füze modeli:** füzenin enerjisi (yakıt bitince yavaşlar), dönüş sınırı, arayıcı başlık açısı ve flare'e kanma olasılığı. **Kaçış hareketleri:** sert kırılış (break turn), füzeyi yandan alma (beaming/notching), alçalarak dalış ve arazi maskeleme, doğru zamanlı flare/chaff. **Uyarı sistemi:** füzenin yönünü ve mesafesini gösteren RWR, "FÜZE – SAAT 4" sesli uyarı, kaçış önerisi ("SOLA KIR + FLARE"). **Otomatik kaçış yardımı** (Uçuş yardımı açıkken): tek tuşla en iyi kaçış hareketini yapar. Düşman yapay zekâsı da aynı hareketlerle kaçar. Eğitim dersi: "Füzeden kaçış". | ✅ |
-| V2.09 | Kanat adamı komutları | Kanat adamına emir: saldır, kolla, düzene gir, üsse dön. Akrobaside kol uçuşu. | |
+| V2.10 | Kanat adamı komutları | Kanat adamına emir: saldır, kolla, düzene gir, üsse dön (F8 / telsiz menüsü). Akrobaside kol uçuşu. | |
 
 ### Faz 14 — Model altyapısı ve veri
 
 | Sürüm | Başlık | İçerik | Durum |
 |---|---|---|---|
-| V2.10 | Model kayıt sistemi | Her araç tek bir tanım dosyasıyla eklenir: kimlik, ad, sınıf, gerçek ölçüler (Defence Turk envanteri ve diğer açık kaynaklar), performans, silahlar, kokpit, ses, model kurucu ya da .glb dosyası. Yeni tanım kendiliğinden hangara, model kütüphanesine, görev panosuna, binme listesine ve çarpışma kutularına eklenir. **Ölçü denetimi:** modelin uzunluk ve kanat açıklığı gerçek veriyle karşılaştırılır, uyarı verir. Kütüphanede "veri kartı" ve kaynak atfı. | |
-| V2.11 | Model yükleme hattı | Dışarıda hazırlanan .glb modellerin (Blender) kütüphaneye yüklenip oyuna bağlanması: döndürme, ölçek, pivot ve iniş takımı ayarı, renk/kamuflaj bölgeleri, hareketli parçalar (dümen, takım, pervane, taret). Yönetici panelinden herkese yayınlama. Rehber: "Yeni model nasıl eklenir". | |
+| V2.11 | Model altyapısı (kayıt + yükleme hattı) | Her araç tek bir tanım dosyasıyla eklenir: kimlik, ad, sınıf, gerçek ölçüler (Defence Turk envanteri ve diğer açık kaynaklar), performans, silahlar, kokpit, ses, model kurucu ya da .glb dosyası. Yeni tanım kendiliğinden hangara, model kütüphanesine, görev panosuna, binme listesine ve çarpışma kutularına eklenir. **Ölçü denetimi:** modelin uzunluk ve kanat açıklığı gerçek veriyle karşılaştırılır, uyarı verir. Kütüphanede "veri kartı" ve kaynak atfı. Dışarıda hazırlanan .glb modellerin (Blender) kütüphaneye yüklenip oyuna bağlanması: döndürme, ölçek, pivot ve iniş takımı ayarı, renk/kamuflaj bölgeleri, hareketli parçalar (dümen, takım, pervane, taret). Yönetici panelinden herkese yayınlama. Rehber: "Yeni model nasıl eklenir". | |
 
 ### Faz 15 — Model yenileme serisi (her model onaya sunulur)
 

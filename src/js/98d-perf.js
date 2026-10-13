@@ -63,7 +63,7 @@ function instPrep(){
   scene.traverse(function(o){ if(!o.isInstancedMesh||dyn.has(o)||o.userData.noCull||!o.geometry||!o.instanceMatrix) return; const g=o.geometry;
     let p=o.parent; while(p){ if(p===planeGroup||p.userData.noCull) return; p=p.parent; }
     if(o.userData.full){ /* chunk made by chunkInstances: its geometry sphere covers the tile; measure one object */
-      if(o.userData.ir==null){ const keep=g.boundingSphere; g.computeBoundingSphere(); const gr=g.boundingSphere.radius; g.boundingSphere=keep; let sm=1; for(let i=0;i<Math.min(o.count,64);i++){ o.getMatrixAt(i,mt); sm=Math.max(sm,mt.getMaxScaleOnAxis()); } o.userData.ir=gr*sm; }
+      if(o.userData.ir==null){ const keep=g.boundingSphere.clone(); g.computeBoundingSphere(); const gr=g.boundingSphere.radius; g.boundingSphere=keep;   /* computeBoundingSphere overwrites the same Sphere object: keep a copy (V2.09 fix) */ let sm=1; for(let i=0;i<Math.min(o.count,64);i++){ o.getMatrixAt(i,mt); sm=Math.max(sm,mt.getMaxScaleOnAxis()); } o.userData.ir=gr*sm; }
     } else {
       if(o.frustumCulled!==false||o.count<8) return;
       if(!g.boundingSphere) g.computeBoundingSphere(); const gr=g.boundingSphere.radius; if(!isFinite(gr)) return;
@@ -71,14 +71,14 @@ function instPrep(){
       cx/=n; cy/=n; cz/=n; let R=0; for(let i=0;i<n;i++){ o.getMatrixAt(i,mt); v.setFromMatrixPosition(mt); R=Math.max(R,Math.hypot(v.x-cx,v.y-cy,v.z-cz)); }
       if(!(R>0)&&n>1) return; const ng=g.clone(); ng.boundingSphere=new THREE.Sphere(new THREE.Vector3(cx,cy,cz),R+gr*sm); o.geometry=ng;
       o.frustumCulled=true; o.userData.full=n; o.userData.ir=gr*sm; o.userData.bounded=true; }
-    o.userData.bv=o.instanceMatrix.version; o.userData.noCull=true; L.push(o); });   /* the general size cull leaves these to instStep */
+    o.userData.bv=o.instanceMatrix.version; o.userData.noCull=true; o.userData.bs0=o.geometry.boundingSphere.clone(); L.push(o); });   /* the general size cull leaves these to instStep */
   PERF2.inst=L; PERF2.ii=0; return L.length; }
 const _p2Chunk=chunkInstances; chunkInstances=function(){ const r=_p2Chunk(); try{ waterFix(); instPrep(); }catch(e){ console.warn('perf',e); } return r; };
 function treeDensity(){ return [0.35,0.7,1,1][SETTINGS.quality||0]*(PERF2.lvl>=2?0.6:1); }
 function instStep(){
   const L=PERF2.inst, n=L.length; if(!n||!camera) return; const k=HH/(2*Math.tan(camera.fov*Math.PI/360)), cp=camera.position, px=(typeof CULL!=='undefined'?CULL.px:2.5)*1.4, v=instStep.v||(instStep.v=new THREE.Vector3()), td=treeDensity(), mob=DEV.mobile;
   const per=Math.max(24,Math.ceil(n/4));
-  for(let c=0;c<per;c++){ if(PERF2.ii>=n) PERF2.ii=0; const o=L[PERF2.ii++], g=o.geometry, bs=g&&g.boundingSphere; if(!bs) continue;
+  for(let c=0;c<per;c++){ if(PERF2.ii>=n) PERF2.ii=0; const o=L[PERF2.ii++], g=o.geometry; if(o.userData.bs0&&g&&(!g.boundingSphere||!g.boundingSphere.equals(o.userData.bs0))) g.boundingSphere=o.userData.bs0.clone(); const bs=g&&g.boundingSphere; if(!bs) continue;
     if(o.userData.bounded&&o.instanceMatrix.version!==o.userData.bv){ o.frustumCulled=false; o.layers.enable(0); L.splice(PERF2.ii-1,1); PERF2.ii--; return; }   /* it moves after all: draw it as before */
     v.copy(bs.center).applyMatrix4(o.matrixWorld); const d=Math.max(1,v.distanceTo(cp)-bs.radius), show=(o.userData.ir||1)*k/d>=px;
     if(show) o.layers.enable(0); else o.layers.disable(0);

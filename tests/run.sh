@@ -76,3 +76,5 @@ node harness.js /tmp/sim.js board.test.js
 node harness.js /tmp/sim.js collide.test.js
 node harness.js /tmp/sim.js acro.test.js
 node harness.js /tmp/sim.js evade.test.js
+node harness.js /tmp/sim.js perf2.test.js
+node harness.js /tmp/sim.js notes.test.js

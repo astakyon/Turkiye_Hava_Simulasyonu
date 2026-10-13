@@ -74,7 +74,33 @@ Kitaplıklar ilk ihtiyaçta `vendor/`'dan, yoksa jsDelivr'den yüklenir; yüklen
 
 ## Sürüm verme
 `python3 bump_version.py V1.xx "not"` → `src/js/01-core.js`, şablon, `VERSION`, `version.json`, `sw.js`, CHANGELOG
-güncellenir ve `index.html` yeniden derlenir. `VERSION` değişip `main`'e gidince Releases kaydı otomatik açılır.
+güncellenir ve `index.html` yeniden derlenir. CHANGELOG başlığı `## Vx.xx — tarih · başlık` biçimindedir; `python3 tools/relnotes.py` son 8 sürümü `src/js/98w-relnotes-data.js` dosyasına yazar (oyundaki "Yenilikler" ve sürüm duyurusu buradan okur). `VERSION` değişip `main`'e gidince Releases kaydı otomatik açılır.
+
+## Performans (V2.09) ve teknik borç
+
+Hedef: her telefon, tablet ve bilgisayarda akıcı oyun. Telefonlarda darboğaz çoğunlukla **çizim çağrısı** sayısıdır (yaygın kılavuz: mobilde kare başına ~100–300). Ölçüm `node tools/browser-check.js` ile yapılır (`Q=0` Düşük kademe). V2.09 değerleri:
+
+| Görünüm | Düşük (telefon) | Yüksek (PC) |
+|---|---|---|
+| Uçuş | ~250 çizim · 550k üçgen | ~400 çizim · 660k üçgen |
+| Şehir (yürüyüş) | ~300 · 570k | ~480 · 740k |
+| Orman (yürüyüş) | ~280 · 610k | ~400 · 790k |
+
+Katmanlar:
+1. **Boyut ayıklaması** (46-cull): ekranda eşik pikselden küçük kalan nesne render katmanından çıkar (`.visible` oyun mantığına kalır). Liste 4 sn'de bir yenilenir (Set ile; eskiden O(n²) idi).
+2. **Örnekli gruplar** (98d-perf): ağaç, kaya, park etmiş araç gibi InstancedMesh'ler 4 km karolara bölünür. Her karo kendi sınır küresini taşır. **Tuzak:** three r128'de `computeBoundingSphere()` mevcut küreyi yerinde değiştirir; karo küresi `userData.bs0` kopyasıyla korunur, `instStep` her adımda denetler. (V1.94–V2.08'de ekran ortasındaki ağaçların kaybolma nedeni buydu.)
+3. **Sabit birleştirme** (98u-perf2): küçük sabit nesneler malzeme + boyut sınıfı (S < 3 m, M < 20 m, L < 150 m: 800 m hücre; B: 4 km hücre) başına tek ağa birleşir. Rengi farklı dokusuz malzemeler köşe rengiyle tek ağa girer. Hücre, en büyük üyesinin ekrandaki boyutuna göre gizlenir. Bekçi 2 sn'de bir asılları denetler; biri hareket eder, gizlenir ya da silinirse hücre çözülür. Kapatmak için `SETTINGS.merge=false`.
+4. **Cihaz kademesi**: ilk açılışta GPU adı, bellek ve çekirdek sayısından hazır ayar seçilir (Ayarlar → Grafik → Cihaza göre ayarla).
+5. **Uyarlanır kalite** (98d): FPS düşünce çözünürlük ve kalite basamak basamak iner.
+6. **Menüde 10 FPS**: tam ekran menü sahneyi örterken.
+
+Yayın kapısı: `release.sh`, `tools/browser-check.js` FAIL verirse yayını durdurur. Denetlenenler: görüş alanındaki örnekli grubun ayıklanması, birleştirilmiş hücre ile asıllarının birlikte çizilmesi, sayfa hataları.
+
+Açık teknik borç:
+- Arazi tek parça (≈180k üçgen, her kademede). Parçalı arazi + uzaklık LOD'u planlı. Yükseklik örneklemesi şimdilik bu ağa bağlı olduğu için dikkat ister.
+- Park etmiş uçak ve gemi modelleri model başına 30–70 çizim. Model altyapısıyla (V2.11) uzak LOD ve birleştirilmiş gövde gelecek.
+- Modüller sarmalama (`const _x=fn; fn=function…`) zinciriyle genişliyor. `tests/decl.sh` aynı adlı üst düzey tanımları yakalar; yeni modülde benzersiz önek kullanın.
+- Başsız testlerde THREE sahte (stub); gerçek grafik davranışı yalnızca tarayıcı denetiminde sınanır.
 
 ## Android (planlı)
 `index.html` + `vendor/` + `assets/` bir Capacitor (veya TWA) projesine kopyalanır; her şey yerelden yüklendiği için

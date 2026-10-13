@@ -15,7 +15,7 @@ function cullCollect(){
     L.push(o);
   });
   /* objects dropped from the list must be visible again */
-  CULL.list.forEach(function(o){ if(L.indexOf(o)<0) o.layers.enable(0); });
+  const keep=new Set(L); CULL.list.forEach(function(o){ if(!keep.has(o)) o.layers.enable(0); });   /* Set: indexOf here was O(n²), a 10–20 ms hitch every 4 s on phones */
   CULL.list=L; CULL.i=0;
 }
 function cullStep(dt){
