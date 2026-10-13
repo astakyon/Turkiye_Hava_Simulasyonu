@@ -117,3 +117,22 @@ create policy "içerik dosyası silme" on storage.objects for delete to authenti
 -- V1.68: uzaktan oyun ayarı için 'config' türü (eski kurulumlar için kısıtı güncelle)
 alter table public.content drop constraint if exists content_kind_check;
 alter table public.content add constraint content_kind_check check (kind in ('model','sound','music','livery','config','mission'));
+
+-- ---------- performans testi raporları (V2.12) — ayrıca supabase/perf_reports.sql
+create table if not exists public.perf_reports(
+  id bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  version text,
+  device text,
+  gpu text,
+  summary jsonb,
+  data jsonb not null
+);
+alter table public.perf_reports enable row level security;
+drop policy if exists "performans raporu ekleme" on public.perf_reports;
+create policy "performans raporu ekleme" on public.perf_reports for insert to anon, authenticated
+  with check (pg_column_size(data) < 200000 and coalesce(length(device),0) < 200 and coalesce(length(gpu),0) < 200);
+drop policy if exists "performans raporu okuma" on public.perf_reports;
+create policy "performans raporu okuma" on public.perf_reports for select to authenticated using (public.is_admin());
+drop policy if exists "performans raporu silme" on public.perf_reports;
+create policy "performans raporu silme" on public.perf_reports for delete to authenticated using (public.is_admin());

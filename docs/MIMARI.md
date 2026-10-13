@@ -95,6 +95,8 @@ Katmanlar:
 5. **Uyarlanır kalite** (98d): FPS düşünce çözünürlük ve kalite basamak basamak iner.
 6. **Menüde 10 FPS**: tam ekran menü sahneyi örterken.
 
+**Gerçek cihaz ölçümü (V2.12):** Ayarlar → Grafik → Performans testi (`98x-perftest.js`). Oyun sabit rotaları kendisi oynar: 6 sahne, özellik maliyetleri (gölge, efekt, yarı çözünürlük, ağaç, iki katmanlı derinlik, logaritmik derinlik), stres sahnesi, ilk efekt takılması, isteğe bağlı 5 dk ısınma. Kare süresi rAF aralığından, işlemci süresi kare fonksiyonunun içinden, GPU süresi `EXT_disjoint_timer_query_webgl2` varsa ölçülür. Sonuç ortalama/P90/P99 FPS, 20 FPS altı kare oranı ve darboğaz (ekran yenileme · işlemci · ekran kartı) olarak raporlanır. Rapor anonimdir; `perf_reports` tablosuna (supabase/perf_reports.sql) yalnız oyuncu "Gönder" deyince gider, cihazda son 5 rapor saklanır, Yönetim → Performans sekmesinde listelenir. Logaritmik derinlik çalışırken kapatılamadığı için ölçüm sırasında malzemelere `onBeforeCompile` ile `#undef USE_LOGDEPTHBUF` eklenip programlar yeniden derlenir.
+
 Yayın kapısı: `release.sh`, `tools/browser-check.js` FAIL verirse yayını durdurur. Denetlenenler: görüş alanındaki örnekli grubun ayıklanması, birleştirilmiş hücre ile asıllarının birlikte çizilmesi, sayfa hataları.
 
 Açık teknik borç:

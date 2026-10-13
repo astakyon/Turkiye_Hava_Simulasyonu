@@ -38,3 +38,12 @@ Proje olmadan da oyun çalışır; bu durumda oyuncular **misafir** olarak oynar
    update public.profiles set role = 'admin' where id = (select id from auth.users where email = 'SENIN@EPOSTAN.com');
    ```
 3. Oyunu yenile. Ana menüde **Yönetim** bölümü ve kütüphaneler görünür.
+
+## 5. Performans raporları (V2.12)
+
+Oyundaki **Ayarlar → Grafik → Performans testi** sonucunda oyuncular "Raporu gönder" diyebilir. Raporların kaydedilmesi için Supabase'te bir tablo gerekir:
+
+1. Supabase → **SQL Editor** → **New query**.
+2. `supabase/perf_reports.sql` dosyasının tamamını yapıştır → **Run**.
+
+Raporlar anonimdir (cihaz, ekran kartı, grafik ayarları, ölçümler). Oyuncular yalnız ekleyebilir; okuma ve silme yalnız yöneticilere açıktır. Raporlar oyunda **Yönetim → Performans** sekmesinde listelenir. Tablo kurulmadan önce de test çalışır: sonuç cihazda saklanır ve "Kopyala" ile paylaşılabilir.

@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.12 — 2026-10-13 · Performans testi ve cihaz raporu
+- **Performans testi:** Ayarlar → Grafik → **Performans testi**. Oyun yaklaşık 2 dakika boyunca kendi kendine sabit bir rota oynar; her cihaz aynı sahneyi çizdiği için sonuçlar karşılaştırılabilir:
+  - ekranın yenileme hızı (60 / 90 / 120 Hz),
+  - ilk patlama ve ilk flare anındaki takılma,
+  - 6 sahne: yüksek uçuş, şehir üstünde alçak uçuş, şehirde yürüyüş, İHA üssü, deniz üssü, orman,
+  - aynı uçuş rotasında gölge, görsel efekt, çözünürlük, ağaç, iki katmanlı derinlik ve logaritmik derinlik tek tek kapatılarak her birinin maliyeti,
+  - kalabalık savaş (8 uçak ve sürekli patlama),
+  - isteğe bağlı 5 dakikalık ısınma testi (telefon ısınınca yavaşlıyor mu?).
+- **Sonuç ekranı:** ortalama, P90 ve P99 FPS, 20 FPS altındaki kare oranı (Google Play "yavaş oturum" ölçütü), işlemci ve (tarayıcı izin veriyorsa) ekran kartı süresi, çizim ve üçgen sayısı, darboğazın ne olduğu (ekranın yenileme hızı · işlemci · ekran kartı), kare süresi grafiği ve öneriler.
+- **Rapor gönderme:** "Raporu gönder" ile sonuç anonim olarak sunucuya gider (cihaz, ekran kartı, grafik ayarları ve ölçümler; ad, e-posta ya da hesap bilgisi yok). Son 5 test cihazda saklanır, "Kopyala" ile paylaşılabilir. Yönetim panelinde yeni **Performans** sekmesi raporları listeler. Sunucu tablosu için supabase/perf_reports.sql bir kez çalıştırılmalı (supabase/KURULUM.md, bölüm 5).
+- **Canlı FPS göstergesi:** artık P90 FPS, kare süresi, çizim ve üçgen sayısı ile son 2 saniyenin kare süresi çizgisini gösteriyor (50 ms'yi aşan kareler kırmızı).
+- Teknik: test süresince otomatik kalite ve FPS sınırı kapanır, sonunda (ya da Esc ile durdurulunca) bütün ayarlar geri yüklenir.
+
 ## V2.11 — 2026-10-13 · Model altyapısı
 - **Tek çağrıyla yeni uçak:** `defineAircraft('id',{...})` yeni bir aracı benzer bir uçaktan kopyalayıp üzerine yazar. Uçuş verisi, sınıf, üretici, ehliyet, rütbe kilidi, envanter kartı ve gerçek performans bu tek çağrıdan gelir. Araç kendiliğinden hangara, model kütüphanesine, görev panosuna, binme listesine ve çarpışma kutularına girer.
 - **.glb modeller:** kod yerine bir .glb dosyası verilebilir; model gerçek boyuna ölçeklenerek yüklenir. Dışarıdan yüklenen modeller de artık uçağın gerçek uzunluğuna göre boyutlanıyor.
