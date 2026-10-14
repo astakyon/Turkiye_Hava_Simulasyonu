@@ -19,7 +19,7 @@ function mrgExcluded(){ const S0=new Set(); const add=function(g){ if(g) S0.add(
   try{ if(AP.flag) add(AP.flag.m); if(AP.radar) add(AP.radar); AP.socks.forEach(add); }catch(e){}
   return S0; }
 function mrgCandidate(o,EX){ if(!o.isMesh||o.isInstancedMesh||o.isSkinnedMesh||!o.geometry||!o.geometry.attributes||!o.geometry.attributes.position) return false;
-  const m=o.material; if(!m||Array.isArray(m)||m.transparent||m.isShaderMaterial||m.isRawShaderMaterial||m.wireframe) return false; if(o.onBeforeRender&&o.onBeforeRender.toString().length>40) return false;
+  const m=o.material; if(!m||Array.isArray(m)||m.isShaderMaterial||m.isRawShaderMaterial||m.wireframe) return false; if(o.onBeforeRender&&o.onBeforeRender.toString().length>40) return false;
   if(o.userData.noMerge||o.userData.noCull||o.userData.merged) return false; if(o.morphTargetInfluences) return false;
   let p=o; while(p){ if(!p.visible||EX.has(p)||p.userData.noMerge) return false; if(p===scene) break; p=p.parent; } if(p!==scene) return false;
   const g=o.geometry; if(!g.boundingSphere) g.computeBoundingSphere(); const bs=g.boundingSphere; if(!bs||!isFinite(bs.radius)) return false;
@@ -43,31 +43,68 @@ function mrgBuild(list,vc){ /* list of meshes with the same material / attribute
     vo+=c; });
   const bg=new THREE.BufferGeometry(); bg.setAttribute('position',new THREE.BufferAttribute(P,3)); if(N) bg.setAttribute('normal',new THREE.BufferAttribute(N,3)); if(U) bg.setAttribute('uv',new THREE.BufferAttribute(U,2)); if(C) bg.setAttribute('color',new THREE.BufferAttribute(C,cs));
   bg.setIndex(new THREE.BufferAttribute(I,1)); bg.computeBoundingSphere(); return bg; }
-/* size class in the key: small props share a cell only with small props, so the whole cell can be hidden by distance the way
-   the per-object size cull hid them before merging (otherwise far cells drew every bench and sign — triangles went up ~25 %) */
-function mrgCellKey(r,v){ const sc=r<3?'S':r<20?'M':r<150?'L':'B', T=sc==='B'?4000:800; return sc+Math.floor(v.x/T)+','+Math.floor(v.z/T); }
-function mrgRun(){ if(MRG.done||!scene||!scene.traverse) return; MRG.done=true; scene.updateMatrixWorld(true); const EX=mrgExcluded(), by=new Map(); let cnt=0;
-  scene.traverse(function(o){ if(!mrgCandidate(o,EX)) return; cnt++; const bs=o.geometry.boundingSphere; MRG.v.copy(bs.center).applyMatrix4(o.matrixWorld);
-    const vc=mrgVC(o.material), key=mrgGroupKey(o.material)+'|'+(vc?'vc':mrgSig(o.geometry))+'|'+(o.castShadow?1:0)+(o.receiveShadow?1:0)+'|'+mrgCellKey(o.userData._mr,MRG.v); let L=by.get(key); if(!L){ L=[]; by.set(key,L); } L.push(o); });
+/* ---- V2.14 "Birleştirme 2.0": coverage, permanent cells, ≤65 535 vertices per mesh, shared merged materials, frozen matrices.
+   V2.09 merged only 42 % of the candidates (small groups of 1–2 per 800 m cell stayed single, glass was skipped) and a single
+   moving part (a door, a rotating antenna) dissolved its whole cell for good (586 → 494 merged after a short flight).
+   • size class in the key: small props share a cell only with small props, so a far cell of benches can be hidden by distance;
+     leftovers (fewer than 2 in their cell) get a second chance in 4× larger cells of the same class.
+   • transparent parts (glass, light covers) merge with parts of the same material/opacity.
+   • a cell is split into meshes of at most 65 535 vertices (16-bit indices; Android guidance: some GPUs drop bigger meshes).
+   • untextured cells of the same kind share one vertex-colour material (fewer shader/state switches).
+   • when a part moves, only that part leaves: the cell is rebuilt from the rest at once.
+   • matrices: ~3 500 static objects recomputed their matrix every frame (CPU on phones). After the merge, objects that stayed
+     still for 1.5 s are frozen (matrixAutoUpdate off); a watchdog checks position/rotation/scale a slice per frame and
+     unfreezes anything the game moves. */
+function mrgCellKey(r,v,big){ const sc=r<3?'S':r<20?'M':r<150?'L':'B', T=sc==='B'?4000:(big?3200:800); return sc+(big?'x':'')+Math.floor(v.x/T)+','+Math.floor(v.z/T); }
+function mrgBaseKey(o){ const m=o.material, vc=mrgVC(m); return (m.transparent?'T'+m.opacity+(m.depthWrite?'w':'')+':':'')+mrgGroupKey(m)+'|'+(vc?'vc':mrgSig(o.geometry))+'|'+(o.castShadow?1:0)+(o.receiveShadow?1:0); }
+MRG.vmat=new Map();
+function mrgVcMat(m){ const k=(m.transparent?'T'+m.opacity+(m.depthWrite?'w':''):'')+mrgGroupKey(m); let x=MRG.vmat.get(k); if(!x){ x=m.clone(); x.color.setRGB(1,1,1); x.vertexColors=true; x.needsUpdate=true; MRG.vmat.set(k,x); } return x; }
+function mrgCenter(o){ const bs=o.geometry.boundingSphere; return MRG.v.copy(bs.center).applyMatrix4(o.matrixWorld); }
+function mrgAdd(L,key){ const vc=key.indexOf('|vc|')>0; let rMax=0; L.forEach(function(o){ rMax=Math.max(rMax,o.userData._mr||0); });
+  const meshes=[], box=new THREE.Box3(); let chunk=[], nv=0;
+  const flush=function(){ if(!chunk.length) return; let geo=null; try{ geo=mrgBuild(chunk,vc); }catch(e){ geo=null; }
+    if(geo){ const m0=chunk[0]; const m=new THREE.Mesh(geo,vc?mrgVcMat(m0.material):m0.material); m.castShadow=m0.castShadow; m.receiveShadow=m0.receiveShadow; m.userData.rs=m0.userData.rs; m.userData.cs=m0.userData.cs; m.userData.noMerge=true; m.userData.mergedCell=key; m.renderOrder=m0.renderOrder; m.matrixAutoUpdate=false; m.updateMatrix();
+      geo.computeBoundingBox(); box.union(geo.boundingBox); meshes.push(m); } else chunk.forEach(function(o){ o.userData.noMerge=true; });
+    chunk=[]; nv=0; };
+  L.forEach(function(o){ const c=o.geometry.attributes.position.count; if(nv+c>65535&&chunk.length) flush(); chunk.push(o); nv+=c; }); flush();
+  const used=L.filter(function(o){ return !o.userData.noMerge; }); if(!meshes.length||used.length<2){ meshes.forEach(function(m){ m.geometry.dispose(); }); return null; }
+  meshes.forEach(function(m){ scene.add(m); }); const sp=box.getBoundingSphere(new THREE.Sphere());
+  const cell={key:key, mesh:meshes[0], meshes:meshes, rMax:rMax, c:sp.center.clone(), R:sp.radius, src:used.map(function(o){ return {o:o,mw:o.matrixWorld.elements.slice(),parent:o.parent,mat:o.material,mk:mrgMatKey(o.material)}; })};
+  used.forEach(function(o){ o.userData.merged=cell; o.userData.noCull=true; o.layers.disable(0); });
+  MRG.cells.set(key,cell); MRG.stats.merged+=used.length; MRG.stats.cells++; MRG.stats.meshesOut=(MRG.stats.meshesOut||0)+meshes.length; return cell; }
+function mrgRun(){ if(MRG.done||!scene||!scene.traverse) return; MRG.done=true; scene.updateMatrixWorld(true); const EX=mrgExcluded(), by=new Map(), left=new Map(); let cnt=0;
+  const put=function(M,k,o){ let L=M.get(k); if(!L){ L=[]; M.set(k,L); } L.push(o); };
+  scene.traverse(function(o){ if(!mrgCandidate(o,EX)) return; cnt++; put(by,mrgBaseKey(o)+'|'+mrgCellKey(o.userData._mr,mrgCenter(o)),o); });
   MRG.stats.meshes=cnt;
-  by.forEach(function(L,key){ if(L.length<(key.indexOf('|B')>0?2:3)) return; let rMax=0; L.forEach(function(o){ rMax=Math.max(rMax,o.userData._mr||0); }); const vc=key.indexOf('|vc|')>0; let geo; try{ geo=mrgBuild(L,vc); }catch(e){ return; }
-    let mat=L[0].material; if(vc){ mat=mat.clone(); mat.color.setRGB(1,1,1); mat.vertexColors=true; mat.needsUpdate=true; }
-    const m=new THREE.Mesh(geo,mat); m.castShadow=L[0].castShadow; m.receiveShadow=L[0].receiveShadow; m.userData.rs=L[0].userData.rs; m.userData.cs=L[0].userData.cs; m.userData.noMerge=true; m.userData.mergedCell=key; m.matrixAutoUpdate=false; m.updateMatrix();
-    scene.add(m); const cell={key:key,mesh:m,rMax:rMax,c:geo.boundingSphere.center.clone(),R:geo.boundingSphere.radius,src:L.map(function(o){ return {o:o,mw:o.matrixWorld.elements.slice(),parent:o.parent,mat:o.material,mk:mrgMatKey(o.material)}; })};
-    L.forEach(function(o){ o.userData.merged=cell; o.userData.noCull=true; o.layers.disable(0); });
-    MRG.cells.set(key,cell); MRG.stats.merged+=L.length; MRG.stats.cells++; });
-  if(typeof CULL!=='undefined') CULL.list=CULL.list.filter(function(o){ return !o.userData.merged; });   /* else the size cull's refresh would switch the originals back on */ }
-function mrgUnmerge(cell){ if(!MRG.cells.has(cell.key)) return; MRG.cells.delete(cell.key); scene.remove(cell.mesh); try{ cell.mesh.geometry.dispose(); }catch(e){}
-  cell.src.forEach(function(s){ s.o.userData.merged=null; s.o.userData.noCull=false; s.o.layers.enable(0); }); MRG.stats.cells--; MRG.stats.merged-=cell.src.length; }
+  by.forEach(function(L,key){ if(L.length>=2&&mrgAdd(L,key)) return; L.forEach(function(o){ if(!o.userData.merged&&!o.userData.noMerge) put(left,mrgBaseKey(o)+'|'+mrgCellKey(o.userData._mr,mrgCenter(o),true),o); }); });
+  left.forEach(function(L,key){ if(L.length>=2) mrgAdd(L,key); });
+  MRG.stats.single=cnt-MRG.stats.merged;
+  if(typeof CULL!=='undefined') CULL.list=CULL.list.filter(function(o){ return !o.userData.merged; });   /* else the size cull's refresh would switch the originals back on */
+  setTimeout(function(){ try{ mfzRun(); }catch(e){ console.warn('dondurma',e); } },200); }
+function mrgUnmerge(cell,culprit){ if(!MRG.cells.has(cell.key)) return; MRG.cells.delete(cell.key); (cell.meshes||[cell.mesh]).forEach(function(m){ scene.remove(m); try{ m.geometry.dispose(); }catch(e){} });
+  cell.src.forEach(function(s){ s.o.userData.merged=null; s.o.userData.noCull=false; s.o.layers.enable(0); }); MRG.stats.cells--; MRG.stats.merged-=cell.src.length; MRG.stats.meshesOut=(MRG.stats.meshesOut||0)-(cell.meshes||[1]).length;
+  if(culprit){ culprit.userData.noMerge=true; MRG.stats.left=(MRG.stats.left||0)+1; const EX=mrgExcluded(); const rest=cell.src.map(function(s){ return s.o; }).filter(function(o){ return o!==culprit&&mrgCandidate(o,EX); });
+    if(rest.length>=2) mrgAdd(rest,cell.key+'~'); } }
 function mrgChanged(s){ const o=s.o; if(o.parent!==s.parent||o.material!==s.mat) return true; if(s.chk=(s.chk||0)+1, s.chk%4===0&&mrgMatKey(o.material)!==s.mk) return true; let p=o; while(p){ if(!p.visible) return true; if(p===scene) break; p=p.parent; } if(p!==scene) return true;
   const e=o.matrixWorld.elements; for(let k=12;k<15;k++) if(Math.abs(e[k]-s.mw[k])>0.01) return true; for(let k=0;k<11;k++) if(Math.abs(e[k]-s.mw[k])>1e-4) return true; return false; }
 /* watchdog: a slice of cells every frame, all cells about every 2 s */
 function mrgShow(cells){ if(!camera) return; const on=typeof CULL==='undefined'||CULL.on, k=HH/(2*Math.tan(camera.fov*Math.PI/360)), px=on?CULL.px:0, cp=camera.position;
-  for(let i=0;i<cells.length;i++){ const c=cells[i], d=Math.max(1,c.c.distanceTo(cp)-c.R); if(!on||c.rMax*k/d>=px) c.mesh.layers.enable(0); else c.mesh.layers.disable(0); } }
+  for(let i=0;i<cells.length;i++){ const c=cells[i], d=Math.max(1,c.c.distanceTo(cp)-c.R), show=!on||c.rMax*k/d>=px, L=c.meshes||[c.mesh]; for(let j=0;j<L.length;j++){ if(show) L[j].layers.enable(0); else L[j].layers.disable(0); } } }
 function mrgStep(dt){ if(!MRG.done) return; MRG.t+=dt; const cells=Array.from(MRG.cells.values()); if(!cells.length) return; mrgShow(cells); const per=Math.max(1,Math.ceil(cells.length*dt/2));
-  for(let k=0;k<per;k++){ const c=cells[MRG.ix++%cells.length]; if(!c) continue; let bad=false; for(let i=0;i<c.src.length&&!bad;i++){ if(c.src[i].o.layers.test(camera.layers)) c.src[i].o.layers.disable(0); if(mrgChanged(c.src[i])) bad=true; } if(bad) mrgUnmerge(c); } }
+  for(let k=0;k<per;k++){ const c=cells[MRG.ix++%cells.length]; if(!c||!MRG.cells.has(c.key)) continue; let bad=null; for(let i=0;i<c.src.length&&!bad;i++){ const o=c.src[i].o; if(o.layers.test(camera.layers)) o.layers.disable(0); if(mrgChanged(c.src[i])) bad=o; } if(bad) mrgUnmerge(c,bad); } }
+/* ---- frozen matrices for objects that never move */
+const MFZ={list:[], i:0, done:false, frozen:0, thawed:0, cand:null};
+function mfzRun(){ if(MFZ.done||SETTINGS.freeze===false||!scene||!scene.traverse) return; MFZ.done=true; const L=[], skip=new Set(); try{ skip.add(planeGroup); skip.add(sky); }catch(e){}   /* parked aircraft, vehicles and boats are frozen too: boarding or animating them thaws the moved parts */
+  scene.traverse(function(o){ if(o===scene||!o.matrixAutoUpdate||o.isCamera||o.isLight) return; let p=o; while(p&&p!==scene){ if(skip.has(p)||p.userData.noFreeze||p.isCamera) return; p=p.parent; }
+    try{ if(typeof sunLight!=='undefined'&&(o===sunLight.target)) return; }catch(e){}
+    L.push({o:o, p:o.position.clone(), q:o.quaternion.clone(), s:o.scale.clone()}); });
+  MFZ.cand=L; setTimeout(function(){ try{ mfzFreeze(); }catch(e){} },1500); }
+function mfzSame(e){ const o=e.o; return o.position.equals(e.p)&&o.quaternion.equals(e.q)&&o.scale.equals(e.s); }
+function mfzFreeze(){ const L=MFZ.cand||[]; MFZ.cand=null; L.forEach(function(e){ if(!e.o.parent||!mfzSame(e)) return; e.o.updateMatrix(); e.o.matrixAutoUpdate=false; MFZ.list.push(e); }); MFZ.frozen=MFZ.list.length; }
+function mfzStep(){ const L=MFZ.list, n=L.length; if(!n) return; const per=Math.min(n,Math.max(60,Math.ceil(n/15)));   /* everything checked about every 15 frames (≤ 0.25 s at 60 FPS) */
+  for(let k=0;k<per;k++){ if(MFZ.i>=L.length) MFZ.i=0; const e=L[MFZ.i]; if(!mfzSame(e)){ e.o.matrixAutoUpdate=true; e.o.updateMatrix(); L.splice(MFZ.i,1); MFZ.thawed++; MFZ.frozen=L.length; if(!L.length) return; } else MFZ.i++; } }
 if(SETTINGS.merge!==false)setTimeout(function(){ try{ mrgRun(); }catch(e){ console.warn('birleştirme',e); } },2500);
-const _mrgCull=cullStep; cullStep=function(dt){ _mrgCull(dt); try{ mrgStep(dt||0); }catch(e){} };
+const _mrgCull=cullStep; cullStep=function(dt){ _mrgCull(dt); try{ mrgStep(dt||0); }catch(e){} try{ mfzStep(); }catch(e){} };
 /* ---- device tier → starting preset */
 function devTier(){ const g=String(DEV.gpu||'').toLowerCase(), mem=navigator.deviceMemory||4, cores=navigator.hardwareConcurrency||4;
   if(DEV.mobile){ if(/mali-(4|t[678])|adreno[^0-9]*([34]\d\d|50\d|51\d)|powervr|sgx|videocore/.test(g)||mem<=3||cores<=4) return 0;

@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.14 — 2026-10-14 · Birleştirme 2.0
+- **Birleştirme 2.0:**
+  - Kapsam: birleşen sabit parça oranı %45'ten %61'e çıktı (1 210 adaydan 741'i). Hücresinde eş bulamayan parçalar 4 kat büyük hücrelerde ikinci kez deneniyor. Camlar ve ışık kapakları gibi saydam parçalar da aynı malzemeli eşleriyle birleşiyor.
+  - Kalıcı hücreler: bir parça hareket ettiğinde (kapı, dönen anten) artık bütün hücre dağılmıyor; yalnız o parça ayrılıyor, hücre kalanlarla anında yeniden kuruluyor. Önceki sürümde kısa bir uçuştan sonra birleşik parça sayısı 586'dan 494'e düşüyordu; şimdi 741'den 714'e.
+  - Her birleşik parça en çok 65 535 köşe içeriyor; Android rehberine göre bazı ekran kartları daha büyüklerini çizmiyor.
+  - Aynı türden dokusuz hücreler tek bir malzemeyi paylaşıyor (daha az shader ve durum geçişi).
+  - Şehirde ve ormanda çizilen üçgen sayısı ~%14 azaldı. Çizim çağrısı sayısı bu sürümde değişmedi: birleşen parçaların çoğu zaten uzakta gizlenen küçük nesnelerdi. Çizimlerin asıl kaynağı park uçakları ve araçlar; onlar V2.15'te.
+- **Sabit nesnelerin konum hesabı donduruldu:** hiç hareket etmeyen ~3 300 nesnenin konum matrisi artık her karede yeniden hesaplanmıyor (her karede güncellenen nesne 4 098 → 778). Ölçümde bu iş kare başına ~%45 kısaldı; işlemcisi sınırda olan telefonlarda kazanç daha büyük. Oyun bir nesneyi hareket ettirirse bekçi onu en geç çeyrek saniyede çözer.
+- **Görüş alanı ayıklaması denetlendi:** ayıklaması kapalı kalan 28 nesnenin hepsi adaya yayılan hareketli gruplar (yayalar, trafik, martılar, bulutlar) ve hava efektleri; bunlar için doğru seçim.
+
 ## V2.13 — 2026-10-13 · Efekt zinciri ve akıllı kalite
 - **İlk gerçek ölçüme göre efekt zinciri yenilendi.** Bilgisayar raporunda (Intel UHD, Ultra) karenin %61'ini görsel efektler alıyordu: sahne 8 kat kenar yumuşatmalı, yüksek hassasiyetli bir ara görüntüye çiziliyor, üstüne tam çözünürlükte parlama ekleniyordu.
   - **Tümleşik ekran kartlarında** (Intel, AMD tümleşik): yüksek hassasiyetli ara görüntü ve otomatik 8× kenar yumuşatma yok, yerine FXAA. Elle 8× seçilirse 4×'e iner. Parlama çeyrek çözünürlükten hesaplanır ve yalnız Ultra'da açılır.

@@ -82,3 +82,4 @@ node harness.js /tmp/sim.js wing.test.js
 node harness.js /tmp/sim.js modelreg.test.js
 node harness.js /tmp/sim.js perftest.test.js
 node harness.js /tmp/sim.js quality.test.js
+node harness.js /tmp/sim.js merge2.test.js
