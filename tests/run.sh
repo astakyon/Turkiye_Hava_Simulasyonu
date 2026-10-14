@@ -87,3 +87,4 @@ node harness.js /tmp/sim.js bake.test.js
 node harness.js /tmp/sim.js shadow.test.js
 node harness.js /tmp/sim.js passes.test.js
 node harness.js /tmp/sim.js texmem.test.js
+node harness.js /tmp/sim.js boot.test.js

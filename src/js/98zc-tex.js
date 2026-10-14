@@ -11,7 +11,7 @@
      a shared or shrunk texture, that texture gets its own full-size copy back at once.
    Kill switch: SETTINGS.texShare=false. */
 const TXS={done:false, links:[], shrunk:[], saved:0, shared:0, halved:0, t:0, cv:null};
-function txsSig(im){ if(!TXS.cv){ TXS.cv=document.createElement('canvas'); TXS.cv.width=TXS.cv.height=8; } const cx=TXS.cv.getContext('2d'); cx.clearRect(0,0,8,8); cx.drawImage(im,0,0,8,8); const d=cx.getImageData(0,0,8,8).data; let h=0; for(let i=0;i<d.length;i++) h=(h*31+d[i])|0; return (im.width||0)+'x'+(im.height||0)+':'+h; }
+function txsSig(im){ if(!TXS.cv){ TXS.cv=document.createElement('canvas'); TXS.cv.width=TXS.cv.height=8; } const cx=TXS.cv.getContext('2d',{willReadFrequently:true}); cx.clearRect(0,0,8,8); cx.drawImage(im,0,0,8,8); const d=cx.getImageData(0,0,8,8).data; let h=0; for(let i=0;i<d.length;i++) h=(h*31+d[i])|0; return (im.width||0)+'x'+(im.height||0)+':'+h; }
 function txsSame(a,b){ if(a===b) return true; if(a.width!==b.width||a.height!==b.height) return false; try{ const ca=a.getContext&&a.getContext('2d'), cb=b.getContext&&b.getContext('2d'); if(!ca||!cb) return false;
     const da=ca.getImageData(0,0,a.width,a.height).data, db=cb.getImageData(0,0,b.width,b.height).data; if(da.length!==db.length) return false; for(let i=0;i<da.length;i+=4){ if(da[i]!==db[i]||da[i+1]!==db[i+1]||da[i+2]!==db[i+2]||da[i+3]!==db[i+3]) return false; } return true; }catch(e){ return false; } }
 function txsParams(t){ return [t.wrapS,t.wrapT,t.magFilter,t.minFilter,t.generateMipmaps?1:0,t.flipY?1:0,t.encoding,t.format,t.type,t.premultiplyAlpha?1:0,t.repeat.x,t.repeat.y,t.offset.x,t.offset.y,t.rotation,t.center.x,t.center.y].join(','); }

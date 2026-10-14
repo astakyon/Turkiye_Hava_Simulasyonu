@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.19 — 2026-10-14 · Açılış hızı
+- **Yükleme ekranı:** oyun açılırken donmuş menü yerine yükleme ekranı ve gerçek ilerlemeyi gösteren bir çubuk çıkıyor ("Deniz üssü kuruluyor", "Hangar kuruluyor"…). Dünya 17 adımda kuruluyor; tarayıcı arada ekranı çizebiliyor, telefonda "sayfa yanıt vermiyor" uyarısı riski azaldı. Yükleme bitmeden basılan tuşlar ve dokunuşlar yok sayılıyor.
+- **Shader ön derleme:** ana menüdeyken sahnedeki bütün malzemeler (gizli patlama parçacıkları, flare'ler, henüz görülmemiş bölgeler dahil) karede ~8 ms ayrılarak önceden derleniyor. Böylece uçarken yeni bir bölgeye ilk girişte shader derleme takılması olmuyor. Menüden hızlı çıkılırsa kalanlar eskisi gibi ilk görüldüğünde derleniyor.
+- **Performans testinde açılış süresi:** rapora açılış süreleri (betik, modüller, dünya kurulumu, ilk kare), en uzun kurulum adımı ve önceden derlenen shader sayısı eklendi.
+- Envanterin arama metni artık açılışta değil, ilk aramada hazırlanıyor.
+- Ölçülen ama değiştirilmeyen: ilk patlama ve flare'de yeni shader derlenmiyor; telefondaki tek 33 ms'lik kare büyük olasılıkla ekran kartı yükü (yeni raporla bakılacak). Envanter verisinin ayrıştırılması 1,6 ms, ertelemeye değmez.
+
 ## V2.18 — 2026-10-14 · Bellek ve dokular
 - **Doku belleği azaldı:** bilgisayarda ~111 MB'tan ~87 MB'a, telefonda ~111 MB'tan ~44 MB'a. Açılışta tuvalde çizilen 476 dokunun yalnız 321'i farklı resimdi; aynı pencere/tabela resmi her bina için yeniden çiziliyordu. Aynı resim ve aynı ayarlara sahip 145 kopya artık tek dokuyu paylaşıyor, kopyalar bellekten siliniyor.
 - **Telefonda büyük dokular yarıya iniyor:** 1024 piksel ve üstü 45 doku (ör. 2048×256 tabelalar) telefonda yarı boyutta. Bilgisayarda Düşük/Orta kalitede yalnız 2048 ve üstü yarıya iniyor; Yüksek/Ultra'da dokunulmuyor. Önce/sonra ekran görüntüleri aynı.

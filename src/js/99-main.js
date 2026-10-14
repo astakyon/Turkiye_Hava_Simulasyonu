@@ -1,5 +1,12 @@
 /* ------------------------------------------------------------------ loop */
-loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert; buildAirport(); buildNaval(); buildLand(); buildTown(); buildMarina(); buildSouth(); buildUAV(); buildEnemy(); buildLandmarks(); buildSurroundings(); buildRural(); buildMilitary(); buildTraffic(); buildHelis(); todBuild(); ctlBindUI(); applyTouchOpt(); renderCtlHelp(); buildHangar(); buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); });
+bootMark('modüller');
+loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert;
+const BOOT_STEPS=[['Havalimanı kuruluyor',buildAirport,6],['Deniz üssü kuruluyor',buildNaval,9],['Kara üssü kuruluyor',buildLand,6],['Kasaba kuruluyor',buildTown,5],['Marina kuruluyor',buildMarina,9],
+  ['Güney kıyısı kuruluyor',buildSouth,4],['İHA üssü kuruluyor',buildUAV,2],['Hedefler kuruluyor',function(){ buildEnemy(); buildLandmarks(); },2],['Çevre kuruluyor',buildSurroundings,6],
+  ['Köyler ve askerî alanlar',function(){ buildRural(); buildMilitary(); },2],['Trafik ve helikopterler',function(){ buildTraffic(); buildHelis(); todBuild(); },3],
+  ['Kontroller hazırlanıyor',function(){ ctlBindUI(); applyTouchOpt(); renderCtlHelp(); },1],['Hangar kuruluyor',buildHangar,5],['Apron ve servis',function(){ buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); },3],
+  ['Uçak hazırlanıyor',function(){ setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); },3],['Menü hazırlanıyor',function(){ buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); },3],
+  ['Modeller ve hesap',function(){ modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); }); },1]];
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -19,4 +26,6 @@ function frame(now){
   renderFrame(dt);
   drawHUD(); miniStep(dt); audioUpdate(); radioStep(dt); careerStep(dt); updateTouchUI(); updateWalkTouch();
 }
-requestAnimationFrame(frame);
+bootRun(BOOT_STEPS,function(){ bootMark('dünya hazır'); BOOT.done=true; lastT=performance.now(); if(BOOT.release) BOOT.release();
+  requestAnimationFrame(function(t){ const a=performance.now(); frame(t); BOOT.first=Math.round(performance.now()-a); bootMark('ilk kare');   /* the first frame compiles the visible shaders */
+    requestAnimationFrame(function(){ BOOT.ready=Math.round(performance.now()); bootHide(); }); }); });
