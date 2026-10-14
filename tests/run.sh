@@ -85,3 +85,4 @@ node harness.js /tmp/sim.js quality.test.js
 node harness.js /tmp/sim.js merge2.test.js
 node harness.js /tmp/sim.js bake.test.js
 node harness.js /tmp/sim.js shadow.test.js
+node harness.js /tmp/sim.js passes.test.js

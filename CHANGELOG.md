@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.17 — 2026-10-14 · Derinlik, çözünürlük ve efekt geçişleri
+- **Renk düzeltme ve kenar yumuşatma tek geçişte:** bu iki işlem art arda iki ayrı tam ekran geçişti; her biri bütün ekranı okuyup yeniden yazıyordu. Artık tek geçişte yapılıyor: görsel efektler açıkken tam ekran geçiş sayısı 4'ten 3'e indi. Görüntü aynı (önce/sonra karşılaştırması). Birleşik shader mevcut renk düzeltme kodundan otomatik türetiliyor; türetilemezse eski iki geçişli yol kullanılıyor.
+- **Tam ekran menülerde 3B sahne çizilmiyor:** ayarlar, görevler, kariyer gibi ekranlar açıkken arkadaki sahne saniyede 10 kare çiziliyordu; artık hiç çizilmiyor, ekran kartı boşta kalıyor. Oyun mantığı (çok oyunculu lobi, sesli sohbet, bulut) çalışmaya devam ediyor. Pencere boyutu değişirse bir kare çiziliyor.
+- **Isınmaya karşı sabit kalite:** otomatik kalite 5 dakika içinde 3 kez düşerse (ısınan telefonun kaliteyi sürekli indirip kaldırması), o oturumda o kademede kalıyor; menüye dönünce sıfırlanıyor.
+- **Derinlik kararı:** logaritmik derinlik bilgisayarda kalıyor. İlk bilgisayar raporunda maliyeti 1,5 ms (%3) ölçüldü; alternatifi olan iki katmanlı derinlik sahneyi iki kez çizdiği için işlemciye daha pahalı.
+- Ölçülüp yapılmayan: kameranın uzak görüş sınırını sise göre kısaltmak. Gökyüzü kubbesi 20 km, sis 26 km'de bitiyor; kısaltmak ufukta deniz ile gökyüzü arasında renk bandı riski taşıyor, kazancı küçük.
+
 ## V2.16 — 2026-10-14 · Gölge 2.0
 - **Gölge kalitesi 4 kademe:** Ayarlar → Grafik → Gölgeler artık Kapalı · Düşük (1024) · Orta (2048) · Yüksek (4096 ve yumuşak kenar; telefonda en çok 2048). Varsayılan, grafik kalitesine göre seçiliyor. Eski açık/kapalı ayarı kendi kademesine çevrilir.
 - **Gölge haritası gerektikçe çiziliyor:** önceden her karede (Ultra'da 4096×4096) yeniden çiziliyordu. Artık yürürken ve yere 300 m'den yakınken her karede, daha yüksekte, menüde ve haritada 4 karede bir çiziliyor. Ölçümde 700 m'de uçarken 5 karenin 4'ünde gölge çizimi atlandı. Güneşin yönü değişince hemen yeniden çiziliyor.
