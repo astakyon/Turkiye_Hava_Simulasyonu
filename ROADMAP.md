@@ -225,7 +225,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.15 | Araç ve uçak modellerinde parça birleştirme | ✅ |
 | V2.16 | Gölge 2.0 | ✅ |
 | V2.17 | Derinlik, çözünürlük ve efekt geçişleri | ✅ |
-| V2.18 | Bellek ve dokular | |
+| V2.18 | Bellek ve dokular | ✅ |
 | V2.19 | Açılış hızı | |
 | V2.20 | Arazi ayrıntı kademeleri | |
 | V2.21 | Grafik ayarları 2.0 | |
