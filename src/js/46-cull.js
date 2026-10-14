@@ -15,7 +15,7 @@ function cullCollect(){
     L.push(o);
   });
   /* objects dropped from the list must be visible again */
-  const keep=new Set(L); CULL.list.forEach(function(o){ if(!keep.has(o)) o.layers.enable(0); });   /* Set: indexOf here was O(n²), a 10–20 ms hitch every 4 s on phones */
+  const keep=new Set(L); CULL.list.forEach(function(o){ if(!keep.has(o)&&!o.userData.merged&&!o.userData.baked) o.layers.enable(0); });   /* merged / baked originals stay off (V2.15: they were switched back on every 4 s) */   /* Set: indexOf here was O(n²), a 10–20 ms hitch every 4 s on phones */
   CULL.list=L; CULL.i=0;
 }
 function cullStep(dt){

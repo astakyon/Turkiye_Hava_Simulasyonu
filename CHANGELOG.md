@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.15 — 2026-10-14 · Araç ve uçak modellerinde parça birleştirme
+- **Araç ve uçak modellerinde parça birleştirme:** uçaklar, helikopterler, araçlar ve hedefler ~1 280 küçük parçadan oluşuyordu ve her parça ayrı çiziliyordu (oyuncunun KAAN'ı 126 parça). Artık her modelin hareket etmeyen parçaları malzemelerine göre birkaç ağda toplanıyor. Model yine taksi yapabiliyor, uçabiliyor, binilebiliyor.
+  - Hareket eden parçalar (dümenler, iniş takımı, pervaneler, rotorlar) ve görünürlüğü değişenler (füzeler, alevler) ilk hareketlerinde birleşikten ayrılıyor; model kalan parçalarla anında yeniden kuruluyor.
+  - Oyuncunun uçağı her karede, çizimden önce denetleniyor: atılan füze kanadın altında asılı kalmaz.
+  - Malzeme değişince (boya, hasar) model yeniden kuruluyor. Sürekli değişen bir model 10 saniyede 6'dan fazla yeniden kurulursa birleştirmeden çıkarılıyor.
+  - Birleşik ağlar parça boyutuna göre ayrılıyor; uzaktaki uçağın küçük parçaları (anten, cıvata, lamba) kendi boyutlarına göre gizleniyor.
+- **Ölçüm (Yüksek kalite):** hangarda 249 → 149 çizim (−%40), uçuşta 382 → 289 (−%24), iniş takımı ve flare sonrası 419 → 330. Oyuncu uçağında görünür parça 93 → 37–42. Görüntü değişmedi (önce/sonra karşılaştırması).
+- **Düzeltme:** uzak nesne ayıklamasının liste yenilemesi, birleştirilmiş ya da birleşikten çıkarılmış asıl parçaları 4 saniyede bir yeniden açabiliyordu; artık açmıyor.
+- **Not:** İHA üssündeki çizimlerin çoğunu kendi dokusunu kullanan binalar tutuyor (her bina ayrı doku, bu yüzden birleşemiyor). Bunlar doku atlasıyla (V2.18) birleşebilecek.
+
 ## V2.14 — 2026-10-14 · Birleştirme 2.0
 - **Birleştirme 2.0:**
   - Kapsam: birleşen sabit parça oranı %45'ten %61'e çıktı (1 210 adaydan 741'i). Hücresinde eş bulamayan parçalar 4 kat büyük hücrelerde ikinci kez deneniyor. Camlar ve ışık kapakları gibi saydam parçalar da aynı malzemeli eşleriyle birleşiyor.

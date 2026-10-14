@@ -30,11 +30,11 @@ function mrgMatKey(m){ const c=function(x){ return x&&x.getHexString?x.getHexStr
 function mrgVC(m){ return !m.map&&!m.emissiveMap&&!m.alphaMap&&!m.normalMap&&(m.isMeshLambertMaterial||m.isMeshPhongMaterial||m.isMeshStandardMaterial); }
 function mrgGroupKey(m){ if(!mrgVC(m)) return mrgMatKey(m); const c=function(x){ return x&&x.getHexString?x.getHexString():''; }; return ['VC',m.type,c(m.emissive),m.flatShading?1:0,m.side,m.fog?1:0,m.polygonOffset?(m.polygonOffsetFactor+':'+m.polygonOffsetUnits):'',m.shininess||'',m.roughness==null?'':m.roughness,m.metalness==null?'':m.metalness].join(':'); }
 function mrgSig(g){ const a=g.attributes; return (a.normal?'n':'')+(a.uv?'u':'')+(a.color?'c'+a.color.itemSize:''); }
-function mrgBuild(list,vc){ /* list of meshes with the same material / attributes → one geometry in world space */
+function mrgBuild(list,vc,mfn){ /* list of meshes with the same material / attributes → one geometry in world space */
   let n=0, ni=0; list.forEach(function(o){ const g=o.geometry; n+=g.attributes.position.count; ni+=g.index?g.index.count:g.attributes.position.count; });
   const a0=list[0].geometry.attributes, P=new Float32Array(n*3), N=list.every(function(o){ return o.geometry.attributes.normal; })?new Float32Array(n*3):null, U=(!vc&&a0.uv)?new Float32Array(n*2):null, cs=vc?3:(a0.color?a0.color.itemSize:0), C=cs?new Float32Array(n*cs):null;
   const I=n>65535?new Uint32Array(ni):new Uint16Array(ni); let vo=0, io=0; const v=new THREE.Vector3(), nm=new THREE.Matrix3();
-  list.forEach(function(o){ const g=o.geometry, A=g.attributes, c=A.position.count, M=o.matrixWorld; nm.getNormalMatrix(M);
+  list.forEach(function(o){ const g=o.geometry, A=g.attributes, c=A.position.count, M=mfn?mfn(o):o.matrixWorld; nm.getNormalMatrix(M);
     for(let i=0;i<c;i++){ v.fromBufferAttribute(A.position,i).applyMatrix4(M); P[(vo+i)*3]=v.x; P[(vo+i)*3+1]=v.y; P[(vo+i)*3+2]=v.z;
       if(N){ v.fromBufferAttribute(A.normal,i).applyMatrix3(nm).normalize(); N[(vo+i)*3]=v.x; N[(vo+i)*3+1]=v.y; N[(vo+i)*3+2]=v.z; }
       if(U){ U[(vo+i)*2]=A.uv.getX(i); U[(vo+i)*2+1]=A.uv.getY(i); }
