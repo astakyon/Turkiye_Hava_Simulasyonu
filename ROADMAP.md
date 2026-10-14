@@ -223,7 +223,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.13 | Efekt zinciri ve akıllı kalite (ölçüme göre öne alındı) | ✅ |
 | V2.14 | Birleştirme 2.0 | ✅ |
 | V2.15 | Araç ve uçak modellerinde parça birleştirme | ✅ |
-| V2.16 | Gölge 2.0 | |
+| V2.16 | Gölge 2.0 | ✅ |
 | V2.17 | Derinlik, çözünürlük ve efekt geçişleri | |
 | V2.18 | Bellek ve dokular | |
 | V2.19 | Açılış hızı | |
