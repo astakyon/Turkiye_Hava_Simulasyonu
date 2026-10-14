@@ -36,7 +36,7 @@ function bkBake(g){ if(SETTINGS.bake===false) return null; let rec=BK.recs.get(g
   const meshes=[], used=[];
   by.forEach(function(L,key){ if(L.length<2) return; const vc=key.indexOf('|vc|')>0; let chunk=[], nv=0;
     const flush=function(){ if(chunk.length<2){ chunk=[]; nv=0; return; } let geo=null; try{ geo=mrgBuild(chunk,vc,mfn); }catch(e){ geo=null; }
-      if(geo){ const m0=chunk[0]; const m=new THREE.Mesh(geo,vc?mrgVcMat(m0.material):m0.material); m.castShadow=m0.castShadow; m.receiveShadow=m0.receiveShadow; m.renderOrder=m0.renderOrder; m.userData.bakedMesh=true; m.userData.noMerge=true; m.userData.noCull=true; m.userData.bkR=chunk.reduce(function(a,o){ return Math.max(a,bkSize(o)); },0); m.matrixAutoUpdate=false; m.updateMatrix(); meshes.push(m); chunk.forEach(function(o){ used.push(o); }); }
+      if(geo){ const m0=chunk[0]; const m=new THREE.Mesh(geo,vc?mrgVcMat(m0.material):m0.material); m.castShadow=m0.castShadow; m.receiveShadow=m0.receiveShadow; m.renderOrder=m0.renderOrder; m.userData.bakedMesh=true; m.userData.noMerge=true; m.userData.noCull=true; m.userData.bkR=chunk.reduce(function(a,o){ return Math.max(a,bkSize(o)); },0); if(m.userData.bkR<1.5&&typeof shadowLevel==='function'){ let pg=null; try{ pg=planeGroup; }catch(e){} if(g!==pg) m.castShadow=false; } m.matrixAutoUpdate=false; m.updateMatrix(); meshes.push(m); chunk.forEach(function(o){ used.push(o); }); }
       chunk=[]; nv=0; };
     L.forEach(function(o){ const c=o.geometry.attributes.position.count; if(nv+c>65535&&chunk.length) flush(); chunk.push(o); nv+=c; }); flush(); });
   if(!meshes.length){ rec.parts=[]; rec.meshes=[]; return rec; }

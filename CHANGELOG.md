@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.16 — 2026-10-14 · Gölge 2.0
+- **Gölge kalitesi 4 kademe:** Ayarlar → Grafik → Gölgeler artık Kapalı · Düşük (1024) · Orta (2048) · Yüksek (4096 ve yumuşak kenar; telefonda en çok 2048). Varsayılan, grafik kalitesine göre seçiliyor. Eski açık/kapalı ayarı kendi kademesine çevrilir.
+- **Gölge haritası gerektikçe çiziliyor:** önceden her karede (Ultra'da 4096×4096) yeniden çiziliyordu. Artık yürürken ve yere 300 m'den yakınken her karede, daha yüksekte, menüde ve haritada 4 karede bir çiziliyor. Ölçümde 700 m'de uçarken 5 karenin 4'ünde gölge çizimi atlandı. Güneşin yönü değişince hemen yeniden çiziliyor.
+- **Küçük parçalar gölge düşürmüyor:** 1,5 m'den küçük parçalar (lamba, tabela, cıvata, uzaktaki aracın tekeri) artık gölge düşürmüyor; oyuncunun uçağı bütün gölgelerini koruyor. Ölçümde bu, bakılan sahnelerde gölge çizimini azaltmadı (o parçalar zaten gölge alanı dışındaydı), ama yakına gelen nesnelerde yükü sınırlıyor.
+- **Ölçülüp bırakılanlar:** V2.14–V2.15 birleştirmelerinden sonra gölge geçişi uçuşta 15–20, şehirde ~45 çizime inmişti (önceden 100–160). Çift yüzlü malzemelerde arka yüz elemesi de ölçüldü: bütün adada 67 bin üçgen; kazanç çok küçük ve içeriden görülen odaları bozma riski olduğu için yapılmadı.
+
 ## V2.15 — 2026-10-14 · Araç ve uçak modellerinde parça birleştirme
 - **Araç ve uçak modellerinde parça birleştirme:** uçaklar, helikopterler, araçlar ve hedefler ~1 280 küçük parçadan oluşuyordu ve her parça ayrı çiziliyordu (oyuncunun KAAN'ı 126 parça). Artık her modelin hareket etmeyen parçaları malzemelerine göre birkaç ağda toplanıyor. Model yine taksi yapabiliyor, uçabiliyor, binilebiliyor.
   - Hareket eden parçalar (dümenler, iniş takımı, pervaneler, rotorlar) ve görünürlüğü değişenler (füzeler, alevler) ilk hareketlerinde birleşikten ayrılıyor; model kalan parçalarla anında yeniden kuruluyor.
