@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.18 — 2026-10-14 · Bellek ve dokular
+- **Doku belleği azaldı:** bilgisayarda ~111 MB'tan ~87 MB'a, telefonda ~111 MB'tan ~44 MB'a. Açılışta tuvalde çizilen 476 dokunun yalnız 321'i farklı resimdi; aynı pencere/tabela resmi her bina için yeniden çiziliyordu. Aynı resim ve aynı ayarlara sahip 145 kopya artık tek dokuyu paylaşıyor, kopyalar bellekten siliniyor.
+- **Telefonda büyük dokular yarıya iniyor:** 1024 piksel ve üstü 45 doku (ör. 2048×256 tabelalar) telefonda yarı boyutta. Bilgisayarda Düşük/Orta kalitede yalnız 2048 ve üstü yarıya iniyor; Yüksek/Ultra'da dokunulmuyor. Önce/sonra ekran görüntüleri aynı.
+- **Telefonda anizotropik süzme 2×** (Android rehberi: mobilde daha fazlası çok pahalı); bilgisayarda 16×'e kadar kalıyor.
+- **Güvenlik bekçisi:** oyun paylaşılan ya da küçültülen bir dokuyu sonradan yeniden çizerse (değişen tabela, ekran) o doku hemen kendi tam boy kopyasına dönüyor. Ölçümde geri dönme olmadı. `SETTINGS.texShare=false` ile tamamen kapanabiliyor.
+- Çizim sayısı değişmedi: üsteki binaların dokuları gerçekten farklı resimler; birleşmeleri için doku atlası gerekiyor (sonraya bırakıldı). Doku sıkıştırma (ASTC/ETC2) tuvalde çizilen dokulara uygulanamıyor.
+
 ## V2.17 — 2026-10-14 · Derinlik, çözünürlük ve efekt geçişleri
 - **Renk düzeltme ve kenar yumuşatma tek geçişte:** bu iki işlem art arda iki ayrı tam ekran geçişti; her biri bütün ekranı okuyup yeniden yazıyordu. Artık tek geçişte yapılıyor: görsel efektler açıkken tam ekran geçiş sayısı 4'ten 3'e indi. Görüntü aynı (önce/sonra karşılaştırması). Birleşik shader mevcut renk düzeltme kodundan otomatik türetiliyor; türetilemezse eski iki geçişli yol kullanılıyor.
 - **Tam ekran menülerde 3B sahne çizilmiyor:** ayarlar, görevler, kariyer gibi ekranlar açıkken arkadaki sahne saniyede 10 kare çiziliyordu; artık hiç çizilmiyor, ekran kartı boşta kalıyor. Oyun mantığı (çok oyunculu lobi, sesli sohbet, bulut) çalışmaya devam ediyor. Pencere boyutu değişirse bir kare çiziliyor.

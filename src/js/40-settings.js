@@ -48,7 +48,7 @@ function applyQuality(){
 const TEXQ=new WeakSet();
 function texQuality(){
   if(typeof scene==='undefined') return; let maxA=1; try{ maxA=renderer.capabilities.getMaxAnisotropy(); }catch(e){}
-  const a=Math.min(DEV.mobile?4:16,maxA||1);
+  const a=Math.min(DEV.mobile?2:16,maxA||1);   /* V2.18: Android guidance — above 2× is very costly on phones */
   scene.traverse(function(o){ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):null; if(!ms) return;
     ms.forEach(function(m){ if(!m) return; ['map','emissiveMap','normalMap','roughnessMap','alphaMap'].forEach(function(k){ const t=m[k]; if(!t||!t.isTexture||TEXQ.has(t)) return; TEXQ.add(t);
       if(t.anisotropy!==a){ t.anisotropy=a; t.needsUpdate=true; } }); }); });
