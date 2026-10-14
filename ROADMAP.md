@@ -227,18 +227,19 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.17 | Derinlik, çözünürlük ve efekt geçişleri | ✅ |
 | V2.18 | Bellek ve dokular | ✅ |
 | V2.19 | Açılış hızı | ✅ |
-| V2.20 | Arazi ayrıntı kademeleri | |
-| V2.21 | Grafik ayarları 2.0 | |
-| V2.22 | Bütün ayarların gözden geçirmesi | |
-| V2.23 | Kanca (olay) sistemi ve kare başına çöp | |
-| V2.24 | Kod düzeni | |
-| V2.25 | Kayıt ve depolama düzeni | |
-| V2.26 | Girdi yöneticisi | |
-| V2.27 | Test ve yayın hattı | |
-| V2.28 | Özellik envanteri | |
-| V2.29 | Ekran ve akış sadeleştirme | |
-| V2.30 | Oynanış ve metin tutarlılığı | |
-| V2.31 | Belgeler ve sürüm geçmişi | |
+| V2.20 | Yükleme ekranı 2.0 | |
+| V2.21 | Arazi ayrıntı kademeleri | |
+| V2.22 | Grafik ayarları 2.0 | |
+| V2.23 | Bütün ayarların gözden geçirmesi | |
+| V2.24 | Kanca (olay) sistemi ve kare başına çöp | |
+| V2.25 | Kod düzeni | |
+| V2.26 | Kayıt ve depolama düzeni | |
+| V2.27 | Girdi yöneticisi | |
+| V2.28 | Test ve yayın hattı | |
+| V2.29 | Özellik envanteri | |
+| V2.30 | Ekran ve akış sadeleştirme | |
+| V2.31 | Oynanış ve metin tutarlılığı | |
+| V2.32 | Belgeler ve sürüm geçmişi | |
 
 ### Faz 16 — Model yenileme serisi (her model onaya sunulur; düzen yol haritasından sonra)
 
@@ -246,15 +247,15 @@ Her model Defence Turk sayfasındaki fotoğraflara bakılarak ve gerçek ölçü
 
 | Sürüm | Model | Durum |
 |---|---|---|
-| V2.32 | TUSAŞ KAAN | |
-| V2.33 | Bayraktar TB2 | |
-| V2.34 | Bayraktar TB3 | |
-| V2.35 | Bayraktar Akıncı | |
-| V2.36 | Baykar Kızılelma | |
-| V2.37 | TUSAŞ ANKA ve ANKA-3 | |
-| V2.38 | TUSAŞ Aksungur | |
-| V2.39 | TUSAŞ Hürjet ve Hürkuş | |
-| V2.40 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
+| V2.33 | TUSAŞ KAAN | |
+| V2.34 | Bayraktar TB2 | |
+| V2.35 | Bayraktar TB3 | |
+| V2.36 | Bayraktar Akıncı | |
+| V2.37 | Baykar Kızılelma | |
+| V2.38 | TUSAŞ ANKA ve ANKA-3 | |
+| V2.39 | TUSAŞ Aksungur | |
+| V2.40 | TUSAŞ Hürjet ve Hürkuş | |
+| V2.41 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
 
 ## Sonraki öneriler (sırası sonra belirlenecek)
 

@@ -1,6 +1,11 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.20 — 2026-10-14 · Yükleme ekranı 2.0
+- **Menü artık hazır açılıyor:** yükleme ekranı kapandıktan sonra menüde süren hazırlık (doku paylaşımı, nesne ve model birleştirme, shader ön derleme, hesap kontrolü) artık yükleme ekranının altında yapılıyor. Profil ve yönetici düğmesi menüyle birlikte geliyor; arkadaki sinematik uçuş görüntüsü takılmadan, baştan başlıyor. Yükleme ekranı kareler düzene girince kapanıyor (en çok 6 sn hazırlık, hesap için en çok 3 sn bekleme).
+- **3B ay yıldız:** yükleme ekranında kendi ekseninde dönen, kalınlığı olan bir ay yıldız var. Dönüş tarayıcının ayrı iş parçacığında çalıştığı için oyun kurulurken de akıcı dönüyor.
+- **Uçaklı ilerleme çubuğu:** düz çubuk yerine KAAN, HÜRJET, KIZILELMA, AKINCI ve TB2 siluetleri kuyruktan buruna sırayla kırmızıyla doluyor.
+
 ## V2.19 — 2026-10-14 · Açılış hızı
 - **Yükleme ekranı:** oyun açılırken donmuş menü yerine yükleme ekranı ve gerçek ilerlemeyi gösteren bir çubuk çıkıyor ("Deniz üssü kuruluyor", "Hangar kuruluyor"…). Dünya 17 adımda kuruluyor; tarayıcı arada ekranı çizebiliyor, telefonda "sayfa yanıt vermiyor" uyarısı riski azaldı. Yükleme bitmeden basılan tuşlar ve dokunuşlar yok sayılıyor.
 - **Shader ön derleme:** ana menüdeyken sahnedeki bütün malzemeler (gizli patlama parçacıkları, flare'ler, henüz görülmemiş bölgeler dahil) karede ~8 ms ayrılarak önceden derleniyor. Böylece uçarken yeni bir bölgeye ilk girişte shader derleme takılması olmuyor. Menüden hızlı çıkılırsa kalanlar eskisi gibi ilk görüldüğünde derleniyor.

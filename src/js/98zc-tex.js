@@ -35,5 +35,5 @@ function txsWatch(){ for(let i=TXS.links.length-1;i>=0;i--){ const l=TXS.links[i
   for(let i=TXS.shrunk.length-1;i>=0;i--){ const s=TXS.shrunk[i]; if(s.t.version!==s.v){ if(s.t.image!==s.full&&s.t.image.width<s.full.width){ /* the game redrew the original canvas: show it at full size */ s.t.image=s.full; s.t.needsUpdate=true; } s.t.userData.txsOwn=true; TXS.shrunk.splice(i,1); TXS.reverted=(TXS.reverted||0)+1; } } }
 function txsRun(){ try{ txsShare(); }catch(e){ console.warn('doku paylaşımı',e); } try{ txsShrink(); }catch(e){ console.warn('doku küçültme',e); } TXS.done=true; }
 const _txsCull=cullStep; cullStep=function(dt){ _txsCull(dt); TXS.t+=dt||0; if(TXS.t>1){ TXS.t=0; try{ txsWatch(); }catch(e){} } };
-setTimeout(txsRun,2200);                                         /* before the static merge (2.5 s), so shared pictures merge */
+setTimeout(function(){ if(!TXS.done) txsRun(); },2200);                                         /* before the static merge (2.5 s), so shared pictures merge */
 setTimeout(function(){ try{ txsShare(); txsShrink(); }catch(e){} },9000);   /* models and late props */

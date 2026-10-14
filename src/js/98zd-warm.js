@@ -26,7 +26,7 @@ function warmStart(){ if(SETTINGS.warm===false) return; if(!WARM.prog0) WARM.pro
 /* title menu only: in play the programs compile on first sight as before */
 const _wmCull=cullStep; cullStep=function(dt){ _wmCull(dt); if(!WARM.started||WARM.done) return; if(state!=='menu') return; try{ warmStep(8); }catch(e){} };
 const _wmTitle=enterTitle; enterTitle=function(){ const r=_wmTitle.apply(this,arguments); if(WARM.started){ try{ warmScan(); }catch(e){} } return r; };
-setTimeout(function(){ WARM.started=true; try{ warmStart(); }catch(e){ console.warn('ısıtma',e); } },4600);   /* after merging (2.5 s) and baking (4 s) */
+setTimeout(function(){ if(WARM.started) return; WARM.started=true; try{ warmStart(); }catch(e){ console.warn('ısıtma',e); } },4600);   /* after merging (2.5 s) and baking (4 s) */
 /* start-up timings in the performance report */
 function bootInfo(){ const M={}; BOOT.marks.forEach(function(m){ M[m[0]]=m[1]; }); const steps=BOOT.stepMs.slice().sort(function(a,b){ return b[1]-a[1]; }).slice(0,4);
   const g=function(k){ return M[k]!=null?M[k]:null; }; return {js:g('betik'), mod:g('modüller'), world:g('dünya hazır'), ready:BOOT.ready, first:BOOT.first, slow:steps, warm:{n:WARM.n, ms:Math.round(WARM.ms), done:WARM.done, at:WARM.at||null, prog0:WARM.prog0||null}}; }

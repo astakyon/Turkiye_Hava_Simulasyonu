@@ -6,7 +6,7 @@ const BOOT_STEPS=[['Havalimanı kuruluyor',buildAirport,6],['Deniz üssü kurulu
   ['Köyler ve askerî alanlar',function(){ buildRural(); buildMilitary(); },2],['Trafik ve helikopterler',function(){ buildTraffic(); buildHelis(); todBuild(); },3],
   ['Kontroller hazırlanıyor',function(){ ctlBindUI(); applyTouchOpt(); renderCtlHelp(); },1],['Hangar kuruluyor',buildHangar,5],['Apron ve servis',function(){ buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); },3],
   ['Uçak hazırlanıyor',function(){ setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); },3],['Menü hazırlanıyor',function(){ buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); },3],
-  ['Modeller ve hesap',function(){ modelsInit(); accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); }); },1]];
+  ['Modeller ve hesap',function(){ modelsInit(); BOOT.acc=accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); }); },1]];
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -26,6 +26,12 @@ function frame(now){
   renderFrame(dt);
   drawHUD(); miniStep(dt); audioUpdate(); radioStep(dt); careerStep(dt); updateTouchUI(); updateWalkTouch();
 }
-bootRun(BOOT_STEPS,function(){ bootMark('dünya hazır'); BOOT.done=true; lastT=performance.now(); if(BOOT.release) BOOT.release();
-  requestAnimationFrame(function(t){ const a=performance.now(); frame(t); BOOT.first=Math.round(performance.now()-a); bootMark('ilk kare');   /* the first frame compiles the visible shaders */
-    requestAnimationFrame(function(){ BOOT.ready=Math.round(performance.now()); bootHide(); }); }); });
+/* finishing under the loading screen (V2.20); the same jobs also have their own timers, which then find them done */
+const BOOT_POST=[['Dokular düzenleniyor',function(){ txsRun(); },2],['Nesneler birleştiriliyor',function(){ if(SETTINGS.merge!==false) mrgRun(); },4],
+  ['Modeller birleştiriliyor',function(){ if(SETTINGS.bake!==false&&!BK.started){ BK.started=true; bkScan(); } },3],
+  ['Grafikler hazırlanıyor',function(){ if(!WARM.started){ WARM.started=true; warmStart(); } warmStep(BOOT.hold?40:1e9); return !WARM.done&&SETTINGS.warm!==false; },5],
+  ['Hesap kontrol ediliyor',function(){ return BOOT.acc; },1]];
+bootRun(BOOT_STEPS,function(){ bootMark('dünya hazır'); lastT=performance.now();
+  requestAnimationFrame(function(t){ const a=performance.now(); frame(t); BOOT.first=Math.round(performance.now()-a); bootMark('ilk kare'); });   /* the first frame compiles the visible shaders */
+  bootPost(BOOT_POST,function(){ bootMark('hazırlık bitti'); bootShow('Hazır');
+    bootWhenSmooth(function(){ BOOT.ready=Math.round(performance.now()); BOOT.done=true; if(BOOT.release) BOOT.release(); try{ CINE.shot=0; CINE.shotT=0; CINE.init=false; }catch(e){} bootHide(); }); }); });
