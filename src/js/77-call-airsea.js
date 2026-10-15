@@ -5,16 +5,16 @@ const CALL_X={t625:{id:'t625',n:'T625 GÖKBEY',air:true},t129:{id:'t129',n:'T129
 CALL_TABS.push({id:'hava',n:'Hava · Deniz',ids:['t625','t129','patrol']});
 const CALL_SLING={mil:1};
 const CALLX={jobs:[], helis:[], boats:[]};
-const _cxKind=callKind; callKind=function(id){ return _cxKind(id)||CALL_X[id]; };
-const _cxHow=callHow; callHow=function(id){ if(CALL_X[id]) return CALL_X[id].air?'Uçarak gelir, yanına iner':'Denizden gelir, kıyıya yanaşır'; if(CALL_SLING[id]) return 'T625 askıda getirir'; return _cxHow(id); };
-const _cxIcon=callIcon; callIcon=function(id){ const X=CALL_X[id]; if(!X) return _cxIcon(id);
+callKind=HOOK.wrap('callKind','77-call-airsea#_cxKind',function(_cxKind){ return function(id){ return _cxKind(id)||CALL_X[id]; }; },callKind);
+callHow=HOOK.wrap('callHow','77-call-airsea#_cxHow',function(_cxHow){ return function(id){ if(CALL_X[id]) return CALL_X[id].air?'Uçarak gelir, yanına iner':'Denizden gelir, kıyıya yanaşır'; if(CALL_SLING[id]) return 'T625 askıda getirir'; return _cxHow(id); }; },callHow);
+callIcon=HOOK.wrap('callIcon','77-call-airsea#_cxIcon',function(_cxIcon){ return function(id){ const X=CALL_X[id]; if(!X) return _cxIcon(id);
   const p=X.sea?'<path d="M2 15h20l-3 4H5z"/><path d="M6 15v-3h8l2 3M9 12V9h3"/><path d="M2 21c2 0 2-1 4-1s2 1 4 1 2-1 4-1 2 1 4 1"/>':
     '<path d="M3 7h18M12 7v3"/><path d="M5 13c0-2 2-3 5-3h4l4 3v2H7c-1 0-2-1-2-2z"/><path d="M18 13h4M8 18h8M10 15v3M14 15v3"/>'+(id==='t129'?'<path d="M7 15l-2 2"/>':'');
-  return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">'+p+'</svg>'; };
-const _cxOrder=callOrder; callOrder=function(id,x,z,o){ o=o||{};
+  return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">'+p+'</svg>'; }; },callIcon);
+callOrder=HOOK.wrap('callOrder','77-call-airsea#_cxOrder',function(_cxOrder){ return function(id,x,z,o){ o=o||{};
   if(CALL_X[id]||CALL_SLING[id]){ if(CALL.cd>0&&!o.force){ toast('Lojistik meşgul — '+Math.ceil(CALL.cd)+' sn bekle','#ffc24a'); return null; }
     const r=CALL_X[id]&&CALL_X[id].sea?cxBoat(id,x,z):cxAir(id,x,z); if(r) CALL.cd=o.force?0:6; return r; }
-  return _cxOrder(id,x,z,o); };
+  return _cxOrder(id,x,z,o); }; },callOrder);
 function cxSay(t){ if(typeof radioSay==='function') radioSay({w:'loj',t:t},null,{force:true}); else toast(t,'#b8ecff'); }
 /* ---- helicopters */
 function cxHeliNew(id,x,z,h){ const m=heliBuild(id), y=Math.max(groundH(x,z),0)+90;
@@ -73,12 +73,12 @@ function cxBoatStep(J,dt){ const b=J.b; J.t+=dt; if(b===BOAT.cur){ cxEnd(J); ret
   const vt=Math.min(b.K.top*0.6,Math.max(0.8,d*0.25)); b.v+=clamp(vt-b.v,-3*dt,2*dt); b.x+=-Math.sin(b.h)*b.v*dt; b.z+=-Math.cos(b.h)*b.v*dt; boatPlace(b,dt);
   if(d<3||J.t>60){ b.v=0; b.th=0; boatPlace(b,0); cxSay(b.K.n+' yanaştı. Kıyıdan binebilirsin.'); cxEnd(J); } }
 /* ---- per frame, HUD, map */
-const _cxStep=callStep; callStep=function(dt){ _cxStep(dt); for(let i=CALLX.jobs.length-1;i>=0;i--){ const J=CALLX.jobs[i]; if(!J) continue; if(J.beacon) J.beacon.material.opacity=0.16+0.1*Math.sin((J.t||0)*5);
+callStep=HOOK.wrap('callStep','77-call-airsea#_cxStep',function(_cxStep){ return function(dt){ _cxStep(dt); for(let i=CALLX.jobs.length-1;i>=0;i--){ const J=CALLX.jobs[i]; if(!J) continue; if(J.beacon) J.beacon.material.opacity=0.16+0.1*Math.sin((J.t||0)*5);
     if(J.mode==='boat') cxBoatStep(J,dt); else cxHeliStep(J,dt); }
-  CALLX.boats.forEach(function(b){ if(b!==BOAT.cur&&!CALLX.jobs.some(function(J){ return J.b===b; })) boatPlace(b,dt); }); };
-const _cxHUD=drawWalkHUD; drawWalkHUD=function(){ _cxHUD(); const L=CALLX.jobs.filter(function(J){ return J.ph!=='out'; }); if(!L.length) return;
+  CALLX.boats.forEach(function(b){ if(b!==BOAT.cur&&!CALLX.jobs.some(function(J){ return J.b===b; })) boatPlace(b,dt); }); }; },callStep);
+drawWalkHUD=HOOK.wrap('drawWalkHUD','77-call-airsea#_cxHUD',function(_cxHUD){ return function(){ _cxHUD(); const L=CALLX.jobs.filter(function(J){ return J.ph!=='out'; }); if(!L.length) return;
   const s=clamp(Math.min(HW,HH)/760,0.7,1.5), off=CALL.jobs.filter(function(J){ return !J.done; }).length; hx.save(); hx.textAlign='right'; hx.textBaseline='middle'; hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.shadowColor='rgba(0,0,0,.7)'; hx.shadowBlur=4; hx.fillStyle='#ffb25a';
   L.forEach(function(J,i){ const o=J.H||J.b, d=Math.round(Math.hypot(J.tx-o.x,J.tz-o.z)); hx.fillText('LOJİSTİK · '+J.name.toLocaleUpperCase('tr-TR')+' · '+(J.mode==='boat'?'DENİZDE ':'HAVADA ')+(d>1000?(d/1000).toFixed(1)+' km':d+' m'), HW-Math.round(16*s), Math.round((WALK.tvis?64:22)*s)+(off+i)*Math.round(18*s)); });
-  hx.restore(); };
-const _cxMap=drawMap; drawMap=function(x,W,H,mini){ _cxMap(x,W,H,mini); x.save(); x.fillStyle='#ffb25a'; x.strokeStyle='#08121c'; x.lineWidth=1.5;
-  CALLX.helis.concat(CALLX.boats).forEach(function(o){ const p=mapToScreen(o.x,o.z,W,H); x.beginPath(); x.arc(p[0],p[1],mini?2.8:4.5,0,6.3); x.fill(); x.stroke(); }); x.restore(); };
+  hx.restore(); }; },drawWalkHUD);
+drawMap=HOOK.wrap('drawMap','77-call-airsea#_cxMap',function(_cxMap){ return function(x,W,H,mini){ _cxMap(x,W,H,mini); x.save(); x.fillStyle='#ffb25a'; x.strokeStyle='#08121c'; x.lineWidth=1.5;
+  CALLX.helis.concat(CALLX.boats).forEach(function(o){ const p=mapToScreen(o.x,o.z,W,H); x.beginPath(); x.arc(p[0],p[1],mini?2.8:4.5,0,6.3); x.fill(); x.stroke(); }); x.restore(); }; },drawMap);

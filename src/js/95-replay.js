@@ -7,12 +7,13 @@
    • Leaving the replay puts everything back exactly as it was (paused game or mission end screen). */
 const RP={oh:0, buf:[], max:3000, acc:0, on:false, t:0, play:true, speed:1, cam:'chase', snap:null, cq:new THREE.Quaternion(), shot:-1, shotT:0, fix:new THREE.Vector3(), rec:null, chunks:[], hud:true};
 const RP_DT=0.1;
-function rpSample(){ const f=(S.gear?1:0)|(S.ab?2:0)|(S.crashed?4:0)|((T-lastFireT)<0.15?8:0), r3=function(v){ return Math.round(v*100)/100; }, r4=function(v){ return Math.round(v*1e4)/1e4; };
+function rpR3(v){ return Math.round(v*100)/100; } function rpR4(v){ return Math.round(v*1e4)/1e4; }
+function rpSample(){ const f=(S.gear?1:0)|(S.ab?2:0)|(S.crashed?4:0)|((T-lastFireT)<0.15?8:0), r3=rpR3, r4=rpR4;
   const acts=[]; for(let i=0;i<ACT.length&&acts.length<12;i++){ const a=ACT[i]; if(!a||!a.pos||!a.q) continue; acts.push([a.id,r3(a.pos.x),r3(a.pos.y),r3(a.pos.z),r4(a.q.x),r4(a.q.y),r4(a.q.z),r4(a.q.w),a.alive?1:0]); }
   return [T, r3(S.pos.x),r3(S.pos.y),r3(S.pos.z), r4(S.q.x),r4(S.q.y),r4(S.q.z),r4(S.q.w), Math.round(S.speed*10)/10, Math.round((S.throttle||0)*100)/100, f, acts]; }
 function rpRecord(dt){ if(state!=='play'||RP.on) return; RP.acc+=dt; if(RP.acc<RP_DT) return; RP.acc=0; RP.buf.push(rpSample()); if(RP.buf.length>RP.max) RP.buf.splice(0,RP.buf.length-RP.max); }
-const _rpUpd=update; update=function(dt){ _rpUpd(dt); rpRecord(dt); };
-const _rpStart=startGame; startGame=function(mode){ RP.buf=[]; RP.acc=0; return _rpStart(mode); };
+update=HOOK.wrap('update','95-replay#_rpUpd',function(_rpUpd){ return function(dt){ _rpUpd(dt); rpRecord(dt); }; },update);
+startGame=HOOK.wrap('startGame','95-replay#_rpStart',function(_rpStart){ return function(mode){ RP.buf=[]; RP.acc=0; return _rpStart(mode); }; },startGame);
 function rpCan(){ return RP.buf.length>=20&&!(NET.on&&NET.started)&&(state==='paused'||state==='mend'||state==='play')&&!(WALK.from==='walk'&&state==='paused'); }
 function rpDur(){ const b=RP.buf; return b.length>1?b[b.length-1][0]-b[0][0]:0; }
 /* ---- interpolate the recording at time t (seconds from the first sample) */
@@ -43,7 +44,7 @@ function rpClose(){ if(!RP.on) return; if(RP.rec) rpVidStop(); const s=RP.snap; 
 function rpStep(dt){ if(!RP.on) return; const D=rpDur();
   if(RP.play){ RP.t+=dt*RP.speed; if(RP.t>=D){ RP.t=D; RP.play=false; rpUI(); } }
   rpApply(RP.t); const sl=$('rpT'); if(sl&&!RP.drag) sl.value=String(Math.round(D>0?RP.t/D*1000:0)); const tl=$('rpTime'); if(tl) tl.textContent=fmtT(RP.t)+' / '+fmtT(D); }
-const _rpPlace=placeModel; placeModel=function(dt){ if(state==='replay') rpStep(dt); return _rpPlace(dt); };
+placeModel=HOOK.wrap('placeModel','95-replay#_rpPlace',function(_rpPlace){ return function(dt){ if(state==='replay') rpStep(dt); return _rpPlace(dt); }; },placeModel);
 const rpV=new THREE.Vector3(), rpR=new THREE.Vector3(), rpF=new THREE.Vector3(), rpU=new THREE.Vector3(0,1,0), rpE=new THREE.Euler(), rpQ=new THREE.Quaternion();
 const RP_SHOTS=['side','flyby','tower','high','side','chase'];
 function rpCam(dt){ const D=(typeof VIEW_D!=='undefined'&&VIEW_D[activeId])||30, P=S.pos; let cam=RP.cam;
@@ -64,12 +65,12 @@ function rpCam(dt){ const D=(typeof VIEW_D!=='undefined'&&VIEW_D[activeId])||30,
   const gh=Math.max(terrainH(camera.position.x,camera.position.z),0)+2; if(camera.position.y<gh) camera.position.y=gh;
   const fov=cam==='cockpit'?78:(RP.shotK==='flyby'||RP.shotK==='tower')&&RP.cam==='cine'?40:60; if(Math.abs(fov-lastFov)>0.05){ camera.fov=fov; lastFov=fov; camera.updateProjectionMatrix(); }
   camera.updateMatrixWorld(); }
-const _rpCamUpd=cameraUpdate; cameraUpdate=function(dt){ if(state==='replay') return rpCam(dt); return _rpCamUpd(dt); };
+cameraUpdate=HOOK.wrap('cameraUpdate','95-replay#_rpCamUpd',function(_rpCamUpd){ return function(dt){ if(state==='replay') return rpCam(dt); return _rpCamUpd(dt); }; },cameraUpdate);
 /* HUD: a small replay caption instead of the flight HUD */
-const _rpHUD=drawHUD; drawHUD=function(){ if(state!=='replay') return _rpHUD(); hx.setTransform(DPR,0,0,DPR,0,0); hx.clearRect(0,0,HW,HH); if(!RP.hud||RP.rec&&RP.clean) return;
+drawHUD=HOOK.wrap('drawHUD','95-replay#_rpHUD',function(_rpHUD){ return function(){ if(state!=='replay') return _rpHUD(); hx.setTransform(DPR,0,0,DPR,0,0); hx.clearRect(0,0,HW,HH); if(!RP.hud||RP.rec&&RP.clean) return;
   const s=clamp(Math.min(HW,HH)/760,0.7,1.4), alt=Math.max(0,S.pos.y-Math.max(terrainH(S.pos.x,S.pos.z),0)); hx.save(); hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.textBaseline='top'; hx.textAlign='left'; hx.shadowColor='rgba(0,0,0,.7)'; hx.shadowBlur=4;
   hx.fillStyle='#ff4a3a'; hx.beginPath(); hx.arc(18*s,22*s,5*s,0,6.3); hx.fill(); hx.fillStyle='#fff'; hx.fillText('TEKRAR · '+AIRCRAFT[activeId].name,28*s,15*s);
-  hx.fillStyle='#b8ecff'; hx.fillText(Math.round(S.speed*3.6)+' km/sa · '+Math.round(alt)+' m'+(RP.speed!==1?' · '+RP.speed+'×':'')+(RP.rec?'   ⏺ KAYIT':''),28*s,33*s); hx.restore(); };
+  hx.fillStyle='#b8ecff'; hx.fillText(Math.round(S.speed*3.6)+' km/sa · '+Math.round(alt)+' m'+(RP.speed!==1?' · '+RP.speed+'×':'')+(RP.rec?'   ⏺ KAYIT':''),28*s,33*s); hx.restore(); }; },drawHUD);
 /* ---- bar UI */
 function rpUI(){ const b=$('rpPlay'); if(b) b.textContent=RP.play?'❚❚':'▶'; Array.prototype.forEach.call(document.querySelectorAll('#rpBar [data-cam]'),function(x){ x.setAttribute('aria-pressed',String(x.dataset.cam===RP.cam)); });
   Array.prototype.forEach.call(document.querySelectorAll('#rpBar [data-sp]'),function(x){ x.setAttribute('aria-pressed',String(+x.dataset.sp===RP.speed)); });

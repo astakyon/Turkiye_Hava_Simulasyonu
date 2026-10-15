@@ -19,14 +19,14 @@ function relShow(){ const R=(typeof RELNOTES!=='undefined'?RELNOTES:[]), cur=R[0
   if(typeof annShow!=='function') return; annShow({id:'rel-'+cur.v,text:'🆕 '+cur.v+(cur.t?' — '+cur.t:': '+relFirstLine(cur.md)),flash:false,sec:dur>0?dur:0});
   if(typeof ANN!=='undefined'){ ANN.t=dur>0?dur:1e9; } const bar=$('annBar'); if(bar&&!bar.querySelector('.relmore')){ const b=document.createElement('button'); b.type='button'; b.className='relmore'; b.textContent='Tümünü gör'; b.addEventListener('click',function(){ relOpen(); try{ annHide(); }catch(e){} }); bar.insertBefore(b,bar.lastChild); } }
 /* the "Tümünü gör" button only belongs to the release-notes strip */
-if(typeof annShow==='function'){ const _rnAnn=annShow; annShow=function(o){ _rnAnn(o); const b=$('annBar'), m=b&&b.querySelector('.relmore'); if(m&&!(o&&String(o.id).indexOf('rel-')===0)) m.remove(); }; }
+if(typeof annShow==='function'){ annShow=HOOK.wrap('annShow','98v-notes#_rnAnn',function(_rnAnn){ return function(o){ _rnAnn(o); const b=$('annBar'), m=b&&b.querySelector('.relmore'); if(m&&!(o&&String(o.id).indexOf('rel-')===0)) m.remove(); }; },annShow); }
 setTimeout(function(){ try{ relShow(); }catch(e){} },3500);
 (function(){ const s=$('setNotes'); if(s) s.addEventListener('click',function(e){ const b=e.target.closest('button[data-n]'); if(!b) return; SETTINGS.notesDur=+b.dataset.n; saveSettings(); syncSettingsUI(); });
   const o=$('btnNotes'); if(o) o.addEventListener('click',relOpen); })();
-const _rnSync=syncSettingsUI; syncSettingsUI=function(){ _rnSync(); const s=$('setNotes'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.n===relDur())); }); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98v-notes#_rnSync',function(_rnSync){ return function(){ _rnSync(); const s=$('setNotes'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.n===relDur())); }); }; },syncSettingsUI);
 /* "Yenilikler" entry on the title menu (root level, under Çok Oyunculu) */
 NAV_IC.news='<path d="M4 5h13v14H6a2 2 0 01-2-2z"/><path d="M17 9h3v8a2 2 0 01-2 2M8 9h5M8 13h5"/>';
 NAV_D.notes=['OYNA','Yenilikler','Son sürümlerde nelerin değiştiğini oku. Yeni sürümden sonraki ilk açılışta özet duyuru olarak da gösterilir; süresi Ayarlar → Arayüz → Sürüm notları.',[],'Notları aç'];
-const _rnNav=navRender; navRender=function(){ _rnNav(); if(NAV.level!=='root') return; const el=$('cNav'); if(!el) return; const h=el.innerHTML; if(h.indexOf('data-act="notes"')>=0) return;
-  const k=h.indexOf('data-act="net"'); if(k<0) return; const j=h.indexOf('</button>',k)+9; el.innerHTML=h.slice(0,j)+navBtn('notes','Yenilikler',GAME_VERSION+' sürüm notları','news')+h.slice(j); tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); };
-const _rnAct=titleAct; titleAct=function(act){ if(act==='notes'&&state==='menu') return relOpen(); return _rnAct(act); };
+navRender=HOOK.wrap('navRender','98v-notes#_rnNav',function(_rnNav){ return function(){ _rnNav(); if(NAV.level!=='root') return; const el=$('cNav'); if(!el) return; const h=el.innerHTML; if(h.indexOf('data-act="notes"')>=0) return;
+  const k=h.indexOf('data-act="net"'); if(k<0) return; const j=h.indexOf('</button>',k)+9; el.innerHTML=h.slice(0,j)+navBtn('notes','Yenilikler',GAME_VERSION+' sürüm notları','news')+h.slice(j); tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
+titleAct=HOOK.wrap('titleAct','98v-notes#_rnAct',function(_rnAct){ return function(act){ if(act==='notes'&&state==='menu') return relOpen(); return _rnAct(act); }; },titleAct);

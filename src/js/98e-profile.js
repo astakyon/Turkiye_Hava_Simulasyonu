@@ -24,16 +24,16 @@ function loginGo(){ const mail=($('accMail').value||'').trim(), pw=$('accPass').
   const g=$('lgGo'); if(g) g.classList.add('busy'); accMsg(PCARD.lg==='up'?'Hesap oluşturuluyor…':'Giriş yapılıyor…');
   Promise.resolve(accEmail(PCARD.lg==='up'?'up':'in',mail,pw)).finally(function(){ if(g) g.classList.remove('busy'); }); }
 /* ---- wrappers around the account screen */
-const _pcOpen=accOpen; accOpen=function(tab){
+accOpen=HOOK.wrap('accOpen','98e-profile#_pcOpen',function(_pcOpen){ return function(tab){
   const t=tab==='profile'||tab==='hesap'?'hesap':tab==='career'?'kariyer':(tab&&PCARD_TABS.indexOf(tab)>=0?tab:null);
   loginClose(); _pcOpen(tab==='hesap'?'profile':tab);
   pcTab(ACC.user&&!ACC.prof?'hesap':(t||PCARD.tab||'ozet')); pcHero();
-  if(ACC.user&&!ACC.prof){ const c=$('accCs'); if(c) setTimeout(function(){ try{ c.focus(); }catch(e){} },80); } };
+  if(ACC.user&&!ACC.prof){ const c=$('accCs'); if(c) setTimeout(function(){ try{ c.focus(); }catch(e){} },80); } }; },accOpen);
 const PCARD_TABS=['ozet','kariyer','madalya','ist','hesap'];
-const _pcRender=accRender; accRender=function(){ _pcRender(); pcHero(); const L=$('accLocal'); if(L) L.classList.toggle('hidden',!!ACC.user);
-  const eb=$('pcEditBox'); if(eb) eb.classList.toggle('new',!!(ACC.user&&!ACC.prof)); };
-const _pcChip=accChip; accChip=function(){ _pcChip(); if(ACC.user){ const el=$('loginUI'); if(el&&!el.classList.contains('hidden')){ loginClose(); if(!ACC.prof) accOpen('hesap'); } } try{ pcHero(); }catch(e){} };
-const _pcMsg=accMsg; accMsg=function(t,err){ _pcMsg(t,err); const el=$('pcMsg'); if(el){ el.textContent=t||''; el.classList.toggle('err',!!err); } };
+accRender=HOOK.wrap('accRender','98e-profile#_pcRender',function(_pcRender){ return function(){ _pcRender(); pcHero(); const L=$('accLocal'); if(L) L.classList.toggle('hidden',!!ACC.user);
+  const eb=$('pcEditBox'); if(eb) eb.classList.toggle('new',!!(ACC.user&&!ACC.prof)); }; },accRender);
+accChip=HOOK.wrap('accChip','98e-profile#_pcChip',function(_pcChip){ return function(){ _pcChip(); if(ACC.user){ const el=$('loginUI'); if(el&&!el.classList.contains('hidden')){ loginClose(); if(!ACC.prof) accOpen('hesap'); } } try{ pcHero(); }catch(e){} }; },accChip);
+accMsg=HOOK.wrap('accMsg','98e-profile#_pcMsg',function(_pcMsg){ return function(t,err){ _pcMsg(t,err); const el=$('pcMsg'); if(el){ el.textContent=t||''; el.classList.toggle('err',!!err); } }; },accMsg);
 (function(){
   const tabs=$('pcTabs'); if(tabs) tabs.addEventListener('click',function(e){ const b=e.target.closest('button[data-t]'); if(b) pcTab(b.dataset.t); });
   const ed=$('pcEdit'); if(ed) ed.addEventListener('click',function(){ pcTab('hesap'); try{ $('pcEditBox').scrollIntoView({block:'start',behavior:'smooth'}); $('accCs').focus(); }catch(e){} });

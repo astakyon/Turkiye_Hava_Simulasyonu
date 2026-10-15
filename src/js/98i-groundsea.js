@@ -27,7 +27,7 @@ const GVMIS=[
     setup:function(){ [[-4100,-3300],[-4350,-3050],[-3900,-2950]].forEach(function(p){ gvSeaTarget('raft',p[0],p[1],0); }); },obj:[{t:'kill',n:'Üç hedef dubayı topla vur'}]},
   {id:'s_anadolu',grp:'deniz',boat:'anadolu',lic:'kaptan',n:'TCG Anadolu ile çıkarma',d:'TCG Anadolu\'yu toplanma noktasına, oradan kıyıdaki çıkarma noktasına götür. Gemi büyük ve yavaş: dönüşleri erken başlat.',spot:[-2200,-3900,Math.PI/2],lim:900,xp:320,diff:2,setup:function(){},
     obj:[{t:'cp',n:'Toplanma noktası',x:-3600,z:-4600,r:120},{t:'cp',n:'Çıkarma noktası (kıyı açığı)',x:-3000,z:-2600,r:140}]}];
-const _gvById=hmById; hmById=function(id){ return _gvById(id)||GVMIS.find(function(m){ return m.id===id; })||null; };
+hmById=HOOK.wrap('hmById','98i-groundsea#_gvById',function(_gvById){ return function(id){ return _gvById(id)||GVMIS.find(function(m){ return m.id===id; })||null; }; },hmById);
 /* boats start here */
 function gvBoatStart(M){ if(HM.on) hmClean(); closeModals(); startWalk(); hmClean(); buildBoats();
   const K=BOAT_KINDS[M.boat], sh=K.build(), g=new THREE.Group(); g.add(bakeGroup(sh.group)); scene.add(g);
@@ -39,23 +39,23 @@ function gvBoatStart(M){ if(HM.on) hmClean(); closeModals(); startWalk(); hmClea
 const GV={boat:null};
 function gvBoatClean(){ const b=GV.boat; if(!b) return; if(BOAT.cur===b){ try{ boatExit(); }catch(e){} } scene.remove(b.g); const i=BOATS.indexOf(b); if(i>=0) BOATS.splice(i,1);
   for(let k=SHIPDECKS.length-1;k>=0;k--) if(SHIPDECKS[k].gv) SHIPDECKS.splice(k,1); GV.boat=null; }
-const _gvStart=hmStart; hmStart=function(id){ const M=hmById(id); gvBoatClean(); if(M&&M.boat) return gvBoatStart(M); return _gvStart(id); };
+hmStart=HOOK.wrap('hmStart','98i-groundsea#_gvStart',function(_gvStart){ return function(id){ const M=hmById(id); gvBoatClean(); if(M&&M.boat) return gvBoatStart(M); return _gvStart(id); }; },hmStart);
 /* sea checkpoints count for boats */
-const _gvStep=hmStep; hmStep=function(dt){ _gvStep(dt); if(!HM.on||HM.ended) return; const o=hmCur(), b=BOAT.cur;
-  if(o&&o.t==='cp'&&WALK.mode==='boat'&&b&&Math.hypot(b.x-o.x,b.z-o.z)<(o.r||60)) hmNext(); };
+hmStep=HOOK.wrap('hmStep','98i-groundsea#_gvStep',function(_gvStep){ return function(dt){ _gvStep(dt); if(!HM.on||HM.ended) return; const o=hmCur(), b=BOAT.cur;
+  if(o&&o.t==='cp'&&WALK.mode==='boat'&&b&&Math.hypot(b.x-o.x,b.z-o.z)<(o.r||60)) hmNext(); }; },hmStep);
 /* tank and boat shells hit mission targets */
-const _gvWeap=vehWeaponsStep; vehWeaponsStep=function(dt){ const before=VFX.shells.slice(); _gvWeap(dt);
-  if(!HTGT.length) return; before.forEach(function(s){ if(VFX.shells.indexOf(s)>=0||s.life<=0) return; hoBlast(s.p,s.big?14:3,s.big?1.4:0.12); }); };
+vehWeaponsStep=HOOK.wrap('vehWeaponsStep','98i-groundsea#_gvWeap',function(_gvWeap){ return function(dt){ const before=VFX.shells.slice(); _gvWeap(dt);
+  if(!HTGT.length) return; before.forEach(function(s){ if(VFX.shells.indexOf(s)>=0||s.life<=0) return; hoBlast(s.p,s.big?14:3,s.big?1.4:0.12); }); }; },vehWeaponsStep);
 /* objective panel on the boat HUD */
-if(typeof drawWalkHUD==='function'){ const _gvHUD=drawWalkHUD; drawWalkHUD=function(){ _gvHUD(); if(HM.on&&!HM.ended&&WALK.mode==='boat'&&BOAT.cur&&typeof hmDrawObj==='function'){ const b=BOAT.cur, s=clamp(Math.min(HW,HH)/760,0.7,1.5); hx.save(); hmDrawObj(HW,HH,s,b.x,b.z,b.h); hx.restore(); } }; }
+if(typeof drawWalkHUD==='function'){ drawWalkHUD=HOOK.wrap('drawWalkHUD','98i-groundsea#_gvHUD',function(_gvHUD){ return function(){ _gvHUD(); if(HM.on&&!HM.ended&&WALK.mode==='boat'&&BOAT.cur&&typeof hmDrawObj==='function'){ const b=BOAT.cur, s=clamp(Math.min(HW,HH)/760,0.7,1.5); hx.save(); hmDrawObj(HW,HH,s,b.x,b.z,b.h); hx.restore(); } }; },drawWalkHUD); }
 /* ---- mission board */
-const _gvAll=boardAll; boardAll=function(){ return _gvAll().concat(GVMIS.map(function(M){ return {id:M.id,kind:'gv',name:M.n,desc:M.d,M:M}; })); };
-const _gvMeta=bMeta; bMeta=function(e){ if(e.kind!=='gv') return _gvMeta(e); const M=e.M, o=M.obj.find(function(q){ return q.x!=null; });
-  return {cat:M.grp,diff:M.diff,dur:Math.round(M.lim/60),xp:M.xp,obj:M.obj.map(function(q){ return q.n; }),thr:M.grp==='deniz'?['Açık deniz, dalga']:['Engebeli arazi, devrilme'],load:null,area:o?[o.x,o.z,4000]:[M.spot[0],M.spot[1],4000]}; };
+boardAll=HOOK.wrap('boardAll','98i-groundsea#_gvAll',function(_gvAll){ return function(){ return _gvAll().concat(GVMIS.map(function(M){ return {id:M.id,kind:'gv',name:M.n,desc:M.d,M:M}; })); }; },boardAll);
+bMeta=HOOK.wrap('bMeta','98i-groundsea#_gvMeta',function(_gvMeta){ return function(e){ if(e.kind!=='gv') return _gvMeta(e); const M=e.M, o=M.obj.find(function(q){ return q.x!=null; });
+  return {cat:M.grp,diff:M.diff,dur:Math.round(M.lim/60),xp:M.xp,obj:M.obj.map(function(q){ return q.n; }),thr:M.grp==='deniz'?['Açık deniz, dalga']:['Engebeli arazi, devrilme'],load:null,area:o?[o.x,o.z,4000]:[M.spot[0],M.spot[1],4000]}; }; },bMeta);
 function gvVehName(M){ if(M.boat) return BOAT_KINDS[M.boat].n; const k=CAR_KINDS.find(function(c){ return c.id===M.car; }); return k?k.n:M.car; }
-const _gvRender=renderMissions; renderMissions=function(){ _gvRender(); const f=$('misFilt'), seg=f&&f.querySelector('[data-k="cat"]');
+renderMissions=HOOK.wrap('renderMissions','98i-groundsea#_gvRender',function(_gvRender){ return function(){ _gvRender(); const f=$('misFilt'), seg=f&&f.querySelector('[data-k="cat"]');
   if(seg&&!seg.querySelector('[data-v="kara"]')){ [['kara','Kara'],['deniz','Deniz']].forEach(function(c){ const b=document.createElement('button'); b.type='button'; b.dataset.v=c[0]; b.textContent=c[1]; b.setAttribute('aria-pressed',String(BF.cat===c[0])); const nw=seg.querySelector('.bnew'); if(nw) seg.insertBefore(b,nw); else seg.appendChild(b); }); }
-  const e=boardList()[misSel]; if(e&&e.kind==='gv'){ const bt=$('btnMisGo'); if(bt) bt.textContent=e.M.boat?'▶ Gemiyle başla':'▶ Araçla başla'; $('btnMisAc').disabled=true; $('btnMisAc').textContent=gvVehName(e.M); } };
-const _gvGo=misGo; misGo=function(){ const e=boardList()[misSel]; if(!e||e.kind!=='gv') return _gvGo(); if(PLAY.mode==='career'&&!licHas(e.M.lic)){ toast('🔒 '+LIC2[e.M.lic].n+' gerekli — Kariyer → Ehliyet ve Sertifikalar','#ffc24a'); return; } hmStart(e.M.id); };
-const _gvLock=misLocked; misLocked=function(e){ if(e&&e.kind==='gv') return PLAY.mode==='career'&&!licHas(e.M.lic); return _gvLock(e); };
-const _gvQuit=hmQuit; hmQuit=function(){ _gvQuit(); if(WALK.mode!=='boat') gvBoatClean(); };
+  const e=boardList()[misSel]; if(e&&e.kind==='gv'){ const bt=$('btnMisGo'); if(bt) bt.textContent=e.M.boat?'▶ Gemiyle başla':'▶ Araçla başla'; $('btnMisAc').disabled=true; $('btnMisAc').textContent=gvVehName(e.M); } }; },renderMissions);
+misGo=HOOK.wrap('misGo','98i-groundsea#_gvGo',function(_gvGo){ return function(){ const e=boardList()[misSel]; if(!e||e.kind!=='gv') return _gvGo(); if(PLAY.mode==='career'&&!licHas(e.M.lic)){ toast('🔒 '+LIC2[e.M.lic].n+' gerekli — Kariyer → Ehliyet ve Sertifikalar','#ffc24a'); return; } hmStart(e.M.id); }; },misGo);
+misLocked=HOOK.wrap('misLocked','98i-groundsea#_gvLock',function(_gvLock){ return function(e){ if(e&&e.kind==='gv') return PLAY.mode==='career'&&!licHas(e.M.lic); return _gvLock(e); }; },misLocked);
+hmQuit=HOOK.wrap('hmQuit','98i-groundsea#_gvQuit',function(_gvQuit){ return function(){ _gvQuit(); if(WALK.mode!=='boat') gvBoatClean(); }; },hmQuit);

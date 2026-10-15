@@ -58,7 +58,7 @@ window.addEventListener('mousemove',function(e){ if(!PW.open||PW.src!=='mouse') 
   b.addEventListener('pointerdown',function(e){ e.preventDefault(); e.stopPropagation(); pwPress('touch'); });
   b.addEventListener('pointerup',function(e){ e.preventDefault(); e.stopPropagation(); if(PW.hold){ pwRelease(); } });
   b.addEventListener('pointercancel',function(){ if(PW.hold){ clearTimeout(PW.hold); PW.hold=null; } }); })();
-const _pgTouch=updateTouchUI; updateTouchUI=function(){ _pgTouch(); const b=$('tPing'); if(!b) return; const on=(state==='play'||state==='walk')&&((typeof TOUCH!=='undefined'&&TOUCH.vis)||(typeof WALK!=='undefined'&&WALK.tvis)); b.classList.toggle('hidden',!on); };
+updateTouchUI=HOOK.wrap('updateTouchUI','98j-comms#_pgTouch',function(_pgTouch){ return function(){ _pgTouch(); const b=$('tPing'); if(!b) return; const on=(state==='play'||state==='walk')&&((typeof TOUCH!=='undefined'&&TOUCH.vis)||(typeof WALK!=='undefined'&&WALK.tvis)); b.classList.toggle('hidden',!on); }; },updateTouchUI);
 /* ---- HUD: icons with distance; who is talking */
 const pgV=new THREE.Vector3();
 function pingHUD(){ if(state!=='play'&&state!=='walk') return; const s=clamp(Math.min(HW,HH)/760,0.7,1.5), me=state==='play'?S.pos:camera.position; hx.save(); hx.textAlign='center'; hx.textBaseline='middle';
@@ -70,11 +70,11 @@ function pingHUD(){ if(state!=='play'&&state!=='walk') return; const s=clamp(Mat
     hx.fillText((d>=1000?(d/1000).toFixed(1).replace('.',',')+' km':Math.round(d)+' m')+(edge?' ◂':''),x,y+25*s); if(!P.mine){ hx.font=Math.round(10*s)+'px system-ui,sans-serif'; hx.fillStyle='#dfe9f1'; hx.fillText(P.name,x,y-24*s); } hx.shadowBlur=0; });
   hx.globalAlpha=1; const tk=Object.keys(TALK); if(tk.length){ hx.textAlign='left'; hx.font='700 '+Math.round(12*s)+'px system-ui,sans-serif'; tk.forEach(function(k,i){ const y=Math.round(150*s)+i*20*s; hx.fillStyle='rgba(0,0,0,.5)'; hx.fillRect(12*s,y-9*s,150*s,18*s); hx.fillStyle='#7dffb0'; hx.fillText('🎙 '+TALK[k].n,18*s,y); }); }
   hx.restore(); }
-const _pgHUD=drawHUD; drawHUD=function(){ _pgHUD(); try{ hx.setTransform(DPR,0,0,DPR,0,0); pingHUD(); }catch(e){} };
-const _pgCull=cullStep; cullStep=function(dt){ _pgCull(dt); pingStep(dt||0); };
+drawHUD=HOOK.wrap('drawHUD','98j-comms#_pgHUD',function(_pgHUD){ return function(){ _pgHUD(); try{ hx.setTransform(DPR,0,0,DPR,0,0); pingHUD(); }catch(e){} }; },drawHUD);
+cullStep=HOOK.wrap('cullStep','98j-comms#_pgCull',function(_pgCull){ return function(dt){ _pgCull(dt); pingStep(dt||0); }; },cullStep);
 /* map and mini-map */
-const _pgMap=drawMap; drawMap=function(x,W,H,mini){ _pgMap(x,W,H,mini); if(!PINGS.length) return; x.save(); x.textAlign='center'; x.textBaseline='middle';
-  PINGS.forEach(function(P){ const K=pingKind(P.k), p=mapToScreen(P.pos.x,P.pos.z,W,H); x.fillStyle=K[3]; x.beginPath(); x.arc(p[0],p[1],mini?4:9,0,6.3); x.fill(); if(!mini){ x.font='13px system-ui,sans-serif'; x.fillStyle='#fff'; x.fillText(K[2],p[0],p[1]-16); } }); x.restore(); };
+drawMap=HOOK.wrap('drawMap','98j-comms#_pgMap',function(_pgMap){ return function(x,W,H,mini){ _pgMap(x,W,H,mini); if(!PINGS.length) return; x.save(); x.textAlign='center'; x.textBaseline='middle';
+  PINGS.forEach(function(P){ const K=pingKind(P.k), p=mapToScreen(P.pos.x,P.pos.z,W,H); x.fillStyle=K[3]; x.beginPath(); x.arc(p[0],p[1],mini?4:9,0,6.3); x.fill(); if(!mini){ x.font='13px system-ui,sans-serif'; x.fillStyle='#fff'; x.fillText(K[2],p[0],p[1]-16); } }); x.restore(); }; },drawMap);
 (function(){ const cv=$('mapCv'); if(!cv) return; let lp=null;
   const drop=function(cx,cy){ const r=cv.getBoundingClientRect(), w=mapToWorld(cx-r.left,cy-r.top,r.width,r.height); pingPlace('git',new THREE.Vector3(w[0],Math.max(0,groundH(w[0],w[1])),w[1])); try{ mapDraw(); }catch(e){} toast('➜ Haritaya "Buraya git" işareti kondu','#39e6ff'); };
   cv.addEventListener('contextmenu',function(e){ e.preventDefault(); if(MAPV.pick) return; drop(e.clientX,e.clientY); });
@@ -82,11 +82,11 @@ const _pgMap=drawMap; drawMap=function(x,W,H,mini){ _pgMap(x,W,H,mini); if(!PING
   cv.addEventListener('pointermove',function(e){ if(lp&&cv._lps&&Math.hypot(e.clientX-cv._lps[0],e.clientY-cv._lps[1])>8){ clearTimeout(lp); lp=null; } });
   ['pointerup','pointercancel'].forEach(function(ev){ cv.addEventListener(ev,function(){ if(lp){ clearTimeout(lp); lp=null; } }); }); })();
 /* ---- network */
-const _pgNet=netHandle; netHandle=function(msg,from){
+netHandle=HOOK.wrap('netHandle','98j-comms#_pgNet',function(_pgNet){ return function(msg,from){
   if(msg.t==='ping'){ if(NET.host&&from&&from!==NET.myId) netBroadcast(msg,from); if(msg.by===NET.myId) return; const mt=pingTeam(); if(mt&&msg.team&&msg.team!==mt) return; pingIn(msg,false); return; }
   if(msg.t==='talk'){ if(NET.host&&from&&from!==NET.myId) netBroadcast(msg,from); if(msg.by===NET.myId) return; if(msg.on) TALK[msg.by]={n:String(msg.name||'Pilot').slice(0,16),t:30}; else delete TALK[msg.by]; return; }
-  return _pgNet(msg,from); };
-const _pgPTT=voicePTT; voicePTT=function(on){ const was=VOICE.talk; _pgPTT(on); if(VOICE.talk!==was&&NET.on){ const m={t:'talk',on:!!VOICE.talk,by:NET.myId,name:NET.name||callsign()}; if(NET.host) netBroadcast(m); else netSend(NET.hconn,m); if(VOICE.talk) TALK[NET.myId]={n:'Sen',t:30}; else delete TALK[NET.myId]; } };
+  return _pgNet(msg,from); }; },netHandle);
+voicePTT=HOOK.wrap('voicePTT','98j-comms#_pgPTT',function(_pgPTT){ return function(on){ const was=VOICE.talk; _pgPTT(on); if(VOICE.talk!==was&&NET.on){ const m={t:'talk',on:!!VOICE.talk,by:NET.myId,name:NET.name||callsign()}; if(NET.host) netBroadcast(m); else netSend(NET.hconn,m); if(VOICE.talk) TALK[NET.myId]={n:'Sen',t:30}; else delete TALK[NET.myId]; } }; },voicePTT);
 /* bindings restored from a cloud save made before V2.00 lack the new action */
 function pingBindFix(){ CTRL_ORDER.forEach(function(s){ CTRL_DEF[s].acts.forEach(function(a){ if(CTRL.kb[s]&&!CTRL.kb[s][a[0]]) CTRL.kb[s][a[0]]=a[2].slice(); if(CTRL.pad[s]&&!CTRL.pad[s][a[0]]) CTRL.pad[s][a[0]]=a[3].slice(); }); }); }
-const _pgApply=accApply; accApply=function(d){ _pgApply(d); try{ pingBindFix(); renderCtlHelp(); }catch(e){} };
+accApply=HOOK.wrap('accApply','98j-comms#_pgApply',function(_pgApply){ return function(d){ _pgApply(d); try{ pingBindFix(); renderCtlHelp(); }catch(e){} }; },accApply);

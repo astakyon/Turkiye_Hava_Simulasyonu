@@ -12,13 +12,13 @@ const CRATES=[];             /* sling-loadable crates */
 const HO_AMMO={gun:500,cirit:12,umtas:4,door:1000};
 function hoAmmo(H){ if(!H.ammo) H.ammo={gun:HO_AMMO.gun,cirit:HO_AMMO.cirit,umtas:HO_AMMO.umtas,door:HO_AMMO.door}; if(!H.sel) H.sel='cirit'; return H.ammo; }
 /* ---- hover assist: centred cyclic -> brake towards a hover */
-const _hoInput=heliInput; heliInput=function(){ const inp=_hoInput(), H=HELI.cur;
+heliInput=HOOK.wrap('heliInput','76-heli-ops#_hoInput',function(_hoInput){ return function(){ const inp=_hoInput(), H=HELI.cur;
   if(!HO.assist||!H||H.ground) return inp;
   const fx=-Math.sin(H.h), fz=-Math.cos(H.h), rx=Math.cos(H.h), rz=-Math.sin(H.h), vf=H.vx*fx+H.vz*fz, vr=H.vx*rx+H.vz*rz;
   if(Math.abs(inp.f)<0.08) inp.f=clamp(-vf/18,-0.85,0.85);
   if(Math.abs(inp.r)<0.08) inp.r=clamp(-vr/14,-0.85,0.85);
   if(H.sling||H.troops>0){ /* loaded: slower climb */ if(inp.c>0) inp.c*=H.sling?0.7:0.85; }
-  return inp; };
+  return inp; }; },heliInput);
 function hoAssistToggle(){ HO.assist=!HO.assist; try{ localStorage.setItem('ayy-hassist',HO.assist?'1':'0'); }catch(e){} toast('Askı yardımı (hover assist): '+(HO.assist?'AÇIK':'KAPALI'),HO.assist?'#7dffb0':'#ffc24a'); }
 /* ---- targets */
 const HOM={};
@@ -234,7 +234,7 @@ function hmList(){ const el=$('hMis'); if(!el) return; if(!HSEL){ el.innerHTML='
   el.innerHTML='<p class="hmh">HELİKOPTER GÖREVLERİ</p>'+HMIS.filter(function(m){ return m.heli===HSEL; }).map(function(m){ const r=R[m.id];
     return '<button type="button" class="hmb" data-hm="'+m.id+'"><b>'+m.n+'</b><small>'+m.d+'</small><i>'+(r?'Rekor '+Math.floor(r/60)+':'+String(r%60).padStart(2,'0'):'Süre '+Math.round(m.lim/60)+' dk')+' · '+m.xp+' XP</i></button>'; }).join(''); }
 (function(){ const el=$('hMis'); if(el) el.addEventListener('click',function(e){ const b=e.target.closest('[data-hm]'); if(b) hmStart(b.dataset.hm); }); })();
-const _hoRefresh=refreshHangarUI; refreshHangarUI=function(){ _hoRefresh(); hmList(); };
+refreshHangarUI=HOOK.wrap('refreshHangarUI','76-heli-ops#_hoRefresh',function(_hoRefresh){ return function(){ _hoRefresh(); hmList(); }; },refreshHangarUI);
 /* ---- input */
 function hoKey(e){
   if(WALK.mode!=='heli'||!HELI.cur) return false;
@@ -252,12 +252,12 @@ function heliOpsStep(dt){
   if(HO.pj.length) hoPjStep(dt); if(HTGT.length) htStep(dt); if(TROOPS.length) trStep(dt); slingStep(dt); hmStep(dt);
 }
 /* a crash drops whatever hangs on the hook */
-const _hoCrash=heliCrash; heliCrash=function(H,why){ if(H.sling){ const S=H.sling; scene.remove(S.line); H.sling=null; S.o.fall={v:S.v.clone()}; S.o.fallP=S.p.clone(); FALLING.push(S.o); } H.troops=0; return _hoCrash(H,why); };
+heliCrash=HOOK.wrap('heliCrash','76-heli-ops#_hoCrash',function(_hoCrash){ return function(H,why){ if(H.sling){ const S=H.sling; scene.remove(S.line); H.sling=null; S.o.fall={v:S.v.clone()}; S.o.fallP=S.p.clone(); FALLING.push(S.o); } H.troops=0; return _hoCrash(H,why); }; },heliCrash);
 /* exit: unloading troops is done with B, getting out is G as before */
 /* ---- HUD */
 const hoP=new THREE.Vector3();
 function hoScreen(p,w,h){ hoP.copy(p).project(camera); if(!(hoP.z<1)) return null; return [(hoP.x*0.5+0.5)*w,(-hoP.y*0.5+0.5)*h]; }
-const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; if(!H) return;
+heliHUD=HOOK.wrap('heliHUD','76-heli-ops#_hoHUD',function(_hoHUD){ return function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; if(!H) return;
   const L=WALK.tvis?w/2:Math.round(16*s), top=Math.round(20*s)+Math.round(76*s);
   hx.textAlign=WALK.tvis?'center':'left'; hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif';
   hx.fillStyle=HO.assist?'#7dffb0':'#8899aa'; hx.fillText('ASKI YARDIMI '+(HO.assist?'AÇIK':'KAPALI')+' (J)', L, top);
@@ -275,7 +275,7 @@ const _hoHUD=heliHUD; heliHUD=function(w,h,s){ _hoHUD(w,h,s); const H=HELI.cur; 
       if(near){ const oy=near.crate?near.y:(near.y==null?groundH(near.x,near.z):near.y), up=H.y-oy, ok=bd<10&&up>4&&up<26; hx.textAlign='center'; hx.fillStyle=ok?'#7dffb0':'#ffd27a';
         hx.fillText(ok?'KANCA HAZIR — B':'YÜK '+Math.round(bd)+' m · '+Math.round(up)+' m altında', w/2, h*0.62); } } }
   hmDrawObj(w,h,s,H.x,H.z,H.h);
-};
+}; },heliHUD);
 /* mission objective (helicopter HUD and vehicle HUD) */
 function hmDrawObj(w,h,s,px,pz,hd){ if(!HM.on||HM.ended) return; { const o=hmCur(), tp=hmTarget(); hx.textAlign='center'; hx.font='700 '+Math.round(14*s)+'px "Chakra Petch",system-ui,sans-serif'; const rem=Math.max(0,Math.round(HM.M.lim-HM.t));
     hx.fillStyle='#ffb25a'; hx.fillText('GÖREV · '+HM.M.n.toLocaleUpperCase('tr-TR')+'  ·  '+Math.floor(rem/60)+':'+String(rem%60).padStart(2,'0'), w/2, Math.round((WALK.tvis?60:22)*s));
@@ -285,4 +285,4 @@ function hmDrawObj(w,h,s,px,pz,hd){ if(!HM.on||HM.ended) return; { const o=hmCur
       const cx=w/2, cy=Math.round((WALK.tvis?100:62)*s); hx.save(); hx.translate(cx,cy); hx.rotate(-rel); hx.fillStyle='#ffb25a'; hx.beginPath(); hx.moveTo(0,-11*s); hx.lineTo(7*s,6*s); hx.lineTo(0,2*s); hx.lineTo(-7*s,6*s); hx.closePath(); hx.fill(); hx.restore(); }
     hx.fillText(line, w/2, Math.round((WALK.tvis?80:42)*s)); } }
 /* ---- controls hint */
-const _hoBoard=heliBoard; heliBoard=function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · J askı yardımı · G in':' — Space sağ kapı silahı · B asker bindir/indir ya da yük kancası · J askı yardımı · G in'),'#b8ecff'); };
+heliBoard=HOOK.wrap('heliBoard','76-heli-ops#_hoBoard',function(_hoBoard){ return function(H){ _hoBoard(H); hoAmmo(H); toast(H.D.name+(H.id==='t129'?' — Space 20 mm · X '+(H.sel==='cirit'?'CİRİT':'UMTAS')+' · Tab silah · J askı yardımı · G in':' — Space sağ kapı silahı · B asker bindir/indir ya da yük kancası · J askı yardımı · G in'),'#b8ecff'); }; },heliBoard);

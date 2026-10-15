@@ -41,7 +41,7 @@ function licMsg(id,kind){ const k=licFor(id,kind), L=LIC2[k]; return '🔒 '+(L?
   RACES.push({id:'x_tank',n:'Tank sürüş sınavı',veh:'car',ac:'altay',exam:true,lim:300,d:'Altay ile kontrol noktalarından geç.',R:18,gates:function(){ return rc.gates().slice(0,5); }});
   RACES.push({id:'x_boat',n:'Kaptanlık sınavı',veh:'boat',ac:'patrol',exam:true,lim:300,d:'Şamandıraların arasından bir tur.',R:24,gates:function(){ const G=rb.gates(); return G.slice(0,8).concat([G[0].slice()]); }}); })();
 /* exam lessons / courses are not on the mission board */
-const _licAll=boardAll; boardAll=function(){ return _licAll().filter(function(e){ return !((e.kind==='school'&&e.L&&e.L.exam)||(e.kind==='race'&&e.R&&e.R.exam)); }); };
+boardAll=HOOK.wrap('boardAll','98c-licenses#_licAll',function(_licAll){ return function(){ return _licAll().filter(function(e){ return !((e.kind==='school'&&e.L&&e.L.exam)||(e.kind==='race'&&e.R&&e.R.exam)); }); }; },boardAll);
 /* ---- exam engine */
 const EXAM={on:false,id:null,i:0,t0:0};
 function examStart(k){ const L=LIC2[k]; if(!L) return; if(L.need&&!licProfile().lic2[L.need]){ toast('Önce: '+LIC2[L.need].n,'#ffc24a'); return; }
@@ -56,23 +56,23 @@ function examPass(){ const k=EXAM.id, L=LIC2[k], p=licProfile(); EXAM.on=false; 
   if(first) try{ careerAdd(L.xp,null,L.n); }catch(e){}
   toast('🎖 '+L.n+' aldın! Yeni araçlar açıldı.','#ffd27a'); if(typeof radioSay==='function') radioSay({w:'egitmen',t:'Tebrikler {cs}, '+L.n.toLocaleLowerCase('tr-TR')+' belgen hazır.'},null,{force:true});
   setTimeout(function(){ licOpen(k); },1800); }
-const _licSchEnd=schEnd; schEnd=function(ok,why){ const L=SCH.cur, ex=EXAM.on&&L&&LIC2[EXAM.id].steps[EXAM.i]&&LIC2[EXAM.id].steps[EXAM.i].les===L.id; _licSchEnd(ok,why); if(!ex) return; if(ok) examNext(); else examFail(why||'aşama tamamlanamadı'); };
-const _licRaceFin=raceFinish; raceFinish=function(){ const R=RACE.def, t=RACE.t, ex=EXAM.on&&R&&LIC2[EXAM.id].steps[EXAM.i]&&LIC2[EXAM.id].steps[EXAM.i].race===R.id; _licRaceFin(); if(!ex) return;
-  if(t<=R.lim) examNext(); else examFail('süre '+fmtT(t)+' (sınır '+fmtT(R.lim)+')'); };
+schEnd=HOOK.wrap('schEnd','98c-licenses#_licSchEnd',function(_licSchEnd){ return function(ok,why){ const L=SCH.cur, ex=EXAM.on&&L&&LIC2[EXAM.id].steps[EXAM.i]&&LIC2[EXAM.id].steps[EXAM.i].les===L.id; _licSchEnd(ok,why); if(!ex) return; if(ok) examNext(); else examFail(why||'aşama tamamlanamadı'); }; },schEnd);
+raceFinish=HOOK.wrap('raceFinish','98c-licenses#_licRaceFin',function(_licRaceFin){ return function(){ const R=RACE.def, t=RACE.t, ex=EXAM.on&&R&&LIC2[EXAM.id].steps[EXAM.i]&&LIC2[EXAM.id].steps[EXAM.i].race===R.id; _licRaceFin(); if(!ex) return;
+  if(t<=R.lim) examNext(); else examFail('süre '+fmtT(t)+' (sınır '+fmtT(R.lim)+')'); }; },raceFinish);
 /* ---- career gating */
-const _licRank=rankLocked; rankLocked=function(id){ return _licRank(id)||!licOk(id); };
-const _licPre=preFlight; preFlight=function(from){ if(state==='menu'&&!licOk(selectedId)){ toast(licMsg(selectedId),'#ffc24a'); return; } return _licPre(from); };
+rankLocked=HOOK.wrap('rankLocked','98c-licenses#_licRank',function(_licRank){ return function(id){ return _licRank(id)||!licOk(id); }; },rankLocked);
+preFlight=HOOK.wrap('preFlight','98c-licenses#_licPre',function(_licPre){ return function(from){ if(state==='menu'&&!licOk(selectedId)){ toast(licMsg(selectedId),'#ffc24a'); return; } return _licPre(from); }; },preFlight);
 document.getElementById('btnPlay').addEventListener('click',function(e){ const v=VSEL?{id:VSEL.id,k:VSEL.g}:(HSEL?{id:HSEL,k:'heli'}:null); if(v&&!licOk(v.id,v.k)){ e.stopImmediatePropagation(); toast(licMsg(v.id,v.k),'#ffc24a'); } },true);
-const _licWalk=walkInteract; walkInteract=function(){ if(state==='walk'&&WALK.mode==='foot'&&!licExempt()){ let id=null,k=null;
+walkInteract=HOOK.wrap('walkInteract','98c-licenses#_licWalk',function(_licWalk){ return function(){ if(state==='walk'&&WALK.mode==='foot'&&!licExempt()){ let id=null,k=null;
     if(WALK.near==='boat'&&WALK.nearBoat){ id=WALK.nearBoat.id; k='boat'; } else if(WALK.near==='heli'&&WALK.nearHeli){ id=WALK.nearHeli.id; k='heli'; } else if(WALK.near==='car'){ const c=WALK.nearCar||WALK.car; if(c) id=c.K.id; } else if(WALK.near==='plane') id=WALK.nearId;
-    if(id&&!licOk(id,k)){ toast(licMsg(id,k),'#ffc24a'); return; } } return _licWalk(); };
-const _licMisLock=misLocked; misLocked=function(e){ if(_licMisLock(e)) return true; if(PLAY.mode!=='career'||!e) return false;
-  if(e.kind==='heli') return !licHas('heli'); if(e.kind==='race'&&e.R) return !licOk(e.R.ac,e.R.veh==='boat'?'boat':null); if(e.kind==='dyn'&&e.D&&e.D.veh==='car') return !licHas('ehliyet'); return false; };
+    if(id&&!licOk(id,k)){ toast(licMsg(id,k),'#ffc24a'); return; } } return _licWalk(); }; },walkInteract);
+misLocked=HOOK.wrap('misLocked','98c-licenses#_licMisLock',function(_licMisLock){ return function(e){ if(_licMisLock(e)) return true; if(PLAY.mode!=='career'||!e) return false;
+  if(e.kind==='heli') return !licHas('heli'); if(e.kind==='race'&&e.R) return !licOk(e.R.ac,e.R.veh==='boat'?'boat':null); if(e.kind==='dyn'&&e.D&&e.D.veh==='car') return !licHas('ehliyet'); return false; }; },misLocked);
 /* hangar: chips and start button show the missing licence */
-const _licPick=buildPicker; buildPicker=function(){ _licPick(); if(PLAY.mode!=='career') return; Array.prototype.forEach.call($('acChips').children,function(b){ const id=b.dataset.id||b.dataset.heli||b.dataset.v, k=b.dataset.v?pickGrp:(b.dataset.heli?'heli':null);
-  if(id&&!licOk(id,k)){ const s=b.querySelector('small'); if(s) s.textContent='🔒 '+LIC2[licFor(id,k)].n; } }); };
-const _licRef=refreshHangarUI; refreshHangarUI=function(){ _licRef(); if(PLAY.mode!=='career') return; const v=VSEL?{id:VSEL.id,k:VSEL.g}:(HSEL?{id:HSEL,k:'heli'}:{id:selectedId,k:null});
-  if(!licOk(v.id,v.k)){ const b=$('btnPlay'); b.textContent='🔒 '+LIC2[licFor(v.id,v.k)].n+' gerekli'; b.classList.add('locked'); } };
+buildPicker=HOOK.wrap('buildPicker','98c-licenses#_licPick',function(_licPick){ return function(){ _licPick(); if(PLAY.mode!=='career') return; Array.prototype.forEach.call($('acChips').children,function(b){ const id=b.dataset.id||b.dataset.heli||b.dataset.v, k=b.dataset.v?pickGrp:(b.dataset.heli?'heli':null);
+  if(id&&!licOk(id,k)){ const s=b.querySelector('small'); if(s) s.textContent='🔒 '+LIC2[licFor(id,k)].n; } }); }; },buildPicker);
+refreshHangarUI=HOOK.wrap('refreshHangarUI','98c-licenses#_licRef',function(_licRef){ return function(){ _licRef(); if(PLAY.mode!=='career') return; const v=VSEL?{id:VSEL.id,k:VSEL.g}:(HSEL?{id:HSEL,k:'heli'}:{id:selectedId,k:null});
+  if(!licOk(v.id,v.k)){ const b=$('btnPlay'); b.textContent='🔒 '+LIC2[licFor(v.id,v.k)].n+' gerekli'; b.classList.add('locked'); } }; },refreshHangarUI);
 /* ---- licences screen */
 function licOpen(hi){ const el=$('licUI'); if(!el) return; const p=licProfile(), have=p.lic2;
   $('licList').innerHTML=LIC2_ORDER.map(function(k){ const L=LIC2[k], got=have[k], need=L.need&&!have[L.need];
@@ -85,9 +85,9 @@ function licOpen(hi){ const el=$('licUI'); if(!el) return; const p=licProfile(),
   $('btnLicX').addEventListener('click',function(){ $('licUI').classList.add('hidden'); }); })();
 /* career menu: Eğitim → Ehliyet ve Sertifikalar */
 NAV_IC.lic='<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.4"/><path d="M5.5 16.5c.6-1.6 2-2.4 3.5-2.4s2.9.8 3.5 2.4M14 10h5M14 13h4"/>';
-const _licNav=navRender; navRender=function(){ _licNav(); if(NAV.level!=='career') return; const el=$('cNav'); if(!el) return; const h=el.innerHTML, key='data-act="c_school"', i=h.indexOf(key); if(i<0||h.indexOf('c_lic')>=0) return;
+navRender=HOOK.wrap('navRender','98c-licenses#_licNav',function(_licNav){ return function(){ _licNav(); if(NAV.level!=='career') return; const el=$('cNav'); if(!el) return; const h=el.innerHTML, key='data-act="c_school"', i=h.indexOf(key); if(i<0||h.indexOf('c_lic')>=0) return;
   const j=h.lastIndexOf('<button',i), n=Object.keys(licProfile().lic2).filter(function(k){ return LIC2[k]; }).length;
-  el.innerHTML=h.slice(0,j)+navBtn('c_lic','Ehliyet ve Sertifikalar',n+' / '+LIC2_ORDER.length+' belge · uygulamalı sınav','lic')+h.slice(j); tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); };
+  el.innerHTML=h.slice(0,j)+navBtn('c_lic','Ehliyet ve Sertifikalar',n+' / '+LIC2_ORDER.length+' belge · uygulamalı sınav','lic')+h.slice(j); tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
 NAV_D.c_lic=['KARİYER','Ehliyet ve Sertifikalar','Kariyerde her araç için belge gerekir: araç ehliyeti, tank sürücülüğü, kaptanlık, İHA, temel, jet ve savaş pilotluğu, helikopter pilotluğu. Uygulamalı sınavı geç, belgeyi al, aracı kullan.',[],'Belgeleri aç'];
-const _licAct=titleAct; titleAct=function(act){ if(state!=='menu') return; if(act==='c_lic'){ playMode('career'); return licOpen(); } return _licAct(act); };
+titleAct=HOOK.wrap('titleAct','98c-licenses#_licAct',function(_licAct){ return function(act){ if(state!=='menu') return; if(act==='c_lic'){ playMode('career'); return licOpen(); } return _licAct(act); }; },titleAct);
 Object.keys(LIC2).forEach(function(k){ MEDALS.push(['lic2_'+k,LIC2[k].n,LIC2[k].d,function(){ return !!licProfile().lic2[k]; }]); });

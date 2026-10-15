@@ -34,6 +34,6 @@ function txsShrink(){ if(SETTINGS.texShare===false) return 0; const lim=txsLimit
 function txsWatch(){ for(let i=TXS.links.length-1;i>=0;i--){ const l=TXS.links[i]; if(l.orig.version!==l.ov||l.canon.version!==l.cv){ l.users.forEach(function(u){ if(u[0][u[1]]===l.canon){ u[0][u[1]]=l.orig; u[0].needsUpdate=true; } }); l.orig.userData.txsOwn=true; l.orig.needsUpdate=true; TXS.links.splice(i,1); TXS.reverted=(TXS.reverted||0)+1; } }
   for(let i=TXS.shrunk.length-1;i>=0;i--){ const s=TXS.shrunk[i]; if(s.t.version!==s.v){ if(s.t.image!==s.full&&s.t.image.width<s.full.width){ /* the game redrew the original canvas: show it at full size */ s.t.image=s.full; s.t.needsUpdate=true; } s.t.userData.txsOwn=true; TXS.shrunk.splice(i,1); TXS.reverted=(TXS.reverted||0)+1; } } }
 function txsRun(){ try{ txsShare(); }catch(e){ console.warn('doku paylaşımı',e); } try{ txsShrink(); }catch(e){ console.warn('doku küçültme',e); } TXS.done=true; }
-const _txsCull=cullStep; cullStep=function(dt){ _txsCull(dt); TXS.t+=dt||0; if(TXS.t>1){ TXS.t=0; try{ txsWatch(); }catch(e){} } };
+cullStep=HOOK.wrap('cullStep','98zc-tex#_txsCull',function(_txsCull){ return function(dt){ _txsCull(dt); TXS.t+=dt||0; if(TXS.t>1){ TXS.t=0; try{ txsWatch(); }catch(e){} } }; },cullStep);
 setTimeout(function(){ if(!TXS.done) txsRun(); },2200);                                         /* before the static merge (2.5 s), so shared pictures merge */
 setTimeout(function(){ try{ txsShare(); txsShrink(); }catch(e){} },9000);   /* models and late props */

@@ -18,16 +18,16 @@ trafficRadius=function(){ return (DEV.mobile?[1200,1800,2500,3200]:[2000,3200,45
 treeDensity=function(){ return [0.35,0.7,1,1][gq('trees')]*(PERF2.lvl>=2?0.6:1); };
 perfLvlApply=function(){ if(typeof CULL!=='undefined') CULL.t=99; if(GFX.clouds&&GFX.cloudN) GFX.clouds.count=Math.floor(GFX.cloudN*[0.4,0.7,1,1][gq('clouds')]*(PERF2.lvl>=3?0.5:1)); };
 txsLimit=function(){ const t=gq('tex'); if(DEV.mobile) return [512,1024,1024,1024][t];   /* phones keep the V2.18 limit; only Düşük goes lower */ return [1024,2048,1e9,1e9][t]; };
-const _gdAQ=applyQuality; applyQuality=function(){ _gdAQ.apply(this,arguments);
+applyQuality=HOOK.wrap('applyQuality','98zf-gfx2#_gdAQ',function(_gdAQ){ return function(){ _gdAQ.apply(this,arguments);
   if(typeof CULL!=='undefined'){ CULL.px=CULL_PX[gq('detail')]*(DEV.mobile?1.3:1)*(PERF2.lvl>=2?1.6:1); CULL.t=99; }
   const td=treeDensity(); if(GFX.trees) GFX.trees.count=Math.floor(GFX.treeN*td); if(GFX.treeChunks) GFX.treeChunks.forEach(function(m){ m.count=Math.max(0,Math.floor(m.userData.full*td)); });
-  perfLvlApply(); try{ gdTexApply(); }catch(e){} };
+  perfLvlApply(); try{ gdTexApply(); }catch(e){} }; },applyQuality);
 /* texture quality can go both ways: when the limit changes, give the shrunk textures their full picture back, then shrink to the new limit */
 function gdTexApply(){ if(typeof TXS==='undefined'||!TXS.done||SETTINGS.texShare===false) return 0; const lim=txsLimit(); if(gdTexApply.lim===lim) return 0; gdTexApply.lim=lim; let back=0;
   for(let i=TXS.shrunk.length-1;i>=0;i--){ const s=TXS.shrunk[i]; s.t.image=s.full; s.t.needsUpdate=true; TXS.links.forEach(function(l){ if(l.canon===s.t) l.cv=s.t.version; }); TXS.shrunk.splice(i,1); back++; }
   TXS.halved=0; txsShrink(); return back; }
 /* fewer particles at lower effect quality */
-const _gdExp=explode; explode=function(pos,n,size){ return _gdExp(pos,Math.max(3,Math.round((n||0)*[0.4,0.7,1,1][gq('fx')])),size); };
+explode=HOOK.wrap('explode','98zf-gfx2#_gdExp',function(_gdExp){ return function(pos,n,size){ return _gdExp(pos,Math.max(3,Math.round((n||0)*[0.4,0.7,1,1][gq('fx')])),size); }; },explode);
 /* ---- live difference */
 function gdProbe(){ if(typeof renderer==='undefined'||!camera) return null; try{ if(typeof cullCollect==='function'){ cullCollect(); cullAll(); } }catch(e){} try{ terLodStep(true); }catch(e){}
   const sh=renderer.shadowMap.enabled; if(sh) renderer.shadowMap.needsUpdate=true; renderer.info.autoReset=false; renderer.info.reset(); const t=performance.now();
@@ -53,10 +53,10 @@ GD_KEYS.forEach(function(k){ const c=$(GD_IDS[k]); if(!c||!c.addEventListener) r
   c.addEventListener('click',function(e){ const b=e.target.closest('button[data-v]'); if(!b) return; const v=+b.dataset.v; SETTINGS.gd=SETTINGS.gd||{};
     if(v<0) delete SETTINGS.gd[k]; else SETTINGS.gd[k]=v; saveSettings(); applyQuality(); syncSettingsUI(); }); });
 const GD_INFO=['Düşük: en akıcı, zayıf telefonlar için','Orta: dengeli, çoğu telefon için','Yüksek: gölge ve efektler açık','Ultra: güçlü bilgisayarlar için, en uzak ayrıntı'];
-const _gdSync=syncSettingsUI; syncSettingsUI=function(){ _gdSync(); const c=$('setQ'); if(!c) return; const auto=!!SETTINGS.tierAuto, q=SETTINGS.quality||0, cu=gdCustom();
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98zf-gfx2#_gdSync',function(_gdSync){ return function(){ _gdSync(); const c=$('setQ'); if(!c) return; const auto=!!SETTINGS.tierAuto, q=SETTINGS.quality||0, cu=gdCustom();
   Array.prototype.forEach.call(c.children,function(b){ b.setAttribute('aria-pressed',String(auto?b.dataset.q==='auto':b.dataset.q===String(q))); });
   const i=$('setQInfo'); if(i) i.textContent=(cu?'Özel — ':'')+(auto?'Otomatik ('+['Düşük','Orta','Yüksek','Ultra'][q]+'): cihazına göre seçildi, FPS düşerse ayarlar kendiliğinden hafifler':GD_INFO[q])+(cu?' · kendi seçimlerin üstte; bir hazır ayara dokununca sıfırlanır':'');
   const g=SETTINGS.gd||{}; GD_KEYS.forEach(function(k){ const el=$(GD_IDS[k]); if(!el) return; const v=g[k]!=null?g[k]:-1; Array.prototype.forEach.call(el.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.v===v)); });
-    const h=el.querySelector('[data-v="-1"]'); if(h) h.textContent='Hazır ('+['D','O','Y','U'][q]+')'; }); };
+    const h=el.querySelector('[data-v="-1"]'); if(h) h.textContent='Hazır ('+['D','O','Y','U'][q]+')'; }); }; },syncSettingsUI);
 /* a search hit inside a closed group opens it */
 (function(){ const s=$('setSearch'); if(!s||!s.addEventListener) return; s.addEventListener('input',function(){ const q=s.value.trim(); ['gdMore','gdFix'].forEach(function(id){ const d=$(id); if(!d) return; if(q) d.open=!!d.querySelector('.srow:not(.nomatch)'); }); }); })();

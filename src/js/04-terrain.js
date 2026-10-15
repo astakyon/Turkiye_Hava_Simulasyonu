@@ -24,7 +24,9 @@ const PADS=[{id:'naval',x0:-1990,x1:-1500,z0:-4300,z1:-3150,y:2.7,f:380,hard:'w'
   {id:'marina',fr:{cx:2350,cz:1250,a:0.536},x0:-260,x1:40,z0:-290,z1:260,y:2.7,f:300,hard:'e'}];
 const DECKS=[];
 /* optional rotated frame `fr` {cx,cz,a}: local x = along (cos a, sin a), local z = along (−sin a, cos a) */
-function frLocal(fr,x,z){ if(!fr) return [x,z]; const dx=x-fr.cx, dz=z-fr.cz, c=Math.cos(fr.a), s=Math.sin(fr.a); return [dx*c+dz*s, -dx*s+dz*c]; }
+/* V2.24: returns one shared pair (every caller reads it at once) — terrainH/groundH run hundreds of times a frame */
+const FR_L=[0,0];
+function frLocal(fr,x,z){ if(!fr){ FR_L[0]=x; FR_L[1]=z; return FR_L; } if(fr.c==null){ fr.c=Math.cos(fr.a); fr.s=Math.sin(fr.a); } const dx=x-fr.cx, dz=z-fr.cz, c=fr.c, s=fr.s; FR_L[0]=dx*c+dz*s; FR_L[1]=-dx*s+dz*c; return FR_L; }
 function frWorld(fr,lx,lz){ const c=Math.cos(fr.a), s=Math.sin(fr.a); return [fr.cx+lx*c-lz*s, fr.cz+lx*s+lz*c]; }
 function padW(p,x,z){
   if(p.fr){ const l=frLocal(p.fr,x,z); x=l[0]; z=l[1]; } const hd=p.hard||'';

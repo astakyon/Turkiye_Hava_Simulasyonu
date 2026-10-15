@@ -16,16 +16,16 @@ function fxGradeAAShader(){ const F=THREE.FXAAShader, G=GRADE_SHADER; if(!F||!G)
   const first=L[3].replace('vec3 c=texture2D(tDiffuse,vUv).rgb;','vec3 c=gl_FragColor.rgb;'); if(first===L[3]) return null;
   const frag=aa+'\n'+uni+'\n'+L[1]+'\nvoid main(){ fxaaMain();\n'+first+'\n'+L.slice(4).join('\n');
   return {uniforms:Object.assign(THREE.UniformsUtils.clone(F.uniforms),THREE.UniformsUtils.clone(G.uniforms)), vertexShader:F.vertexShader, fragmentShader:frag}; }
-const _fp17Build=fxBuild; fxBuild=function(){ _fp17Build(); FX.merged=false; const c=FX.composer; if(!c||!FX.fxaa||!FX.grade||FX.fxaa===FX.grade||SETTINGS.fxMerge===false) return;
+fxBuild=HOOK.wrap('fxBuild','98zb-passes#_fp17Build',function(_fp17Build){ return function(){ _fp17Build(); FX.merged=false; const c=FX.composer; if(!c||!FX.fxaa||!FX.grade||FX.fxaa===FX.grade||SETTINGS.fxMerge===false) return;
   let sh=null; try{ sh=fxGradeAAShader(); }catch(e){ sh=null; } if(!sh) return;
   const P=c.passes, gi=P.indexOf(FX.grade), ai=P.indexOf(FX.fxaa); if(gi<0||ai!==gi+1) return;
   const comb=new THREE.ShaderPass(sh); comb.uniforms.uHdr.value=FX.grade.uniforms.uHdr.value; ['uVig','uSat','uCon'].forEach(function(k){ comb.uniforms[k].value=FX.grade.uniforms[k].value; });
-  P.splice(gi,2,comb); comb.renderToScreen=true; FX.grade=comb; FX.fxaa=comb; FX.merged=true; fxResize(); };
+  P.splice(gi,2,comb); comb.renderToScreen=true; FX.grade=comb; FX.fxaa=comb; FX.merged=true; fxResize(); }; },fxBuild);
 /* full-screen menus: no 3D drawing behind them */
 const MC17={w:0,h:0,skipped:0};
-const _mc17RF=renderFrame; renderFrame=function(dt){ if(typeof menuCovered==='function'&&menuCovered()&&!(typeof PT!=='undefined'&&PT.run)){ if(MC17.w===HW&&MC17.h===HH){ MC17.skipped++; return; } } MC17.w=HW; MC17.h=HH; _mc17RF(dt); };
+renderFrame=HOOK.wrap('renderFrame','98zb-passes#_mc17RF',function(_mc17RF){ return function(dt){ if(typeof menuCovered==='function'&&menuCovered()&&!(typeof PT!=='undefined'&&PT.run)){ if(MC17.w===HW&&MC17.h===HH){ MC17.skipped++; return; } } MC17.w=HW; MC17.h=HH; _mc17RF(dt); }; },renderFrame);
 /* sustained quality: stop climbing back after repeated step-downs */
-const _sq17Lad=perfLadder; perfLadder=function(){ if(PERF2.lock&&PERF2.good>=11) PERF2.good=0; const b=PERF2.lvl; _sq17Lad(); const now=performance.now();
+perfLadder=HOOK.wrap('perfLadder','98zb-passes#_sq17Lad',function(_sq17Lad){ return function(){ if(PERF2.lock&&PERF2.good>=11) PERF2.good=0; const b=PERF2.lvl; _sq17Lad(); const now=performance.now();
   if(PERF2.lvl>b){ PERF2.ups=(PERF2.ups||[]).filter(function(t){ return now-t<300000; }); PERF2.ups.push(now);
-    if(PERF2.ups.length>=3&&!PERF2.lock){ PERF2.lock=true; toast('Cihaz ısındığı için kalite bu oturumda sabitlendi (menüye dönünce sıfırlanır)','#b8ecff'); } } };
-const _sq17Title=enterTitle; enterTitle=function(){ PERF2.lock=false; PERF2.ups=[]; return _sq17Title.apply(this,arguments); };
+    if(PERF2.ups.length>=3&&!PERF2.lock){ PERF2.lock=true; toast('Cihaz ısındığı için kalite bu oturumda sabitlendi (menüye dönünce sıfırlanır)','#b8ecff'); } } }; },perfLadder);
+enterTitle=HOOK.wrap('enterTitle','98zb-passes#_sq17Title',function(_sq17Title){ return function(){ PERF2.lock=false; PERF2.ups=[]; return _sq17Title.apply(this,arguments); }; },enterTitle);

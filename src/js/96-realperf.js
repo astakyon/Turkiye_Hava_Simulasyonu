@@ -19,18 +19,18 @@ const REALP={
 function realOn(){ return SETTINGS.realp!==false; }
 function realCeil(id){ const r=REALP[id]; return realOn()&&r&&r.ceil?r.ceil:0; }
 function ceilK(){ const c=realCeil(activeId); if(!c||S.onGround) return 1; const y=S.pos.y; if(y<c*0.85) return 1; return clamp((c-y)/(c*0.15),0,1); }
-const _rpThrust=dmgThrust; dmgThrust=function(){ return _rpThrust()*ceilK(); };
+dmgThrust=HOOK.wrap('dmgThrust','96-realperf#_rpThrust',function(_rpThrust){ return function(){ return _rpThrust()*ceilK(); }; },dmgThrust);
 const RPF={warn:false};
-const _rpfUpd=update; update=function(dt){ _rpfUpd(dt); const c=realCeil(activeId); if(!c||state!=='play') return;
+update=HOOK.wrap('update','96-realperf#_rpfUpd',function(_rpfUpd){ return function(dt){ _rpfUpd(dt); const c=realCeil(activeId); if(!c||state!=='play') return;
   if(!RPF.warn&&S.pos.y>c*0.9){ RPF.warn=true; toast('Servis tavanına yaklaşıyorsun ('+Math.round(c).toLocaleString('tr-TR')+' m) — motor gücü düşüyor','#ffc24a'); }
-  if(RPF.warn&&S.pos.y<c*0.8) RPF.warn=false; };
+  if(RPF.warn&&S.pos.y<c*0.8) RPF.warn=false; }; },update);
 /* ---- hangar: real figures */
 function realRows(id){ const r=REALP[id]; if(!r) return []; const km=function(v){ return Math.round(v*3.6).toLocaleString('tr-TR')+' km/sa'; }, m=function(v){ return Math.round(v).toLocaleString('tr-TR')+' m'; };
   const L=[]; if(r.vmax) L.push(['Azami hız',(r.vmaxT?r.vmaxT+' · ':'')+km(r.vmax)]); if(r.cruise) L.push(['Seyir hızı',(r.cruiseT?r.cruiseT+' · ':'')+km(r.cruise)]);
   if(r.climb) L.push(['Tırmanma',r.climb+' m/s']); if(r.ceil) L.push(['Servis tavanı',m(r.ceil)]); if(r.endur) L.push(['Havada kalış',(r.endur%1?String(r.endur).replace('.',','):r.endur)+' saat']);
   if(r.range) L.push(['Menzil',r.range.toLocaleString('tr-TR')+' km']); if(r.load) L.push(['Faydalı yük',r.load.toLocaleString('tr-TR')+' kg']); return L; }
-const _rpPerf=perfHTML; perfHTML=function(id){ const h=_rpPerf(id), L=realRows(id);
+perfHTML=HOOK.wrap('perfHTML','96-realperf#_rpPerf',function(_rpPerf){ return function(id){ const h=_rpPerf(id), L=realRows(id);
   const body=L.length?L.map(function(x){ return '<span><i>'+x[0]+'</i> '+x[1]+'</span>'; }).join(''):'<span class="na">Envanterde sayısal performans verisi yok; oyun değerleri kullanılıyor.</span>';
-  return h+'<div class="realp" title="Kaynak: Defence Turk · Sistem Envanteri"><b>GERÇEK'+(realCeil(id)?' · tavan uygulanıyor':'')+'</b>'+body+'<small>Kaynak: Defence Turk</small></div>'; };
+  return h+'<div class="realp" title="Kaynak: Defence Turk · Sistem Envanteri"><b>GERÇEK'+(realCeil(id)?' · tavan uygulanıyor':'')+'</b>'+body+'<small>Kaynak: Defence Turk</small></div>'; }; },perfHTML);
 (function(){ const c=$('setRealP'); if(c) c.addEventListener('change',function(){ SETTINGS.realp=c.checked; saveSettings(); if(typeof refreshHangarUI==='function'&&state==='menu') refreshHangarUI(); }); })();
-const _rpSync=syncSettingsUI; syncSettingsUI=function(){ _rpSync(); const c=$('setRealP'); if(c) c.checked=realOn(); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','96-realperf#_rpSync',function(_rpSync){ return function(){ _rpSync(); const c=$('setRealP'); if(c) c.checked=realOn(); }; },syncSettingsUI);

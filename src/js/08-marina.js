@@ -111,7 +111,8 @@ function buildGulls(r){
   spots.forEach(function(s){ for(let k=0;k<s[1];k++) list.push({cx:s[0][0]+(r()-0.5)*s[2]*0.6,cz:s[0][1]+(r()-0.5)*s[2]*0.6,R:s[2]*(0.3+r()*0.7),h:14+r()*28,w:(0.08+r()*0.12)*(r()<0.5?-1:1),a:r()*6.3,ph:r()*6.3}); });
   const im=new THREE.InstancedMesh(geo,new THREE.MeshLambertMaterial({color:0xf4f4f0,side:THREE.DoubleSide}),list.length); im.frustumCulled=false; scene.add(im); MARINA.gulls=im; MARINA.gullD=list; gullStep(0);
 }
-function gullStep(dt){ const im=MARINA.gulls; if(!im) return; const mt=new THREE.Matrix4(), q=new THREE.Quaternion(), e=new THREE.Euler(), s=new THREE.Vector3(), p=new THREE.Vector3();
+const GULL_T={mt:new THREE.Matrix4(), q:new THREE.Quaternion(), e:new THREE.Euler(), s:new THREE.Vector3(), p:new THREE.Vector3()};   /* V2.24: reused every frame */
+function gullStep(dt){ const im=MARINA.gulls; if(!im) return; const G=GULL_T, mt=G.mt, q=G.q, e=G.e, s=G.s, p=G.p;
   MARINA.gullD.forEach(function(b,i){ b.a+=b.w*dt; const R=b.R*(1+0.15*Math.sin(b.a*2+b.ph)), x=b.cx+Math.cos(b.a)*R, z=b.cz+Math.sin(b.a)*R, y=b.h+Math.sin(b.a*3+b.ph)*3;
     const tx=-Math.sin(b.a)*Math.sign(b.w), tz=Math.cos(b.a)*Math.sign(b.w), flap=Math.sin(T*9+b.ph)>-0.2?Math.sin(T*9+b.ph):1;
     e.set(0,Math.atan2(-tx,-tz),-Math.sign(b.w)*0.35); mt.compose(p.set(x,y,z),q.setFromEuler(e),s.set(1.6,1.6*flap,1.6)); im.setMatrixAt(i,mt); });

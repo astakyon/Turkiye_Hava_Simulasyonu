@@ -125,7 +125,7 @@ function callOpen(){
   $('callUI').classList.remove('hidden'); CALL.open=true; callRender(); WALK.sx=WALK.sy=0;
   setTimeout(function(){ const b=$('callGo'); if(b) try{ b.focus(); }catch(e){} },0); }
 function callClose(){ const el=$('callUI'); if(el) el.classList.add('hidden'); CALL.open=false; }
-const _callCloseModals=closeModals; closeModals=function(){ _callCloseModals(); CALL.open=false; };
+closeModals=HOOK.wrap('closeModals','75-call#_callCloseModals',function(_callCloseModals){ return function(){ _callCloseModals(); CALL.open=false; }; },closeModals);
 function callGo(){
   const id=CALL_TABS[CALL.tab].ids[CALL.sel]; if(callLocked(id)){ callHub(); return; }
   callClose();
@@ -166,16 +166,16 @@ function callPickCancel(){ MAPV.pick=false; CALL.pickKind=null; CALL.pickPt=null
   const tb=$('wCall'); if(tb) tb.addEventListener('pointerdown',function(e){ e.preventDefault(); callOpen(); });
 })();
 /* no walking while the menu is up */
-const _callWalkInput=walkInput; walkInput=function(){ if(callIsOpen()) return {f:0,r:0}; return _callWalkInput(); };
+walkInput=HOOK.wrap('walkInput','75-call#_callWalkInput',function(_callWalkInput){ return function(){ if(callIsOpen()) return {f:0,r:0}; return _callWalkInput(); }; },walkInput);
 /* touch button visibility, HUD line for deliveries in progress, map markers */
-const _callTouch=updateWalkTouch; updateWalkTouch=function(){ _callTouch(); const b=$('wCall'); if(b) b.classList.toggle('hidden',WALK.mode!=='foot'); };
-const _callHUD=drawWalkHUD; drawWalkHUD=function(){ _callHUD(); const L=CALL.jobs.filter(function(J){ return !J.done; }); if(!L.length) return;
+updateWalkTouch=HOOK.wrap('updateWalkTouch','75-call#_callTouch',function(_callTouch){ return function(){ _callTouch(); const b=$('wCall'); if(b) b.classList.toggle('hidden',WALK.mode!=='foot'); }; },updateWalkTouch);
+drawWalkHUD=HOOK.wrap('drawWalkHUD','75-call#_callHUD',function(_callHUD){ return function(){ _callHUD(); const L=CALL.jobs.filter(function(J){ return !J.done; }); if(!L.length) return;
   const s=clamp(Math.min(HW,HH)/760,0.7,1.5); hx.save(); hx.textAlign='right'; hx.textBaseline='middle'; hx.font='700 '+Math.round(13*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.shadowColor='rgba(0,0,0,.7)'; hx.shadowBlur=4;
   L.forEach(function(J,i){ const c=J.c, d=Math.round(Math.hypot(J.tx-WALK.pos.x,J.tz-WALK.pos.z)); hx.fillStyle='#ffb25a';
     hx.fillText('LOJİSTİK · '+c.K.n.toLocaleUpperCase('tr-TR')+' · '+(J.mode==='drop'?'PARAŞÜT '+Math.max(0,Math.round(c.y-groundH(J.tx,J.tz)))+' m':'YOLDA '+Math.round(Math.hypot(J.tx-c.x,J.tz-c.z))+' m')+(d>60?' · '+d+' m uzakta':''), HW-Math.round(16*s), Math.round((WALK.tvis?64:22)*s)+i*Math.round(18*s)); });
-  hx.restore(); };
-const _callDrawMap=drawMap; drawMap=function(x,W,H,mini){ _callDrawMap(x,W,H,mini);
+  hx.restore(); }; },drawWalkHUD);
+drawMap=HOOK.wrap('drawMap','75-call#_callDrawMap',function(_callDrawMap){ return function(x,W,H,mini){ _callDrawMap(x,W,H,mini);
   x.save(); CALL.list.forEach(function(c){ const p=mapToScreen(c.x,c.z,W,H); x.fillStyle='#ffb25a'; x.strokeStyle='#08121c'; x.lineWidth=1.5; x.beginPath(); x.rect(p[0]-(mini?2.5:4),p[1]-(mini?2.5:4),mini?5:8,mini?5:8); x.fill(); x.stroke(); });
   if(!mini&&MAPV.pick&&CALL.pickPt){ const p=mapToScreen(CALL.pickPt[0],CALL.pickPt[1],W,H); x.strokeStyle='#ffb25a'; x.lineWidth=2.5; x.beginPath(); x.arc(p[0],p[1],11,0,6.3); x.moveTo(p[0]-16,p[1]); x.lineTo(p[0]+16,p[1]); x.moveTo(p[0],p[1]-16); x.lineTo(p[0],p[1]+16); x.stroke(); }
-  x.restore(); };
-const _callCloseMap=closeMap; closeMap=function(){ if(MAPV.pick){ MAPV.pick=false; CALL.pickKind=null; CALL.pickPt=null; } _callCloseMap(); };
+  x.restore(); }; },drawMap);
+closeMap=HOOK.wrap('closeMap','75-call#_callCloseMap',function(_callCloseMap){ return function(){ if(MAPV.pick){ MAPV.pick=false; CALL.pickKind=null; CALL.pickPt=null; } _callCloseMap(); }; },closeMap);

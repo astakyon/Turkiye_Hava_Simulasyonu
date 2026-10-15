@@ -83,8 +83,9 @@ function buildLandmarks(){
   [[-6080,5720,140],[9310,8002,80],[10700,-10500,80],[4300,-5465,120],[6700,-5050,60]].forEach(function(c){ const pts=[]; for(let x=c[0]-c[2];x<=c[0]+c[2];x+=20) for(let z=c[1]-c[2];z<=c[1]+c[2];z+=20) pts.push([x,z]); clearTreesNear(pts,12); });
   L.built=true; landmarksStep(0);
 }
+const LMK_T={mt:new THREE.Matrix4(), q:new THREE.Quaternion(), qa:new THREE.Quaternion(), s1:new THREE.Vector3(1,1,1), p:new THREE.Vector3(), Z:new THREE.Vector3(0,0,1)};   /* V2.24: temporaries reused every frame */
 function landmarksStep(dt){
-  const L=LMK; if(!L.built) return; const mt=new THREE.Matrix4(), q=new THREE.Quaternion(), qa=new THREE.Quaternion(), s1=new THREE.Vector3(1,1,1), p=new THREE.Vector3(), Z=new THREE.Vector3(0,0,1);
+  const L=LMK; if(!L.built) return; const mt=LMK_T.mt, q=LMK_T.q, qa=LMK_T.qa, s1=LMK_T.s1, p=LMK_T.p, Z=LMK_T.Z;
   if(L.rotors){ L.rotorD.forEach(function(t,i){ t.a+=t.w*dt; q.setFromAxisAngle(UP,L.yaw); qa.setFromAxisAngle(Z,t.a); q.multiply(qa); mt.compose(p.set(t.x-3.6*Math.sin(L.yaw),t.y,t.z-3.6*Math.cos(L.yaw)),q,s1); L.rotors.setMatrixAt(i,mt); }); L.rotors.instanceMatrix.needsUpdate=true; }
   if(L.gondola&&L.cabM){ const G=L.gondola, dx=-(G.t[1]-G.b[1]), dz=(G.t[0]-G.b[0]), dl=Math.hypot(dx,dz), hd=Math.atan2(G.t[0]-G.b[0],G.t[1]-G.b[1]);
     L.cabins.forEach(function(c,i){ c.u=(c.u+dt*0.004*(c.side>0?1:-1)+1)%1; const x=G.b[0]+(G.t[0]-G.b[0])*c.u+dx/dl*c.side, z=G.b[1]+(G.t[1]-G.b[1])*c.u+dz/dl*c.side, y=G.yb+(G.yt-G.yb)*c.u;

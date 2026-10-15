@@ -86,7 +86,7 @@ function alWalkers(){
     AL.walkers.push({P:P,s:r()*P.len,dir:r()<0.5?1:-1,v:1.1+r()*0.6,side:r()<0.5?-1:1,off:5.2+r()*1.2,i:0,c:i%geos.length,ph:r()*6}); }
   geos.forEach(function(g,ci){ const n=AL.walkers.filter(function(w){ return w.c===ci; }).length; const im=new THREE.InstancedMesh(g,AL_MAT,Math.max(1,n)); im.frustumCulled=false; im.userData.noCull=true; im.userData.noChunk=true; im.castShadow=false; scene.add(im); AL.wmesh.push(im); }); }
 const alM=new THREE.Matrix4(), alQ=new THREE.Quaternion(), alS=new THREE.Vector3(1,1,1), alP=new THREE.Vector3(), alU=new THREE.Vector3(0,1,0);
-function alWalkStep(dt){ if(!AL.wmesh.length) return; const idx=AL.wmesh.map(function(){ return 0; }), cp=camera.position;
+function alWalkStep(dt){ if(!AL.wmesh.length) return; const idx=AL.widx||(AL.widx=[]); for(let i=0;i<AL.wmesh.length;i++) idx[i]=0; const cp=camera.position;
   for(let k=0;k<AL.walkers.length;k++){ const w=AL.walkers[k], P=w.P; w.s+=w.dir*w.v*dt; if(w.s>P.len-2){ w.s=P.len-2; w.dir=-1; } else if(w.s<2){ w.s=2; w.dir=1; }
     while(w.i<P.L.length-2&&P.L[w.i+1]<w.s) w.i++; while(w.i>0&&P.L[w.i]>w.s) w.i--;
     const a=P.pts[w.i], b=P.pts[w.i+1], seg=P.L[w.i+1]-P.L[w.i]||1, u=(w.s-P.L[w.i])/seg, cx=a[0]+(b[0]-a[0])*u, cz=a[1]+(b[1]-a[1])*u, fx=(b[0]-a[0])/seg, fz=(b[1]-a[1])/seg;
@@ -111,6 +111,6 @@ function airLifeStep(dt){
   alWalkStep(d); alCrewStep(d); }
 /* settings + map */
 (function(){ const s=$('setLife'); if(s) s.addEventListener('change',function(){ SETTINGS.life=s.checked; saveSettings(); }); })();
-const _alSync=syncSettingsUI; syncSettingsUI=function(){ _alSync(); const s=$('setLife'); if(s) s.checked=!!SETTINGS.life; };
-const _alMap=drawMap; drawMap=function(x,W,H,mini){ _alMap(x,W,H,mini); if(!AL.ai.length) return; x.save(); x.fillStyle='#e8f4ff'; x.strokeStyle='#08121c'; x.lineWidth=1;
-  AL.ai.forEach(function(a){ const p=mapToScreen(a.x,a.z,W,H); x.beginPath(); x.arc(p[0],p[1],mini?2:3,0,6.3); x.fill(); x.stroke(); }); x.restore(); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','78-airlife#_alSync',function(_alSync){ return function(){ _alSync(); const s=$('setLife'); if(s) s.checked=!!SETTINGS.life; }; },syncSettingsUI);
+drawMap=HOOK.wrap('drawMap','78-airlife#_alMap',function(_alMap){ return function(x,W,H,mini){ _alMap(x,W,H,mini); if(!AL.ai.length) return; x.save(); x.fillStyle='#e8f4ff'; x.strokeStyle='#08121c'; x.lineWidth=1;
+  AL.ai.forEach(function(a){ const p=mapToScreen(a.x,a.z,W,H); x.beginPath(); x.arc(p[0],p[1],mini?2:3,0,6.3); x.fill(); x.stroke(); }); x.restore(); }; },drawMap);

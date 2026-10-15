@@ -11,7 +11,10 @@ function resize(){
 window.addEventListener('resize',function(){ resize(); if(typeof refreshTitle==='function'&&state==='menu'&&menuMode==='title') refreshTitle(); }); resize();
 
 function ln(x1,y1,x2,y2){ hx.beginPath(); hx.moveTo(x1,y1); hx.lineTo(x2,y2); hx.stroke(); }
-function tx(s,x,y,size,align,color){ hx.font='600 '+(size*sc)+'px '+FONT; hx.textAlign=align||'center'; hx.fillStyle=color||C; hx.fillText(s,x,y); }
+/* V2.24: font strings are built once per size (the HUD draws ~60 texts a frame) */
+const TXF={};
+function txFont(px){ return TXF[px]||(TXF[px]='600 '+px+'px '+FONT); }
+function tx(s,x,y,size,align,color){ hx.font=txFont(size*sc); hx.textAlign=align||'center'; hx.fillStyle=color||C; hx.fillText(s,x,y); }
 const sv=new THREE.Vector3(), sv2=new THREE.Vector3(), fpV=new THREE.Vector3();
 function toScreen(p){
   sv.copy(p).sub(camera.position); const front=sv.dot(camFwd)>0;

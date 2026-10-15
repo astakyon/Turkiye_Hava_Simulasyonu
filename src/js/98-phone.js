@@ -20,12 +20,12 @@ function gyroStart(){ const go=function(){ window.addEventListener('deviceorient
 function gyroStop(){ window.removeEventListener('deviceorientation',gyroOnEvt); GYRO.on=false; GYRO.roll=GYRO.pitch=0; }
 function gyroStep(){ if(!GYRO.on||!GYRO.ok||GYRO.r0==null){ GYRO.roll=GYRO.pitch=0; return; } const ax=gyroAxes(GYRO.beta,GYRO.gamma);
   let dr=ax[0]-GYRO.r0, dp=ax[1]-GYRO.p0; dr=((dr+540)%360)-180; dp=((dp+540)%360)-180; GYRO.roll=gyroMap(dr); GYRO.pitch=gyroMap(dp)*(SETTINGS.gyroInv?-1:1); }
-const _gyPoll=pollPad; pollPad=function(){ _gyPoll(); gyroStep(); if(GYRO.on&&state==='play'&&!(typeof TOUCH!=='undefined'&&(TOUCH.roll||TOUCH.pitch))){ PAD.roll=clamp((PAD.roll||0)+GYRO.roll,-1,1); PAD.pitch=clamp((PAD.pitch||0)+GYRO.pitch,-1,1); } };
+pollPad=HOOK.wrap('pollPad','98-phone#_gyPoll',function(_gyPoll){ return function(){ _gyPoll(); gyroStep(); if(GYRO.on&&state==='play'&&!(typeof TOUCH!=='undefined'&&(TOUCH.roll||TOUCH.pitch))){ PAD.roll=clamp((PAD.roll||0)+GYRO.roll,-1,1); PAD.pitch=clamp((PAD.pitch||0)+GYRO.pitch,-1,1); } }; },pollPad);
 /* ---- haptics on phones */
 function hapticOK(){ return SETTINGS.rumble!==false&&typeof navigator!=='undefined'&&typeof navigator.vibrate==='function'&&(typeof DEV==='undefined'||DEV.mobile||('ontouchstart' in window)); }
 const HAPT={last:0};
-const _hRumble=rumble; rumble=function(ms,weak,strong){ _hRumble(ms,weak,strong); if(!hapticOK()) return; const now=performance.now(); if(now-HAPT.last<60) return; HAPT.last=now;
-  try{ navigator.vibrate(Math.round(clamp((ms||40)*Math.max(weak||0,strong||0,0.3),8,400))); }catch(e){} };
+rumble=HOOK.wrap('rumble','98-phone#_hRumble',function(_hRumble){ return function(ms,weak,strong){ _hRumble(ms,weak,strong); if(!hapticOK()) return; const now=performance.now(); if(now-HAPT.last<60) return; HAPT.last=now;
+  try{ navigator.vibrate(Math.round(clamp((ms||40)*Math.max(weak||0,strong||0,0.3),8,400))); }catch(e){} }; },rumble);
 /* ---- save backup */
 const SAVE_KEYS=/^(ayy-|kaan-|ayyildiz|kaan_)/i;
 function saveCollect(){ const d={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(SAVE_KEYS.test(k)) d[k]=localStorage.getItem(k); } }catch(e){} return d; }
@@ -55,6 +55,6 @@ function saveDownload(){ const o=saveExport(), blob=new Blob([JSON.stringify(o,n
   const fb=$('btnSaveOpen'); if(fb) fb.addEventListener('click',function(){ $('saveFile').click(); });
   const ta=$('saveTxt'); if(ta) ta.addEventListener('keydown',function(e){ e.stopPropagation(); });
   if(SETTINGS.gyro) setTimeout(gyroStart,500); })();
-const _phSync=syncSettingsUI; syncSettingsUI=function(){ _phSync(); const g=$('setGyro'); if(g) g.checked=!!SETTINGS.gyro; const iv=$('setGyroInv'); if(iv) iv.checked=!!SETTINGS.gyroInv;
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98-phone#_phSync',function(_phSync){ return function(){ _phSync(); const g=$('setGyro'); if(g) g.checked=!!SETTINGS.gyro; const iv=$('setGyroInv'); if(iv) iv.checked=!!SETTINGS.gyroInv;
   const sv=$('setGyroSens'); if(sv) Array.prototype.forEach.call(sv.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.f===(SETTINGS.gyroFull||25))); });
-  const n=$('saveInfo'); if(n){ const c=Object.keys(saveCollect()).length; n.textContent='Bu cihazda '+c+' kayıt öğesi var'+(typeof ACC!=='undefined'&&ACC.user?' · hesabın bulutta da kayıtlı':' · misafir oyuncu (yalnızca bu tarayıcıda)'); } };
+  const n=$('saveInfo'); if(n){ const c=Object.keys(saveCollect()).length; n.textContent='Bu cihazda '+c+' kayıt öğesi var'+(typeof ACC!=='undefined'&&ACC.user?' · hesabın bulutta da kayıtlı':' · misafir oyuncu (yalnızca bu tarayıcıda)'); } }; },syncSettingsUI);

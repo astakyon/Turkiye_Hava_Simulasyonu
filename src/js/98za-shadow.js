@@ -13,10 +13,10 @@ function shadowDefaultLevel(){ const q=SETTINGS.quality||0; if(DEV.mobile) retur
 function shadowLevel(){ const s=SETTINGS.shadows; if(s===false||s===0||s==='0') return 0; if(s===true) return shadowDefaultLevel()||2; if(s==null) return shadowDefaultLevel(); return Math.max(0,Math.min(3,+s||0)); }
 shadowsOn=function(){ return shadowLevel()>0; };
 const SHQ_SIZE=[0,1024,2048,4096];
-const _shApply=applyShadows; applyShadows=function(){ _shApply(); const lv=shadowLevel(); if(!lv||!renderer.shadowMap.enabled) return;
+applyShadows=HOOK.wrap('applyShadows','98za-shadow#_shApply',function(_shApply){ return function(){ _shApply(); const lv=shadowLevel(); if(!lv||!renderer.shadowMap.enabled) return;
   const n=DEV.mobile?Math.min(2048,SHQ_SIZE[lv]):SHQ_SIZE[lv]; if(sunLight.shadow.mapSize.x!==n){ sunLight.shadow.mapSize.set(n,n); if(sunLight.shadow.map){ sunLight.shadow.map.dispose(); sunLight.shadow.map=null; } }
   const type=(lv>=3&&!DEV.mobile)?THREE.PCFSoftShadowMap:THREE.PCFShadowMap; if(renderer.shadowMap.type!==type){ renderer.shadowMap.type=type; scene.traverse(function(o){ if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(function(m){ m.needsUpdate=true; }); }); }
-  shSmallCasters(); renderer.shadowMap.needsUpdate=true; };
+  shSmallCasters(); renderer.shadowMap.needsUpdate=true; }; },applyShadows);
 /* small parts do not cast (the player's aircraft keeps all its shadows) */
 function shSmallCasters(){ let pg=null; try{ pg=planeGroup; }catch(e){} let n=0;
   scene.traverse(function(o){ if(!o.isMesh||!o.castShadow||o.isInstancedMesh) return; let p=o; while(p){ if(p===pg) return; p=p.parent; }
@@ -30,13 +30,13 @@ function shNeed(){ SHU.n++; if(typeof PT!=='undefined'&&PT.run) return true;   /
   if(state==='walk') return true;
   if(state==='play'){ let agl=999; try{ agl=S.pos.y-Math.max(0,groundH(S.pos.x,S.pos.z)); }catch(e){} if(agl<300||S.onGround) return true; }
   return SHU.n%4===0; }
-const _shFollow=shadowFollow; shadowFollow=function(){ if(!renderer.shadowMap.enabled){ SHU.upd=true; return; } SHU.upd=SETTINGS.shadowEvery===true||shNeed(); if(SHU.upd) _shFollow(); };
-const _shRF=renderFrame; renderFrame=function(dt){ if(renderer.shadowMap.enabled){ renderer.shadowMap.autoUpdate=false; if(SHU.upd){ renderer.shadowMap.needsUpdate=true; SHU.drawn++; } else SHU.skipped++; } _shRF(dt); };
+shadowFollow=HOOK.wrap('shadowFollow','98za-shadow#_shFollow',function(_shFollow){ return function(){ if(!renderer.shadowMap.enabled){ SHU.upd=true; return; } SHU.upd=SETTINGS.shadowEvery===true||shNeed(); if(SHU.upd) _shFollow(); }; },shadowFollow);
+renderFrame=HOOK.wrap('renderFrame','98za-shadow#_shRF',function(_shRF){ return function(dt){ if(renderer.shadowMap.enabled){ renderer.shadowMap.autoUpdate=false; if(SHU.upd){ renderer.shadowMap.needsUpdate=true; SHU.drawn++; } else SHU.skipped++; } _shRF(dt); }; },renderFrame);
 /* small-caster pass: after merging (2.5 s) and baking (4 s), then every 5 s for rebuilt cells / models */
-const _shCull=cullStep; cullStep=function(dt){ _shCull(dt); SHU.t=(SHU.t||0)+(dt||0); if(SHU.t>5){ SHU.t=0; try{ if(renderer.shadowMap.enabled) shSmallCasters(); }catch(e){} } };
+cullStep=HOOK.wrap('cullStep','98za-shadow#_shCull',function(_shCull){ return function(dt){ _shCull(dt); SHU.t=(SHU.t||0)+(dt||0); if(SHU.t>5){ SHU.t=0; try{ if(renderer.shadowMap.enabled) shSmallCasters(); }catch(e){} } }; },cullStep);
 /* settings row: four levels */
 (function(){ const c=$('setShadow'); if(!c||!document.createElement) return;
   c.innerHTML='<button type="button" data-s="0">Kapalı</button><button type="button" data-s="1">Düşük</button><button type="button" data-s="2">Orta</button><button type="button" data-s="3">Yüksek</button>';
   c.addEventListener('click',function(e){ const b=e.target.closest('button[data-s]'); if(!b) return; e.stopImmediatePropagation(); SETTINGS.shadows=+b.dataset.s; saveSettings(); applyShadows(); syncSettingsUI(); },true);
   const sm=c.closest&&c.closest('.srow'), s=sm&&sm.querySelector('small'); if(s) s.textContent='Düşük: 1024 · Orta: 2048 · Yüksek: 4096 ve yumuşak kenar (bilgisayar). Telefonda varsayılan kapalı; açınca FPS düşebilir'; })();
-const _shSync=syncSettingsUI; syncSettingsUI=function(){ _shSync(); const c=$('setShadow'); if(c) Array.prototype.forEach.call(c.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.s===shadowLevel())); }); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98za-shadow#_shSync',function(_shSync){ return function(){ _shSync(); const c=$('setShadow'); if(c) Array.prototype.forEach.call(c.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.s===shadowLevel())); }); }; },syncSettingsUI);

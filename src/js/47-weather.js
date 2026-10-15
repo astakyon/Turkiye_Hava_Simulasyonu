@@ -49,7 +49,7 @@ function wxPrecip(dt){
 }
 /* ---- sky, fog and light on top of the time of day */
 const wxGrey=new THREE.Color(), wxTmp=new THREE.Color();
-const _wxTod=todApply; todApply=function(h){ _wxTod(h); wxTint(); };
+todApply=HOOK.wrap('todApply','47-weather#_wxTod',function(_wxTod){ return function(h){ _wxTod(h); wxTint(); }; },todApply);
 function wxTint(){
   const c=WX.cur, d=c.dark, f=c.fog; if(d<0.01&&f<0.01&&WX.flash<=0) return;
   const nk=TOD.nightK||0, gl=0.66-d*0.32; wxGrey.setRGB(gl,gl*1.04,gl*1.1).multiplyScalar(1-nk*0.8); if(c.snow>0.2) wxGrey.lerp(wxTmp.setRGB(0.82,0.84,0.88).multiplyScalar(1-nk*0.8),c.snow*0.6);
@@ -82,8 +82,8 @@ function wxAir(dt){ if(S.crashed||S.onGround) return; wxVec(wxW); const g=wxGust
   wxE.set(n1*tb*0.12*dt,n3*tb*0.04*dt,n2*tb*0.18*dt,'YXZ'); wxQ.setFromEuler(wxE); S.q.multiply(wxQ).normalize(); S.pos.y+=(n2+n3)*tb*0.9*dt; }
 function wxHeli(dt){ const H=HELI.cur; if(!H||H.ground||H.crashT>0) return; wxVec(wxW); const g=wxGust(); H.x+=wxW.x*g*0.7*dt; H.z+=wxW.z*g*0.7*dt;
   const tb=WX.cur.turb; if(tb>0.02){ H.roll+=Math.sin(T*5.3)*tb*0.05*dt*10; H.pitch+=Math.sin(T*4.1+1)*tb*0.04*dt*10; H.y+=Math.sin(T*3.7)*tb*0.6*dt; } }
-const _wxUpd=update; update=function(dt){ _wxUpd(dt); if(state==='play'&&!(typeof EJ!=='undefined'&&EJ.on)) wxAir(dt); };
-const _wxHeli=heliStep; heliStep=function(dt){ _wxHeli(dt); wxHeli(dt); };
+update=HOOK.wrap('update','47-weather#_wxUpd',function(_wxUpd){ return function(dt){ _wxUpd(dt); if(state==='play'&&!(typeof EJ!=='undefined'&&EJ.on)) wxAir(dt); }; },update);
+heliStep=HOOK.wrap('heliStep','47-weather#_wxHeli',function(_wxHeli){ return function(dt){ _wxHeli(dt); wxHeli(dt); }; },heliStep);
 /* radio wind call follows the weather */
 windTxt=function(){ const k=Math.round(WX.cur.wind*1.944*wxGust()); return String(Math.round(WX.dir/10)*10||360).padStart(3,'0')+' derece, '+k+' knot'; };
 /* ---- per frame */
@@ -108,8 +108,8 @@ function visStep(){ const m=(state==='play'||state==='walk'||state==='paused'||s
 window.addEventListener('keydown',function(e){ if(e.repeat||(state!=='play'&&state!=='walk')||(typeof anyModalOpen==='function'&&anyModalOpen())) return; if(isKey(e,'gen','vision')){ e.preventDefault(); visCycle(); } });
 (function(){ const b=$('tVis'); if(b) b.addEventListener('pointerdown',function(e){ e.preventDefault(); visCycle(); }); const w=$('wVis'); if(w) w.addEventListener('pointerdown',function(e){ e.preventDefault(); visCycle(); });
   const s=$('setWx'); if(s) s.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; wxSet(b.dataset.w); syncSettingsUI(); }); })();
-const _wxSync=syncSettingsUI; syncSettingsUI=function(){ _wxSync(); const s=$('setWx'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.w===(SETTINGS.wx||'clear'))); }); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','47-weather#_wxSync',function(_wxSync){ return function(){ _wxSync(); const s=$('setWx'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.w===(SETTINGS.wx||'clear'))); }); }; },syncSettingsUI);
 /* HUD: wind line under the fuel gauge (flight) */
-const _wxHealth=hudHealth; hudHealth=function(x,y){ _wxHealth(x,y); if(WX.cur.wind<5&&WX.cur.turb<0.2&&WX.vis==='off') return;
+hudHealth=HOOK.wrap('hudHealth','47-weather#_wxHealth',function(_wxHealth){ return function(x,y){ _wxHealth(x,y); if(WX.cur.wind<5&&WX.cur.turb<0.2&&WX.vis==='off') return;
   const k=Math.round(WX.cur.wind*1.944*wxGust()), by=y+10*sc+13*sc+24*sc+7*sc+26*sc;
-  tx('RÜZGÂR '+String(Math.round(WX.dir/10)*10||360).padStart(3,'0')+'° / '+k+' kt'+(WX.cur.turb>0.3?' · TÜRBÜLANS':'')+(WX.vis!=='off'?' · '+(WX.vis==='nvg'?'NVG':'FLIR'):''),x,TOUCH.vis?by:by+(typeof S!=='undefined'&&(S.efire>0||S.leak>0||S.eng>0||S.wingL>0||S.wingR>0||S.fuel<0.2)?80*sc:0),11,'left',CD); };
+  tx('RÜZGÂR '+String(Math.round(WX.dir/10)*10||360).padStart(3,'0')+'° / '+k+' kt'+(WX.cur.turb>0.3?' · TÜRBÜLANS':'')+(WX.vis!=='off'?' · '+(WX.vis==='nvg'?'NVG':'FLIR'):''),x,TOUCH.vis?by:by+(typeof S!=='undefined'&&(S.efire>0||S.leak>0||S.eng>0||S.wingL>0||S.wingR>0||S.fuel<0.2)?80*sc:0),11,'left',CD); }; },hudHealth);

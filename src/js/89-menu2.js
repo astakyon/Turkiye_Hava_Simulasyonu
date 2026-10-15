@@ -32,7 +32,7 @@ rankLocked=function(id){ if(PLAY.mode!=='career'||SETTINGS.rankLocks===false) re
 lockedAt=function(need){ if(PLAY.mode!=='career'||SETTINGS.rankLocks===false) return false; return (accProfile().rank||0)<need; };
 callLocked=function(id){ if(PLAY.mode!=='career'||SETTINGS.rankLocks===false) return false; const need=VEH_RANK[id]; return need!=null&&(accProfile().rank||0)<need; };
 /* quick play earns nothing */
-const _m2Add=careerAdd; careerAdd=function(xp,patch,why){ if(PLAY.mode==='quick') return; return _m2Add(xp,patch,why); };
+careerAdd=HOOK.wrap('careerAdd','89-menu2#_m2Add',function(_m2Add){ return function(xp,patch,why){ if(PLAY.mode==='quick') return; return _m2Add(xp,patch,why); }; },careerAdd);
 /* ---- detail panel and actions */
 const NAV_D={
   start:['OYNA','Başla','Hızlı oyun: hemen uç, gez ya da hangarı incele — puan kazandırmaz, her şey açık. Kariyer: görevler, eğitim ve ilerleme.',[],'Seç'],
@@ -45,9 +45,9 @@ const NAV_D={
   c_walk:['KARİYER','Serbest Gezi','Adayı kariyer modunda gez: uçuş, iniş, gemi inişi ve keşif tecrübe puanı kazandırır.',[],'▶ Gezmeye başla'],
   c_hangar:['KARİYER','Hangar','Kariyer hangarı: rütbene göre açılmış uçaklar ve boyalar. Kilitli olanların yanında gereken rütbe yazar.',[],'Hangara git'],
   back:['MENÜ','Geri','Bir önceki menüye dön.',[],'Geri']};
-const _m2Detail=titleDetail; titleDetail=function(act){ const d=NAV_D[act]; if(!d) return _m2Detail(act); const el=$('cDet'); if(!el) return; const p=accProfile();
+titleDetail=HOOK.wrap('titleDetail','89-menu2#_m2Detail',function(_m2Detail){ return function(act){ const d=NAV_D[act]; if(!d) return _m2Detail(act); const el=$('cDet'); if(!el) return; const p=accProfile();
   const chips=act==='careerMenu'||act.indexOf('c_')===0?['<span>Rütbe <b>'+rankName(p.rank||0)+'</b></span>','<span>TP <b>'+(p.xp||0).toLocaleString('tr-TR')+'</b></span>']:(act.indexOf('q_')===0?['<span>Puan <b>kazanılmaz</b></span>','<span>Kilit <b>yok</b></span>']:[]);
-  $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=chips.join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=false; el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim'); };
+  $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=chips.join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=false; el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim'); }; },titleDetail);
 const _m2Act=titleAct; titleAct=function(act){ if(state!=='menu') return;
   if(act==='start') return navGo('start'); if(act==='careerMenu') return navGo('career'); if(act==='back') return navGo(NAV.level==='career'?'start':'root');
   if(act==='q_free'){ playMode('quick'); return _m2Act('free'); } if(act==='q_walk'){ playMode('quick'); return _m2Act('walk'); } if(act==='q_hangar'){ playMode('quick'); return _m2Act('hangar'); }
@@ -55,7 +55,7 @@ const _m2Act=titleAct; titleAct=function(act){ if(state!=='menu') return;
   if(act==='c_walk'){ playMode('career'); return _m2Act('walk'); } if(act==='c_hangar'){ playMode('career'); return _m2Act('hangar'); }
   if(act==='net'||act==='free'||act==='walk'||act==='hangar'||act==='missions'||act==='school'){ if(act==='net') playMode('career'); }
   return _m2Act(act); };
-const _m2Refresh=refreshTitle; refreshTitle=function(){ if(!$('mc_missions')){ const s=document.createElement('span'); s.id='mc_missions'; s.hidden=true; document.body.appendChild(s); } _m2Refresh(); navRender(); };
+refreshTitle=HOOK.wrap('refreshTitle','89-menu2#_m2Refresh',function(_m2Refresh){ return function(){ if(!$('mc_missions')){ const s=document.createElement('span'); s.id='mc_missions'; s.hidden=true; document.body.appendChild(s); } _m2Refresh(); navRender(); }; },refreshTitle);
 /* Esc goes up one level in the menu */
 window.addEventListener('keydown',function(e){ if(state==='menu'&&menuMode==='title'&&e.code==='Escape'&&NAV.level!=='root'&&!(typeof anyModalOpen==='function'&&anyModalOpen())){ e.preventDefault(); e.stopImmediatePropagation(); navGo(NAV.level==='career'?'start':'root'); } },true);
 /* header buttons + admin library row (built here so the page skeleton stays small) */
@@ -66,10 +66,10 @@ window.addEventListener('keydown',function(e){ if(state==='menu'&&menuMode==='ti
   const am=$('admMsg'); if(am&&am.parentNode&&!$('admLibs')&&document.createElement){ const d=document.createElement('div'); d.className='admlibs'; d.id='admLibs'; d.innerHTML='<b>Kütüphaneler</b><button type="button" class="btn sm" data-l="models">Model kütüphanesi</button><button type="button" class="btn sm" data-l="sounds">Ses kütüphanesi</button>'; if(am.parentNode.insertBefore) am.parentNode.insertBefore(d,am); } })();
 (function(){ const h=$('cIbtns'); if(h) h.addEventListener('click',function(e){ const b=e.target.closest('button[data-act]'); if(b) _m2Act(b.dataset.act); }); })();
 /* ---- board: rank requirements in career */
-const _m2Render=renderMissions; renderMissions=function(){ _m2Render(); const L=boardList();
+renderMissions=HOOK.wrap('renderMissions','89-menu2#_m2Render',function(_m2Render){ return function(){ _m2Render(); const L=boardList();
   Array.prototype.forEach.call(document.querySelectorAll('#misList .mitem'),function(b){ const e=L[+b.dataset.i]; if(e&&misLocked(e)){ b.classList.add('lock'); const bc=b.querySelector('.bc'); if(bc) bc.textContent='🔒 '+rankName(misReq(e))+' rütbesinde açılır'; } });
-  const e=L[misSel]; if(e&&misLocked(e)){ $('btnMisGo').textContent='🔒 '+rankName(misReq(e))+' rütbesi gerekli'; } };
-const _m2Go=misGo; misGo=function(){ const e=boardList()[misSel]; if(e&&misLocked(e)){ toast('🔒 Bu görev '+rankName(misReq(e))+' rütbesinde açılır — eğitim ve açık görevlerle TP kazan','#ffc24a'); return; } return _m2Go(); };
+  const e=L[misSel]; if(e&&misLocked(e)){ $('btnMisGo').textContent='🔒 '+rankName(misReq(e))+' rütbesi gerekli'; } }; },renderMissions);
+misGo=HOOK.wrap('misGo','89-menu2#_m2Go',function(_m2Go){ return function(){ const e=boardList()[misSel]; if(e&&misLocked(e)){ toast('🔒 Bu görev '+rankName(misReq(e))+' rütbesinde açılır — eğitim ve açık görevlerle TP kazan','#ffc24a'); return; } return _m2Go(); }; },misGo);
 /* ---- admin panel: libraries */
 (function(){ const a=$('admLibs'); if(a) a.addEventListener('click',function(e){ const b=e.target.closest('button[data-l]'); if(!b) return; $('adminUI').classList.add('hidden'); if(b.dataset.l==='models') openLibrary(); else openSoundLib(); }); })();
 playMode(PLAY.mode);

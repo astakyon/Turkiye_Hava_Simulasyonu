@@ -13,7 +13,7 @@ const PSCHEMES=[
   {id:'altin',n:'Altın',r:11,liv:{color:'#c9a24a',gloss:0.9},sw:'#c9a24a'}];
 const PAINT={}; try{ Object.assign(PAINT,JSON.parse(localStorage.getItem('ayy-paint')||'{}')); }catch(e){}
 function lockedAt(need){ if(typeof accIsAdmin==='function'&&accIsAdmin()) return false; if(SETTINGS.rankLocks===false) return false; return (accProfile().rank||0)<need; }
-const _pLiv=applyLivery; applyLivery=function(m){ const id=m&&m.acId, P=id&&PAINT[id]&&PSCHEMES.find(function(s){ return s.id===PAINT[id]; }); if(P&&P.liv){ LIV.data[id]=P.liv; } return _pLiv(m); };
+applyLivery=HOOK.wrap('applyLivery','86-progress#_pLiv',function(_pLiv){ return function(m){ const id=m&&m.acId, P=id&&PAINT[id]&&PSCHEMES.find(function(s){ return s.id===PAINT[id]; }); if(P&&P.liv){ LIV.data[id]=P.liv; } return _pLiv(m); }; },applyLivery);
 function paintSet(id,sid){ const P=PSCHEMES.find(function(s){ return s.id===sid; }); if(!P) return; if(lockedAt(P.r)){ toast('🔒 '+P.n+' boyası '+rankName(P.r)+' rütbesinde açılır','#ffc24a'); return; }
   if(sid==='std'){ delete PAINT[id]; delete LIV.data[id]; } else { PAINT[id]=sid; LIV.data[id]=P.liv; }
   try{ localStorage.setItem('ayy-paint',JSON.stringify(PAINT)); }catch(e){} liveryRefresh(id); paintUI(); toast('Boya: '+P.n,'#7dffb0'); }
@@ -22,7 +22,7 @@ function paintUI(){ const el=$('hPaint'); if(!el) return; if(HSEL||!AIRCRAFT[sel
   el.innerHTML='<p class="hmh">BOYA'+(skin?' <small>(içe aktarılmış modelde geçerli değil)</small>':'')+'</p><div class="pchips">'+PSCHEMES.map(function(P){ const lk=lockedAt(P.r);
     return '<button type="button" data-p="'+P.id+'" class="'+(cur===P.id?'on':'')+(lk?' lock':'')+'" title="'+P.n+(lk?' · '+rankName(P.r):'')+'"><i style="background:'+P.sw+(P.liv&&P.liv.camo2?';box-shadow:inset -6px -6px 0 '+P.liv.camo2:'')+'"></i><span>'+P.n+(lk?' 🔒':'')+'</span></button>'; }).join('')+'</div>'; }
 (function(){ const el=$('hPaint'); if(el) el.addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(b) paintSet(selectedId,b.dataset.p); }); })();
-const _pRefresh=refreshHangarUI; refreshHangarUI=function(){ _pRefresh(); paintUI(); };
+refreshHangarUI=HOOK.wrap('refreshHangarUI','86-progress#_pRefresh',function(_pRefresh){ return function(){ _pRefresh(); paintUI(); }; },refreshHangarUI);
 /* ---- achievements */
 const ACH=[
   ['fly10','Gökyüzü sakini','10 saat uç','flightSec',36000,500,function(v){ return Math.floor(v/3600)+' / 10 sa'; }],
@@ -75,11 +75,11 @@ function progStep(dt){
   else PS.prevG=true;
   if(state==='walk'&&WALK.mode==='heli'&&HELI.cur){ const H=HELI.cur; if(!PS.hprev&&H.ground&&H.crashT<=0&&typeof deckAt==='function'&&deckAt(H.x,H.z,H.y+0.6)) careerAdd(25,{deck:1}); PS.hprev=H.ground; } else PS.hprev=true;
   PS.acc+=dt; if(PS.acc>20){ PS.acc=0; achCheck(); } }
-const _pEnd=endMission; endMission=function(ok,tm){ const was=M.done, r=_pEnd.apply(this,arguments); if(!was&&ok&&M.id==='dyn') careerAdd(0,{dyn:1}); return r; };
-if(typeof hmEnd==='function'){ const _pHm=hmEnd; hmEnd=function(win,why){ const was=HM.ended; _pHm(win,why); if(!was&&win&&String(HM.id).indexOf('d_')===0) careerAdd(0,{dyn:1}); }; }
-if(typeof ejLand==='function'){ const _pEj=ejLand; ejLand=function(w){ _pEj(w); careerAdd(20,{ejectOk:1}); }; }
+endMission=HOOK.wrap('endMission','86-progress#_pEnd',function(_pEnd){ return function(ok,tm){ const was=M.done, r=_pEnd.apply(this,arguments); if(!was&&ok&&M.id==='dyn') careerAdd(0,{dyn:1}); return r; }; },endMission);
+if(typeof hmEnd==='function'){ hmEnd=HOOK.wrap('hmEnd','86-progress#_pHm',function(_pHm){ return function(win,why){ const was=HM.ended; _pHm(win,why); if(!was&&win&&String(HM.id).indexOf('d_')===0) careerAdd(0,{dyn:1}); }; },hmEnd); }
+if(typeof ejLand==='function'){ ejLand=HOOK.wrap('ejLand','86-progress#_pEj',function(_pEj){ return function(w){ _pEj(w); careerAdd(20,{ejectOk:1}); }; },ejLand); }
 /* ---- career page sections */
-const _pRender=careerRender; careerRender=function(){ _pRender(); const p=accProfile(), st=p.stats||{}, v=progStats(), got=st.ach||[], X=tasksNow();
+careerRender=HOOK.wrap('careerRender','86-progress#_pRender',function(_pRender){ return function(){ _pRender(); const p=accProfile(), st=p.stats||{}, v=progStats(), got=st.ach||[], X=tasksNow();
   const bar=function(f){ return '<div class="pbar"><i style="width:'+Math.round(Math.min(1,f)*100)+'%"></i></div>'; };
   const tk=function(t){ return '<div class="tk'+(t.done?' on':'')+'"><b>'+(t.done?'✓ ':'')+t.txt+'</b>'+bar(t.v/t.need)+'<small>'+(t.k==='flightSec'||t.k==='heliSec'?Math.floor(t.v/60)+' / '+t.need/60+' dk':t.k==='dist'?Math.floor(t.v/1000)+' / '+t.need/1000+' km':t.v+' / '+t.need)+' · +'+t.xp+' TP</small></div>'; };
   if($('carTasks')) $('carTasks').innerHTML='<div class="tcol"><p>BUGÜN</p>'+X.daily.map(tk).join('')+'</div><div class="tcol"><p>BU HAFTA</p>'+X.weekly.map(tk).join('')+'</div>';
@@ -91,4 +91,4 @@ const _pRender=careerRender; careerRender=function(){ _pRender(); const p=accPro
   const R=p.rank||0, un=[]; Object.keys(RANK_LOCK).forEach(function(id){ if(AIRCRAFT[id]) un.push([RANK_LOCK[id],'Uçak',AIRCRAFT[id].name]); });
   if(typeof VEH_RANK!=='undefined') Object.keys(VEH_RANK).forEach(function(id){ const K=CAR_KINDS.find(function(k){ return k.id===id; }); if(K) un.push([VEH_RANK[id],'Araç',K.n]); });
   PSCHEMES.forEach(function(P){ if(P.r>0) un.push([P.r,'Boya',P.n]); }); un.sort(function(a,b){ return a[0]-b[0]; });
-  if($('carUnl')) $('carUnl').innerHTML=(lockedAt(99)?'':'<p class="note">Kilitler bulut hesaplarda geçerlidir; şu an hepsi açık.</p>')+un.map(function(u){ const ok=R>=u[0]||!lockedAt(u[0]); return '<div class="ul'+(ok?' on':'')+'">'+rankSVG(u[0],20)+'<b>'+u[2]+'</b><small>'+u[1]+' · '+RANKS[u[0]][0]+(ok?' ✓':' 🔒')+'</small></div>'; }).join(''); };
+  if($('carUnl')) $('carUnl').innerHTML=(lockedAt(99)?'':'<p class="note">Kilitler bulut hesaplarda geçerlidir; şu an hepsi açık.</p>')+un.map(function(u){ const ok=R>=u[0]||!lockedAt(u[0]); return '<div class="ul'+(ok?' on':'')+'">'+rankSVG(u[0],20)+'<b>'+u[2]+'</b><small>'+u[1]+' · '+RANKS[u[0]][0]+(ok?' ✓':' 🔒')+'</small></div>'; }).join(''); }; },careerRender);

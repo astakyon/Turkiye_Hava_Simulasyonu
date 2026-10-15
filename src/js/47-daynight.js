@@ -46,7 +46,7 @@ function todStep(dt){
   if(!TOD.stars) return; const m=SETTINGS.tod||'day';
   if(m==='cycle'){ TOD.h=(TOD.h+dt*24/1200)%24; if(Math.abs(TOD.h-TOD.last)>0.02){ TOD.last=TOD.h; todApply(TOD.h); } }
   if(TOD.stars) TOD.stars.position.copy(camera.position);
-  if(TOD.moon&&TOD.nightK>0){ TOD.moon.position.copy(new THREE.Vector3(-0.45,0.62,0.55).normalize().multiplyScalar(29000)).add(camera.position); TOD.moon.lookAt(camera.position); }
+  if(TOD.moon&&TOD.nightK>0){ if(!TOD.moonFar) TOD.moonFar=new THREE.Vector3(-0.45,0.62,0.55).normalize().multiplyScalar(29000); TOD.moon.position.copy(TOD.moonFar).add(camera.position);   /* V2.24: no new vector per frame */ TOD.moon.lookAt(camera.position); }
   ambStep(dt);
 }
 /* ---- ambient sound: surf, wind, gull calls, crickets; generated with WebAudio from the shared noise buffer */

@@ -64,30 +64,30 @@ function dynConvoy(r){ const S0=[1300,-7300], P=dynPlaces(r,function(p){ return 
   return {id:id,kind:'dyn',sub:'car',tp:'convoy',name:M.n,desc:M.d,M:M,diff:1,dur:10,xp:220,cat:'dinamik',thr:['Yoldan çıkma, devrilme'],area:[P[0].g[0],P[0].g[1],5000],obj:M.obj.map(function(o){ return o.n; })}; }
 dynGen(DYN.seed);
 /* ---- board integration */
-const _dynAll=boardAll; boardAll=function(){ return _dynAll().concat(DYN.list.map(function(e){ return {id:e.id,kind:'dyn',name:e.name,desc:e.desc,D:e}; })); };
-const _dynMeta=bMeta; bMeta=function(e){ if(e.kind!=='dyn') return _dynMeta(e); const D=e.D;
-  return {cat:'dinamik',diff:D.diff,dur:D.dur,xp:D.xp,obj:D.sub==='air'?D.obj.map(function(o){ return o.n; }).concat(D.bonus?[D.bonus.n]:[]):D.obj,thr:D.thr.concat(D.ev?[{sam:'Görev ortasında yeni tehdit çıkabilir',weather:'Hava bozabilir',fault:'Arıza çıkabilir'}[D.ev]]:[]),load:D.load||null,area:D.area}; };
-const _dynRender=renderMissions; renderMissions=function(){ _dynRender(); const f=$('misFilt'); if(f&&!f.querySelector('[data-v="dinamik"]')){ const seg=f.querySelector('[data-k="cat"]'); if(seg){ const b=document.createElement('button'); b.type='button'; b.dataset.v='dinamik'; b.textContent='Dinamik'; b.setAttribute('aria-pressed',String(BF.cat==='dinamik')); seg.appendChild(b); const n=document.createElement('button'); n.type='button'; n.className='bnew'; n.dataset.v='__new'; n.textContent='↻ Yeni görevler'; seg.appendChild(n); } }
-  const e=boardList()[misSel]; if(e&&e.kind==='dyn'){ const bt=$('btnMisGo'); if(bt) bt.textContent=e.D.sub==='heli'?'▶ Helikopterle başla':e.D.sub==='car'?'▶ Kamyonla başla':'▶ Brifing tamam — başla'; $('btnMisAc').disabled=e.D.sub!=='air'; if(e.D.sub!=='air') $('btnMisAc').textContent=e.D.sub==='car'?'Askerî kamyon':HELI_DEF[e.D.M.heli].name; else if(e.D.uav&&UAVS.indexOf(selectedId)<0) $('btnMisAc').textContent='İHA gerekli → Aksungur'; } };
+boardAll=HOOK.wrap('boardAll','84-dynamic#_dynAll',function(_dynAll){ return function(){ return _dynAll().concat(DYN.list.map(function(e){ return {id:e.id,kind:'dyn',name:e.name,desc:e.desc,D:e}; })); }; },boardAll);
+bMeta=HOOK.wrap('bMeta','84-dynamic#_dynMeta',function(_dynMeta){ return function(e){ if(e.kind!=='dyn') return _dynMeta(e); const D=e.D;
+  return {cat:'dinamik',diff:D.diff,dur:D.dur,xp:D.xp,obj:D.sub==='air'?D.obj.map(function(o){ return o.n; }).concat(D.bonus?[D.bonus.n]:[]):D.obj,thr:D.thr.concat(D.ev?[{sam:'Görev ortasında yeni tehdit çıkabilir',weather:'Hava bozabilir',fault:'Arıza çıkabilir'}[D.ev]]:[]),load:D.load||null,area:D.area}; }; },bMeta);
+renderMissions=HOOK.wrap('renderMissions','84-dynamic#_dynRender',function(_dynRender){ return function(){ _dynRender(); const f=$('misFilt'); if(f&&!f.querySelector('[data-v="dinamik"]')){ const seg=f.querySelector('[data-k="cat"]'); if(seg){ const b=document.createElement('button'); b.type='button'; b.dataset.v='dinamik'; b.textContent='Dinamik'; b.setAttribute('aria-pressed',String(BF.cat==='dinamik')); seg.appendChild(b); const n=document.createElement('button'); n.type='button'; n.className='bnew'; n.dataset.v='__new'; n.textContent='↻ Yeni görevler'; seg.appendChild(n); } }
+  const e=boardList()[misSel]; if(e&&e.kind==='dyn'){ const bt=$('btnMisGo'); if(bt) bt.textContent=e.D.sub==='heli'?'▶ Helikopterle başla':e.D.sub==='car'?'▶ Kamyonla başla':'▶ Brifing tamam — başla'; $('btnMisAc').disabled=e.D.sub!=='air'; if(e.D.sub!=='air') $('btnMisAc').textContent=e.D.sub==='car'?'Askerî kamyon':HELI_DEF[e.D.M.heli].name; else if(e.D.uav&&UAVS.indexOf(selectedId)<0) $('btnMisAc').textContent='İHA gerekli → Aksungur'; } }; },renderMissions);
 (function(){ const f=$('misFilt'); if(f) f.addEventListener('click',function(ev){ const b=ev.target.closest('button[data-v="__new"]'); if(!b) return; ev.stopImmediatePropagation(); DYN.seed=(DYN.seed*1103515245+12345)&0xffffff; dynGen(DYN.seed); BF.cat='dinamik'; misSel=0; renderMissions(); toast('Yeni dinamik görevler hazır','#7dffb0'); },true); })();
-const _dynGo=misGo; misGo=function(){ const e=boardList()[misSel]; if(!e||e.kind!=='dyn') return _dynGo(); const D=e.D;
+misGo=HOOK.wrap('misGo','84-dynamic#_dynGo',function(_dynGo){ return function(){ const e=boardList()[misSel]; if(!e||e.kind!=='dyn') return _dynGo(); const D=e.D;
   if(D.sub==='heli') return hmStart(D.M.id); if(D.sub==='car') return dynCarStart(D.M);
   if(D.uav&&UAVS.indexOf(selectedId)<0){ selectedId='aksungur'; if(typeof setAircraft==='function') setAircraft('aksungur'); toast('İHA keşfi: Aksungur seçildi','#b8ecff'); }
-  DYN.cur=D; MISSIONS.dyn.name=D.name; MISSIONS.dyn.desc=D.desc; MISSIONS.dyn.limit=D.lim; BMETA.dyn={xp:D.xp,dur:D.dur}; selectMission('dyn'); preFlight('missions'); };
+  DYN.cur=D; MISSIONS.dyn.name=D.name; MISSIONS.dyn.desc=D.desc; MISSIONS.dyn.limit=D.lim; BMETA.dyn={xp:D.xp,dur:D.dur}; selectMission('dyn'); preFlight('missions'); }; },misGo);
 /* convoy: start in a truck */
 function dynCarStart(M){ if(HM.on) hmClean(); closeModals(); startWalk(); hmClean();
   const sp=callSpot(M.spot[0],M.spot[1],4.5)||[M.spot[0],M.spot[1]], c=vehNew(M.car,sp[0],sp[1],M.spot[2]); c.called=true; WALK.car=c; WALK.mode='car'; c.v=0; WALK.cy=0;
   Object.assign(HM,{on:true,id:M.id,M:M,H:null,i:0,t:0,score:0,kills:0,ended:false,crate:null}); M.setup(); hmBeacon();
   if(typeof radioSay==='function') radioSay({w:'kule',t:'{cs}, konvoy görevi başladı. '+M.obj[0].n+'.'},null,{force:true}); }
-const _dynHmStart=hmStart; hmStart=function(id){ const M=hmById(id); if(M&&M.car) return dynCarStart(M); return _dynHmStart(id); };
-const _dynWalkHUD=drawWalkHUD; drawWalkHUD=function(){ _dynWalkHUD(); if(HM.on&&!HM.ended&&WALK.mode==='car'&&WALK.car){ const s=clamp(Math.min(HW,HH)/760,0.7,1.5); hx.save(); hmDrawObj(HW,HH,s,WALK.car.x,WALK.car.z,WALK.car.h); hx.restore(); } };
+hmStart=HOOK.wrap('hmStart','84-dynamic#_dynHmStart',function(_dynHmStart){ return function(id){ const M=hmById(id); if(M&&M.car) return dynCarStart(M); return _dynHmStart(id); }; },hmStart);
+drawWalkHUD=HOOK.wrap('drawWalkHUD','84-dynamic#_dynWalkHUD',function(_dynWalkHUD){ return function(){ _dynWalkHUD(); if(HM.on&&!HM.ended&&WALK.mode==='car'&&WALK.car){ const s=clamp(Math.min(HW,HH)/760,0.7,1.5); hx.save(); hmDrawObj(HW,HH,s,WALK.car.x,WALK.car.z,WALK.car.h); hx.restore(); } }; },drawWalkHUD);
 /* ---- aircraft mission engine */
 function dynMark(x,z,r,col){ const g=new THREE.Group(), h=Math.max(0,terrainH(x,z)); const rg=new THREE.TorusGeometry(r,6,6,48); rg.rotateX(Math.PI/2);
   const m1=new THREE.Mesh(rg,new THREE.MeshBasicMaterial({color:col||0x39e6ff,transparent:true,opacity:0.7})); m1.position.y=10; g.add(m1);
   const m2=new THREE.Mesh(new THREE.CylinderGeometry(r,r,700,32,1,true),new THREE.MeshBasicMaterial({color:col||0x39e6ff,transparent:true,opacity:0.1,side:THREE.DoubleSide,depthWrite:false})); m2.position.y=350; g.add(m2);
   g.position.set(x,h,z); scene.add(g); DYN.marks.push(g); return g; }
 function dynClear(){ DYN.marks.forEach(function(g){ scene.remove(g); }); DYN.marks=[]; if(DYN.tr){ scene.remove(DYN.tr.g); DYN.tr=null; } if(DYN.wxKeep!=null){ SETTINGS.wx=DYN.wxKeep; WX.kind=DYN.wxKeep==='auto'?WX.kind:DYN.wxKeep; DYN.wxKeep=null; } }
-const _dynSetup=setupMission; setupMission=function(){ dynClear(); if(missionId!=='dyn'||!DYN.cur) return _dynSetup();
+setupMission=HOOK.wrap('setupMission','84-dynamic#_dynSetup',function(_dynSetup){ return function(){ dynClear(); if(missionId!=='dyn'||!DYN.cur) return _dynSetup();
   MLOG.length=0; bLogToggle(false); B_STAT.shots=0; B_STAT.minHp=100;
   const D=DYN.cur; MS.rings=MS.air=MS.ground=MS.recon=false; M={id:'dyn',t:0,started:false,done:false,scanIdx:0,scanT:0};
   clearAir(); clearGround(); clearRecon(); ringIdx=0; courseT=null; updateRingVisuals(); aiClear();
@@ -98,7 +98,7 @@ const _dynSetup=setupMission; setupMission=function(){ dynClear(); if(missionId!
   if(D.tp==='escort'){ const m=buildModel('aksungur'); m.group.scale.setScalar(1.6); scene.add(m.group); DYN.tr={g:m.group,p:new THREE.Vector3(0,AIRFIELD_Y+900,-1500),i:1,h:0}; DYN.st.waves=0; }
   if(D.tp==='sea'){ const L=(MARINA.movers||[]).slice().sort(function(a,b){ return b.g.position.distanceTo(new THREE.Vector3())-a.g.position.distanceTo(new THREE.Vector3()); }); DYN.st.ships=L.slice(0,2).map(function(m){ return {m:m,done:false}; }); }
   if(D.bonus&&D.bonus.t==='killset'&&D.bonus.pos){ for(let k=0;k<3;k++){ const p=D.bonus.pos; const o=addGround('truck',p[0]+k*14,p[1]+k*6); o.bonus=true; DYN.st.bonusSet.push(o); } }
-  dynMarkCur(); toast('Görev: '+D.name,'#7dffb0'); if(typeof radioSay==='function') radioSay({w:'kule',t:'{cs}, görev: '+D.obj[0].n+'.'},null,{force:true}); };
+  dynMarkCur(); toast('Görev: '+D.name,'#7dffb0'); if(typeof radioSay==='function') radioSay({w:'kule',t:'{cs}, görev: '+D.obj[0].n+'.'},null,{force:true}); }; },setupMission);
 function dynMarkCur(){ DYN.marks.forEach(function(g){ if(!g.userData.keep) scene.remove(g); }); DYN.marks=DYN.marks.filter(function(g){ return g.userData.keep; }); const D=DYN.cur, o=D&&D.obj[DYN.st.i]; if(!o) return;
   if(o.t==='wp'||o.t==='scan') dynMark(o.x,o.z,o.r,o.t==='scan'?0xffd27a:0x39e6ff); }
 function dynNext(){ const D=DYN.cur; DYN.st.i++; score+=150; noteScore(); if(DYN.st.i>=D.obj.length){ dynFinish(true); return; } dynMarkCur(); toast('Yeni hedef: '+D.obj[DYN.st.i].n,'#b8ecff'); if(typeof radioSay==='function') radioSay({w:'kule',t:D.obj[DYN.st.i].n+'.'},null,{}); }
@@ -126,13 +126,13 @@ function dynStep(dt){ const D=DYN.cur; if(!D||M.done) return; const st=DYN.st, o
     if(M.t>20&&st.waves<1||M.t>140&&st.waves<2){ st.waves++; const n=st.waves; for(let k=0;k<n+1;k++){ const a=spawnEnemy(k+1); a.pos.set(tr.p.x+3000+k*300,tr.p.y+200,tr.p.z-2500); } toast('Düşman avcıları nakliyeye yöneldi!','#ff8a5a'); }
     let thr=0; (typeof ACT!=='undefined'?ACT:[]).forEach(function(a){ if(a.alive&&a.team==='red'&&a.pos.distanceTo(tr.p)<600) thr++; }); if(thr){ st.trHp-=thr*4*dt; if(st.trHp<=0){ toast('Nakliye uçağı düştü','#ff5a4a'); explode(tr.p.clone(),60,8); endMission(false); return; } }
     st.downs=(typeof ACT!=='undefined'?ACT:[]).filter(function(a){ return a.team==='red'&&!a.alive; }).length; } }
-const _dynUpd=updateMission; updateMission=function(dt){ if(M.id==='dyn'&&!M.done&&state==='play'){ if(!M.started&&!S.onGround) M.started=true; if(M.started) M.t+=dt; dynStep(dt); return; } return _dynUpd(dt); };
-const _dynEnd=endMission; endMission=function(ok,tm){ const r=_dynEnd(ok,tm); if(M.id==='dyn') dynClear(); return r; };
-const _dynObj=bObjective; bObjective=function(){ if(state!=='play'||!M||M.id!=='dyn'||M.done||!DYN.cur) return _dynObj(); const D=DYN.cur, st=DYN.st, o=D.obj[st.i]; if(!o) return null; let txt=o.n, tgt=null;
+updateMission=HOOK.wrap('updateMission','84-dynamic#_dynUpd',function(_dynUpd){ return function(dt){ if(M.id==='dyn'&&!M.done&&state==='play'){ if(!M.started&&!S.onGround) M.started=true; if(M.started) M.t+=dt; dynStep(dt); return; } return _dynUpd(dt); }; },updateMission);
+endMission=HOOK.wrap('endMission','84-dynamic#_dynEnd',function(_dynEnd){ return function(ok,tm){ const r=_dynEnd(ok,tm); if(M.id==='dyn') dynClear(); return r; }; },endMission);
+bObjective=HOOK.wrap('bObjective','84-dynamic#_dynObj',function(_dynObj){ return function(){ if(state!=='play'||!M||M.id!=='dyn'||M.done||!DYN.cur) return _dynObj(); const D=DYN.cur, st=DYN.st, o=D.obj[st.i]; if(!o) return null; let txt=o.n, tgt=null;
   if(o.t==='wp'||o.t==='scan'){ tgt={x:o.x,z:o.z}; if(o.t==='scan'&&st.scan>0) txt+=' · %'+Math.round(st.scan/o.sec*100); }
   else if(o.t==='killset'){ const L=gtargets.filter(function(g){ return !g.bonus; }); txt+=' ('+L.filter(function(g){ return !g.alive; }).length+'/'+L.length+')'; tgt=bNearest(L.filter(function(g){ return g.alive; }).map(function(g){ return g.pos; })); }
   else if(o.t==='intercept'){ const L=targets.filter(function(t){ return t.alive; }); txt+=' ('+(targets.length-L.length)+'/'+targets.length+')'; tgt=bNearest(L.map(function(t){ return t.pos; })); }
   else if(o.t==='ship'){ txt+=' ('+st.ships.filter(function(s){ return s.done; }).length+'/'+st.ships.length+')'; const s=st.ships.find(function(s){ return !s.done; }); if(s) tgt=s.m.g.position; }
   else if(o.t==='escort'&&DYN.tr){ txt+=' · nakliye %'+Math.max(0,Math.round(st.trHp)); tgt=DYN.tr.p; }
-  return {name:D.name.split(':')[0],txt:(D.obj.length>1?(st.i+1)+'/'+D.obj.length+' · ':'')+txt,rem:Math.max(0,D.lim-M.t),tgt:tgt}; };
-const _dynStars=bStarsFor; bStarsFor=function(ok){ if(M.id!=='dyn'||!DYN.cur) return _dynStars(ok); if(!ok) return 0; return Math.min(3,1+(M.t<DYN.cur.lim*0.6?1:0)+(DYN.st&&DYN.st.bonus?1:0)); };
+  return {name:D.name.split(':')[0],txt:(D.obj.length>1?(st.i+1)+'/'+D.obj.length+' · ':'')+txt,rem:Math.max(0,D.lim-M.t),tgt:tgt}; }; },bObjective);
+bStarsFor=HOOK.wrap('bStarsFor','84-dynamic#_dynStars',function(_dynStars){ return function(ok){ if(M.id!=='dyn'||!DYN.cur) return _dynStars(ok); if(!ok) return 0; return Math.min(3,1+(M.t<DYN.cur.lim*0.6?1:0)+(DYN.st&&DYN.st.bonus?1:0)); }; },bStarsFor);

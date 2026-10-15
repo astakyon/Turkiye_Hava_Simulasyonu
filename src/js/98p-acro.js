@@ -14,11 +14,15 @@ function acroSample(){ const a=acroAngles(); ACRO.dq.copy(ACRO.q0).invert().mult
   let rx=0,ry=0,rz=0; if(w>1e-5){ const k=(ACRO.dq.w<0?-1:1)*(w>Math.PI?(w-2*Math.PI):w)/s; rx=ACRO.dq.x*k; ry=ACRO.dq.y*k; rz=ACRO.dq.z*k; } ACRO.q0.copy(S.q);
   return {t:ACRO.t, hd:a.hd, pitch:a.pitch, bank:a.bank, y:S.pos.y, v:S.speed, rx:rx, ry:ry, rz:rz}; }
 /* sums over the last `sec` seconds */
-function acroWin(sec){ const B=ACRO.buf, t1=ACRO.t, L=[]; for(let i=B.length-1;i>=0&&t1-B[i].t<=sec;i--) L.push(B[i]); L.reverse(); if(L.length<3) return null;
-  let roll=0,pit=0,yaw=0,pmax=-9,pmin=9,ymax=-1e9,ymin=1e9; L.forEach(function(s){ roll+=s.rz; pit+=s.rx; yaw+=s.ry; pmax=Math.max(pmax,s.pitch); pmin=Math.min(pmin,s.pitch); ymax=Math.max(ymax,s.y); ymin=Math.min(ymin,s.y); });
-  const a=L[0], b=L[L.length-1]; return {L:L,a:a,b:b,roll:roll,pit:pit,yaw:yaw,dh:Math.abs(angDiff(b.hd,a.hd)),dy:b.y-a.y,pmax:pmax,pmin:pmin,yrange:ymax-ymin,vmin:Math.min.apply(null,L.map(function(s){ return s.v; }))}; }
+/* V2.24: no arrays per call — this runs 10 times a second for six window lengths; one result object is reused */
+const ACRO_W={a:null,b:null,roll:0,pit:0,yaw:0,dh:0,dy:0,pmax:0,pmin:0,yrange:0,vmin:0,bmin:0,kmax:0,n:0};
+function acroWin(sec){ const B=ACRO.buf, t1=ACRO.t, W=ACRO_W; let i0=B.length; while(i0>0&&t1-B[i0-1].t<=sec) i0--; const n=B.length-i0; if(n<3) return null;
+  let roll=0,pit=0,yaw=0,pmax=-9,pmin=9,ymax=-1e9,ymin=1e9,vmin=1e9,bmin=9,kmax=0;
+  for(let i=i0;i<B.length;i++){ const s=B[i]; roll+=s.rz; pit+=s.rx; yaw+=s.ry; if(s.pitch>pmax) pmax=s.pitch; if(s.pitch<pmin) pmin=s.pitch; if(s.y>ymax) ymax=s.y; if(s.y<ymin) ymin=s.y; if(s.v<vmin) vmin=s.v;
+    const ab=Math.abs(s.bank); if(ab<bmin) bmin=ab; const kd=Math.abs(ab-Math.PI/2); if(kd>kmax) kmax=kd; }
+  const a=B[i0], b=B[B.length-1]; W.a=a; W.b=b; W.n=n; W.roll=roll; W.pit=pit; W.yaw=yaw; W.dh=Math.abs(angDiff(b.hd,a.hd)); W.dy=b.y-a.y; W.pmax=pmax; W.pmin=pmin; W.yrange=ymax-ymin; W.vmin=vmin; W.bmin=bmin; W.kmax=kmax; return W; }
 
-function acroDetect(){ const W=function(s){ return acroWin(s); }; let w;
+function acroDetect(){ const W=acroWin; let w;
   /* order matters: larger figures first so their parts are not reported separately */
   if((w=W(26))&&Math.abs(w.pit)>600*D2R&&Math.abs(w.roll)>300*D2R&&w.dh<45*D2R) return ['cuban',1-Math.min(1,Math.abs(w.dy)/400)];
   if((w=W(14))&&Math.abs(w.pit)>320*D2R&&Math.abs(w.roll)<100*D2R&&w.dh<35*D2R&&w.pmax>60*D2R&&w.pmin<-30*D2R) return ['loop',1-Math.min(1,Math.abs(w.dy)/250)];
@@ -27,8 +31,8 @@ function acroDetect(){ const W=function(s){ return acroWin(s); }; let w;
   if((w=W(14))&&w.pmax>70*D2R&&w.pmin<-60*D2R&&w.dh>140*D2R&&w.vmin<CUR.stall[1]*1.4&&Math.abs(w.yaw)>120*D2R) return ['hammer',1];
   if((w=W(8))&&Math.abs(w.roll)>330*D2R&&w.dh<45*D2R&&(w.pmax-w.pmin)>20*D2R) return ['fici',1-Math.min(1,Math.abs(w.dy)/200)];
   if((w=W(6))&&Math.abs(w.roll)>330*D2R&&w.dh<30*D2R&&(w.pmax-w.pmin)<25*D2R) return ['tonoz',1-Math.min(1,w.yrange/120)];
-  if((w=W(4))&&w.L.every(function(s){ return Math.abs(s.bank)>150*D2R; })&&w.yrange<60) return ['inv',1-w.yrange/60];
-  if((w=W(3))&&w.L.every(function(s){ return Math.abs(Math.abs(s.bank)-Math.PI/2)<12*D2R; })&&w.dy>-80) return ['knife',1-Math.max(0,-w.dy)/80];
+  if((w=W(4))&&w.bmin>150*D2R&&w.yrange<60) return ['inv',1-w.yrange/60];
+  if((w=W(3))&&w.kmax<12*D2R&&w.dy>-80) return ['knife',1-Math.max(0,-w.dy)/80];
   return null; }
 function acroStep(dt){ if(state!=='play'||S.onGround||S.crashed){ ACRO.buf.length=0; ACRO.q0.copy(S.q); if(ACRO.flashT>0) ACRO.flashT-=dt; return; }
   ACRO.t+=dt; ACRO.acc=(ACRO.acc||0)+dt; if(ACRO.flashT>0) ACRO.flashT-=dt; smokeStep(dt);
@@ -58,19 +62,19 @@ function acroHUD(){ if(state!=='play') return; const s=clamp(Math.min(HW,HH)/760
   if(ACRO.flashT>0&&ACRO.flash){ const a=Math.min(1,ACRO.flashT); hx.globalAlpha=a; hx.font='800 '+Math.round(30*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#ffd27a'; hx.fillText(ACRO.flash.n.toLocaleUpperCase('tr-TR'),HW/2,HH*0.3);
     hx.font='700 '+Math.round(15*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff'; hx.fillText(ACRO.flash.g+'  +'+ACRO.flash.p,HW/2,HH*0.3+28*s); hx.globalAlpha=1; }
   hx.restore(); }
-const _acHUD=drawHUD; drawHUD=function(){ _acHUD(); try{ hx.setTransform(DPR,0,0,DPR,0,0); acroHUD(); }catch(e){} };
-const _acUpd=update; update=function(dt){ _acUpd(dt); try{ acroStep(dt); }catch(e){} };
+drawHUD=HOOK.wrap('drawHUD','98p-acro#_acHUD',function(_acHUD){ return function(){ _acHUD(); try{ hx.setTransform(DPR,0,0,DPR,0,0); acroHUD(); }catch(e){} }; },drawHUD);
+update=HOOK.wrap('update','98p-acro#_acUpd',function(_acUpd){ return function(dt){ _acUpd(dt); try{ acroStep(dt); }catch(e){} }; },update);
 /* ---- "Akrobasi gösterisi" mission */
 const ACRO_SEQ=['tonoz','loop','immel','splits','fici'];
 const ACRO_TIPS={tonoz:'Burnu ufukta tut, çubuğu tam sağa (ya da sola) yatır, 360° dön',loop:'Hızlan (en az 600 km/s), çubuğu sürekli geri çek, tam bir daire çiz',immel:'Yarım looping ile tırman, ters dönünce yarım tonozla düzel: ters yöne uçarsın',splits:'Sırtüstü dön, çubuğu geri çekerek yarım looping ile aşağı dal',fici:'Burnu hafif kaldırırken tonoz at: geniş bir sarmal çiz'};
 MISSIONS.acro={name:'Akrobasi gösterisi',desc:'Türk Yıldızları tarzı gösteri: tonoz, looping, Immelmann, Split-S ve fıçı tonozu sırayla uç; hakemler her figürü puanlar.',limit:900};
 BMETA.acro={cat:'egitim',diff:2,dur:10,xp:300,obj:ACRO_SEQ.map(function(k){ return ACRO_FIG[k][0]+' — '+ACRO_TIPS[k]; }),thr:['Alçakta figür yapma: en az 800 m irtifa önerilir'],load:'clr',area:[0,0,6000]};
 if(typeof MORDER!=='undefined'&&MORDER.indexOf('acro')<0) MORDER.push('acro');
-const _acSetup=setupMission; setupMission=function(){ const r=_acSetup(); if(missionId==='acro'){ ACRO.seq=ACRO_SEQ.slice(); ACRO.si=0; ACRO.score=0; ACRO.smoke=true; S.pos.y=Math.max(S.pos.y,AIRFIELD_Y+900); setTimeout(function(){ toast('İlk figür: '+ACRO_FIG[ACRO.seq[0]][0]+' — '+ACRO_TIPS[ACRO.seq[0]],'#ffd27a'); },1500); } else ACRO.seq=null; return r; };
+setupMission=HOOK.wrap('setupMission','98p-acro#_acSetup',function(_acSetup){ return function(){ const r=_acSetup(); if(missionId==='acro'){ ACRO.seq=ACRO_SEQ.slice(); ACRO.si=0; ACRO.score=0; ACRO.smoke=true; S.pos.y=Math.max(S.pos.y,AIRFIELD_Y+900); setTimeout(function(){ toast('İlk figür: '+ACRO_FIG[ACRO.seq[0]][0]+' — '+ACRO_TIPS[ACRO.seq[0]],'#ffd27a'); },1500); } else ACRO.seq=null; return r; }; },setupMission);
 function acroSeqDone(){ const sc=ACRO.score; ACRO.seq=null; toast('Gösteri tamam! Hakem puanı: '+sc,'#7dffb0'); try{ M.acroScore=sc; endMission(true); }catch(e){} }
-const _acStars=bStarsFor; bStarsFor=function(ok){ if(M&&M.id==='acro'){ if(!ok) return 0; const sc=M.acroScore||0; return sc>=1250?3:sc>=950?2:1; } return _acStars(ok); };
-const _acUpdM=updateMission; updateMission=function(dt){ if(M&&M.id==='acro'){ if(!M.done&&state==='play'){ if(!M.started&&!S.onGround) M.started=true; if(M.started) M.t+=dt; if(M.t>MISSIONS.acro.limit) endMission(false); } return; } return _acUpdM(dt); };
-const _acObj=bObjective; bObjective=function(){ if(state==='play'&&M&&M.id==='acro'&&!M.done&&ACRO.seq){ const k=ACRO.seq[ACRO.si]; return {name:'Akrobasi',txt:(ACRO.si+1)+'/'+ACRO.seq.length+' · '+ACRO_FIG[k][0]+' — '+ACRO_TIPS[k],rem:Math.max(0,MISSIONS.acro.limit-M.t),tgt:null}; } return _acObj(); };
+bStarsFor=HOOK.wrap('bStarsFor','98p-acro#_acStars',function(_acStars){ return function(ok){ if(M&&M.id==='acro'){ if(!ok) return 0; const sc=M.acroScore||0; return sc>=1250?3:sc>=950?2:1; } return _acStars(ok); }; },bStarsFor);
+updateMission=HOOK.wrap('updateMission','98p-acro#_acUpdM',function(_acUpdM){ return function(dt){ if(M&&M.id==='acro'){ if(!M.done&&state==='play'){ if(!M.started&&!S.onGround) M.started=true; if(M.started) M.t+=dt; if(M.t>MISSIONS.acro.limit) endMission(false); } return; } return _acUpdM(dt); }; },updateMission);
+bObjective=HOOK.wrap('bObjective','98p-acro#_acObj',function(_acObj){ return function(){ if(state==='play'&&M&&M.id==='acro'&&!M.done&&ACRO.seq){ const k=ACRO.seq[ACRO.si]; return {name:'Akrobasi',txt:(ACRO.si+1)+'/'+ACRO.seq.length+' · '+ACRO_FIG[k][0]+' — '+ACRO_TIPS[k],rem:Math.max(0,MISSIONS.acro.limit-M.t),tgt:null}; } return _acObj(); }; },bObjective);
 /* touch: DUMAN button in the flight top bar */
 (function(){ const bar=document.querySelector?document.querySelector('#touch .ttop'):null; if(!bar||!document.createElement||typeof bar.appendChild!=='function') return; const b=document.createElement('button'); b.type='button'; b.id='tSmoke'; b.textContent='DUMAN'; bar.appendChild(b);
   b.addEventListener('pointerdown',function(e){ e.preventDefault(); smokeToggle(); b.classList.toggle('on',ACRO.smoke); }); })();

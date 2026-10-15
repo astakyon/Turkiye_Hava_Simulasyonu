@@ -31,16 +31,16 @@ function selectV(v){ if(v.t==='ac'){ VSEL=null; if(pickGrp!=='hava'||pickCls==='
   if(v.t==='heli'){ VSEL=null; pickGrp='hava'; pickCls='heli'; buildPicker(); selectHeli(v.id); return; }
   HSEL=null; VSEL={g:v.t,id:v.id}; pickGrp=v.t; pickCls='all'; MENUV.init=false; MENUV.idle=0; buildPicker(); }
 cycleAircraft=function(d){ const L=ALLV(), c=curV(); let i=L.findIndex(function(x){ return x.t===c.t&&x.id===c.id; }); if(i<0) i=0; selectV(L[(i+d+L.length)%L.length]); };
-const _m3Pick=buildPicker; buildPicker=function(){ if(pickGrp==='hava'){ VSEL=null; return _m3Pick(); }
+buildPicker=HOOK.wrap('buildPicker','98b-menu3#_m3Pick',function(_m3Pick){ return function(){ if(pickGrp==='hava'){ VSEL=null; return _m3Pick(); }
   buildGroups(); $('clsSeg').innerHTML='<button type="button" data-c="all" aria-pressed="true">Tümü</button>';
   const box=$('acChips'); box.innerHTML=''; const L=HV[pickGrp]; $('acCount').textContent=L.length+' araç';
   if(!VSEL||VSEL.g!==pickGrp) VSEL={g:pickGrp,id:L[0][0]}; HSEL=null;
   L.forEach(function(v){ const b=document.createElement('button'); b.type='button'; b.className='chip'; b.dataset.v=v[0]; b.setAttribute('role','radio'); b.setAttribute('aria-checked',String(VSEL.id===v[0]));
     b.innerHTML=(pickGrp==='kara'?hvSVGk():hvSVGs())+'<span>'+v[1]+'</span><small>'+v[2]+'</small>'; b.addEventListener('click',function(){ VSEL={g:pickGrp,id:v[0]}; MENUV.init=false; MENUV.idle=0; buildPicker(); }); box.appendChild(b); });
-  refreshHangarUI(); };
+  refreshHangarUI(); }; },buildPicker);
 function hvSVGk(){ return '<svg viewBox="0 0 100 40" aria-hidden="true"><g fill="currentColor"><rect x="14" y="18" width="70" height="12" rx="3"/><rect x="34" y="11" width="26" height="8" rx="2"/><rect x="58" y="13" width="34" height="3"/><circle cx="24" cy="31" r="4"/><circle cx="40" cy="31" r="4"/><circle cx="56" cy="31" r="4"/><circle cx="72" cy="31" r="4"/></g></svg>'; }
 function hvSVGs(){ return '<svg viewBox="0 0 100 40" aria-hidden="true"><g fill="currentColor"><path d="M6 22h88l-8 10H16z"/><rect x="40" y="12" width="20" height="10"/><rect x="48" y="5" width="3" height="8"/></g></svg>'; }
-const _m3Ref=refreshHangarUI; refreshHangarUI=function(){ _m3Ref(); if(!VSEL) { const b=$('btnEnvAc'); if(b) b.dataset.k=''; return; } const v=hvOf(VSEL.g,VSEL.id), K=hvKind(VSEL); if(!v||!K) return;
+refreshHangarUI=HOOK.wrap('refreshHangarUI','98b-menu3#_m3Ref',function(_m3Ref){ return function(){ _m3Ref(); if(!VSEL) { const b=$('btnEnvAc'); if(b) b.dataset.k=''; return; } const v=hvOf(VSEL.g,VSEL.id), K=hvKind(VSEL); if(!v||!K) return;
   $('hName').textContent=v[1]; $('hKind').textContent=(v[3]?v[3]+' · ':'')+v[2]; $('hDesc').textContent=HV_DESC[VSEL.id]||'';
   const st=[['AZAMİ HIZ',Math.round(K.top*3.6)+' km/sa'],['TÜR',VSEL.g==='kara'?(K.tracked?'Paletli':'Tekerlekli'):'Deniz aracı'],['SİLAH',K.weapon==='cannon'||K.gun==='cannon'?'Top':(K.weapon==='auto'||K.gun==='auto'?'Otomatik top':(K.weapon==='water'?'Su topu':'—'))],['MÜRETTEBAT','Sürücü']];
   $('hStats').innerHTML=st.map(function(t){ return '<li><small>'+t[0]+'</small><b>'+t[1]+'</b></li>'; }).join('');
@@ -48,7 +48,7 @@ const _m3Ref=refreshHangarUI; refreshHangarUI=function(){ _m3Ref(); if(!VSEL) { 
   const L=HV[VSEL.g], i=L.findIndex(function(x){ return x[0]===VSEL.id; }); $('acPos').textContent=(i+1)+' / '+L.length;
   $('btnPlay').textContent=VSEL.g==='kara'?'▶ Sürmeye başla':'▶ Dümene geç'; $('btnPlay').classList.remove('locked');
   const pa=$('hPaint'); if(pa) pa.classList.add('hidden'); const e=$('btnEnvAc'); if(e){ e.dataset.k=HV_ENV[VSEL.id]||''; e.classList.toggle('hidden',!HV_ENV[VSEL.id]); }
-  Array.prototype.forEach.call($('acChips').children,function(b){ b.setAttribute('aria-checked',String(b.dataset.v===VSEL.id)); }); hvShow(); };
+  Array.prototype.forEach.call($('acChips').children,function(b){ b.setAttribute('aria-checked',String(b.dataset.v===VSEL.id)); }); hvShow(); }; },refreshHangarUI);
 /* showcase model: land vehicles on the hall floor, ships off the naval base */
 const HVS={key:null,g:null,pos:new THREE.Vector3(),tv:new THREE.Vector3(),up:new THREE.Vector3(),dist:20};
 const HV_SEA=[-2200,-3900];
@@ -56,14 +56,14 @@ function hvShow(){ const key=VSEL?VSEL.g+':'+VSEL.id:null; if(key===HVS.key) ret
   try{ let g, L=6; if(VSEL.g==='kara'){ const m=carBuild(VSEL.id); g=m.g; L=m.len||6; HVS.pos.set(HANGAR.cx,AIRFIELD_Y+0.25,936); g.position.copy(HVS.pos); g.rotation.y=0.6; }
     else { const sh=BOAT_KINDS[VSEL.id].build(); g=new THREE.Group(); g.add(bakeGroup(sh.group)); L=sh.L||12; HVS.pos.set(HV_SEA[0],0,HV_SEA[1]); g.position.copy(HVS.pos); g.rotation.y=Math.PI/2; }
     g.traverse(function(o){ o.userData.noCull=true; }); g.userData.noCull=true; scene.add(g); HVS.g=g; HVS.dist=Math.max(9,L*1.5); }catch(e){ console.warn('vitrin',e); } }
-const _m3Enter=enterHangar; enterHangar=function(){ _m3Enter(); if(HVS.g){ HVS.g.visible=true; } try{ buildPicker(); }catch(e){} };
-const _m3Title=enterTitle; enterTitle=function(){ VSEL=null; hvShow(); return _m3Title(); };
-const _m3MenuCam=menuCam; menuCam=function(dt){ if(!(VSEL&&state==='menu'&&menuMode==='hangar'&&HVS.g)) return _m3MenuCam(dt);
+enterHangar=HOOK.wrap('enterHangar','98b-menu3#_m3Enter',function(_m3Enter){ return function(){ _m3Enter(); if(HVS.g){ HVS.g.visible=true; } try{ buildPicker(); }catch(e){} }; },enterHangar);
+enterTitle=HOOK.wrap('enterTitle','98b-menu3#_m3Title',function(_m3Title){ return function(){ VSEL=null; hvShow(); return _m3Title(); }; },enterTitle);
+menuCam=HOOK.wrap('menuCam','98b-menu3#_m3MenuCam',function(_m3MenuCam){ return function(dt){ if(!(VSEL&&state==='menu'&&menuMode==='hangar'&&HVS.g)) return _m3MenuCam(dt);
   const k=1-Math.exp(-3*dt); if(!MENUV.init){ MENUV.tgt.copy(HVS.pos); MENUV.dist=HVS.dist; MENUV.init=true; }
   MENUV.tgt.lerp(HVS.tv.copy(HVS.pos).add(HVS.up.set(0,VSEL.g==="kara"?1.4:6,0)),k); MENUV.dist+=(HVS.dist*MENUV.zoom-MENUV.dist)*k; MENUV.idle+=dt; if(MENUV.idle>3) MENUV.yaw+=dt*0.12;
   const cp=Math.cos(MENUV.pitch), sp=Math.sin(MENUV.pitch); camera.position.set(MENUV.tgt.x+Math.sin(MENUV.yaw)*cp*MENUV.dist, MENUV.tgt.y+Math.max(0.15,sp)*MENUV.dist, MENUV.tgt.z+Math.cos(MENUV.yaw)*cp*MENUV.dist);
   const gy=Math.max(groundH(camera.position.x,camera.position.z),0)+1.2; if(camera.position.y<gy) camera.position.y=gy; camera.lookAt(MENUV.tgt);
-  if(Math.abs(50-lastFov)>0.05){ camera.fov=50; lastFov=50; camera.updateProjectionMatrix(); } camera.updateMatrixWorld(); };
+  if(Math.abs(50-lastFov)>0.05){ camera.fov=50; lastFov=50; camera.updateProjectionMatrix(); } camera.updateMatrixWorld(); }; },menuCam);
 /* ---------- starting with any vehicle; the last one is remembered for HIZLI OYUN */
 const LASTV={v:null}; try{ const s=localStorage.getItem('ayy-lastv'); if(s) LASTV.v=JSON.parse(s); }catch(e){}
 function lastSet(v){ LASTV.v=v; try{ localStorage.setItem('ayy-lastv',JSON.stringify(v)); }catch(e){} }
@@ -75,8 +75,8 @@ function vehStart(v){ if(v.g==='kara'){ startWalk(); const c=vehNew(v.id,HG.X0+9
     WALK.pos.set(b.x,2,b.z); boatBoard(b); }
   lastSet({t:v.g,id:v.id}); }
 document.getElementById('btnPlay').addEventListener('click',function(e){ if(!VSEL) return; e.stopImmediatePropagation(); vehStart(VSEL); },true);
-const _m3Heli=heliFromHangar; heliFromHangar=function(id){ lastSet({t:'heli',id:id}); return _m3Heli(id); };
-const _m3SG=startGame; startGame=function(mode){ const r=_m3SG(mode); if(mode!=='walk'&&state==='play') lastSet({t:'ac',id:activeId}); return r; };
+heliFromHangar=HOOK.wrap('heliFromHangar','98b-menu3#_m3Heli',function(_m3Heli){ return function(id){ lastSet({t:'heli',id:id}); return _m3Heli(id); }; },heliFromHangar);
+startGame=HOOK.wrap('startGame','98b-menu3#_m3SG',function(_m3SG){ return function(mode){ const r=_m3SG(mode); if(mode!=='walk'&&state==='play') lastSet({t:'ac',id:activeId}); return r; }; },startGame);
 function quickPlay(){ playMode('quick'); const v=LASTV.v||{t:'ac',id:'kaan'};
   if(v.t==='ac'){ selectedId=AIRCRAFT[v.id]?v.id:'kaan'; setAircraft(selectedId); if(missionId!=='free') selectMission('free'); startGame(startPick==='walk'||startPick==='hangar'?'runway':startPick); return; }
   if(v.t==='heli'){ heliFromHangar(v.id); return; } vehStart({g:v.t,id:v.id}); }
@@ -90,8 +90,8 @@ function m3Launch(){ if(state!=='menu') return; const s=(startPick==='walk'||!st
 const START3=[['hangar','Hangardan','Taksi yolundan piste'],['runway','Pistten','Kalkışa hazır'],['air','Havada','Doğrudan uçuş']];
 function m3StartUI(){ const el=$('suStart'); if(!el) return; if(startPick==='walk') startPick='runway';
   el.innerHTML=START3.map(function(s){ return '<button type="button" data-s="'+s[0]+'" aria-pressed="'+(startPick===s[0])+'"><b>'+s[1]+'</b><small>'+s[2]+'</small></button>'; }).join(''); }
-const _m3Setup=refreshSetup; refreshSetup=function(){ _m3Setup(); m3StartUI(); m3Groups(); const b=$('btnLoadDone'); if(b) b.textContent=loadFrom==='missions'?'▶ Göreve başla':'▶ Uçuşa başla';
-  const k=document.querySelector('#setupUI .step'); if(k) k.textContent=(SLOTS[selectedId]>0?'Silah yükü':'Uçuş öncesi')+' · başlama yeri'; };
+refreshSetup=HOOK.wrap('refreshSetup','98b-menu3#_m3Setup',function(_m3Setup){ return function(){ _m3Setup(); m3StartUI(); m3Groups(); const b=$('btnLoadDone'); if(b) b.textContent=loadFrom==='missions'?'▶ Göreve başla':'▶ Uçuşa başla';
+  const k=document.querySelector('#setupUI .step'); if(k) k.textContent=(SLOTS[selectedId]>0?'Silah yükü':'Uçuş öncesi')+' · başlama yeri'; }; },refreshSetup);
 /* ---------- my quick groups (per aircraft) */
 const LGRP={}; try{ Object.assign(LGRP,JSON.parse(localStorage.getItem('ayy-lgroups')||'{}')); }catch(e){}
 function lgSave(){ try{ localStorage.setItem('ayy-lgroups',JSON.stringify(LGRP)); }catch(e){} }
@@ -114,22 +114,22 @@ function lgApply(i){ const g=(LGRP[selectedId]||[])[i]; if(!g) return; const l=l
   if(host&&ai){ host.appendChild(ai); } if(host&&sp){ host.appendChild(sp); } })();
 /* ---------- title menu: quick play items */
 NAV_IC.bolt='<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'; NAV_IC.flag='<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>';
-const _m3Nav=navRender; navRender=function(){ _m3Nav(); if(NAV.level!=='start') return; const el=$('cNav'); if(!el) return;
+navRender=HOOK.wrap('navRender','98b-menu3#_m3Nav',function(_m3Nav){ return function(){ _m3Nav(); if(NAV.level!=='start') return; const el=$('cNav'); if(!el) return;
   const p=accProfile(), r=p.rank||0;
   el.innerHTML='<p class="mg">HIZLI OYUN <small>· her şey açık, puan kazandırmaz</small></p>'+navBtn('q_quick','Hızlı Oyun',lastName()+' ile hemen başla','bolt')+navBtn('q_free','Serbest Uçuş / Sürüş','Hangarda aracını seç','plane')+
     navBtn('q_mis','Hızlı Görev','Bütün görevler açık','target')+navBtn('q_walk','Üssü Gez','Başlayacağın üssü seç','walk')+
     '<p class="mg">KARİYER</p>'+navBtn('careerMenu','Kariyer',rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP','star','car')+navBtn('back','Geri','','back','bk');
-  tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); };
+  tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
 Object.assign(NAV_D,{q_quick:['HIZLI OYUN','Hızlı Oyun','En son kullandığın araçla tek tıkla oyuna gir: uçak, helikopter, tank ya da gemi.',[],'▶ Hemen başla'],
   q_free:['HIZLI OYUN','Serbest Uçuş / Sürüş','Hangara git; uçak, helikopter, kara ya da deniz aracını seç, silah yükünü ve başlama yerini belirle. Süre ve kısıt yok.',[],'Hangara git'],
   q_mis:['HIZLI OYUN','Hızlı Görev','Bütün görevler kilitsiz: uçak, helikopter, dinamik görevler ve yarışlar. Düşman, kanat adamı ve zorluk görev ekranında.',[],'Görevleri aç'],
   q_walk:['HIZLI OYUN','Üssü Gez','Hava, deniz ya da kara üssünde başla: yürü, araçlara ve helikopterlere bin.',[],'Üs seç']});
-const _m3Act=titleAct; titleAct=function(act){ if(state!=='menu') return;
+titleAct=HOOK.wrap('titleAct','98b-menu3#_m3Act',function(_m3Act){ return function(act){ if(state!=='menu') return;
   if(act==='q_quick') return quickPlay();
   if(act==='q_free'){ playMode('quick'); if(missionId!=='free') selectMission('free'); VSEL=null; enterHangar(); buildPicker(); return; }
   if(act==='q_mis'){ playMode('quick'); BF.cat='all'; misSel=0; return openMissions(); }
   if(act==='q_walk'){ playMode('quick'); return basePickOpen(); }
-  return _m3Act(act); };
+  return _m3Act(act); }; },titleAct);
 /* base picker for ÜSSÜ GEZ */
 const BASES=['base','naval','land','uav','marina','village','hilalkent','anadolukent'];
 function basePickOpen(){ const el=$('baseUI'); if(!el) return; const L=BASES.map(placeById).filter(function(p){ return p&&p.g; });

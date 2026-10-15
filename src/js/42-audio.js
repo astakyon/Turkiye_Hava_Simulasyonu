@@ -32,12 +32,17 @@ function audioUpdate(){
   else { const on=state==='play'&&!S.crashed&&!muted, thr=S.ab?1:S.throttle, sn=CUR.snd; type=sn.type;
     gN=on?(0.12+0.32*thr+(S.ab?0.18:0)+S.speed/900*0.1)*sn.n:0; fL=sn.lp0+thr*sn.lpK+S.speed*1.4+(S.ab?700:0); fO=sn.f0+thr*(sn.f1-sn.f0); gO=on?(0.012+thr*0.03)*sn.o:0;
     id='eng_air'; lg=on?0.3+0.45*thr+(S.ab?0.25:0):0; lr=0.7+thr*0.6+(S.ab?0.25:0); }
-  ['eng_air','eng_car'].forEach(function(k){ if(k!==id&&SND.loops[k]) sndLoop(k,0,1); });
+  if(id!=='eng_air'&&SND.loops.eng_air) sndLoop('eng_air',0,1); if(id!=='eng_car'&&SND.loops.eng_car) sndLoop('eng_car',0,1);
   const file=id&&sndLoop(id,lg,lr), uv=id?sndVol(id):1, up=id?sndPitch(id):1;
   if(file){ gN=0; gO=0; }
   if(eng.osc.type!==type) eng.osc.type=type;
-  eng.g.gain.setTargetAtTime(gN*uv,t,0.1); eng.og.gain.setTargetAtTime(gO*uv,t,0.1);
-  eng.osc.frequency.setTargetAtTime(fO*up,t,0.08); eng.lp.frequency.setTargetAtTime(fL*up,t,0.1);
+  /* V2.24: new targets only when they change (each call adds an event to the audio timeline), and the voice is unplugged
+     after 1.5 s of silence so the audio thread stops computing it (menus, walking, helicopter) */
+  const E=eng.last||(eng.last={gN:-1,gO:-1,fO:-1,fL:-1,quiet:0,off:false}), a=gN*uv, b=gO*uv, c=fO*up, d=fL*up;
+  if(a===0&&b===0){ E.quiet+=1; } else { E.quiet=0; if(E.off){ E.off=false; try{ eng.g.connect(sndOut('sfx')); eng.og.connect(sndOut('sfx')); }catch(x){} } }
+  if(E.quiet>90&&!E.off){ E.off=true; try{ eng.g.disconnect(); eng.og.disconnect(); }catch(x){} }
+  if(!E.off){ if(Math.abs(a-E.gN)>1e-4){ eng.g.gain.setTargetAtTime(a,t,0.1); E.gN=a; } if(Math.abs(b-E.gO)>1e-4){ eng.og.gain.setTargetAtTime(b,t,0.1); E.gO=b; }
+    if(Math.abs(c-E.fO)>0.5){ eng.osc.frequency.setTargetAtTime(c,t,0.08); E.fO=c; } if(Math.abs(d-E.fL)>2){ eng.lp.frequency.setTargetAtTime(d,t,0.1); E.fL=d; } }
 }
 function noiseBurst(freq,type,vol,dur){
   if(!AC||muted||!noiseBuf) return;

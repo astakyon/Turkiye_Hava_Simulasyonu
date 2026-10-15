@@ -15,8 +15,8 @@ function pkNear(p){ if(typeof MODELS==='undefined'||!MODELS.inst) return null; l
   for(const id in MODELS.inst){ if(!AIRCRAFT[id]) continue; const L=MODELS.inst[id]; for(let i=0;i<L.length;i++){ const m=L[i]; if(pkSkip(m)) continue; m.group.getWorldPosition(PK.v);
       const d=Math.hypot(PK.v.x-p.x,PK.v.z-p.z), R=pkSize(m)+2.5; if(d<R&&Math.abs(PK.v.y-p.y)<12&&d/R<bd){ bd=d/R; best={id:id,m:m}; } } }
   return best; }
-const _pkWalk=walkUpdate; walkUpdate=function(dt){ _pkWalk(dt); PK.cur=null;
-  if(WALK.mode==='foot'&&!WALK.near){ const n=pkNear(WALK.pos); if(n){ PK.cur=n; WALK.near='plane'; WALK.nearId=n.id; } } };
+walkUpdate=HOOK.wrap('walkUpdate','98n-board#_pkWalk',function(_pkWalk){ return function(dt){ _pkWalk(dt); PK.cur=null;
+  if(WALK.mode==='foot'&&!WALK.near){ const n=pkNear(WALK.pos); if(n){ PK.cur=n; WALK.near='plane'; WALK.nearId=n.id; } } }; },walkUpdate);
 function pkBoard(n){ const g=n.m.group; g.getWorldPosition(PK.v); g.getWorldQuaternion(PK.q); const id=n.id, pos=PK.v.clone(), q=PK.q.clone();
   walkLeave(); selectedId=id; if(activeId!==id) setAircraft(id); if(missionId!=='free') selectMission('free'); startGame('runway');
   const gy=Math.max(groundH(pos.x,pos.z),pos.y-0.5); S.pos.set(pos.x,gy+CUR.gearOff,pos.z);
@@ -24,6 +24,6 @@ function pkBoard(n){ const g=n.m.group; g.getWorldPosition(PK.v); g.getWorldQuat
   const f=new THREE.Vector3(0,0,-1).applyQuaternion(q); S.q.setFromAxisAngle(UP,Math.atan2(-f.x,-f.z));
   S.speed=0; S.throttle=0; S.onGround=true; S.taxi=false; S.auto=false; S.clearance=true; S.gear=true; camSnap=true; try{ camQ.copy(S.q); }catch(e){}
   g.visible=false; PK.hid=g; toast(AIRCRAFT[id].name+' hazır — gazı aç, pistte hızlan ve kalk','#7dffb0'); }
-const _pkAct=walkInteract; walkInteract=function(){ if(state==='walk'&&WALK.mode==='foot'&&WALK.near==='plane'&&PK.cur&&PK.cur.id===WALK.nearId){ if(typeof licOk==='function'&&!licExempt()&&!licOk(PK.cur.id)){ toast(licMsg(PK.cur.id),'#ffc24a'); return; } pkBoard(PK.cur); return; } return _pkAct(); };
+walkInteract=HOOK.wrap('walkInteract','98n-board#_pkAct',function(_pkAct){ return function(){ if(state==='walk'&&WALK.mode==='foot'&&WALK.near==='plane'&&PK.cur&&PK.cur.id===WALK.nearId){ if(typeof licOk==='function'&&!licExempt()&&!licOk(PK.cur.id)){ toast(licMsg(PK.cur.id),'#ffc24a'); return; } pkBoard(PK.cur); return; } return _pkAct(); }; },walkInteract);
 /* bring the parked model back when the flight is over */
-const _pkCull=cullStep; cullStep=function(dt){ _pkCull(dt); if(PK.hid&&state!=='play'&&state!=='paused'&&state!=='map'&&state!=='mend'){ PK.hid.visible=true; PK.hid=null; } };
+cullStep=HOOK.wrap('cullStep','98n-board#_pkCull',function(_pkCull){ return function(dt){ _pkCull(dt); if(PK.hid&&state!=='play'&&state!=='paused'&&state!=='map'&&state!=='mend'){ PK.hid.visible=true; PK.hid=null; } }; },cullStep);

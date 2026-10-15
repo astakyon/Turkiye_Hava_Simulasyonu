@@ -53,14 +53,14 @@ function schDone(){ const s=schState(); return LESSONS.filter(function(L){ retur
 function schLicOk(k){ const s=schState(); return LIC[k].ids.every(function(id){ return s[id]; }); }
 Object.keys(LIC).forEach(function(k){ MEDALS.push(['lic_'+k,LIC[k].n,LIC[k].ids.length>1?'Uçuş okulundaki ilgili dersleri bitir':'Uçuş okulunun silah dersini bitir',function(st){ return (st.school||[]).length&&LIC[k].ids.every(function(id){ return st.school.indexOf(id)>=0; }); }]); });
 /* ---- board + menu */
-const _schAll=boardAll; boardAll=function(){ return _schAll().concat(LESSONS.map(function(L){ return {id:'sch_'+L.id,kind:'school',name:'Ders: '+L.n,desc:L.d,L:L}; })); };
-const _schMeta=bMeta; bMeta=function(e){ if(e.kind!=='school') return _schMeta(e); const L=e.L;
-  return {cat:'okul',diff:L.id==='ruzgar'||L.id==='gemi'?2:1,dur:4,xp:L.xp,obj:L.steps.map(function(s){ return s.t; }),thr:[L.wind?'Yan rüzgâr 25 knot, türbülans':'Tehdit yok — eğitmen telsizde'],load:null,area:L.veh==='heli'?[L.spot[0],L.spot[1],1500]:L.id==='silah'?[2300,-7700,2500]:[600,1500,5000]}; };
-const _schRender=renderMissions; renderMissions=function(){ _schRender(); const f=$('misFilt'); if(f&&!f.querySelector('[data-v="okul"]')){ const seg=f.querySelector('[data-k="cat"]'); if(seg){ const b=document.createElement('button'); b.type='button'; b.dataset.v='okul'; b.textContent='Okul'; b.setAttribute('aria-pressed',String(BF.cat==='okul')); const nw=seg.querySelector('.bnew'); seg.insertBefore(b,nw||null); } }
+boardAll=HOOK.wrap('boardAll','85-school#_schAll',function(_schAll){ return function(){ return _schAll().concat(LESSONS.map(function(L){ return {id:'sch_'+L.id,kind:'school',name:'Ders: '+L.n,desc:L.d,L:L}; })); }; },boardAll);
+bMeta=HOOK.wrap('bMeta','85-school#_schMeta',function(_schMeta){ return function(e){ if(e.kind!=='school') return _schMeta(e); const L=e.L;
+  return {cat:'okul',diff:L.id==='ruzgar'||L.id==='gemi'?2:1,dur:4,xp:L.xp,obj:L.steps.map(function(s){ return s.t; }),thr:[L.wind?'Yan rüzgâr 25 knot, türbülans':'Tehdit yok — eğitmen telsizde'],load:null,area:L.veh==='heli'?[L.spot[0],L.spot[1],1500]:L.id==='silah'?[2300,-7700,2500]:[600,1500,5000]}; }; },bMeta);
+renderMissions=HOOK.wrap('renderMissions','85-school#_schRender',function(_schRender){ return function(){ _schRender(); const f=$('misFilt'); if(f&&!f.querySelector('[data-v="okul"]')){ const seg=f.querySelector('[data-k="cat"]'); if(seg){ const b=document.createElement('button'); b.type='button'; b.dataset.v='okul'; b.textContent='Okul'; b.setAttribute('aria-pressed',String(BF.cat==='okul')); const nw=seg.querySelector('.bnew'); seg.insertBefore(b,nw||null); } }
   const e=boardList()[misSel]; if(e&&e.kind==='school'){ const s=schState(); $('btnMisGo').textContent=s[e.L.id]?'▶ Dersi tekrarla':'▶ Derse başla'; $('btnMisAc').disabled=true; $('btnMisAc').textContent=e.L.veh==='heli'?'T625 GÖKBEY':AIRCRAFT[e.L.ac].short;
     const ch=$('misChips'); if(ch) ch.innerHTML='<span>'+(s[e.L.id]?'✓ Tamamlandı':'Tamamlanmadı')+'</span><span>'+LIC[e.L.lic].n+(schLicOk(e.L.lic)?' ✓':'')+'</span><span>'+schDone()+' / '+LESSONS.length+' ders</span>'; }
-  Array.prototype.forEach.call(document.querySelectorAll('#misList .mitem'),function(b){ const en=boardList()[+b.dataset.i]; if(en&&en.kind==='school'&&schState()[en.L.id]){ const st=b.querySelector('.stars'); if(st) st.outerHTML='<span class="stars"><i class="on">✓</i></span>'; } }); };
-const _schGo=misGo; misGo=function(){ const e=boardList()[misSel]; if(!e||e.kind!=='school') return _schGo(); schStart(e.L.id); };
+  Array.prototype.forEach.call(document.querySelectorAll('#misList .mitem'),function(b){ const en=boardList()[+b.dataset.i]; if(en&&en.kind==='school'&&schState()[en.L.id]){ const st=b.querySelector('.stars'); if(st) st.outerHTML='<span class="stars"><i class="on">✓</i></span>'; } }); }; },renderMissions);
+misGo=HOOK.wrap('misGo','85-school#_schGo',function(_schGo){ return function(){ const e=boardList()[misSel]; if(!e||e.kind!=='school') return _schGo(); schStart(e.L.id); }; },misGo);
 /* ---- engine */
 function schStart(id){
   const L=LESSONS.find(function(x){ return x.id===id; }); if(!L) return; schStop(); closeModals();
@@ -77,7 +77,7 @@ function schSay(t){ if(typeof radioSay==='function') radioSay({w:'egitmen',t:t},
 function schStop(){ if(SCH.mark){ scene.remove(SCH.mark); SCH.mark=null; } if(SCH.crate){ const c=SCH.crate; HELI.list.forEach(function(H){ if(H.sling&&H.sling.o===c){ scene.remove(H.sling.line); H.sling=null; } }); scene.remove(c.g); const i=CRATES.indexOf(c); if(i>=0) CRATES.splice(i,1); SCH.crate=null; }
   if(SCH.wx){ WX.dir=SCH.wx.dir; SCH.wx=null; } if(typeof DYN!=='undefined') dynClear(); SCH.on=false; }
 /* wind override while a crosswind lesson runs */
-const _schWx=wxTarget; wxTarget=function(){ const t=_schWx(); if(SCH.on&&SCH.cur&&SCH.cur.wind) return Object.assign({},t,{wind:SCH.cur.wind.wind,turb:SCH.cur.wind.turb}); return t; };
+wxTarget=HOOK.wrap('wxTarget','85-school#_schWx',function(_schWx){ return function(){ const t=_schWx(); if(SCH.on&&SCH.cur&&SCH.cur.wind) return Object.assign({},t,{wind:SCH.cur.wind.wind,turb:SCH.cur.wind.turb}); return t; }; },wxTarget);
 function schStep(dt){
   if(!SCH.on||!SCH.cur) return; const L=SCH.cur;
   if(L.veh==='air'&&(state!=='play'||M.id!=='school')){ if(state==='menu') schStop(); return; }
@@ -103,13 +103,13 @@ function schEnd(ok,why){
     if(el){ $('hmEndT').textContent=ok?'DERS TAMAMLANDI':'DERS BAŞARISIZ'; $('hmEndT').className=ok?'ok':'bad'; $('hmEndS').innerHTML='<b>'+L.n+'</b><span>'+(ok?(schLicOk(L.lic)?LIC[L.lic].n+' ✓ · ':'')+schDone()+' / '+LESSONS.length+' ders':why)+'</span>'; setTimeout(function(){ el.classList.remove('hidden'); },1200); }
     schStop(); }
 }
-const _schHmStart=hmStart; hmStart=function(id){ if(String(id).indexOf('sch_')===0){ $('hmEnd').classList.add('hidden'); HM.on=false; return schStart(String(id).slice(4)); } return _schHmStart(id); };
-const _schRestart=restartMission; restartMission=function(){ if(M.id==='school'&&SCH.cur){ $('missionEnd').classList.add('hidden'); return schStart(SCH.cur.id); } return _schRestart(); };
-const _schSetup=setupMission; setupMission=function(){ if(missionId!=='school') return _schSetup(); MLOG.length=0; B_STAT.shots=0; B_STAT.minHp=100; MS.rings=MS.air=MS.ground=MS.recon=false; M={id:'school',t:0,started:false,done:false,scanIdx:0,scanT:0};
-  clearAir(); clearGround(); clearRecon(); ringIdx=0; courseT=null; updateRingVisuals(); aiClear(); };
-const _schUpdM=updateMission; updateMission=function(dt){ if(M.id==='school'){ if(!M.done&&state==='play'){ if(!M.started&&!S.onGround) M.started=true; M.t+=dt; } return; } return _schUpdM(dt); };
-const _schStars=bStarsFor; bStarsFor=function(ok){ return M.id==='school'?(ok?3:0):_schStars(ok); };
-const _schObj=bObjective; bObjective=function(){ if(state==='play'&&M&&M.id==='school') return null; return _schObj(); };
+hmStart=HOOK.wrap('hmStart','85-school#_schHmStart',function(_schHmStart){ return function(id){ if(String(id).indexOf('sch_')===0){ $('hmEnd').classList.add('hidden'); HM.on=false; return schStart(String(id).slice(4)); } return _schHmStart(id); }; },hmStart);
+restartMission=HOOK.wrap('restartMission','85-school#_schRestart',function(_schRestart){ return function(){ if(M.id==='school'&&SCH.cur){ $('missionEnd').classList.add('hidden'); return schStart(SCH.cur.id); } return _schRestart(); }; },restartMission);
+setupMission=HOOK.wrap('setupMission','85-school#_schSetup',function(_schSetup){ return function(){ if(missionId!=='school') return _schSetup(); MLOG.length=0; B_STAT.shots=0; B_STAT.minHp=100; MS.rings=MS.air=MS.ground=MS.recon=false; M={id:'school',t:0,started:false,done:false,scanIdx:0,scanT:0};
+  clearAir(); clearGround(); clearRecon(); ringIdx=0; courseT=null; updateRingVisuals(); aiClear(); }; },setupMission);
+updateMission=HOOK.wrap('updateMission','85-school#_schUpdM',function(_schUpdM){ return function(dt){ if(M.id==='school'){ if(!M.done&&state==='play'){ if(!M.started&&!S.onGround) M.started=true; M.t+=dt; } return; } return _schUpdM(dt); }; },updateMission);
+bStarsFor=HOOK.wrap('bStarsFor','85-school#_schStars',function(_schStars){ return function(ok){ return M.id==='school'?(ok?3:0):_schStars(ok); }; },bStarsFor);
+bObjective=HOOK.wrap('bObjective','85-school#_schObj',function(_schObj){ return function(){ if(state==='play'&&M&&M.id==='school') return null; return _schObj(); }; },bObjective);
 /* ---- HUD: lesson checklist */
 function schPanel(w,h,s){ const L=SCH.cur; if(!SCH.on||!L) return; const x=Math.round(16*s), y0=Math.round(h*(L.veh==='air'?0.36:0.3)); hx.save(); hx.textAlign='left'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,.75)'; hx.shadowBlur=4;
   hx.font='500 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; let mw=0; L.steps.forEach(function(st){ mw=Math.max(mw,hx.measureText('▶ '+st.t+'  (0.0 / 5 sn)').width); });
@@ -118,5 +118,5 @@ function schPanel(w,h,s){ const L=SCH.cur; if(!SCH.on||!L) return; const x=Math.
   L.steps.forEach(function(st,i){ const done=i<SCH.i, cur=i===SCH.i; hx.font=(cur?'700 ':'500 ')+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle=done?'rgba(125,255,176,.7)':cur?'#ffffff':'rgba(223,233,241,.45)';
     let t=(done?'✓ ':cur?'▶ ':'· ')+st.t; if(cur&&st.hold) t+='  ('+SCH.hold.toFixed(1)+' / '+st.hold+' sn)'; if(cur&&st.wp&&L.veh==='air') t+='  · '+Math.round(Math.hypot(S.pos.x-st.wp[0],S.pos.z-st.wp[1]))+' m'; hx.fillText(t,x,y0+(i+1)*Math.round(17*s)); });
   hx.restore(); }
-const _schHUD=drawHUD; drawHUD=function(){ _schHUD(); if(state==='play'&&SCH.on&&SCH.cur&&SCH.cur.veh==='air'&&!(typeof EJ!=='undefined'&&EJ.on)) schPanel(HW,HH,clamp(Math.min(HW,HH)/760,0.7,1.5)); };
-const _schHeliHUD=heliHUD; heliHUD=function(w,h,s){ _schHeliHUD(w,h,s); if(SCH.on&&SCH.cur&&SCH.cur.veh==='heli') schPanel(w,h,s); };
+drawHUD=HOOK.wrap('drawHUD','85-school#_schHUD',function(_schHUD){ return function(){ _schHUD(); if(state==='play'&&SCH.on&&SCH.cur&&SCH.cur.veh==='air'&&!(typeof EJ!=='undefined'&&EJ.on)) schPanel(HW,HH,clamp(Math.min(HW,HH)/760,0.7,1.5)); }; },drawHUD);
+heliHUD=HOOK.wrap('heliHUD','85-school#_schHeliHUD',function(_schHeliHUD){ return function(w,h,s){ _schHeliHUD(w,h,s); if(SCH.on&&SCH.cur&&SCH.cur.veh==='heli') schPanel(w,h,s); }; },heliHUD);

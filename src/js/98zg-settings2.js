@@ -40,7 +40,7 @@ function rdReset(r){ const el=$(r[0]); if(!el) return; const k=r[1];
   const b=document.createElement('button'); b.type='button'; b.className='sreset hidden'; b.textContent='↺'; b.title='Varsayılana dön'; b.setAttribute('aria-label','Varsayılana dön: '+t.textContent.replace(/(az|orta|çok) etki/,'').trim());
   b.addEventListener('click',function(e){ e.stopPropagation(); rdReset(r); }); t.appendChild(b); r.btn=b; }); })();
 function rdSync(){ RD.forEach(function(r){ if(r.btn) r.btn.classList.toggle('hidden',!rdDiff(r)); }); }
-const _rdSync=syncSettingsUI; syncSettingsUI=function(){ _rdSync(); try{ rdSync(); }catch(e){} };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98zg-settings2#_rdSync',function(_rdSync){ return function(){ _rdSync(); try{ rdSync(); }catch(e){} }; },syncSettingsUI);
 /* search: every tab, every control panel, every collapsed group */
 (function(){ const s=$('setSearch'); if(!s||!s.addEventListener) return; s.addEventListener('input',function(){ const q=s.value.trim(), st=$('settings'); if(!st||!st.querySelectorAll) return;
   Array.prototype.forEach.call(st.querySelectorAll('details'),function(d){ if(q) d.open=!!d.querySelector('.srow:not(.nomatch):not(.dup)'); });

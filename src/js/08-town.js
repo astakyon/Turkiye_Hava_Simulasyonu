@@ -96,8 +96,9 @@ function buildTraffic(){
   TRAFFIC.mesh=carInstances(TRAFFIC.cars.map(function(){ return {x:0,y:-50,z:0,h:0}; }),r);
   trafficStep(0);
 }
+const TRF_T={mt:new THREE.Matrix4(), q:new THREE.Quaternion(), s:new THREE.Vector3(1,1,1), p:new THREE.Vector3()};   /* V2.24: temporaries reused every frame */
 function trafficStep(dt){
-  const T1=TRAFFIC; if(!T1.mesh) return; const mt=new THREE.Matrix4(), q=new THREE.Quaternion(), s=new THREE.Vector3(1,1,1), p=new THREE.Vector3();
+  const T1=TRAFFIC; if(!T1.mesh) return; const mt=TRF_T.mt, q=TRF_T.q, s=TRF_T.s, p=TRF_T.p;
   for(let k=0;k<T1.cars.length;k++){ const c=T1.cars[k], P=c.P; c.s+=c.dir*c.v*dt;
     if(c.s>P.len-3){ c.s=P.len-3; c.dir=-1; } else if(c.s<3){ c.s=3; c.dir=1; }
     while(c.i<P.L.length-2&&P.L[c.i+1]<c.s) c.i++; while(c.i>0&&P.L[c.i]>c.s) c.i--;

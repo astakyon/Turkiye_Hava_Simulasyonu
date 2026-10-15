@@ -19,7 +19,7 @@ function gpuClass(name){ const g=String(name==null?DEV.gpu:name||'').toLowerCase
   return 'dgpu'; }
 const GPUC_TXT={igpu:'tümleşik ekran kartı', dgpu:'ayrı ekran kartı', apple:'Apple ekran kartı', mobile:'telefon/tablet ekran kartı', soft:'yazılım (ekran kartı yok)'};
 /* ---- effect chain */
-const _q13Def=fxDefault; fxDefault=function(){ if(!DEV.mobile&&gpuClass()==='igpu'){ const q=SETTINGS.quality||0; return q>=3?2:q>=2?1:0; } return _q13Def(); };
+fxDefault=HOOK.wrap('fxDefault','98y-quality#_q13Def',function(_q13Def){ return function(){ if(!DEV.mobile&&gpuClass()==='igpu'){ const q=SETTINGS.quality||0; return q>=3?2:q>=2?1:0; } return _q13Def(); }; },fxDefault);
 function fxBloomScale(){ const c=gpuClass(); if(c==='igpu'||c==='mobile'||c==='soft') return 0.5; return (SETTINGS.quality>=3&&(c==='dgpu'||c==='apple'))?1:0.5; }   /* the pass itself starts at half of this */
 function fxAAChoice(){ const c=gpuClass(), set=SETTINGS.aa&&SETTINGS.aa!=='auto'?SETTINGS.aa:null;
   if(set) return (c==='igpu'&&set==='msaa8')?'msaa4':set;
@@ -44,7 +44,7 @@ fxBuild=function(){
 };
 /* ---- frame pacing: even 30 instead of 33/50 judder (FPS limit "Otomatik") */
 const PACE={cap:0, low:0, t:0, hold:0, probe:0, told:false};
-const _q13Cap=fpsCap; fpsCap=function(){ if(SETTINGS.fpsCap==null&&!(typeof PT!=='undefined'&&PT.run)&&PACE.cap) return PACE.cap; return _q13Cap(); };
+fpsCap=HOOK.wrap('fpsCap','98y-quality#_q13Cap',function(_q13Cap){ return function(){ if(SETTINGS.fpsCap==null&&!(typeof PT!=='undefined'&&PT.run)&&PACE.cap) return PACE.cap; return _q13Cap(); }; },fpsCap);
 function paceStep(){ if(SETTINGS.fpsCap!=null||(typeof PT!=='undefined'&&PT.run)||(state!=='play'&&state!=='walk')){ PACE.cap=0; PACE.low=0; PACE.probe=0; return; }
   const fps=PERF.fps;
   if(PACE.probe>0){ PACE.probe--; if(PACE.probe===0){ if(fps>=55){ PACE.cap=0; PACE.low=0; } else { PACE.cap=30; PACE.hold=0; } } return; }
@@ -52,14 +52,14 @@ function paceStep(){ if(SETTINGS.fpsCap!=null||(typeof PT!=='undefined'&&PT.run)
     if(fps>=22&&fps<50&&!ladderBusy) PACE.low++; else PACE.low=0;
     if(PACE.low>=6){ PACE.cap=30; PACE.hold=0; PACE.low=0; PERF2.capLast=0; if(!PACE.told){ PACE.told=true; toast('Daha akıcı görüntü için kareler eşit aralıklı 30 FPS\'e sabitlendi (Ayarlar → Grafik → FPS sınırı)','#b8ecff'); } } }
   else { PACE.hold++; if(PACE.hold>=20){ PACE.hold=0; PACE.cap=0; PACE.probe=3; } } }
-const _q13PS=perfStep; perfStep=function(dt){ const n0=PERF.n; _q13PS(dt); if(PERF.n===0&&n0>0){ try{ paceStep(); }catch(e){} } };
+perfStep=HOOK.wrap('perfStep','98y-quality#_q13PS',function(_q13PS){ return function(dt){ const n0=PERF.n; _q13PS(dt); if(PERF.n===0&&n0>0){ try{ paceStep(); }catch(e){} } }; },perfStep);
 /* the ladder must not read a locked 30 as "too slow" */
-const _q13Lad=perfLadder; perfLadder=function(){ if(PACE.cap&&PERF.fps>=26){ PERF2.bad=0; return; } return _q13Lad(); };
+perfLadder=HOOK.wrap('perfLadder','98y-quality#_q13Lad',function(_q13Lad){ return function(){ if(PACE.cap&&PERF.fps>=26){ PERF2.bad=0; return; } return _q13Lad(); }; },perfLadder);
 /* FPS limit row: "Otomatik" */
 (function(){ const c=$('setCap'); if(!c||!document.createElement||c.querySelector('[data-c="auto"]')) return; const b=document.createElement('button'); b.type='button'; b.dataset.c='auto'; b.textContent='Otomatik'; c.insertBefore(b,c.firstChild);
   c.addEventListener('click',function(e){ const t=e.target.closest('button[data-c="auto"]'); if(!t) return; e.stopImmediatePropagation(); SETTINGS.fpsCap=null; PACE.cap=0; PERF2.capLast=0; saveSettings(); syncSettingsUI(); },true);
   const sm=c.closest&&c.closest('.srow'); const s=sm&&sm.querySelector('small'); if(s) s.textContent='Otomatik: telefonda 60; 60\'ı tutamayan cihazda titreme olmasın diye eşit aralıklı 30 · 30: pil tasarrufu · Sınırsız: yüksek yenileme hızlı ekranlar'; })();
-const _q13Sync=syncSettingsUI; syncSettingsUI=function(){ _q13Sync(); const c=$('setCap'); if(c) Array.prototype.forEach.call(c.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.c==='auto'?SETTINGS.fpsCap==null:(SETTINGS.fpsCap!=null&&+b.dataset.c===+SETTINGS.fpsCap))); }); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98y-quality#_q13Sync',function(_q13Sync){ return function(){ _q13Sync(); const c=$('setCap'); if(c) Array.prototype.forEach.call(c.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.c==='auto'?SETTINGS.fpsCap==null:(SETTINGS.fpsCap!=null&&+b.dataset.c===+SETTINGS.fpsCap))); }); }; },syncSettingsUI);
 /* ---- performance test: recommended settings */
 function ptRecommend(r){ const b=r&&r.base; if(!b||!r.feats) return null; const hz=Math.min(60,r.refresh||60), tgt=1000/hz*0.92;
   const cost=function(id){ const f=r.feats.find(function(x){ return x.id===id; }); if(!f) return 0; return Math.max(0,f.gpu!=null?Math.max(f.gpu,f.ms):f.ms); };
@@ -74,17 +74,17 @@ function ptRecommend(r){ const b=r&&r.base; if(!b||!r.feats) return null; const 
 function ptApplyRec(rec){ if(!rec||!rec.ch.length) return; const s=rec.set; Object.keys(s).forEach(function(k){ SETTINGS[k]=s[k]; }); if(s.fx!=null) SETTINGS.fx=s.fx; PERF.scale=1; PERF2.lvl=0;
   saveSettings(); applyQuality(); try{ syncSettingsUI(); }catch(e){} toast('Önerilen ayarlar uygulandı'+(s.depth?' — derinlik değişikliği için sayfayı yenile':''),'#7dffb0'); }
 /* tips: integrated GPU on a laptop that may have a discrete one */
-const _q13Tips=ptTips; ptTips=function(r){ const T=_q13Tips(r).filter(function(t){ return !/Logaritmik derinlik bu bilgisayarda pahalı/.test(t); }), d=r.dev||{};
+ptTips=HOOK.wrap('ptTips','98y-quality#_q13Tips',function(_q13Tips){ return function(r){ const T=_q13Tips(r).filter(function(t){ return !/Logaritmik derinlik bu bilgisayarda pahalı/.test(t); }), d=r.dev||{};
   const lg=(r.feats||[]).find(function(f){ return f.id==='logderinlik'; }); if(lg&&(lg.gpu!=null?lg.gpu:lg.ms90)>3) T.push('Logaritmik derinlik bu bilgisayarda '+String(lg.gpu!=null?lg.gpu:lg.ms90).replace('.',',')+' ms tutuyor; V2.17\'de kaldırılacak.');
   if(!d.mobile&&gpuClass(d.gpu)==='igpu') T.unshift('Oyun tümleşik ekran kartında ('+String(d.gpu).replace(/^ANGLE \(|\)$/g,'').split(',').slice(0,2).join(',')+') çalışıyor. Bilgisayarında ayrı bir NVIDIA ya da AMD kart varsa: Windows Ayarlar → Sistem → Ekran → Grafik → tarayıcını seç → Seçenekler → Yüksek performans → tarayıcıyı yeniden başlat. Fark çok büyük olur.');
-  return T.map(function(t){ return t.replace(/V2\.16'da kaldırılacak/,'V2.17\'de kaldırılacak').replace(/V2\.17'de küçültülecek/,'V2.18\'de küçültülecek').replace(/shader ön derleme \(V2\.18\)/,'shader ön derleme (V2.19)'); }); };
-const _q13Res=ptResults; ptResults=function(rep,list){ try{ if(rep&&rep.dev) rep.tips=ptTips(rep); }catch(e){} _q13Res(rep,list); const el=$('ptResUI'); if(!el) return; const rec=ptRecommend(rep); const tips=el.querySelector('.pttips'); if(!rec||!tips) return;
+  return T.map(function(t){ return t.replace(/V2\.16'da kaldırılacak/,'V2.17\'de kaldırılacak').replace(/V2\.17'de küçültülecek/,'V2.18\'de küçültülecek').replace(/shader ön derleme \(V2\.18\)/,'shader ön derleme (V2.19)'); }); }; },ptTips);
+ptResults=HOOK.wrap('ptResults','98y-quality#_q13Res',function(_q13Res){ return function(rep,list){ try{ if(rep&&rep.dev) rep.tips=ptTips(rep); }catch(e){} _q13Res(rep,list); const el=$('ptResUI'); if(!el) return; const rec=ptRecommend(rep); const tips=el.querySelector('.pttips'); if(!rec||!tips) return;
   const box=document.createElement('div'); box.className='ptrec';
   if(rec.ok) box.innerHTML='<b>Ayarların bu cihaz için uygun.</b> <small>Ölçülen kare süresi hedefin içinde.</small>';
   else if(!rec.ch.length) box.innerHTML=rec.cpu?'<b>Ayar değiştirmek yetmiyor.</b> <small>Bu cihazda darboğaz işlemci (nesne ve çizim sayısı). Birleştirme ve sadeleştirme sürümleri (V2.14–V2.16) bunu doğrudan hedefliyor.</small>':'<b>Önerilecek ayar bulunamadı.</b> <small>Kalite ayarlarıyla hedefe inilemiyor.</small>';
   else { box.innerHTML='<div><b>Önerilen ayarlar</b> <small>(tahmini kare '+String(Math.round(rec.est*10)/10).replace('.',',')+' ms ≈ '+Math.round(1000/rec.est)+' FPS)</small><ul>'+rec.ch.map(function(c){ return '<li>'+c+'</li>'; }).join('')+'</ul></div><button class="btn primary sm" type="button" data-pt="rec">Önerilen ayarları uygula</button>';
     box.querySelector('[data-pt="rec"]').addEventListener('click',function(e){ e.stopPropagation(); ptApplyRec(rec); this.disabled=true; this.textContent='Uygulandı ✓'; }); }
-  tips.parentNode.insertBefore(box,tips.nextSibling); };
+  tips.parentNode.insertBefore(box,tips.nextSibling); }; },ptResults);
 /* first start on an integrated GPU of a strong laptop: one hint (a discrete card may be sitting idle) */
 setTimeout(function(){ try{ if(DEV.mobile||SETTINGS.igpuTold||gpuClass()!=='igpu') return; const cores=navigator.hardwareConcurrency||0, mem=navigator.deviceMemory||0; if(cores<8&&mem<16) return;
   SETTINGS.igpuTold=true; saveSettings(); toast('Oyun tümleşik ekran kartında çalışıyor. Bilgisayarında NVIDIA/AMD kart varsa Windows → Ayarlar → Sistem → Ekran → Grafik bölümünden tarayıcını "Yüksek performans" yap.','#ffc24a'); }catch(e){} },9000);

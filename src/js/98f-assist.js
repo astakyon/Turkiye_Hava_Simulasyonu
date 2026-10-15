@@ -38,11 +38,11 @@ function annStep(dt){ if(!ANN.cur) return; ANN.t-=dt; if(ANN.t<=0) annHide(); }
   const nb=go.cloneNode(true); go.parentNode.replaceChild(nb,go);
   nb.addEventListener('click',function(){ const t=($('admNewsTxt').value||'').trim().slice(0,230); if(!t||!ACC.sb||!ACC.user) return; const d=sel.value, full='⏱'+d+'|'+t;
     ACC.sb.from('announcements').insert({text:full,active:true,created_by:ACC.user.id}).then(function(x){ if(x.error) admMsg(x.error.message,true); else { $('admNewsTxt').value=''; admMsg('Duyuru yayınlandı: '+ANN_DUR.find(function(q){ return q[0]===d; })[1]); admLog('news',null,{text:t,dur:d}); admLoad('news'); accAnnouncements(); } }); }); })();
-const _annLoad=admLoad; admLoad=function(t){ if(t!=='news'||!(ACC.sb&&ACC.user)) return _annLoad(t); $('admNoCloud').classList.add('hidden');
+admLoad=HOOK.wrap('admLoad','98f-assist#_annLoad',function(_annLoad){ return function(t){ if(t!=='news'||!(ACC.sb&&ACC.user)) return _annLoad(t); $('admNoCloud').classList.add('hidden');
   return ACC.sb.from('announcements').select('*').order('created_at',{ascending:false}).limit(20).then(function(r){ $('admNews').innerHTML=(r.data||[]).map(function(a){ const o=annParse(a), live=a.active&&o.exp>Date.now();
-    return '<li data-id="'+a.id+'"'+(a.active?'':' class="off"')+'><span>'+o.text.replace(/</g,'&lt;')+'</span><small>'+new Date(a.created_at).toLocaleString('tr-TR')+' · '+(a.active?annLabel(o):'Kaldırıldı')+(live?' · <b class="ok">yayında</b>':'')+'</small><button type="button" class="btn sm" data-k="toggle">'+(a.active?'Kaldır':'Yeniden yayınla')+'</button></li>'; }).join('')||'<li>Duyuru yok</li>'; }); };
+    return '<li data-id="'+a.id+'"'+(a.active?'':' class="off"')+'><span>'+o.text.replace(/</g,'&lt;')+'</span><small>'+new Date(a.created_at).toLocaleString('tr-TR')+' · '+(a.active?annLabel(o):'Kaldırıldı')+(live?' · <b class="ok">yayında</b>':'')+'</small><button type="button" class="btn sm" data-k="toggle">'+(a.active?'Kaldır':'Yeniden yayınla')+'</button></li>'; }).join('')||'<li>Duyuru yok</li>'; }); }; },admLoad);
 /* ================= mission log close button ================= */
-const _mlR=bLogRender; bLogRender=function(){ _mlR(); const el=$('mlog'); if(!el) return; const h=el.querySelector('h3'); if(h&&!h.querySelector('.mlogx')) h.insertAdjacentHTML('beforeend','<button type="button" class="mlogx" aria-label="Kapat">✕</button>'); const sm=el.querySelector('small'); if(sm) sm.textContent='F2 ya da ✕ ile kapat'; };
+bLogRender=HOOK.wrap('bLogRender','98f-assist#_mlR',function(_mlR){ return function(){ _mlR(); const el=$('mlog'); if(!el) return; const h=el.querySelector('h3'); if(h&&!h.querySelector('.mlogx')) h.insertAdjacentHTML('beforeend','<button type="button" class="mlogx" aria-label="Kapat">✕</button>'); const sm=el.querySelector('small'); if(sm) sm.textContent='F2 ya da ✕ ile kapat'; }; },bLogRender);
 (function(){ const el=$('mlog'); if(el) el.addEventListener('click',function(e){ if(e.target.closest('.mlogx')) bLogToggle(false); }); })();
 /* ================= flight assist and landing ================= */
 function assistMode(){ const a=SETTINGS.assist; return a==null?'help':a; }
@@ -82,12 +82,12 @@ function lndControl(raw){ const m=assistMode(); if(m==='off'||!LND.on||!S.gear) 
   LND.auto=full; return out; }
 /* stall protection */
 function stallGuard(up){ const sp=S.speed, ref=CUR.uav?(CUR.stall[0]+CUR.stall[1])/2:CUR.stall[0]*1.1; if(S.onGround||up<=0) return up; const k=clamp((sp-ref)/(ref*0.3),0,1); return up*k-(sp<ref?0.25:0); }
-const _asPoll=pollPad; pollPad=function(){ _asPoll(); if(state!=='play'||typeof S==='undefined'||S.crashed) return;
+pollPad=HOOK.wrap('pollPad','98f-assist#_asPoll',function(_asPoll){ return function(){ _asPoll(); if(state!=='play'||typeof S==='undefined'||S.crashed) return;
   let kbP=0, kbR=0; try{ kbP=kb('air','noseUp')-kb('air','noseDown'); kbR=kb('air','rollR')-kb('air','rollL'); }catch(e){}
   const raw={p:clamp(kbP+(PAD.pitch||0)+((typeof TOUCH!=='undefined'&&TOUCH.pitch)||0),-1,1), r:clamp(kbR+(PAD.roll||0)+((typeof TOUCH!=='undefined'&&TOUCH.roll)||0),-1,1)};
   const sg=sign0(invertY), up=raw.p*sg;
   const c=lndControl(raw); if(c){ PAD.pitch=(PAD.pitch||0)+c.p*sg; PAD.roll=(PAD.roll||0)+c.r; PAD.yaw=(PAD.yaw||0)+(c.y||0); if(c.thr!=null&&LND.auto) S.throttle=c.thr; else if(c.thr===0) S.throttle=Math.min(S.throttle,0.1); return; }
-  if((CUR.uav||assistMode()!=='off')&&up>0){ const lim=stallGuard(up); PAD.pitch=(PAD.pitch||0)+(lim-up)*sg; } };
+  if((CUR.uav||assistMode()!=='off')&&up>0){ const lim=stallGuard(up); PAD.pitch=(PAD.pitch||0)+(lim-up)*sg; } }; },pollPad);
 function sign0(inv){ return inv?-1:1; }
 /* forgiving touchdown */
 landK=function(){ return assistMode()==='off'?1:1.5; };
@@ -101,13 +101,13 @@ function licStepDone(key){ const p=licProfile(), pr=Object.assign({},licProg());
     if(!p.lic2[k]&&keys.every(function(x){ return a.indexOf(x)>=0; })&&(!L.need||p.lic2[L.need])) granted=granted||k; });
   accSetProfile({stats:Object.assign({},licProfile().stats,{licp:pr})});
   if(granted&&!(EXAM.on&&EXAM.id===granted)){ licGrant(granted); const L=LIC2[granted]; try{ careerAdd(L.xp,null,L.n); }catch(e){} setTimeout(function(){ toast('🎖 '+L.n+' aldın! Yeni araçlar açıldı.','#ffd27a'); },1400); } }
-const _lfSch=schEnd; schEnd=function(ok,why){ const L=SCH.cur; _lfSch(ok,why); if(ok&&L) try{ licStepDone('l:'+L.id); }catch(e){} };
-const _lfRace=raceFinish; raceFinish=function(){ const R=RACE.def, t=RACE.t; _lfRace(); if(R&&(!R.lim||t<=R.lim)) try{ licStepDone('r:'+R.id); }catch(e){} };
-const _lfStart=examStart; examStart=function(k){ _lfStart(k); if(!EXAM.on||EXAM.id!==k) return; const L=LIC2[k], a=licProg()[k]||[]; if(licProfile().lic2[k]) return;
-  const i=L.steps.findIndex(function(s){ return a.indexOf(licStepKey(s))<0; }); if(i>0&&i!==EXAM.i){ EXAM.i=i; schStop(); toast('Önceki aşamaları geçmiştin — aşama '+(i+1)+'den devam','#b8ecff'); setTimeout(function(){ if(EXAM.on) examStep(); },400); } };
-const _lfOpen=licOpen; licOpen=function(hi){ _lfOpen(hi); const pr=licProg(), have=licProfile().lic2;
+schEnd=HOOK.wrap('schEnd','98f-assist#_lfSch',function(_lfSch){ return function(ok,why){ const L=SCH.cur; _lfSch(ok,why); if(ok&&L) try{ licStepDone('l:'+L.id); }catch(e){} }; },schEnd);
+raceFinish=HOOK.wrap('raceFinish','98f-assist#_lfRace',function(_lfRace){ return function(){ const R=RACE.def, t=RACE.t; _lfRace(); if(R&&(!R.lim||t<=R.lim)) try{ licStepDone('r:'+R.id); }catch(e){} }; },raceFinish);
+examStart=HOOK.wrap('examStart','98f-assist#_lfStart',function(_lfStart){ return function(k){ _lfStart(k); if(!EXAM.on||EXAM.id!==k) return; const L=LIC2[k], a=licProg()[k]||[]; if(licProfile().lic2[k]) return;
+  const i=L.steps.findIndex(function(s){ return a.indexOf(licStepKey(s))<0; }); if(i>0&&i!==EXAM.i){ EXAM.i=i; schStop(); toast('Önceki aşamaları geçmiştin — aşama '+(i+1)+'den devam','#b8ecff'); setTimeout(function(){ if(EXAM.on) examStep(); },400); } }; },examStart);
+licOpen=HOOK.wrap('licOpen','98f-assist#_lfOpen',function(_lfOpen){ return function(hi){ _lfOpen(hi); const pr=licProg(), have=licProfile().lic2;
   Array.prototype.forEach.call(document.querySelectorAll('#licList .lic'),function(div,ix){ const k=LIC2_ORDER[ix], L=LIC2[k]; if(!L||have[k]||L.steps.length<2) return; const n=(pr[k]||[]).length; if(!n) return;
-    const s=div.querySelector('.lt'); if(s) s.insertAdjacentHTML('beforeend','<small class="lp">Aşama '+Math.min(n,L.steps.length)+' / '+L.steps.length+' geçildi</small>'); }); };
+    const s=div.querySelector('.lt'); if(s) s.insertAdjacentHTML('beforeend','<small class="lp">Aşama '+Math.min(n,L.steps.length)+' / '+L.steps.length+' geçildi</small>'); }); }; },licOpen);
 /* İHA exam: realistic climb */
 (function(){ const L=LESSONS.find(function(x){ return x.id==='x_iha_kalkis'; }); if(!L) return;
   L.d='TB2 ile pist başından kalk ve 150 metreye tırman. İHA yavaştır: burnu az kaldır, hızı 110 km/s üstünde tut.';
@@ -115,5 +115,5 @@ const _lfOpen=licOpen; licOpen=function(hi){ _lfOpen(hi); const pr=licProg(), ha
   LIC2.iha.d='TB2 ile kalkış (150 m) ve iniş sınavı. Uçuş bilgisayarı stolü önler.'; })();
 /* settings UI + per-frame hooks */
 (function(){ const a=$('setAssist'); if(a) a.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.assist=b.dataset.a; saveSettings(); syncSettingsUI(); }); })();
-const _asSync=syncSettingsUI; syncSettingsUI=function(){ _asSync(); const a=$('setAssist'); if(a) Array.prototype.forEach.call(a.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.a===assistMode())); }); };
-const _asCull=cullStep; cullStep=function(dt){ _asCull(dt); try{ lndStep(); }catch(e){} annStep(dt||0); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98f-assist#_asSync',function(_asSync){ return function(){ _asSync(); const a=$('setAssist'); if(a) Array.prototype.forEach.call(a.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.a===assistMode())); }); }; },syncSettingsUI);
+cullStep=HOOK.wrap('cullStep','98f-assist#_asCull',function(_asCull){ return function(dt){ _asCull(dt); try{ lndStep(); }catch(e){} annStep(dt||0); }; },cullStep);

@@ -51,10 +51,10 @@ function ptGpuPoll(){ const G=PT.gq; if(!G||!G.ext) return; const gl=G.gl; let d
   while(G.pend.length){ const p=G.pend[0]; let ok=false; try{ ok=gl.getQueryParameter(p.q,gl.QUERY_RESULT_AVAILABLE); }catch(e){ ok=true; p.bad=true; } if(!ok) break; G.pend.shift();
     if(!dis&&!p.bad&&p.seg){ try{ const ns=gl.getQueryParameter(p.q,gl.QUERY_RESULT); if(ns>0) p.seg.gpu.push(ns/1e6); }catch(e){} } G.pool.push(p.q); }
   if(G.pend.length>12){ G.pend.splice(0,G.pend.length-12).forEach(function(p){ G.pool.push(p.q); }); } }
-const _ptRF=renderFrame; renderFrame=function(dt){ const G=PT.gq;
+renderFrame=HOOK.wrap('renderFrame','98x-perftest#_ptRF',function(_ptRF){ return function(dt){ const G=PT.gq;
   if(!PT.run||!G||!G.ext||!PT.seg||PT.seg.noGpu){ return _ptRF(dt); }
   const gl=G.gl, q=G.pool.pop()||gl.createQuery(); let begun=false; try{ gl.beginQuery(G.ext.TIME_ELAPSED_EXT,q); begun=true; }catch(e){}
-  try{ _ptRF(dt); } finally { if(begun){ try{ gl.endQuery(G.ext.TIME_ELAPSED_EXT); G.pend.push({q:q,seg:PT.seg}); }catch(e){ G.pool.push(q); } } else G.pool.push(q); } };
+  try{ _ptRF(dt); } finally { if(begun){ try{ gl.endQuery(G.ext.TIME_ELAPSED_EXT); G.pend.push({q:q,seg:PT.seg}); }catch(e){ G.pool.push(q); } } else G.pool.push(q); } }; },renderFrame);
 /* ---- scripted camera paths: the same views on every device */
 const PT_AIR={ucus:{c:[0,0],R:3500,alt:700,w:0.07,a0:0.6}, alcak:{c:[-1450,6300],R:1100,agl:160,w:0.12,a0:2.2}};
 function ptAirPose(sc,t){ const a=sc.a0+t*sc.w, x=sc.c[0]+Math.cos(a)*sc.R, z=sc.c[1]+Math.sin(a)*sc.R; let y=sc.alt||0;
@@ -64,8 +64,8 @@ function ptApplyAir(t){ const sc=PT.path; if(!sc||state!=='play') return; const 
   S.pos.set(p.x,p.y,p.z); S.q.setFromAxisAngle(UP,p.yaw); S.speed=200; S.onGround=false; S.crashed=false; S.taxi=false; S.auto=false; S.sink=0; S.gear=false; if(S.hp!=null) S.hp=100; S.throttle=0.7; }
 function ptApplyWalk(t){ const w=PT.path; if(!w||state!=='walk'||WALK.mode!=='foot') return; const yaw=w.yaw+Math.sin(t*0.35)*1.1, d=Math.min(t,12)*1.2;
   const x=w.x-Math.sin(w.yaw)*d, z=w.z-Math.cos(w.yaw)*d; WALK.pos.set(x,groundH(x,z)+1.7,z); WALK.yaw=yaw; WALK.pitch=0.02; }
-const _ptUpd=update; update=function(dt){ _ptUpd(dt); if(PT.run&&PT.path&&PT.path.air) ptApplyAir(PT.pathT); };
-const _ptWalk=walkUpdate; walkUpdate=function(dt){ _ptWalk(dt); if(PT.run&&PT.path&&PT.path.walk) ptApplyWalk(PT.pathT); };
+update=HOOK.wrap('update','98x-perftest#_ptUpd',function(_ptUpd){ return function(dt){ _ptUpd(dt); if(PT.run&&PT.path&&PT.path.air) ptApplyAir(PT.pathT); }; },update);
+walkUpdate=HOOK.wrap('walkUpdate','98x-perftest#_ptWalk',function(_ptWalk){ return function(dt){ _ptWalk(dt); if(PT.run&&PT.path&&PT.path.walk) ptApplyWalk(PT.pathT); }; },walkUpdate);
 /* ---- scene setup helpers */
 function ptFly(id){ const sc=Object.assign({air:true},PT_AIR[id]);
   if(state!=='play'){ playMode('quick'); missionId='free'; selectedId='kaan'; setAircraft('kaan'); SETTINGS.ai={enemies:0,wing:false,skill:1}; startGame('air'); }
@@ -140,10 +140,10 @@ function ptTick(now,ftMs,cpuMs){ if(!PT.run) return; const s=PT.steps[PT.si]; if
   if(PT.st>=s.dur){ if(s.idle) PT.refresh=ptRefresh(PT.iv); if(s.fx) PT.fxRes=PT.fxSeen.map(function(x){ return {k:x.k, spike:ptR1(x.max), med:ptR1(x.med)}; }); ptNext(); }
   if(PT.ui&&(PT.ui.n=(PT.ui.n||0)+1)%10===0) ptOverlay(false); }
 /* outermost frame wrapper: frame interval + CPU time; the idle step skips drawing */
-const _ptFrame=frame; frame=function(now){ const iv=PT.last?now-PT.last:0; PT.last=now; if(iv>0&&iv<1000){ PT.ring[PT.ri]=iv; PT.ri=(PT.ri+1)%PT.ring.length; }
+frame=HOOK.wrap('frame','98x-perftest#_ptFrame',function(_ptFrame){ return function(now){ const iv=PT.last?now-PT.last:0; PT.last=now; if(iv>0&&iv<1000){ PT.ring[PT.ri]=iv; PT.ri=(PT.ri+1)%PT.ring.length; }
   if(PT.run){ const s=PT.steps[PT.si]; if(s&&s.idle){ requestAnimationFrame(frame); ptTick(now,iv,0); return; }
     const t0=performance.now(); _ptFrame(now); const cpu=performance.now()-t0; ptTick(now,iv,cpu); return; }
-  _ptFrame(now); };
+  _ptFrame(now); }; },frame);
 /* ---- results */
 function ptReport(aborted){ const S2=PT.segs, base=S2.find(function(r){ return r.base; });
   const scenes=S2.filter(function(r){ return r.scene; }), feats=S2.filter(function(r){ return r.feat; }), warm=S2.filter(function(r){ return r.warm!=null; }), stress=S2.find(function(r){ return r.stress; });
@@ -249,11 +249,11 @@ function ptCopyFallback(t){ try{ const a=document.createElement('textarea'); a.v
   sec.addEventListener('click',function(e){ const tr=e.target.closest('tr[data-i]'); if(!tr) return; const r=(PT.reports||[])[+tr.dataset.i]; if(r) ptResults(r,PT.reports); }); })();
 function ptAdmRender(L,src){ PT.reports=L; const el=$('admPerf'); if(!el) return; const f=function(v){ return v==null?'—':String(v).replace('.',','); };
   el.innerHTML=L.map(function(r,i){ const s=r.sum||{}, d=r.dev||{}; return '<tr data-i="'+i+'" class="ptrow"><td>'+new Date(r.at).toLocaleString('tr-TR')+'</td><td>'+ptEsc(r.model||d.kind||'')+(src==='yerel'?' <small>(bu cihaz)</small>':'')+'</td><td><small>'+ptEsc(String(d.gpu||'').slice(0,48))+'</small></td><td>'+f(s.avg)+'</td><td>'+f(s.p90)+'</td><td><small>'+ptEsc(ptBoundTxt(s.bound))+'</small></td><td>'+ptEsc(r.v)+'</td></tr>'; }).join('')||'<tr><td colspan="7">Rapor yok</td></tr>'; }
-if(typeof admLoad==='function'){ const _ptAdm=admLoad; admLoad=function(t){ if(t!=='perf') return _ptAdm(t); try{ $('admNoCloud').classList.add('hidden'); }catch(e){}
+if(typeof admLoad==='function'){ admLoad=HOOK.wrap('admLoad','98x-perftest#_ptAdm',function(_ptAdm){ return function(t){ if(t!=='perf') return _ptAdm(t); try{ $('admNoCloud').classList.add('hidden'); }catch(e){}
   const local=ptLocal(); const cloud=!!(typeof ACC!=='undefined'&&ACC.sb&&ACC.user);
   if(!cloud){ ptAdmRender(local,'yerel'); return Promise.resolve(); }
   return ACC.sb.from('perf_reports').select('data,created_at').order('created_at',{ascending:false}).limit(100).then(function(r){ if(r.error){ ptAdmRender(local,'yerel'); admMsg('Bulut raporları okunamadı: '+r.error.message+' (supabase/perf_reports.sql çalıştırıldı mı?)',true); return; }
-    ptAdmRender((r.data||[]).map(function(x){ return x.data; }).filter(Boolean),'bulut'); }); }; }
+    ptAdmRender((r.data||[]).map(function(x){ return x.data; }).filter(Boolean),'bulut'); }); }; },admLoad); }
 /* ---- live FPS display: frame time line and P90 (Ayarlar → Grafik → FPS göstergesi) */
 function ptLive(){ const el=$('fps'); if(!el||!SETTINGS.fps) return; const n=PT.ring.length, L=[]; for(let i=0;i<n;i++){ const v=PT.ring[(PT.ri+i)%n]; if(v>0) L.push(v); } if(!L.length) return;
   const p90=ptPct(L.slice(-120),90);
@@ -263,4 +263,4 @@ function ptLive(){ const el=$('fps'); if(!el||!SETTINGS.fps) return; const n=PT.
   g.fillStyle='rgba(4,9,18,.6)'; g.fillRect(0,0,240,48); g.strokeStyle='rgba(255,255,255,.25)'; g.beginPath(); const y60=48-16.7/mx*48; g.moveTo(0,y60); g.lineTo(240,y60); g.stroke();
   const M=L.slice(-120); g.strokeStyle='#7dffb0'; g.beginPath(); M.forEach(function(v,i){ const x=i*2, y=48-Math.min(v,mx)/mx*48; if(i) g.lineTo(x,y); else g.moveTo(x,y); }); g.stroke();
   M.forEach(function(v,i){ if(v>50){ g.fillStyle='#ff6b74'; g.fillRect(i*2,0,2,48); } }); }
-const _ptPS=perfStep; perfStep=function(dt){ const n0=PERF.n; _ptPS(dt); PT.lt=(PT.lt||0)+dt; if(PT.lt>=0.5||(PERF.n===0&&n0>0)){ PT.lt=0; try{ ptLive(); }catch(e){} } };   /* also right after the 1 s text update in 98d, so the line is never wiped */
+perfStep=HOOK.wrap('perfStep','98x-perftest#_ptPS',function(_ptPS){ return function(dt){ const n0=PERF.n; _ptPS(dt); PT.lt=(PT.lt||0)+dt; if(PT.lt>=0.5||(PERF.n===0&&n0>0)){ PT.lt=0; try{ ptLive(); }catch(e){} } }; },perfStep);   /* also right after the 1 s text update in 98d, so the line is never wiped */

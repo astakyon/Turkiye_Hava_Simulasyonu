@@ -29,5 +29,5 @@ function terFar(off){ let key=''; for(let i=0;i<TER.tiles.length;i++){ const t=T
   const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3)); g.setAttribute('normal',new THREE.BufferAttribute(nor,3)); g.setAttribute('color',new THREE.BufferAttribute(col,3)); g.setIndex(new THREE.BufferAttribute(idx,1)); g.computeBoundingSphere();
   const m=new THREE.Mesh(g,TER.mat); m.userData.terrainTile=true; m.userData.noMerge=true; m.userData.noBake=true; m.userData.rs=true; m.userData.cs=false; m.receiveShadow=renderer.shadowMap.enabled; m.castShadow=false; m.matrixAutoUpdate=false; m.frustumCulled=false;
   scene.add(m); TLOD.far=m; }
-const _tlCull=cullStep; cullStep=function(dt){ _tlCull(dt); TLOD.t+=dt||0; if(TLOD.t>0.25){ TLOD.t=0; try{ terLodStep(); }catch(e){} } };
-const _tlQ=applyQuality; applyQuality=function(){ const r=_tlQ.apply(this,arguments); try{ terLodStep(true); }catch(e){} return r; };
+cullStep=HOOK.wrap('cullStep','98ze-terrain-lod#_tlCull',function(_tlCull){ return function(dt){ _tlCull(dt); TLOD.t+=dt||0; if(TLOD.t>0.25){ TLOD.t=0; try{ terLodStep(); }catch(e){} } }; },cullStep);
+applyQuality=HOOK.wrap('applyQuality','98ze-terrain-lod#_tlQ',function(_tlQ){ return function(){ const r=_tlQ.apply(this,arguments); try{ terLodStep(true); }catch(e){} return r; }; },applyQuality);

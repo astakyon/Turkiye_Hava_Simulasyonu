@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.24 — 2026-10-15 · Kanca sistemi ve kare başına çöp
+- **Kanca kaydı:** modüllerin birbirini genişletme biçimi baştan düzenlendi. 284 "sarmalama"nın 279'u tek bir kanca kaydına taşındı. Artık bir modülde hata çıkarsa yalnız o modül atlanıyor, oyunun geri kalanı çalışmaya devam ediyor (eskiden aynı zincirdeki diğer modüller de duruyordu). Davranış değişmedi; bütün testler aynı.
+- **Performans testinde modül maliyeti:** test sonucunda "En pahalı modüller" satırı var: hangi modülün kare başına kaç ms harcadığı görünüyor.
+- **Daha az çöp:** uçuşta kare başına üretilen geçici bellek ~%26 azaldı (çöp toplayıcı daha seyrek çalışır, telefonda ani takılma riski azalır). Yapay zekâ uçaklarının parça birleştirmesi artık her hareketli parça için ayrı ayrı değil, bir kerede yeniden kuruluyor (yeniden kurulum 32 → 9); akrobasi algılayıcısı, martılar, koyunlar, trafik, simge yapılar ve HUD yazıları her karede yeni nesne üretmiyor.
+- **Ses:** motor sesi sustuğunda 1,5 saniye sonra ses işlemcisinden çıkarılıyor (menüde, yürürken boşa hesaplanmıyor); ses ayarları yalnız değiştiğinde yazılıyor.
+
 ## V2.23 — 2026-10-15 · Bütün ayarların gözden geçirmesi
 - **Tekrar eden ayarlar kaldırıldı:** "Telsiz altyazıları" artık yalnız Erişilebilirlik'te, "Kumanda titreşimi" yalnız Kontroller → Gamepad'de. İki ayrı "Çubuk hassasiyeti" satırı "Kumanda çubuk hassasiyeti" ve "Dokunmatik çubuk hassasiyeti" oldu.
 - **Her satırın açıklaması var:** yalnız yüzde gösteren satırlar (duyarlılık, ölü bölge, düğme boyutu, saydamlık, ses seviyesi…) artık neyi değiştirdiklerini de yazıyor.

@@ -117,9 +117,9 @@ function ckpUpdate(dt){ const kind=ckpKind(); CKP.on=!!kind; if(!kind) return; c
   CKP.sun.position.copy(SUN).applyQuaternion(ckQi).multiplyScalar(5); CKP.sun.target.position.set(0,0,0); CKP.sun.color.copy(sunLight.color); CKP.sun.intensity=sunLight.intensity*0.9;
   CKP.hemi.color.copy(HEMI.color); CKP.hemi.groundColor.copy(HEMI.groundColor); CKP.hemi.intensity=HEMI.intensity*0.8+0.12;
   CKP.flood.intensity=(TOD.nightK||0)*0.9+(typeof WX!=='undefined'?WX.cur.dark*0.3:0); }
-const _ckpRender=renderFrame; renderFrame=function(dt){ _ckpRender(dt); const on=CKP.on; CKP.on=false; if(!on||!CKP.scene) return; const ac=renderer.autoClear; renderer.autoClear=false; renderer.clearDepth(); renderer.render(CKP.scene,CKP.cam); renderer.autoClear=ac; };
-const _ckpCam=cameraUpdate; cameraUpdate=function(dt){ _ckpCam(dt); if(state!=='replay') ckpUpdate(dt); };
-const _ckpWalkCam=walkCam; walkCam=function(dt){ _ckpWalkCam(dt); ckpUpdate(dt); };
+renderFrame=HOOK.wrap('renderFrame','97-cockpit#_ckpRender',function(_ckpRender){ return function(dt){ _ckpRender(dt); const on=CKP.on; CKP.on=false; if(!on||!CKP.scene) return; const ac=renderer.autoClear; renderer.autoClear=false; renderer.clearDepth(); renderer.render(CKP.scene,CKP.cam); renderer.autoClear=ac; }; },renderFrame);
+cameraUpdate=HOOK.wrap('cameraUpdate','97-cockpit#_ckpCam',function(_ckpCam){ return function(dt){ _ckpCam(dt); if(state!=='replay') ckpUpdate(dt); }; },cameraUpdate);
+walkCam=HOOK.wrap('walkCam','97-cockpit#_ckpWalkCam',function(_ckpWalkCam){ return function(dt){ _ckpWalkCam(dt); ckpUpdate(dt); }; },walkCam);
 /* settings */
 (function(){ const c=$('setCkpHead'); if(c) c.addEventListener('change',function(){ SETTINGS.ckpHead=c.checked; saveSettings(); }); })();
-const _ckpSync=syncSettingsUI; syncSettingsUI=function(){ _ckpSync(); const c=$('setCkpHead'); if(c) c.checked=ckpHeadOn(); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','97-cockpit#_ckpSync',function(_ckpSync){ return function(){ _ckpSync(); const c=$('setCkpHead'); if(c) c.checked=ckpHeadOn(); }; },syncSettingsUI);

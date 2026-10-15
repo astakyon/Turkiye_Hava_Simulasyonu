@@ -20,12 +20,12 @@ function planeBank(){ cfR.set(1,0,0).applyQuaternion(S.q); cfU.set(0,1,0).applyQ
 function stabStep(dt){ if(!stabOn()||S.crashed||S.onGround||state!=='play') return; if(typeof EJ!=='undefined'&&EJ.on) return; if(Math.abs(S.rollIn)>0.05) return;
   const b=planeBank(); if(Math.abs(b)>0.62||Math.abs(b)<0.002) return; const r=clamp(b*1.3,-0.45,0.45)*Math.min(1,S.speed/80);
   cfE.set(0,0,r*dt,'YXZ'); cfQ.setFromEuler(cfE); S.q.multiply(cfQ).normalize(); }
-const _cfUpd=update; update=function(dt){ _cfUpd(dt); stabStep(dt); };
+update=HOOK.wrap('update','91-comfort#_cfUpd',function(_cfUpd){ return function(dt){ _cfUpd(dt); stabStep(dt); }; },update);
 /* ---- helicopter chase camera: smooth heading */
 const HCAM={h:null};
-const _cfHeliCam=heliCam; heliCam=function(dt){ const H=HELI.cur; if(!H||HELI.fp||!(dt>0)){ HCAM.h=H?H.h:null; return _cfHeliCam(dt); }
-  if(HCAM.h==null||HCAM.H!==H){ HCAM.h=H.h; HCAM.H=H; } let d=H.h-HCAM.h; d=Math.atan2(Math.sin(d),Math.cos(d)); HCAM.h+=d*(1-Math.exp(-dt*4)); const real=H.h; H.h=HCAM.h; try{ _cfHeliCam(dt); } finally { H.h=real; } };
+heliCam=HOOK.wrap('heliCam','91-comfort#_cfHeliCam',function(_cfHeliCam){ return function(dt){ const H=HELI.cur; if(!H||HELI.fp||!(dt>0)){ HCAM.h=H?H.h:null; return _cfHeliCam(dt); }
+  if(HCAM.h==null||HCAM.H!==H){ HCAM.h=H.h; HCAM.H=H; } let d=H.h-HCAM.h; d=Math.atan2(Math.sin(d),Math.cos(d)); HCAM.h+=d*(1-Math.exp(-dt*4)); const real=H.h; H.h=HCAM.h; try{ _cfHeliCam(dt); } finally { H.h=real; } }; },heliCam);
 /* ---- settings */
 (function(){ const s=$('setTurb'); if(s) s.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.turb=b.dataset.t; saveSettings(); syncSettingsUI(); });
   const c=$('setStab'); if(c) c.addEventListener('change',function(){ SETTINGS.stab=c.checked; saveSettings(); }); })();
-const _cfSync=syncSettingsUI; syncSettingsUI=function(){ _cfSync(); const s=$('setTurb'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.turb||'soft'))); }); const c=$('setStab'); if(c) c.checked=stabOn(); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','91-comfort#_cfSync',function(_cfSync){ return function(){ _cfSync(); const s=$('setTurb'); if(s) Array.prototype.forEach.call(s.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.t===(SETTINGS.turb||'soft'))); }); const c=$('setStab'); if(c) c.checked=stabOn(); }; },syncSettingsUI);

@@ -90,21 +90,21 @@ function edPick(px,py,W,H){ let best=null, bd=16; ED.m.items.forEach(function(i)
 function cusPublish(m){ if(!ACC.sb||!accIsAdmin()){ toast('Yayınlamak için yönetici hesabıyla giriş yap','#ffc24a'); return; }
   ACC.sb.from('content').upsert({id:'mis_'+m.id,kind:'mission',path:null,meta:{m:m},updated_at:new Date().toISOString(),updated_by:ACC.user.id}).then(function(r){ if(r.error) throw r.error; admLog('publish','mission',{n:m.n}); toast('Görev herkese yayınlandı','#7dffb0'); })
     .catch(function(e){ toast('Yayınlanamadı: '+(e&&e.message||e),'#ff8a7a'); }); }
-const _cusContent=accContent; accContent=function(){ return Promise.resolve(_cusContent()).then(function(){ CUS.pub=(ADM.content||[]).filter(function(c){ return c.kind==='mission'&&c.meta&&c.meta.m; }).map(function(c){ const m=cusNorm(c.meta.m)||{}; m.id=c.id; m.pub=true; return m; }); }); };
+accContent=HOOK.wrap('accContent','88-editor#_cusContent',function(_cusContent){ return function(){ return Promise.resolve(_cusContent()).then(function(){ CUS.pub=(ADM.content||[]).filter(function(c){ return c.kind==='mission'&&c.meta&&c.meta.m; }).map(function(c){ const m=cusNorm(c.meta.m)||{}; m.id=c.id; m.pub=true; return m; }); }); }; },accContent);
 /* ---- board */
-const _cAll=boardAll; boardAll=function(){ return _cAll().concat([{id:'c_new',kind:'cnew',name:'＋ Yeni görev oluştur',desc:'Görev editörünü aç: hedefleri, düşmanları, noktaları ve aşamaları haritaya yerleştir.'}]).concat(CUS.pub.concat(CUS.local).map(function(m){ return {id:m.id,kind:'cus',name:(m.pub?'★ ':'')+m.n,desc:m.d,C:m}; })); };
-const _cMeta=bMeta; bMeta=function(e){ if(e.kind==='cnew') return {cat:'ozel',diff:1,dur:0,xp:0,obj:['Haritaya hedef ve nokta koy','Aşama ver: aşama 2, aşama 1 bitince belirir','Kod ya da dosya ile paylaş'],thr:['—'],load:null,area:[0,0,12000]};
+boardAll=HOOK.wrap('boardAll','88-editor#_cAll',function(_cAll){ return function(){ return _cAll().concat([{id:'c_new',kind:'cnew',name:'＋ Yeni görev oluştur',desc:'Görev editörünü aç: hedefleri, düşmanları, noktaları ve aşamaları haritaya yerleştir.'}]).concat(CUS.pub.concat(CUS.local).map(function(m){ return {id:m.id,kind:'cus',name:(m.pub?'★ ':'')+m.n,desc:m.d,C:m}; })); }; },boardAll);
+bMeta=HOOK.wrap('bMeta','88-editor#_cMeta',function(_cMeta){ return function(e){ if(e.kind==='cnew') return {cat:'ozel',diff:1,dur:0,xp:0,obj:['Haritaya hedef ve nokta koy','Aşama ver: aşama 2, aşama 1 bitince belirir','Kod ya da dosya ile paylaş'],thr:['—'],load:null,area:[0,0,12000]};
   if(e.kind!=='cus') return _cMeta(e); const m=e.C, st=m.items.find(function(i){ return i.t==='st'; }), stages=Math.max.apply(null,m.items.filter(function(i){ return i.t!=='st'; }).map(function(i){ return i.stage||1; }).concat([1]));
   const cnt={}; m.items.forEach(function(i){ if(i.t!=='st') cnt[i.t]=(cnt[i.t]||0)+1; });
   let cx=0, cz=0, n=0; m.items.forEach(function(i){ cx+=i.x; cz+=i.z; n++; }); cx/=Math.max(1,n); cz/=Math.max(1,n); let R=1500; m.items.forEach(function(i){ R=Math.max(R,Math.hypot(i.x-cx,i.z-cz)+800); });
-  return {cat:'ozel',diff:Math.min(3,1+Math.floor(((cnt.en||0)*2+(cnt.gt||0)+(cnt.at||0))/6)),dur:Math.round(m.lim/60),xp:Math.min(400,100+m.items.length*15),obj:Object.keys(cnt).map(function(k){ return cnt[k]+' × '+ED_T[k].n; }).concat([stages+' aşama']),thr:[(m.pub?'Yönetici yayını · ':'')+'Hava: '+WX_P[m.wx].n],load:(cnt.en||cnt.at)?'aa':(cnt.gt?'ag':null),area:[cx,cz,Math.min(R,12000)]}; };
-const _cRender=renderMissions; renderMissions=function(){ _cRender(); const f=$('misFilt'); if(f&&!f.querySelector('[data-v="ozel"]')){ const seg=f.querySelector('[data-k="cat"]'); if(seg){ const b=document.createElement('button'); b.type='button'; b.dataset.v='ozel'; b.textContent='Özel'; b.setAttribute('aria-pressed',String(BF.cat==='ozel')); seg.insertBefore(b,seg.querySelector('.bnew')||null); } }
+  return {cat:'ozel',diff:Math.min(3,1+Math.floor(((cnt.en||0)*2+(cnt.gt||0)+(cnt.at||0))/6)),dur:Math.round(m.lim/60),xp:Math.min(400,100+m.items.length*15),obj:Object.keys(cnt).map(function(k){ return cnt[k]+' × '+ED_T[k].n; }).concat([stages+' aşama']),thr:[(m.pub?'Yönetici yayını · ':'')+'Hava: '+WX_P[m.wx].n],load:(cnt.en||cnt.at)?'aa':(cnt.gt?'ag':null),area:[cx,cz,Math.min(R,12000)]}; }; },bMeta);
+renderMissions=HOOK.wrap('renderMissions','88-editor#_cRender',function(_cRender){ return function(){ _cRender(); const f=$('misFilt'); if(f&&!f.querySelector('[data-v="ozel"]')){ const seg=f.querySelector('[data-k="cat"]'); if(seg){ const b=document.createElement('button'); b.type='button'; b.dataset.v='ozel'; b.textContent='Özel'; b.setAttribute('aria-pressed',String(BF.cat==='ozel')); seg.insertBefore(b,seg.querySelector('.bnew')||null); } }
   const e=boardList()[misSel]; if(!e) return; const ac=$('btnMisAc');
   if(e.kind==='cnew'){ $('btnMisGo').textContent='✎ Editörü aç'; ac.disabled=true; ac.textContent='Görev editörü'; }
   else if(e.kind==='cus'){ $('btnMisGo').textContent='▶ Göreve başla'; ac.disabled=false; ac.textContent=e.C.pub?'Kopyasını düzenle':'✎ Düzenle'; ac.dataset.edit='1'; }
-  else delete ac.dataset.edit; };
+  else delete ac.dataset.edit; }; },renderMissions);
 (function(){ const ac=$('btnMisAc'); if(ac) ac.addEventListener('click',function(ev){ const e=boardList()[misSel]; if(!e||e.kind!=='cus') return; ev.stopImmediatePropagation(); const m=JSON.parse(JSON.stringify(e.C)); if(m.pub){ m.id='c'+Date.now().toString(36); delete m.pub; } edOpen(m); },true); })();
-const _cGo=misGo; misGo=function(){ const e=boardList()[misSel]; if(!e) return _cGo(); if(e.kind==='cnew') return edOpen(null); if(e.kind==='cus') return cusPlay(e.C); return _cGo(); };
+misGo=HOOK.wrap('misGo','88-editor#_cGo',function(_cGo){ return function(){ const e=boardList()[misSel]; if(!e) return _cGo(); if(e.kind==='cnew') return edOpen(null); if(e.kind==='cus') return cusPlay(e.C); return _cGo(); }; },misGo);
 /* ---- running a custom mission */
 function cusPlay(m){ CUS.cur=JSON.parse(JSON.stringify(m)); MISSIONS.cus.name=m.n; MISSIONS.cus.desc=m.d; MISSIONS.cus.limit=m.lim||0; BMETA.cus={xp:Math.min(400,100+m.items.length*15),dur:Math.round((m.lim||600)/60)};
   if(m.ac!=='any'&&AIRCRAFT[m.ac]){ selectedId=m.ac; setAircraft(m.ac); } selectMission('cus'); const st=m.items.find(function(i){ return i.t==='st'; });
@@ -116,12 +116,12 @@ function cusSpawn(stage){ const m=CUS.cur, st=CUS.st; m.items.filter(function(i)
     else if(i.t==='en'){ const a=spawnEnemy(st.objs.length+1); a.pos.set(i.x,Math.max(0,terrainH(i.x,i.z))+(i.alt||900),i.z); st.objs.push({i:i,o:a}); }
     else { const mk=dynMark(i.x,i.z,i.r||500,i.t==='sc'?0xffd27a:0x39e6ff); st.objs.push({i:i,o:{alive:true,mk:mk,scan:0}}); } });
   if(stage>1){ toast('AŞAMA '+stage+' başladı','#ffd27a'); if(typeof radioSay==='function') radioSay({w:'awacs',t:'{cs}, yeni hedefler belirdi. Aşama '+stage+'.'},null,{force:true}); } }
-const _cSetup=setupMission; setupMission=function(){ if(missionId!=='cus'||!CUS.cur){ cusRestore(); return _cSetup(); }
+setupMission=HOOK.wrap('setupMission','88-editor#_cSetup',function(_cSetup){ return function(){ if(missionId!=='cus'||!CUS.cur){ cusRestore(); return _cSetup(); }
   MLOG.length=0; B_STAT.shots=0; B_STAT.minHp=100; dynClear(); cusRestore(); const m=CUS.cur;
   MS.rings=MS.air=MS.ground=MS.recon=false; M={id:'cus',t:0,started:false,done:false,scanIdx:0,scanT:0}; clearAir(); clearGround(); clearRecon(); ringIdx=0; courseT=null; updateRingVisuals(); aiClear();
   CUS.keep={wx:SETTINGS.wx||'clear',tod:SETTINGS.tod||'day'}; SETTINGS.wx=m.wx; WX.kind=m.wx; SETTINGS.tod=m.tod; todReset();
   CUS.st={stage:1,max:Math.max.apply(null,m.items.filter(function(i){ return i.t!=='st'; }).map(function(i){ return i.stage||1; }).concat([1])),objs:[]}; cusSpawn(1);
-  toast('Görev: '+m.n,'#7dffb0'); };
+  toast('Görev: '+m.n,'#7dffb0'); }; },setupMission);
 function cusDone(x){ const i=x.i, o=x.o; if(i.t==='wp'||i.t==='sc') return !o.alive; return !o.alive; }
 function cusStep(dt){ const m=CUS.cur, st=CUS.st; if(!m||!st||M.done) return;
   if(m.lim&&M.t>m.lim){ endMission(false); return; }
@@ -130,9 +130,9 @@ function cusStep(dt){ const m=CUS.cur, st=CUS.st; if(!m||!st||M.done) return;
     if(i.t==='sc'){ if(d<(i.r||450)&&!S.onGround){ o.scan+=dt; if(o.scan>=4){ o.alive=false; scene.remove(o.mk); toast('Keşif tamam','#7dffb0'); score+=100; noteScore(); } } else o.scan=Math.max(0,o.scan-dt*2); } });
   const cur=st.objs.filter(function(x){ return (x.i.stage||1)===st.stage; });
   if(!cur.length||cur.every(cusDone)){ if(st.stage>=st.max){ endMission(true); return; } st.stage++; cusSpawn(st.stage); } }
-const _cUpd=updateMission; updateMission=function(dt){ if(M.id==='cus'&&!M.done&&state==='play'){ if(!M.started&&!S.onGround) M.started=true; if(M.started) M.t+=dt; cusStep(dt); return; } return _cUpd(dt); };
-const _cEnd=endMission; endMission=function(ok,tm){ const r=_cEnd(ok,tm); if(M.id==='cus'){ cusRestore(); dynClear(); const b=$('btnMEdit'); if(b) b.classList.remove('hidden'); } else { const b=$('btnMEdit'); if(b) b.classList.add('hidden'); } return r; };
-const _cObj=bObjective; bObjective=function(){ if(state!=='play'||!M||M.id!=='cus'||M.done||!CUS.st) return _cObj(); const st=CUS.st, cur=st.objs.filter(function(x){ return (x.i.stage||1)===st.stage; }), left=cur.filter(function(x){ return !cusDone(x); });
+updateMission=HOOK.wrap('updateMission','88-editor#_cUpd',function(_cUpd){ return function(dt){ if(M.id==='cus'&&!M.done&&state==='play'){ if(!M.started&&!S.onGround) M.started=true; if(M.started) M.t+=dt; cusStep(dt); return; } return _cUpd(dt); }; },updateMission);
+endMission=HOOK.wrap('endMission','88-editor#_cEnd',function(_cEnd){ return function(ok,tm){ const r=_cEnd(ok,tm); if(M.id==='cus'){ cusRestore(); dynClear(); const b=$('btnMEdit'); if(b) b.classList.remove('hidden'); } else { const b=$('btnMEdit'); if(b) b.classList.add('hidden'); } return r; }; },endMission);
+bObjective=HOOK.wrap('bObjective','88-editor#_cObj',function(_cObj){ return function(){ if(state!=='play'||!M||M.id!=='cus'||M.done||!CUS.st) return _cObj(); const st=CUS.st, cur=st.objs.filter(function(x){ return (x.i.stage||1)===st.stage; }), left=cur.filter(function(x){ return !cusDone(x); });
   const tgt=bNearest(left.map(function(x){ return x.o.pos||{x:x.i.x,z:x.i.z}; })); const m=CUS.cur;
-  return {name:m.n,txt:(st.max>1?'Aşama '+st.stage+'/'+st.max+' · ':'')+(cur.length-left.length)+'/'+cur.length+' hedef',rem:m.lim?Math.max(0,m.lim-M.t):null,tgt:tgt}; };
+  return {name:m.n,txt:(st.max>1?'Aşama '+st.stage+'/'+st.max+' · ':'')+(cur.length-left.length)+'/'+cur.length+' hedef',rem:m.lim?Math.max(0,m.lim-M.t):null,tgt:tgt}; }; },bObjective);
 (function(){ const b=$('btnMEdit'); if(b) b.addEventListener('click',function(){ $('missionEnd').classList.add('hidden'); enterHangar(); openMissions(); if(CUS.cur){ const L=CUS.local.find(function(x){ return x.id===CUS.cur.id; }); edOpen(L||CUS.cur); } }); })();

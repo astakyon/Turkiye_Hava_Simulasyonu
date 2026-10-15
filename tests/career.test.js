@@ -10,7 +10,7 @@ S.onGround=true; careerStep(0.016); T('landing counted',p.stats.landings===1);
 T('medals',(p.stats.medals||[]).indexOf('first')>=0&&(p.stats.medals||[]).indexOf('land1')>=0);
 enterTitle(); careerStep(0.016); T('flight logged',(p.stats.log||[]).length===1,JSON.stringify(p.stats.log));
 /* rank locks for players (cloud on, not admin) */
-ACC.cfg={url:'x',key:'y'}; ACC.role='player'; p.rank=0; T('kaan locked for a new player',rankLocked('kaan')); T('hurjet free of rank locks',!_licRank('hurjet')); T('hurjet needs the jet licence in career',rankLocked('hurjet'));
+ACC.cfg={url:'x',key:'y'}; ACC.role='player'; p.rank=0; T('kaan locked for a new player',rankLocked('kaan')); T('hurjet free of rank locks',!HOOK.fns.rankLocked.base('hurjet')); T('hurjet needs the jet licence in career',rankLocked('hurjet'));
 ACC.role='admin'; playMode('quick'); T('quick play flies everything',!rankLocked('kaan')); playMode('career'); ACC.cfg=null; ACC.role='player';
 careerRender(); T('career page',/Uçuş süresi/.test($('carStats').innerHTML)&&/Pilot kanadı/.test($('carMedals').innerHTML));
 console.log('pass',ok,'fail',bad);

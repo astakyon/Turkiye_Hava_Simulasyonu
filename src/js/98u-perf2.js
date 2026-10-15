@@ -28,6 +28,8 @@ function mrgCandidate(o,EX){ if(!o.isMesh||o.isInstancedMesh||o.isSkinnedMesh||!
 function mrgMatKey(m){ const c=function(x){ return x&&x.getHexString?x.getHexString():''; }; return [m.type,c(m.color),c(m.emissive),m.map?m.map.uuid:'',m.emissiveMap?m.emissiveMap.uuid:'',m.vertexColors?1:0,m.flatShading?1:0,m.side,m.alphaTest||0,m.fog?1:0,m.polygonOffset?(m.polygonOffsetFactor+':'+m.polygonOffsetUnits):'',m.shininess||'',m.emissiveIntensity==null?'':m.emissiveIntensity,m.opacity].join(':'); }
 /* untextured materials that differ only by colour merge together: the colour goes into the vertices */
 function mrgVC(m){ return !m.map&&!m.emissiveMap&&!m.alphaMap&&!m.normalMap&&(m.isMeshLambertMaterial||m.isMeshPhongMaterial||m.isMeshStandardMaterial); }
+/* V2.24: the same change check as mrgMatKey without building a string (the bake watchdog runs it every few frames) */
+function mrgMatSig(m){ const c=m.color, e=m.emissive; return (c?c.r*7.13+c.g*13.37+c.b*29.71:0)+(e?e.r*37.91+e.g*53.17+e.b*71.39:0)+(m.opacity==null?1:m.opacity)*97.73+(m.emissiveIntensity==null?0:m.emissiveIntensity)*113.9+(m.map?m.map.id*0.0013:0)+(m.emissiveMap?m.emissiveMap.id*0.0007:0)+(m.side||0)*0.31+(m.alphaTest||0)*3.7+(m.shininess||0)*0.011; }
 function mrgGroupKey(m){ if(!mrgVC(m)) return mrgMatKey(m); const c=function(x){ return x&&x.getHexString?x.getHexString():''; }; return ['VC',m.type,c(m.emissive),m.flatShading?1:0,m.side,m.fog?1:0,m.polygonOffset?(m.polygonOffsetFactor+':'+m.polygonOffsetUnits):'',m.shininess||'',m.roughness==null?'':m.roughness,m.metalness==null?'':m.metalness].join(':'); }
 function mrgSig(g){ const a=g.attributes; return (a.normal?'n':'')+(a.uv?'u':'')+(a.color?'c'+a.color.itemSize:''); }
 function mrgBuild(list,vc,mfn){ /* list of meshes with the same material / attributes → one geometry in world space */
@@ -104,7 +106,7 @@ function mfzFreeze(){ const L=MFZ.cand||[]; MFZ.cand=null; L.forEach(function(e)
 function mfzStep(){ const L=MFZ.list, n=L.length; if(!n) return; const per=Math.min(n,Math.max(60,Math.ceil(n/15)));   /* everything checked about every 15 frames (≤ 0.25 s at 60 FPS) */
   for(let k=0;k<per;k++){ if(MFZ.i>=L.length) MFZ.i=0; const e=L[MFZ.i]; if(!mfzSame(e)){ e.o.matrixAutoUpdate=true; e.o.updateMatrix(); L.splice(MFZ.i,1); MFZ.thawed++; MFZ.frozen=L.length; if(!L.length) return; } else MFZ.i++; } }
 if(SETTINGS.merge!==false)setTimeout(function(){ try{ mrgRun(); }catch(e){ console.warn('birleştirme',e); } },2500);
-const _mrgCull=cullStep; cullStep=function(dt){ _mrgCull(dt); try{ mrgStep(dt||0); }catch(e){} try{ mfzStep(); }catch(e){} };
+cullStep=HOOK.wrap('cullStep','98u-perf2#_mrgCull',function(_mrgCull){ return function(dt){ _mrgCull(dt); try{ mrgStep(dt||0); }catch(e){} try{ mfzStep(); }catch(e){} }; },cullStep);
 /* ---- device tier → starting preset */
 function devTier(){ const g=String(DEV.gpu||'').toLowerCase(), mem=navigator.deviceMemory||4, cores=navigator.hardwareConcurrency||4;
   if(DEV.mobile){ if(/mali-(4|t[678])|adreno[^0-9]*([34]\d\d|50\d|51\d)|powervr|sgx|videocore/.test(g)||mem<=3||cores<=4) return 0;
@@ -113,8 +115,8 @@ function devTier(){ const g=String(DEV.gpu||'').toLowerCase(), mem=navigator.dev
   if(/intel/.test(g)&&!/arc/.test(g)) return 1; if(/rtx|radeon rx|gtx 1[06]\d0|apple m[1-9]|arc a/.test(g)||mem>=16) return 3; return 2; }
 function devTierApply(silent){ const q=devTier(); SETTINGS.quality=q; SETTINGS.fx=null; SETTINGS.shadows=null; SETTINGS.res='auto'; SETTINGS.autoPerf=true; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI();
   if(!silent) toast('Cihaza göre ayarlandı: '+['Düşük','Orta','Yüksek','Ultra'][q]+' ('+DEV.kind+(DEV.gpu&&DEV.gpu!=='?'?' · '+String(DEV.gpu).slice(0,40):'')+')','#7dffb0'); }
-const _p3Load=loadStore; loadStore=function(){ let first=false; try{ first=!localStorage.getItem('kaan-sim-settings'); }catch(e){} _p3Load(); if(first){ try{ SETTINGS.quality=devTier(); SETTINGS.tierAuto=true; }catch(e){} } };
+loadStore=HOOK.wrap('loadStore','98u-perf2#_p3Load',function(_p3Load){ return function(){ let first=false; try{ first=!localStorage.getItem('kaan-sim-settings'); }catch(e){} _p3Load(); if(first){ try{ SETTINGS.quality=devTier(); SETTINGS.tierAuto=true; }catch(e){} } }; },loadStore);
 (function(){ const b=$('btnTier'); if(b) b.addEventListener('click',function(){ devTierApply(false); }); })();
 /* ---- full-screen menus: draw the scene at 10 FPS */
 function menuCovered(){ if(state!=='menu'||!document.querySelector) return false; return !!document.querySelector('.modal.fs:not(.hidden), #settings:not(.hidden), #records:not(.hidden), #campUI:not(.hidden)'); }
-const _p3Frame=frame; frame=function(now){ if(menuCovered()&&now){ if(now-(frame._mt||0)<95){ requestAnimationFrame(frame); return; } frame._mt=now; } _p3Frame(now); };
+frame=HOOK.wrap('frame','98u-perf2#_p3Frame',function(_p3Frame){ return function(now){ if(menuCovered()&&now){ if(now-(frame._mt||0)<95){ requestAnimationFrame(frame); return; } frame._mt=now; } _p3Frame(now); }; },frame);

@@ -111,7 +111,8 @@ Yayın kapısı: `release.sh`, `tools/browser-check.js` FAIL verirse yayını du
 
 Açık teknik borç:
 - Park etmiş uçak ve gemi modelleri model başına 30–70 çizim. Model altyapısıyla (V2.11) uzak LOD ve birleştirilmiş gövde gelecek.
-- Modüller sarmalama (`const _x=fn; fn=function…`) zinciriyle genişliyor. `tests/decl.sh` aynı adlı üst düzey tanımları yakalar; yeni modülde benzersiz önek kullanın.
+- **Kanca kaydı (V2.24, 00-hook):** bir modül başka bir modülün işlevini genişletirken `fn=HOOK.wrap('fn','dosya#ad',function(next){ return function(a,b){ … next(a,b) … }; },fn);` kullanır (eski `const _x=fn; fn=function…` biçimi 284 yerden bu biçime çevrildi; 5 eski biçim kaldı, onlar da zincirle uyumlu). `HOOK.list('drawHUD')` katmanları sırayla gösterir; tarayıcıda hata veren katman bir kez raporlanır ve altındaki katmanlar çalışmaya devam eder (başsız testlerde hata eskisi gibi çağırana gider); `HOOK.prof=true` iken her katmanın kendi süresi `HOOK.ms`'de toplanır (performans testi raporunda "En pahalı modüller"). Hooklanan işlevler en çok 4 parametre alır. Yeni kod için olaylar: `HOOK.on(ad,fn)` / `HOOK.emit(ad,…)`. `tests/decl.sh` aynı adlı üst düzey tanımları yine yakalar.
+- **Kare başına çöp (V2.24):** her karede çalışan kodda `new THREE.Vector3()` / `.clone()` / dizi ya da metin üretmeyin; modül düzeyinde bir kez oluşturulan geçici nesneleri kullanın (ör. `GULL_T`, `LMK_T`, `RUR_T`, `TRF_T`, `ACRO_W`, `FR_L`). Füze, mermi, patlama parçacığı, flare ve dumanlar zaten havuzda. three r128'in kendi çizim kodu kare başına ~50–100 KB üretiyor; bu bizim elimizde değil.
 - Başsız testlerde THREE sahte (stub); gerçek grafik davranışı yalnızca tarayıcı denetiminde sınanır.
 
 ## Android (planlı)

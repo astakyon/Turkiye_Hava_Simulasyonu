@@ -77,7 +77,7 @@ function campStart(i){ const ch=CAMP_CH[i]; if(!ch) return; if(!campOpenIx(i)){ 
     else { const D=ch.D(); Object.assign(D,{id:'camp_'+ch.id,kind:'dyn',sub:'air',cat:'dinamik',dur:Math.round(D.lim/60),name:'Kızıl Elma '+(i+1)+': '+D.name}); ch._D=D;
       DYN.cur=D; MISSIONS.dyn.name=D.name; MISSIONS.dyn.desc=D.desc; MISSIONS.dyn.limit=D.lim; BMETA.dyn={xp:D.xp,dur:D.dur}; selectMission('dyn'); preFlight('missions'); } }
   ch.pre.forEach(function(l,k){ setTimeout(function(){ if(CAMP.run===ch) radioSay(l,null,{force:true}); },1500+k*200); }); }
-const _cmHmById=hmById; hmById=function(id){ const r=_cmHmById(id); if(r) return r; const ch=CAMP_CH.find(function(c){ return c.heli&&c.id===id; }); if(!ch) return null; if(!ch._M) ch._M=ch.M(); return ch._M; };
+hmById=HOOK.wrap('hmById','98h-campaign#_cmHmById',function(_cmHmById){ return function(id){ const r=_cmHmById(id); if(r) return r; const ch=CAMP_CH.find(function(c){ return c.heli&&c.id===id; }); if(!ch) return null; if(!ch._M) ch._M=ch.M(); return ch._M; }; },hmById);
 /* ---- finishing */
 function campDone(ch,ok,stars){ if(!ok){ toast('Bölüm başarısız — tekrar dene','#ff8a5a'); return; }
   const first=campSave(ch.id,Math.max(1,stars)); setTimeout(function(){ radioSay(ch.post,null,{force:true}); },2600);
@@ -85,15 +85,15 @@ function campDone(ch,ok,stars){ if(!ok){ toast('Bölüm başarısız — tekrar 
   const last=ch.ix===CAMP_CH.length-1; toast(last?'🏆 KIZIL ELMA HAREKÂTI TAMAMLANDI!':'📜 Bölüm '+(ch.ix+1)+' tamamlandı: '+ch.n+(first&&!last?' — sıradaki bölüm açıldı':''),'#ffd27a');
   if(last&&first) try{ const p=accProfile(), st=p.stats||{}, m=(st.medals||[]).slice(); if(m.indexOf('kizilelma')<0){ m.push('kizilelma'); accSetProfile({stats:Object.assign({},st,{medals:m})}); } }catch(e){}
   CAMP.pending=true; CAMP.sel=Math.min(CAMP_CH.length-1,ch.ix+(last?0:1)); }
-const _cmEnd=endMission; endMission=function(ok,tm){ const ch=CAMP.run; let hit=false, st=0;
+endMission=HOOK.wrap('endMission','98h-campaign#_cmEnd',function(_cmEnd){ return function(ok,tm){ const ch=CAMP.run; let hit=false, st=0;
   if(ch&&!ch.heli&&M&&!M.done){ hit=(ch.mis&&M.id===ch.mis)||(ch._D&&M.id==='dyn'&&DYN.cur===ch._D); if(hit) try{ st=bStarsFor(ok); }catch(e){ st=1; } }
-  const r=_cmEnd(ok,tm); if(hit){ campDone(ch,ok,st); } return r; };
-const _cmHmEnd=hmEnd; hmEnd=function(win,why){ const ch=CAMP.run, hit=ch&&ch.heli&&HM.M&&HM.M===ch._M&&!HM.ended, t=HM.t; _cmHmEnd(win,why); if(hit) campDone(ch,win,win?(2+(t<HM.M.lim*0.5?1:0)):0); };
+  const r=_cmEnd(ok,tm); if(hit){ campDone(ch,ok,st); } return r; }; },endMission);
+hmEnd=HOOK.wrap('hmEnd','98h-campaign#_cmHmEnd',function(_cmHmEnd){ return function(win,why){ const ch=CAMP.run, hit=ch&&ch.heli&&HM.M&&HM.M===ch._M&&!HM.ended, t=HM.t; _cmHmEnd(win,why); if(hit) campDone(ch,win,win?(2+(t<HM.M.lim*0.5?1:0)):0); }; },hmEnd);
 /* playing anything else ends the campaign run */
-const _cmMisGo=misGo; misGo=function(){ CAMP.run=null; return _cmMisGo(); };
-const _cmQuick=quickPlay; quickPlay=function(){ CAMP.run=null; return _cmQuick(); };
+misGo=HOOK.wrap('misGo','98h-campaign#_cmMisGo',function(_cmMisGo){ return function(){ CAMP.run=null; return _cmMisGo(); }; },misGo);
+quickPlay=HOOK.wrap('quickPlay','98h-campaign#_cmQuick',function(_cmQuick){ return function(){ CAMP.run=null; return _cmQuick(); }; },quickPlay);
 /* back on the title screen after a chapter: show the campaign with the next chapter selected */
-const _cmTitle=refreshTitle; refreshTitle=function(){ const r=_cmTitle.apply(this,arguments); if(CAMP.pending&&state==='menu'){ CAMP.pending=false; setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) campOpen(CAMP.sel); },400); } return r; };
+refreshTitle=HOOK.wrap('refreshTitle','98h-campaign#_cmTitle',function(_cmTitle){ return function(){ const r=_cmTitle.apply(this,arguments); if(CAMP.pending&&state==='menu'){ CAMP.pending=false; setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) campOpen(CAMP.sel); },400); } return r; }; },refreshTitle);
 /* ---- screen */
 function campOpen(i){ const el=$('campUI'); if(!el) return; closeModals(); if(i==null){ i=CAMP_CH.findIndex(function(c,k){ return campOpenIx(k)&&!campStars(c.id); }); if(i<0) i=CAMP_CH.length-1; } CAMP.sel=i; campRender(); el.classList.remove('hidden'); }
 function campClose(){ const el=$('campUI'); if(el) el.classList.add('hidden'); }
@@ -116,11 +116,11 @@ function campRender(){ const P=campProg(), n=campDoneN(); $('campSum').textConte
 if(typeof MEDALS!=='undefined'&&!MEDALS.some(function(m){ return m[0]==='kizilelma'; })) MEDALS.push(['kizilelma','Kızıl Elma','Harekât kampanyasını tamamla',function(st){ return !!(st&&st.camp&&CAMP_CH.every(function(c){ return st.camp[c.id]>0; })); }]);
 /* ---- title menu entries */
 NAV_IC.camp='<path d="M4 20l6-14 4 8 3-5 3 11z"/>';
-const _cmNav=navRender; navRender=function(){ _cmNav(); const el=$('cNav'); if(!el) return; const h=el.innerHTML; if(h.indexOf('_camp"')>=0) return;
+navRender=HOOK.wrap('navRender','98h-campaign#_cmNav',function(_cmNav){ return function(){ _cmNav(); const el=$('cNav'); if(!el) return; const h=el.innerHTML; if(h.indexOf('_camp"')>=0) return;
   const sub=campDoneN()+' / '+CAMP_CH.length+' bölüm · hikâyeli harekât';
   if(NAV.level==='start'){ const k='data-act="q_mis"', i=h.indexOf(k); if(i<0) return; const j=h.lastIndexOf('<button',i); el.innerHTML=h.slice(0,j)+navBtn('q_camp','Harekât: Kızıl Elma',sub,'camp')+h.slice(j); }
   else if(NAV.level==='career'){ const k='data-act="c_missions"', i=h.indexOf(k); if(i<0) return; const j=h.lastIndexOf('<button',i); el.innerHTML=h.slice(0,j)+navBtn('c_camp','Harekât: Kızıl Elma',sub,'camp')+h.slice(j); }
-  else return; tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); };
+  else return; tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
 NAV_D.q_camp=['HIZLI OYUN','Harekât: Kızıl Elma','Sekiz bölümlük hikâyeli harekât: keşif, önleme, hava desteği, arama-kurtarma, deniz devriyesi, helikopter taarruzu, refakat ve final. Bölümler sırayla açılır.',[],'Harekâtı aç'];
 NAV_D.c_camp=['KARİYER','Harekât: Kızıl Elma','Sekiz bölümlük hikâyeli harekât. Her bölüm ilk tamamlamada hikâye bonusu TP verir; final Kızıl Elma madalyasını kazandırır.',[],'Harekâtı aç'];
-const _cmAct=titleAct; titleAct=function(act){ if(act==='q_camp'&&state==='menu'){ playMode('quick'); return campOpen(); } if(act==='c_camp'&&state==='menu'){ playMode('career'); return campOpen(); } return _cmAct(act); };
+titleAct=HOOK.wrap('titleAct','98h-campaign#_cmAct',function(_cmAct){ return function(act){ if(act==='q_camp'&&state==='menu'){ playMode('quick'); return campOpen(); } if(act==='c_camp'&&state==='menu'){ playMode('career'); return campOpen(); } return _cmAct(act); }; },titleAct);

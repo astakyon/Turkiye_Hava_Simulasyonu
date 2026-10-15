@@ -8,8 +8,8 @@
 const COL={grid:new Map(), cell:60, near:[], t:9, hitT:0, lastV:0, v:new THREE.Vector3(), q:new THREE.Quaternion(), f:new THREE.Vector3()};
 function colBox(x,z,h,hl,hw,tag){ const s=Math.abs(Math.sin(h)), c=Math.abs(Math.cos(h)), ex=hw*c+hl*s, ez=hl*c+hw*s; return {x0:x-ex,x1:x+ex,z0:z-ez,z1:z+ez,tag:tag||null}; }
 /* static parked cars (instanced) go into a grid once */
-const _colCI=carInstances; carInstances=function(list,r){ const m=_colCI(list,r); try{ list.forEach(function(c,i){ if(c.y<-10) return; const k=Math.floor(c.x/COL.cell)+','+Math.floor(c.z/COL.cell); let L=COL.grid.get(k); if(!L){ L=[]; COL.grid.set(k,L); }
-    const b=colBox(c.x,c.z,c.h,2.15,0.95,'car'); b.pc={x:c.x,z:c.z,h:c.h,m:m,i:i}; L.push(b); }); }catch(e){} return m; };
+carInstances=HOOK.wrap('carInstances','98o-collide#_colCI',function(_colCI){ return function(list,r){ const m=_colCI(list,r); try{ list.forEach(function(c,i){ if(c.y<-10) return; const k=Math.floor(c.x/COL.cell)+','+Math.floor(c.z/COL.cell); let L=COL.grid.get(k); if(!L){ L=[]; COL.grid.set(k,L); }
+    const b=colBox(c.x,c.z,c.h,2.15,0.95,'car'); b.pc={x:c.x,z:c.z,h:c.h,m:m,i:i}; L.push(b); }); }catch(e){} return m; }; },carInstances);
 /* a parked (instanced) car becomes a real, drivable car when you walk up to it */
 const COL_Z=new THREE.Matrix4().makeScale(0,0,0);
 function colWake(b){ const P=b.pc; if(!P||P.done) return null; P.done=true; b.gone=true; try{ ['body','glass','wheel'].forEach(function(k){ const im=P.m[k]; im.setMatrixAt(P.i,COL_Z); im.instanceMatrix.needsUpdate=true; }); }catch(e){}
@@ -31,7 +31,7 @@ function colRefresh(){ const p=colPlayerXZ(), R=160; COL.near=colGridNear(p[0],p
 /* extra boxes join the vehicle boxes used by walking and driving */
 const _colVB=vehBoxes; vehBoxes=function(except){ const L=_colVB(except); const p=colPlayerXZ(); return L.concat(COL.near,colTraffic(p[0],p[1],120)); };
 /* traffic: remember positions, stop for obstacles in front */
-const _colTr=trafficStep; trafficStep=function(dt){ const T1=TRAFFIC; if(!T1||!T1.mesh) return _colTr(dt);
+trafficStep=HOOK.wrap('trafficStep','98o-collide#_colTr',function(_colTr){ return function(dt){ const T1=TRAFFIC; if(!T1||!T1.mesh) return _colTr(dt);
   const pp=(state==='walk')?(WALK.mode==='car'&&WALK.car?{x:WALK.car.x,z:WALK.car.z}:{x:WALK.pos.x,z:WALK.pos.z}):(state==='play'&&S.onGround?{x:S.pos.x,z:S.pos.z}:null);
   const keep=[]; if(pp) T1.cars.forEach(function(c,k){ if(c.wx==null) return; const fx=-Math.sin(c.wh), fz=-Math.cos(c.wh), dx=pp.x-c.wx, dz=pp.z-c.wz, ahead=dx*fx+dz*fz, side=Math.abs(dx*fz-dz*fx);
     if(ahead>0&&ahead<14&&side<2.6){ keep.push([c,c.v]); c.v=0; c.stopT=(c.stopT||0)+dt; if(c.stopT>1.5&&c.stopT-dt<=1.5) try{ sndPlay('horn',{vol:0.35}); }catch(e){} } else c.stopT=0; });
@@ -39,13 +39,13 @@ const _colTr=trafficStep; trafficStep=function(dt){ const T1=TRAFFIC; if(!T1||!T
   /* positions of the cars that were drawn (same maths as the traffic step) */
   const cp=camera.position, R2=200*200; for(let k=0;k<T1.cars.length;k++){ const c=T1.cars[k], P=c.P, a=P.pts[c.i], b=P.pts[c.i+1]; if(!a||!b){ c.wx=null; continue; }
     const seg=P.L[c.i+1]-P.L[c.i]||1, u=(c.s-P.L[c.i])/seg, cx=a[0]+(b[0]-a[0])*u, cz=a[1]+(b[1]-a[1])*u; if((cx-cp.x)*(cx-cp.x)+(cz-cp.z)*(cz-cp.z)>R2){ c.wx=null; continue; }
-    const fx=(b[0]-a[0])/seg*c.dir, fz=(b[1]-a[1])/seg*c.dir; c.wx=cx-fz*2.0; c.wz=cz+fx*2.0; c.wh=Math.atan2(-fx,-fz); } };
+    const fx=(b[0]-a[0])/seg*c.dir, fz=(b[1]-a[1])/seg*c.dir; c.wx=cx-fz*2.0; c.wz=cz+fx*2.0; c.wh=Math.atan2(-fx,-fz); } }; },trafficStep);
 /* car impacts: sound, shake, message */
-const _colWalk=walkUpdate; walkUpdate=function(dt){ COL.t+=dt; if(COL.t>0.5) colRefresh(); const car=WALK.mode==='car'?WALK.car:null, v0=car?Math.abs(car.v||0):0;
+walkUpdate=HOOK.wrap('walkUpdate','98o-collide#_colWalk',function(_colWalk){ return function(dt){ COL.t+=dt; if(COL.t>0.5) colRefresh(); const car=WALK.mode==='car'?WALK.car:null, v0=car?Math.abs(car.v||0):0;
   if(WALK.mode==='foot'){ const near=colGridNear(WALK.pos.x,WALK.pos.z,6); for(let k=0;k<near.length;k++){ const b=near[k]; if(b.pc&&!b.pc.done&&Math.hypot(b.pc.x-WALK.pos.x,b.pc.z-WALK.pos.z)<4.2){ colWake(b); COL.t=9; break; } } }
   _colWalk(dt);
-  if(car&&WALK.car===car){ const dv=v0-Math.abs(car.v||0); COL.hitT-=dt; if(dv>6&&v0>8&&COL.hitT<=0){ COL.hitT=1.5; try{ sndPlay('boom',{vol:Math.min(0.6,dv/30),pitch:1.8}); }catch(e){} try{ rumble(220,0.6,0.9); }catch(e){} if(v0>14) toast('Çarpışma! ('+Math.round(v0*3.6)+' km/s)','#ff8a5a'); } } };
+  if(car&&WALK.car===car){ const dv=v0-Math.abs(car.v||0); COL.hitT-=dt; if(dv>6&&v0>8&&COL.hitT<=0){ COL.hitT=1.5; try{ sndPlay('boom',{vol:Math.min(0.6,dv/30),pitch:1.8}); }catch(e){} try{ rumble(220,0.6,0.9); }catch(e){} if(v0>14) toast('Çarpışma! ('+Math.round(v0*3.6)+' km/s)','#ff8a5a'); } } }; },walkUpdate);
 /* taxiing aircraft */
-const _colUpd=update; update=function(dt){ _colUpd(dt); if(state!=='play'||!S.onGround||S.crashed||S.speed<0.5) return; COL.t+=dt; if(COL.t>0.5) colRefresh();
+update=HOOK.wrap('update','98o-collide#_colUpd',function(_colUpd){ return function(dt){ _colUpd(dt); if(state!=='play'||!S.onGround||S.crashed||S.speed<0.5) return; COL.t+=dt; if(COL.t>0.5) colRefresh();
   const p={x:S.pos.x,z:S.pos.z}, ox=p.x, oz=p.z, r=Math.max(2.2,(parseFloat(String(CUR.span||'10').replace(',','.'))||10)*0.18), B=COL.near.concat(colTraffic(p.x,p.z,100),typeof vehBoxes==='function'?_colVB(null):[]);
-  if(pushCircle(p,r,B)){ if(S.speed>9){ crash('Yerde bir araca çarptın'); return; } S.pos.x=p.x; S.pos.z=p.z; S.speed=0; S.throttle=Math.min(S.throttle,0.2); if(COL.hitT<=0){ COL.hitT=2; toast('Önünde engel var — dur ve etrafından dolaş','#ffc24a'); } } COL.hitT-=dt; };
+  if(pushCircle(p,r,B)){ if(S.speed>9){ crash('Yerde bir araca çarptın'); return; } S.pos.x=p.x; S.pos.z=p.z; S.speed=0; S.throttle=Math.min(S.throttle,0.2); if(COL.hitT<=0){ COL.hitT=2; toast('Önünde engel var — dur ve etrafından dolaş','#ffc24a'); } } COL.hitT-=dt; }; },update);

@@ -14,7 +14,7 @@ function t2Apply(){ const P=t2Opt().pos; TED_ITEMS.forEach(function(it){ const e
     if(p){ el.style.left=(p[0]*100).toFixed(2)+'vw'; el.style.top=(p[1]*100).toFixed(2)+'vh'; el.style.right='auto'; el.style.bottom='auto'; el.classList.add('tmoved'); }
     else if(el.classList.contains('tmoved')){ el.style.left=el.style.top=el.style.right=el.style.bottom=''; el.classList.remove('tmoved'); } });
   const egim=t2Opt().preset==='egim'; const st=$('tStick'); if(st) st.classList.toggle('tgyro',egim); }
-const _t2Opt=applyTouchOpt; applyTouchOpt=function(){ _t2Opt(); try{ t2Apply(); }catch(e){} };
+applyTouchOpt=HOOK.wrap('applyTouchOpt','98l-touch2#_t2Opt',function(_t2Opt){ return function(){ _t2Opt(); try{ t2Apply(); }catch(e){} }; },applyTouchOpt);
 /* ---- floating stick */
 function t2Zone(host,stickId){ const h=$(host), st=$(stickId); if(!h||!st||!document.createElement||typeof h.insertBefore!=='function') return; const z=document.createElement('div'); z.className='tzone'; h.insertBefore(z,h.firstChild);
   z.addEventListener('pointerdown',function(e){ if(!t2Opt().float||TED.on) return; if(stickId==='tStick'&&st.classList.contains('tgyro')) return; e.preventDefault();
@@ -45,7 +45,7 @@ document.addEventListener('pointerup',function(e){ const d=TED.drag; if(!TED.on|
   if(d.x!=null){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.pos=Object.assign({},SETTINGS.tch.pos||{}); SETTINGS.tch.pos[d.id]=[d.x,d.y]; saveSettings(); t2Apply(); } },true);
 ['click','pointercancel'].forEach(function(ev){ document.addEventListener(ev,function(e){ if(TED.on&&tedItemAt(e.target)){ e.stopImmediatePropagation(); e.preventDefault(); } },true); });
 /* keep the touch layers visible while editing */
-const _t2Upd=updateTouchUI; updateTouchUI=function(){ if(TED.on) return; _t2Upd(); };
+updateTouchUI=HOOK.wrap('updateTouchUI','98l-touch2#_t2Upd',function(_t2Upd){ return function(){ if(TED.on) return; _t2Upd(); }; },updateTouchUI);
 /* ---- presets */
 function t2Preset(k){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.preset=k; SETTINGS.tch.left=(k==='solel'); SETTINGS.tch.pos={};
   if(k==='egim'){ SETTINGS.gyro=true; try{ gyroStart(); }catch(e){} } else if(SETTINGS.gyro&&k!=='egim'){ SETTINGS.gyro=false; try{ gyroStop(); }catch(e){} }
@@ -59,14 +59,14 @@ function t2Guide(){ if(SETTINGS.tchTut||TED.on) return; const st=$('tStick'); if
     for(let k=0;k<6;k++){ if(used.some(function(u){ return Math.abs(u[0]-left)<220&&Math.abs(u[1]-top)<74; })) top-=78; else break; } top=clamp(top,8,H-80); used.push([left,top]);
     return '<div class="tgp" style="left:'+left+'px;top:'+top+'px"><b>'+(i+1)+'</b>'+p[1]+'</div>'; }).join('')+'<button type="button" class="btn primary" id="tgOk">Anladım</button>';
   document.body.appendChild(g); g.querySelector('#tgOk').addEventListener('click',function(){ g.remove(); SETTINGS.tchTut=true; saveSettings(); }); }
-const _t2Upd2=updateTouchUI; updateTouchUI=function(){ const was=TOUCH.vis; _t2Upd2(); if(!was&&TOUCH.vis) setTimeout(t2Guide,1200); };
+updateTouchUI=HOOK.wrap('updateTouchUI','98l-touch2#_t2Upd2',function(_t2Upd2){ return function(){ const was=TOUCH.vis; _t2Upd2(); if(!was&&TOUCH.vis) setTimeout(t2Guide,1200); }; },updateTouchUI);
 /* ---- settings UI */
 (function(){ const fl=$('tchFloat'); if(fl) fl.addEventListener('change',function(){ SETTINGS.tch=SETTINGS.tch||{}; SETTINGS.tch.float=fl.checked; saveSettings(); });
   const ed=$('btnTchEdit'); if(ed) ed.addEventListener('click',tedOpen);
   const pr=$('tchPreset'); if(pr) pr.addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(b) t2Preset(b.dataset.p); });
   const tg=$('btnTchTut'); if(tg) tg.addEventListener('click',function(){ SETTINGS.tchTut=false; saveSettings(); toast('Rehber bir sonraki uçuşta açılacak','#b8ecff'); }); })();
-const _t2Sync=syncSettingsUI; syncSettingsUI=function(){ _t2Sync(); const o=t2Opt(), fl=$('tchFloat'); if(fl) fl.checked=o.float; const pr=$('tchPreset'); if(pr) Array.prototype.forEach.call(pr.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.p===o.preset)); }); };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98l-touch2#_t2Sync',function(_t2Sync){ return function(){ _t2Sync(); const o=t2Opt(), fl=$('tchFloat'); if(fl) fl.checked=o.float; const pr=$('tchPreset'); if(pr) Array.prototype.forEach.call(pr.children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.p===o.preset)); }); }; },syncSettingsUI);
 setTimeout(function(){ try{ t2Apply(); }catch(e){} },0);
 /* the ping button sits in the top bar of whichever touch layer is visible */
-const _t2Upd3=updateTouchUI; updateTouchUI=function(){ _t2Upd3(); const b=$('tPing'); if(!b||TED.on) return; const bar=TOUCH.vis?document.querySelector('#touch .ttop'):(WALK.tvis?document.querySelector('#wtouch .ttop'):null);
-  if(bar&&b.parentNode!==bar&&bar.appendChild){ bar.appendChild(b); b.classList.add('inbar'); } };
+updateTouchUI=HOOK.wrap('updateTouchUI','98l-touch2#_t2Upd3',function(_t2Upd3){ return function(){ _t2Upd3(); const b=$('tPing'); if(!b||TED.on) return; const bar=TOUCH.vis?document.querySelector('#touch .ttop'):(WALK.tvis?document.querySelector('#wtouch .ttop'):null);
+  if(bar&&b.parentNode!==bar&&bar.appendChild){ bar.appendChild(b); b.classList.add('inbar'); } }; },updateTouchUI);

@@ -69,30 +69,30 @@ function bObjective(){ if(state!=='play'||!M||M.id==='free'||M.id==='net'||M.don
   else if(M.id==='dogfight'){ const L=(typeof ACT!=='undefined'?ACT:[]).filter(function(a){ return a.alive&&a.team==='red'; }); txt=L.length+' düşman uçağı'; tgt=bNearest(L.map(function(a){ return a.pos; })); }
   return {name:MISSIONS[M.id].name,txt:txt,rem:rem,tgt:tgt}; }
 function bNearest(L){ let b=null, bd=1e12; L.forEach(function(p){ const d=(p.x-S.pos.x)*(p.x-S.pos.x)+(p.z-S.pos.z)*(p.z-S.pos.z); if(d<bd){ bd=d; b=p; } }); return b; }
-const _bHUD=drawHUD; drawHUD=function(){ _bHUD(); if(state!=='play'||(typeof EJ!=='undefined'&&EJ.on)) return; const o=bObjective(); if(!o) return;
+drawHUD=HOOK.wrap('drawHUD','83-board#_bHUD',function(_bHUD){ return function(){ _bHUD(); if(state!=='play'||(typeof EJ!=='undefined'&&EJ.on)) return; const o=bObjective(); if(!o) return;
   const s=clamp(Math.min(HW,HH)/760,0.7,1.5); hx.save(); hx.textAlign='center'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,.7)'; hx.shadowBlur=4; hx.font='700 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif';
   let line='GÖREV · '+o.name.toLocaleUpperCase('tr-TR')+' · '+o.txt; if(o.rem!=null) line+=' · '+Math.floor(o.rem/60)+':'+String(Math.floor(o.rem%60)).padStart(2,'0');
   if(o.tgt){ const d=Math.hypot(o.tgt.x-S.pos.x,o.tgt.z-S.pos.z); line+=' · '+(d>1000?(d/1000).toFixed(1)+' km':Math.round(d)+' m'); }
-  hx.fillStyle=o.rem!=null&&o.rem<60?'#ff8a5a':'#ffd27a'; hx.fillText(line,HW/2,Math.round((TOUCH.vis?104:94)*s)); hx.restore(); };
+  hx.fillStyle=o.rem!=null&&o.rem<60?'#ff8a5a':'#ffd27a'; hx.fillText(line,HW/2,Math.round((TOUCH.vis?104:94)*s)); hx.restore(); }; },drawHUD);
 /* ---- mission log */
 const MLOG=[];
-const _bToast=toast; toast=function(text,color){ _bToast(text,color); if(state==='play'&&M&&M.id!=='net'){ MLOG.push({t:M.t||0,text:String(text),c:color||'#b8ecff'}); if(MLOG.length>60) MLOG.shift(); if(BLOG.open) bLogRender(); } };
+toast=HOOK.wrap('toast','83-board#_bToast',function(_bToast){ return function(text,color){ _bToast(text,color); if(state==='play'&&M&&M.id!=='net'){ MLOG.push({t:M.t||0,text:String(text),c:color||'#b8ecff'}); if(MLOG.length>60) MLOG.shift(); if(BLOG.open) bLogRender(); } }; },toast);
 const BLOG={open:false};
 function bLogRender(){ const el=$('mlog'); if(!el) return; el.innerHTML='<h3>GÖREV GÜNLÜĞÜ · '+(M&&MISSIONS[M.id]?MISSIONS[M.id].name:'')+'</h3>'+(MLOG.length?'<ul>'+MLOG.slice(-14).reverse().map(function(l){ return '<li><time>'+fmtT(l.t).slice(0,5)+'</time><span style="color:'+l.c+'">'+l.text.replace(/</g,'&lt;')+'</span></li>'; }).join('')+'</ul>':'<p>Henüz kayıt yok</p>')+'<small>F2 ile kapat</small>'; }
 function bLogToggle(on){ BLOG.open=on==null?!BLOG.open:on; const el=$('mlog'); if(!el) return; el.classList.toggle('hidden',!BLOG.open); if(BLOG.open) bLogRender(); }
 window.addEventListener('keydown',function(e){ if(e.repeat) return; if(isKey(e,'gen','log')&&(state==='play'||state==='paused')){ e.preventDefault(); bLogToggle(); } });
 (function(){ const b=$('btnPauseLog'); if(b) b.addEventListener('click',function(){ bLogToggle(true); }); })();
-const _bSetup=setupMission; setupMission=function(){ MLOG.length=0; bLogToggle(false); B_STAT.shots=0; B_STAT.hp0=100; B_STAT.minHp=100; return _bSetup(); };
+setupMission=HOOK.wrap('setupMission','83-board#_bSetup',function(_bSetup){ return function(){ MLOG.length=0; bLogToggle(false); B_STAT.shots=0; B_STAT.hp0=100; B_STAT.minHp=100; return _bSetup(); }; },setupMission);
 /* ---- end report */
 const B_STAT={shots:0,minHp:100};
-const _bFire=fire; fire=function(){ B_STAT.shots++; return _bFire(); };
-const _bDmg=damagePlayer; damagePlayer=function(d,r){ _bDmg(d,r); B_STAT.minHp=Math.min(B_STAT.minHp,S.hp); };
+fire=HOOK.wrap('fire','83-board#_bFire',function(_bFire){ return function(){ B_STAT.shots++; return _bFire(); }; },fire);
+damagePlayer=HOOK.wrap('damagePlayer','83-board#_bDmg',function(_bDmg){ return function(d,r){ _bDmg(d,r); B_STAT.minHp=Math.min(B_STAT.minHp,S.hp); }; },damagePlayer);
 function bStarsFor(ok){ if(!ok) return 0; let n=1; const lim=MISSIONS[M.id].limit, bm=BMETA[M.id]||{dur:8};
   if(lim?M.t<lim*0.6:M.t<(bm.dur||8)*60*0.6) n++; if(B_STAT.minHp>=70) n++; return Math.min(3,n); }
-const _bEnd=endMission; endMission=function(ok,tm){ const was=M.done; const r=_bEnd.apply(this,arguments); if(was) return r;
+endMission=HOOK.wrap('endMission','83-board#_bEnd',function(_bEnd){ return function(ok,tm){ const was=M.done; const r=_bEnd.apply(this,arguments); if(was) return r;
   const st=bStarsFor(ok), bm=BMETA[M.id]||{xp:150}, xp=ok?Math.max(150,(bm.xp||150)+(st-1)*40):0;
   if(ok){ bSetStars(M.id,st); if(xp>150&&typeof careerAdd==='function') try{ careerAdd(xp-150,null); }catch(e){} }
   const el=$('mendStats'); if(el){ el.innerHTML=(ok?starsHTML(st):'')+'<ul><li><small>SÜRE</small><b>'+fmtT(tm!=null?tm:M.t)+'</b></li><li><small>PUAN</small><b>'+score+'</b></li><li><small>VURULAN</small><b>'+(kills+gtargets.filter(function(o){ return !o.alive; }).length)+'</b></li><li><small>ATIŞ</small><b>'+B_STAT.shots+'</b></li><li><small>EN DÜŞÜK CAN</small><b>%'+Math.round(B_STAT.minHp)+'</b></li><li><small>ÖDÜL</small><b>'+(ok?'+'+xp+' XP':'—')+'</b></li></ul>'+(ok?'<p class="hint">'+(st<3?(st<2?'Daha hızlı bitir ve az hasar al: ':'')+(B_STAT.minHp<70?'Hasarı %30\'un altında tut.':'Süreyi %60\'ın altında bitir.'):'Kusursuz görev!')+'</p>':''); }
-  return r; };
+  return r; }; },endMission);
 /* helicopter missions get stars too */
-if(typeof hmEnd==='function'){ const _bHm=hmEnd; hmEnd=function(win,why){ const was=HM.ended; _bHm(win,why); if(was||!win) return; const st=1+(HM.t<HM.M.lim*0.5?1:0)+(HM.H&&HM.H.crashT<=0&&!(HM.crate&&HM.crate.broken)?1:0); bSetStars(HM.id,Math.min(3,st)); const s=$('hmEndS'); if(s) s.innerHTML=starsHTML(Math.min(3,st))+s.innerHTML; }; }
+if(typeof hmEnd==='function'){ hmEnd=HOOK.wrap('hmEnd','83-board#_bHm',function(_bHm){ return function(win,why){ const was=HM.ended; _bHm(win,why); if(was||!win) return; const st=1+(HM.t<HM.M.lim*0.5?1:0)+(HM.H&&HM.H.crashT<=0&&!(HM.crate&&HM.crate.broken)?1:0); bSetStars(HM.id,Math.min(3,st)); const s=$('hmEndS'); if(s) s.innerHTML=starsHTML(Math.min(3,st))+s.innerHTML; }; },hmEnd); }

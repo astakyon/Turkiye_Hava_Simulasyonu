@@ -41,7 +41,7 @@ function bkBake(g){ if(SETTINGS.bake===false) return null; let rec=BK.recs.get(g
     L.forEach(function(o){ const c=o.geometry.attributes.position.count; if(nv+c>65535&&chunk.length) flush(); chunk.push(o); nv+=c; }); flush(); });
   if(!meshes.length){ rec.parts=[]; rec.meshes=[]; return rec; }
   meshes.forEach(function(m){ g.add(m); }); g.updateMatrixWorld(true);
-  rec.meshes=meshes; rec.parts=used.map(function(o){ return {o:o, e:rel.get(o).elements.slice(), v:true, mat:o.material, mk:mrgMatKey(o.material), chk:0}; });
+  rec.meshes=meshes; rec.parts=used.map(function(o){ return {o:o, e:rel.get(o).elements.slice(), v:true, mat:o.material, ms:mrgMatSig(o.material), chk:0}; });
   used.forEach(function(o){ o.userData.baked=rec; o.userData.noCull=true; o.layers.disable(0); });
   if(typeof CULL!=='undefined') CULL.list=CULL.list.filter(function(o){ return !o.userData.baked; });
   BK.stats.parts+=used.length; BK.stats.meshes+=meshes.length; return rec; }
@@ -51,11 +51,14 @@ function bkRebuild(rec,why){ const now=performance.now(); rec.rb=rec.rb.filter(f
   bkUnbake(rec); if(rec.rb.length>6){ rec.off=true; BK.stats.off++; return; } if(rec.g.parent) bkBake(rec.g); }
 /* one part: still where it was baked, still visible, same material? */
 function bkPartState(rec,p){ const o=p.o, g=rec.g; let q=o; while(q&&q!==g){ if(!q.visible) return 'vis'; q=q.parent; } if(q!==g) return 'gone';
-  if(o.material!==p.mat) return 'mat'; if((p.chk=(p.chk+1)%6)===0&&mrgMatKey(o.material)!==p.mk) return 'mat';
+  if(o.material!==p.mat) return 'mat'; if((p.chk=(p.chk+1)%6)===0&&mrgMatSig(o.material)!==p.ms) return 'mat';
   const e=bkRel(g,o,BK.m).elements; for(let k=0;k<16;k++){ if(Math.abs(e[k]-p.e[k])>(k>=12&&k<15?0.002:1e-4)) return 'move'; } return null; }
 function bkCheck(rec){ if(!rec.parts.length) return; if(!rec.g.parent){ bkUnbake(rec); BK.recs.delete(rec.g); return; } rec.g.updateMatrixWorld(); let culprit=null, why=null;
-  for(let i=0;i<rec.parts.length;i++){ const p=rec.parts[i]; if(p.o.layers.test(camera.layers)) p.o.layers.disable(0); const w=bkPartState(rec,p); if(w){ culprit=p.o; why=w; break; } }
-  if(!culprit) return; if(why!=='mat'){ culprit.userData.noBake=true; BK.stats.left++; } bkRebuild(rec,why); }
+  /* V2.24: every part that moved in this check leaves at once — one rebuild instead of one per part (an AI aircraft moving its
+     control surfaces used to rebuild a dozen times in a row) */
+  for(let i=0;i<rec.parts.length;i++){ const p=rec.parts[i]; if(p.o.layers.test(camera.layers)) p.o.layers.disable(0); const w=bkPartState(rec,p); if(!w) continue;
+    if(w!=='mat'){ p.o.userData.noBake=true; BK.stats.left++; } if(!culprit||why==='mat'){ culprit=p.o; why=w; } }
+  if(!culprit) return; bkRebuild(rec,why); }
 function bkScan(){ if(SETTINGS.bake===false) return; const G=bkGroups(); G.forEach(function(g){ if(!BK.recs.has(g)) bkBake(g); }); BK.recs.forEach(function(rec,g){ if(!g.parent||!G.has(g)){ bkUnbake(rec); BK.recs.delete(g); } }); BK.stats.groups=BK.recs.size; }
 function bkStep(dt){ if(SETTINGS.bake===false||!BK.started) return; BK.scanT+=dt||0; if(BK.scanT>3){ BK.scanT=0; try{ bkScan(); }catch(e){ console.warn('pişirme',e); } }
   let pg=null; try{ pg=planeGroup; }catch(e){} const pr=pg&&BK.recs.get(pg); if(pr) bkCheck(pr);   /* the player's aircraft every frame */
@@ -66,5 +69,5 @@ function bkStep(dt){ if(SETTINGS.bake===false||!BK.started) return; BK.scanT+=dt
 function bkShow(L,pr){ if(!camera) return; const on=typeof CULL==='undefined'||CULL.on, k=HH/(2*Math.tan(camera.fov*Math.PI/360)), px=on?CULL.px:0, cp=camera.position, v=BK.v||(BK.v=new THREE.Vector3());
   for(let i=0;i<L.length;i++){ const r=L[i]; if(r===pr) continue; for(let j=0;j<r.meshes.length;j++){ const m=r.meshes[j], g=m.geometry; if(!g.boundingSphere) g.computeBoundingSphere(); v.copy(g.boundingSphere.center).applyMatrix4(m.matrixWorld);
     const d=Math.max(1,v.distanceTo(cp)-g.boundingSphere.radius); if(!on||m.userData.bkR*k/d>=px) m.layers.enable(0); else m.layers.disable(0); } } }
-const _bkCull=cullStep; cullStep=function(dt){ _bkCull(dt); try{ bkStep(dt); }catch(e){} };
+cullStep=HOOK.wrap('cullStep','98z-bake#_bkCull',function(_bkCull){ return function(dt){ _bkCull(dt); try{ bkStep(dt); }catch(e){} }; },cullStep);
 setTimeout(function(){ BK.started=true; try{ bkScan(); }catch(e){ console.warn('pişirme',e); } },4000);

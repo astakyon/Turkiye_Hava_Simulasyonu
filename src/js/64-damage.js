@@ -10,14 +10,14 @@ function dmgReset(){ S.fuel=1; S.eng=0; S.leak=0; S.efire=0; S.wingL=0; S.wingR=
 function engineDead(){ return (S.eng||0)>=1||(S.fuel!=null&&S.fuel<=0&&fuelMul()>0); }
 /* thrust multiplier used by the flight model */
 function dmgThrust(){ if(engineDead()) return 0; let k=S.hp<30?0.65:1; k*=1-(S.eng||0)*0.5; return k; }
-const _dmgReset=resetFlight; resetFlight=function(mode){ _dmgReset(mode); dmgReset(); EJ.on&&ejClear(); };
+resetFlight=HOOK.wrap('resetFlight','64-damage#_dmgReset',function(_dmgReset){ return function(mode){ _dmgReset(mode); dmgReset(); EJ.on&&ejClear(); }; },resetFlight);
 /* ---- hits: sub-system damage */
-const _dmgHit=damagePlayer; damagePlayer=function(d,reason){ _dmgHit(d,reason); if(S.crashed||d<12) return;
+damagePlayer=HOOK.wrap('damagePlayer','64-damage#_dmgHit',function(_dmgHit){ return function(d,reason){ _dmgHit(d,reason); if(S.crashed||d<12) return;
   const r=Math.random();
   if(r<0.34){ S.eng=Math.min(1,(S.eng||0)+0.35+Math.random()*0.2); if(S.eng>=0.6&&!S.efire&&Math.random()<0.55){ S.efire=12; toast('🔥 MOTOR YANGINI','#ff5a4a'); } else toast('MOTOR HASAR ALDI — itki düştü','#ff8a5a'); }
   else if(r<0.6){ S.leak=Math.min(0.02,(S.leak||0)+0.004+Math.random()*0.004); toast('YAKIT SIZINTISI','#ff8a5a'); }
   else if(r<0.9){ const L=Math.random()<0.5, k=L?'wingL':'wingR'; S[k]=Math.min(1.5,(S[k]||0)+0.5+Math.random()*0.4); if(S[k]>=1) dmgDebris(L?1:-1); toast((L?'SOL':'SAĞ')+' KANAT HASARLI','#ff8a5a'); }
-};
+}; },damagePlayer);
 /* a piece of wing breaks off and tumbles down */
 const dmgM=new THREE.MeshLambertMaterial({color:0x5c6670});
 function dmgDebris(side){ for(let i=0;i<3;i++){ const m=new THREE.Mesh(new THREE.BoxGeometry(0.4+Math.random()*1.4,0.12,0.4+Math.random()*1.1),dmgM);
@@ -54,9 +54,9 @@ const _dmgUpdate=update; update=function(dt){
   if(EJ.on){ ejStep(dt); return; }
   _dmgUpdate(dt); dmgStep(dt); };
 /* service hangar: full repair and fuel */
-const _dmgSvc=closeService; closeService=function(ok){ const r=_dmgSvc(ok); if(ok){ dmgReset(); } return r; };
+closeService=HOOK.wrap('closeService','64-damage#_dmgSvc',function(_dmgSvc){ return function(ok){ const r=_dmgSvc(ok); if(ok){ dmgReset(); } return r; }; },closeService);
 /* ---- HUD: fuel gauge + caution panel */
-const _dmgHealth=hudHealth; hudHealth=function(x,y){ _dmgHealth(x,y);
+hudHealth=HOOK.wrap('hudHealth','64-damage#_dmgHealth',function(_dmgHealth){ return function(x,y){ _dmgHealth(x,y);
   const bw=176*sc, bh=7*sc, by=y+10*sc+13*sc+24*sc, f=clamp(S.fuel==null?1:S.fuel,0,1), col=f>0.2?'#7fd0ff':f>0.08?AMB:RED;
   if(fuelMul()===0) return;
   hx.save(); hx.shadowBlur=0; hx.fillStyle='rgba(4,12,22,0.62)'; hx.fillRect(x,by,bw,bh); hx.globalAlpha=f<0.08?0.6+0.4*Math.sin(T*10):1; hx.fillStyle=col; hx.fillRect(x,by,bw*f,bh); hx.globalAlpha=1;
@@ -67,7 +67,7 @@ const _dmgHealth=hudHealth; hudHealth=function(x,y){ _dmgHealth(x,y);
   if(S.fuel<=0&&fuelMul()>0) W.push(['YAKIT BİTTİ',RED]); else if(S.fuel<0.2&&fuelMul()>0) W.push([S.fuel<0.08?'YAKIT KRİTİK':'YAKIT AZ',S.fuel<0.08?RED:AMB]);
   if(S.leak>0) W.push(['YAKIT SIZINTISI',AMB]); if((S.wingL||0)>0) W.push(['SOL KANAT HASARLI',AMB]); if((S.wingR||0)>0) W.push(['SAĞ KANAT HASARLI',AMB]);
   if(W.length&&!S.crashed){ const tc=TOUCH.vis, px=tc?HW/2:x, py=tc?HH*0.27:by+bh+34*sc, al=tc?'center':'left'; hx.save(); W.forEach(function(w,i){ if(w[1]===RED&&Math.sin(T*8)<-0.3) return; tx('▲ '+w[0],px,py+i*17*sc,13,al,w[1]); });
-    if(!AIRCRAFT[activeId].uav&&(S.efire>0||engineDead()||S.hp<35)&&!S.onGround) tx(TOUCH.vis?'FIRLAT düğmesine iki kez dokun':'Fırlatma koltuğu: J tuşuna iki kez bas',px,py+W.length*17*sc+4*sc,11,al,CD); hx.restore(); } };
+    if(!AIRCRAFT[activeId].uav&&(S.efire>0||engineDead()||S.hp<35)&&!S.onGround) tx(TOUCH.vis?'FIRLAT düğmesine iki kez dokun':'Fırlatma koltuğu: J tuşuna iki kez bas',px,py+W.length*17*sc+4*sc,11,al,CD); hx.restore(); } }; },hudHealth);
 /* ---- ejection */
 const EJ={on:false, p:new THREE.Vector3(), v:new THREE.Vector3(), ph:'seat', t:0, g:null, chute:null, seat:null, canopy:null, yaw:0, plane:true};
 function ejBuild(){ const g=new THREE.Group(); const M=hoMats(); const p=trBuild(); p.rotation.x=0; g.add(p); const seat=new THREE.Mesh(new THREE.BoxGeometry(0.75,1.2,0.7),new THREE.MeshLambertMaterial({color:0x2a2e33})); seat.position.set(0,0.9,0.35); g.add(seat); EJ.seatM=seat; return g; }
@@ -122,20 +122,20 @@ function ejLand(water){
   toast(msg,'#7dffb0'); }
 /* chase camera on the parachute */
 const ejC=new THREE.Vector3();
-const _dmgCam=cameraUpdate; cameraUpdate=function(dt){ if(!EJ.on) return _dmgCam(dt);
+cameraUpdate=HOOK.wrap('cameraUpdate','64-damage#_dmgCam',function(_dmgCam){ return function(dt){ if(!EJ.on) return _dmgCam(dt);
   const a=EJ.yaw+(typeof CAMU!=='undefined'?CAMU.yaw||0:0), D=EJ.ph==='seat'?14:19; ejC.set(EJ.p.x+Math.sin(a)*D,EJ.p.y+(EJ.ph==='seat'?3:5),EJ.p.z+Math.cos(a)*D);
   const gc=Math.max(groundH(ejC.x,ejC.z),0)+1.2; if(ejC.y<gc) ejC.y=gc;
   if(dt>0&&camera.position.distanceTo(ejC)<60) camera.position.lerp(ejC,1-Math.exp(-dt*4)); else camera.position.copy(ejC);
-  camera.lookAt(EJ.p.x,EJ.p.y+(EJ.ph==='chute'?3.6:0.8),EJ.p.z); if(Math.abs(camera.fov-62)>0.1){ camera.fov=62; camera.updateProjectionMatrix(); } camera.updateMatrixWorld(); };
-const _dmgHUD=drawHUD; drawHUD=function(){ if(!(EJ.on&&state==='play')) return _dmgHUD();
+  camera.lookAt(EJ.p.x,EJ.p.y+(EJ.ph==='chute'?3.6:0.8),EJ.p.z); if(Math.abs(camera.fov-62)>0.1){ camera.fov=62; camera.updateProjectionMatrix(); } camera.updateMatrixWorld(); }; },cameraUpdate);
+drawHUD=HOOK.wrap('drawHUD','64-damage#_dmgHUD',function(_dmgHUD){ return function(){ if(!(EJ.on&&state==='play')) return _dmgHUD();
   hx.setTransform(DPR,0,0,DPR,0,0); hx.clearRect(0,0,HW,HH); const s=clamp(Math.min(HW,HH)/760,0.7,1.5), alt=Math.max(0,Math.round(EJ.p.y-Math.max(groundH(EJ.p.x,EJ.p.z),0)));
   hx.save(); hx.textAlign='center'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,.7)'; hx.shadowBlur=4;
   hx.font='700 '+Math.round(15*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#ffd27a'; hx.fillText(EJ.ph==='seat'?'FIRLATMA KOLTUĞU':'PARAŞÜT', HW/2, 26*s);
   hx.font='700 '+Math.round(30*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#fff'; hx.fillText(alt+' m', HW/2, 58*s);
   hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#dfe9f1'; if(EJ.ph==='chute') hx.fillText(TOUCH.vis?'Sola/sağa yatır: dön · ileri: hızlan':'A/D dön · W hızlan · S yavaşla', HW/2, HH-26*s);
-  hx.restore(); };
+  hx.restore(); }; },drawHUD);
 /* input */
 window.addEventListener('keydown',function(e){ if(e.repeat||state!=='play') return; if(isKey(e,'air','eject')){ ejArm(); } });
 (function(){ const b=$('tEject'); if(b) b.addEventListener('pointerdown',function(e){ e.preventDefault(); ejArm(); }); })();
-const _dmgTouch=updateTouchUI; updateTouchUI=function(){ _dmgTouch(); const b=$('tEject'); if(!b) return; const show=state==='play'&&!S.crashed&&!EJ.on&&!S.onGround&&!AIRCRAFT[activeId].uav&&(S.hp<60||engineDead()||S.efire>0||S.fuel<0.1); b.classList.toggle('hidden',!show); };
-const _dmgNeeds=needsService; needsService=function(){ return _dmgNeeds()||(S.eng||0)>0||(S.leak||0)>0||(S.wingL||0)>0||(S.wingR||0)>0; };
+updateTouchUI=HOOK.wrap('updateTouchUI','64-damage#_dmgTouch',function(_dmgTouch){ return function(){ _dmgTouch(); const b=$('tEject'); if(!b) return; const show=state==='play'&&!S.crashed&&!EJ.on&&!S.onGround&&!AIRCRAFT[activeId].uav&&(S.hp<60||engineDead()||S.efire>0||S.fuel<0.1); b.classList.toggle('hidden',!show); }; },updateTouchUI);
+needsService=HOOK.wrap('needsService','64-damage#_dmgNeeds',function(_dmgNeeds){ return function(){ return _dmgNeeds()||(S.eng||0)>0||(S.leak||0)>0||(S.wingL||0)>0||(S.wingR||0)>0; }; },needsService);

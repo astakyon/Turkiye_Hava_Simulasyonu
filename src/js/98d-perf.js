@@ -73,7 +73,7 @@ function instPrep(){
       o.frustumCulled=true; o.userData.full=n; o.userData.ir=gr*sm; o.userData.bounded=true; }
     o.userData.bv=o.instanceMatrix.version; o.userData.noCull=true; o.userData.bs0=o.geometry.boundingSphere.clone(); L.push(o); });   /* the general size cull leaves these to instStep */
   PERF2.inst=L; PERF2.ii=0; return L.length; }
-const _p2Chunk=chunkInstances; chunkInstances=function(){ const r=_p2Chunk(); try{ waterFix(); instPrep(); }catch(e){ console.warn('perf',e); } return r; };
+chunkInstances=HOOK.wrap('chunkInstances','98d-perf#_p2Chunk',function(_p2Chunk){ return function(){ const r=_p2Chunk(); try{ waterFix(); instPrep(); }catch(e){ console.warn('perf',e); } return r; }; },chunkInstances);
 function treeDensity(){ return [0.35,0.7,1,1][SETTINGS.quality||0]*(PERF2.lvl>=2?0.6:1); }
 function instStep(){
   const L=PERF2.inst, n=L.length; if(!n||!camera) return; const k=HH/(2*Math.tan(camera.fov*Math.PI/360)), cp=camera.position, px=(typeof CULL!=='undefined'?CULL.px:2.5)*1.4, v=instStep.v||(instStep.v=new THREE.Vector3()), td=treeDensity(), mob=DEV.mobile;
@@ -84,18 +84,18 @@ function instStep(){
     if(show) o.layers.enable(0); else o.layers.disable(0);
     if(o.userData.tree){ const far=Math.max(0,d-(mob?1500:2500)), thin=Math.max(mob?0.3:0.4,1-far/(mob?7000:11000)); o.count=Math.max(0,Math.floor(o.userData.full*td*thin)); } }
 }
-(function(){ /* mark forest chunks once they exist */ const t=function(){ if(GFX.treeChunks) GFX.treeChunks.forEach(function(m){ m.userData.tree=true; }); }; const _ca=chunkInstances; chunkInstances=function(){ const r=_ca(); t(); return r; }; })();
-const _p2Cull=cullStep; cullStep=function(dt){ _p2Cull(dt); if(!CULL.on){ PERF2.inst.forEach(function(o){ o.layers.enable(0); }); return; } try{ instStep(); }catch(e){} };
+(function(){ /* mark forest chunks once they exist */ const t=function(){ if(GFX.treeChunks) GFX.treeChunks.forEach(function(m){ m.userData.tree=true; }); }; chunkInstances=HOOK.wrap('chunkInstances','98d-perf#_ca',function(_ca){ return function(){ const r=_ca(); t(); return r; }; },chunkInstances); })();
+cullStep=HOOK.wrap('cullStep','98d-perf#_p2Cull',function(_p2Cull){ return function(dt){ _p2Cull(dt); if(!CULL.on){ PERF2.inst.forEach(function(o){ o.layers.enable(0); }); return; } try{ instStep(); }catch(e){} }; },cullStep);
 /* ---- smart performance ladder */
 function perfLvlApply(){ if(typeof CULL!=='undefined') CULL.t=99;
   if(GFX.clouds&&GFX.cloudN) GFX.clouds.count=Math.floor(GFX.cloudN*[0.5,0.75,1,1][SETTINGS.quality||0]*(PERF2.lvl>=3?0.5:1)); }
-const _p2Shadows=applyShadows; applyShadows=function(){ _p2Shadows(); if(PERF2.lvl>=1&&renderer.shadowMap.enabled){ renderer.shadowMap.enabled=false; sunLight.castShadow=false; } };
-const _p2FX=applyFX; applyFX=function(){ _p2FX(); if(PERF2.lvl>=1){ FX.on=false; try{ glowApply(false); }catch(e){} } };
-const _p2Min=perfMin; perfMin=function(){ return PERF2.lvl>=3?(DEV.mobile?0.55:0.7):_p2Min(); };
-const _p2AQ=applyQuality; applyQuality=function(){
+applyShadows=HOOK.wrap('applyShadows','98d-perf#_p2Shadows',function(_p2Shadows){ return function(){ _p2Shadows(); if(PERF2.lvl>=1&&renderer.shadowMap.enabled){ renderer.shadowMap.enabled=false; sunLight.castShadow=false; } }; },applyShadows);
+applyFX=HOOK.wrap('applyFX','98d-perf#_p2FX',function(_p2FX){ return function(){ _p2FX(); if(PERF2.lvl>=1){ FX.on=false; try{ glowApply(false); }catch(e){} } }; },applyFX);
+perfMin=HOOK.wrap('perfMin','98d-perf#_p2Min',function(_p2Min){ return function(){ return PERF2.lvl>=3?(DEV.mobile?0.55:0.7):_p2Min(); }; },perfMin);
+applyQuality=HOOK.wrap('applyQuality','98d-perf#_p2AQ',function(_p2AQ){ return function(){
   _p2AQ(); const fixed=SETTINGS.res&&SETTINGS.res!=='auto';
   if(DEV.mobile&&!fixed){ const q=SETTINGS.quality||0, cap=[1,1.25,1.5,1.75][q]; if(PERF.base>cap){ PERF.base=cap; renderer.setPixelRatio(PERF.base*PERF.scale); resize(); } }   /* 3x phone screens: 1.25x is already sharp */
-  if(typeof CULL!=='undefined'&&PERF2.lvl>=2) CULL.px*=1.6; perfLvlApply(); };
+  if(typeof CULL!=='undefined'&&PERF2.lvl>=2) CULL.px*=1.6; perfLvlApply(); }; },applyQuality);
 function perfLadder(){
   if(!SETTINGS.autoPerf||(state!=='play'&&state!=='walk')){ PERF2.bad=PERF2.good=0; return; }
   const lo=DEV.mobile?32:38, atMin=(SETTINGS.res&&SETTINGS.res!=='auto')||PERF.scale<=perfMin()+0.001;
@@ -103,11 +103,11 @@ function perfLadder(){
   if(PERF2.bad>=4&&PERF2.lvl<3){ PERF2.lvl++; PERF2.bad=0; applyQuality(); if(PERF2.told<PERF2.lvl){ PERF2.told=PERF2.lvl; toast(PERF_LVL_TXT[PERF2.lvl]+' (Ayarlar → Grafik)','#b8ecff'); } }
   else if(PERF2.good>=12&&PERF2.lvl>0){ PERF2.lvl--; PERF2.good=0; applyQuality(); }
 }
-const _p2Step=perfStep; perfStep=function(dt){ const before=PERF.n; _p2Step(dt); if(PERF.n===0&&before>0){ perfLadder();
-  if(SETTINGS.fps){ const el=$('fps'); if(el){ el.textContent=Math.round(PERF.fps)+' FPS · '+Math.round(renderer.getPixelRatio()*100)/100+'x'+(PERF2.calls?' · '+PERF2.calls+' çizim · '+Math.round(PERF2.tris/1000)+'k üçgen':'')+(PERF2.lvl?' · hafif '+PERF2.lvl:'')+(PERF2.split?' · derinlik 2 kat':''); } } } };
+perfStep=HOOK.wrap('perfStep','98d-perf#_p2Step',function(_p2Step){ return function(dt){ const before=PERF.n; _p2Step(dt); if(PERF.n===0&&before>0){ perfLadder();
+  if(SETTINGS.fps){ const el=$('fps'); if(el){ el.textContent=Math.round(PERF.fps)+' FPS · '+Math.round(renderer.getPixelRatio()*100)/100+'x'+(PERF2.calls?' · '+PERF2.calls+' çizim · '+Math.round(PERF2.tris/1000)+'k üçgen':'')+(PERF2.lvl?' · hafif '+PERF2.lvl:'')+(PERF2.split?' · derinlik 2 kat':''); } } } }; },perfStep);
 /* ---- settings UI */
 (function(){ const c=$('setCap'); if(c) c.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.fpsCap=+b.dataset.c; PERF2.capLast=0; saveSettings(); syncSettingsUI(); });
   const sp=$('setSplit'); if(sp) sp.addEventListener('change',function(){ SETTINGS.split=sp.checked; saveSettings(); });
   const pm=$('btnPerfMode'); if(pm) pm.addEventListener('click',function(){ SETTINGS.quality=0; SETTINGS.fx=0; SETTINGS.shadows=false; SETTINGS.res='auto'; SETTINGS.autoPerf=true; if(DEV.mobile) SETTINGS.fpsCap=30; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI(); toast('Performans modu: en akıcı ayarlar uygulandı','#7dffb0'); }); })();
-const _p2Sync=syncSettingsUI; syncSettingsUI=function(){ _p2Sync(); const c=$('setCap'); if(c) Array.prototype.forEach.call(c.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.c===fpsCap())); });
-  const sp=$('setSplit'); if(sp){ sp.checked=SETTINGS.split!==false; sp.disabled=!!DEV.logDepth; } };
+syncSettingsUI=HOOK.wrap('syncSettingsUI','98d-perf#_p2Sync',function(_p2Sync){ return function(){ _p2Sync(); const c=$('setCap'); if(c) Array.prototype.forEach.call(c.children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.c===fpsCap())); });
+  const sp=$('setSplit'); if(sp){ sp.checked=SETTINGS.split!==false; sp.disabled=!!DEV.logDepth; } }; },syncSettingsUI);

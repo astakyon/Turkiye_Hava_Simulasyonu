@@ -84,16 +84,18 @@ function buildRural(){
   RURAL.clear.forEach(function(c){ const pts=[]; for(let x=c[0];x<=c[1];x+=20) for(let z=c[2];z<=c[3];z+=20) pts.push([x,z]); clearTreesNear(pts,14); });
   R.built=true; ruralStep(0);
 }
+const RUR_T={mt:new THREE.Matrix4(), q:new THREE.Quaternion(), qa:new THREE.Quaternion(), s1:new THREE.Vector3(1,1,1), p:new THREE.Vector3(), Z:new THREE.Vector3(0,0,1)};   /* V2.24: temporaries reused every frame */
 function ruralStep(dt){
-  const R=RURAL; if(!R.built) return; const mt=new THREE.Matrix4(), q=new THREE.Quaternion(), qa=new THREE.Quaternion(), s1=new THREE.Vector3(1,1,1), p=new THREE.Vector3(), Z=new THREE.Vector3(0,0,1);
+  const R=RURAL; if(!R.built) return; const mt=RUR_T.mt, q=RUR_T.q, qa=RUR_T.qa, s1=RUR_T.s1, p=RUR_T.p, Z=RUR_T.Z;
   R.rotorD.forEach(function(t,i){ t.a+=t.w*dt; q.setFromAxisAngle(UP,R.yaw); qa.setFromAxisAngle(Z,t.a); q.multiply(qa);
     mt.compose(p.set(t.x-3.6*Math.sin(R.yaw),t.y,t.z-3.6*Math.cos(R.yaw)),q,s1); R.rotors.setMatrixAt(i,mt); });
   R.rotors.instanceMatrix.needsUpdate=true;
   if(R.tractor){ R.tractorT+=dt; const lane=Math.floor(R.tractorT/22)%8, u=(R.tractorT%22)/22, dir=lane%2?-1:1, x=150+lane*6, z=-3400+(dir>0?u:1-u)*150;
     R.tractor.position.set(x,terrainH(x,z),z); R.tractor.rotation.y=dir>0?Math.PI:0; }
   if(R.sheep){ const f=R.flock; f.x=-1180+Math.cos(T*0.01)*40; f.z=-2560+Math.sin(T*0.013)*30;
-    R.sheepD.forEach(function(d,i){ const x=f.x+d.ox+Math.sin(T*d.sp*0.2+d.ph)*3, z=f.z+d.oz+Math.cos(T*d.sp*0.15+d.ph)*3, hd=d.ph+Math.sin(T*0.05+d.ph);
-      mt.compose(p.set(x,terrainH(x,z),z),q.setFromAxisAngle(UP,hd),s1); R.sheep[0].setMatrixAt(i,mt); R.sheep[1].setMatrixAt(i,mt); });
+    R.sk=(R.sk|0)+1; R.sheepD.forEach(function(d,i){ const x=f.x+d.ox+Math.sin(T*d.sp*0.2+d.ph)*3, z=f.z+d.oz+Math.cos(T*d.sp*0.15+d.ph)*3, hd=d.ph+Math.sin(T*0.05+d.ph);
+      if(d.gy==null||((R.sk|0)+i)%20===0) d.gy=terrainH(x,z);   /* V2.24: ground height every 20th frame per sheep (they move a few metres) */
+      mt.compose(p.set(x,d.gy,z),q.setFromAxisAngle(UP,hd),s1); R.sheep[0].setMatrixAt(i,mt); R.sheep[1].setMatrixAt(i,mt); });
     R.sheep[0].instanceMatrix.needsUpdate=true; R.sheep[1].instanceMatrix.needsUpdate=true; }
   if(R.smoke){ const a=R.smoke.geometry.attributes.position; R.smokeD.forEach(function(d,i){ d.t=(d.t+dt*0.12)%1; a.setXYZ(i,d.x+d.t*10,d.y+d.t*18,d.z+d.t*4); }); a.needsUpdate=true; }
 }

@@ -18,14 +18,14 @@ function raceStore(){ try{ return JSON.parse(localStorage.getItem('ayy-race')||'
 function raceSave(o){ try{ localStorage.setItem('ayy-race',JSON.stringify(o)); }catch(e){} }
 function raceBest(id){ const s=raceStore()[id]; return s&&s.best||null; }
 /* ---- board */
-const _rAll=boardAll; boardAll=function(){ return _rAll().concat(RACES.map(function(R){ return {id:R.id,kind:'race',name:'Yarış: '+R.n,desc:R.d,R:R}; })); };
-const _rMeta=bMeta; bMeta=function(e){ if(e.kind!=='race') return _rMeta(e); const R=e.R, b=raceStore()[R.id];
-  return {cat:'yaris',diff:R.veh==='air'?2:R.veh==='heli'?3:1,dur:R.veh==='air'?4:3,xp:120,obj:['Kapılardan sırayla geç ('+R.gates().length+' kapı)','Süre ilk kapıda başlar'].concat(b&&b.board&&b.board.length?['SIRALAMA: '+b.board.slice(0,5).map(function(x,i){ return (i+1)+'. '+x.n+' '+fmtT(x.t); }).join(' · ')]:['Henüz derece yok']),thr:[b&&b.best?'Hayalet: en iyi derecen '+fmtT(b.best):'Hayalet yok — ilk dereceni yap'],load:null,area:(function(){ const G=R.gates(); let x=0,z=0; G.forEach(function(g){ x+=g[0]; z+=g[2]; }); return [x/G.length,z/G.length,R.veh==='air'?6500:R.veh==='car'?2600:900]; })()}; };
-const _rRender=renderMissions; renderMissions=function(){ _rRender(); const f=$('misFilt'); if(f&&!f.querySelector('[data-v="yaris"]')){ const seg=f.querySelector('[data-k="cat"]'); if(seg){ const b=document.createElement('button'); b.type='button'; b.dataset.v='yaris'; b.textContent='Yarış'; b.setAttribute('aria-pressed',String(BF.cat==='yaris')); seg.insertBefore(b,seg.querySelector('.bnew')||null); } }
+boardAll=HOOK.wrap('boardAll','87-races#_rAll',function(_rAll){ return function(){ return _rAll().concat(RACES.map(function(R){ return {id:R.id,kind:'race',name:'Yarış: '+R.n,desc:R.d,R:R}; })); }; },boardAll);
+bMeta=HOOK.wrap('bMeta','87-races#_rMeta',function(_rMeta){ return function(e){ if(e.kind!=='race') return _rMeta(e); const R=e.R, b=raceStore()[R.id];
+  return {cat:'yaris',diff:R.veh==='air'?2:R.veh==='heli'?3:1,dur:R.veh==='air'?4:3,xp:120,obj:['Kapılardan sırayla geç ('+R.gates().length+' kapı)','Süre ilk kapıda başlar'].concat(b&&b.board&&b.board.length?['SIRALAMA: '+b.board.slice(0,5).map(function(x,i){ return (i+1)+'. '+x.n+' '+fmtT(x.t); }).join(' · ')]:['Henüz derece yok']),thr:[b&&b.best?'Hayalet: en iyi derecen '+fmtT(b.best):'Hayalet yok — ilk dereceni yap'],load:null,area:(function(){ const G=R.gates(); let x=0,z=0; G.forEach(function(g){ x+=g[0]; z+=g[2]; }); return [x/G.length,z/G.length,R.veh==='air'?6500:R.veh==='car'?2600:900]; })()}; }; },bMeta);
+renderMissions=HOOK.wrap('renderMissions','87-races#_rRender',function(_rRender){ return function(){ _rRender(); const f=$('misFilt'); if(f&&!f.querySelector('[data-v="yaris"]')){ const seg=f.querySelector('[data-k="cat"]'); if(seg){ const b=document.createElement('button'); b.type='button'; b.dataset.v='yaris'; b.textContent='Yarış'; b.setAttribute('aria-pressed',String(BF.cat==='yaris')); seg.insertBefore(b,seg.querySelector('.bnew')||null); } }
   const e=boardList()[misSel]; if(e&&e.kind==='race'){ const b=raceBest(e.R.id); $('btnMisGo').textContent='▶ Yarışa başla'; $('btnMisAc').disabled=true; $('btnMisAc').textContent={air:AIRCRAFT[e.R.ac].short,heli:'T129 ATAK',car:'Ay Yıldız SUV',boat:'Hücumbot'}[e.R.veh];
     $('misChips').innerHTML='<span>'+(b?'En iyi: <b>'+fmtT(b)+'</b>':'Derece yok')+'</span><span>'+e.R.gates().length+' kapı</span>'; }
-  Array.prototype.forEach.call(document.querySelectorAll('#misList .mitem'),function(btn){ const en=boardList()[+btn.dataset.i]; if(en&&en.kind==='race'){ const st=btn.querySelector('.stars'), b=raceBest(en.R.id); if(st) st.outerHTML='<span class="stars"><i class="on" style="font-size:11px">'+(b?fmtT(b):'—')+'</i></span>'; } }); };
-const _rGo=misGo; misGo=function(){ const e=boardList()[misSel]; if(!e||e.kind!=='race') return _rGo(); raceStart(e.R.id); };
+  Array.prototype.forEach.call(document.querySelectorAll('#misList .mitem'),function(btn){ const en=boardList()[+btn.dataset.i]; if(en&&en.kind==='race'){ const st=btn.querySelector('.stars'), b=raceBest(en.R.id); if(st) st.outerHTML='<span class="stars"><i class="on" style="font-size:11px">'+(b?fmtT(b):'—')+'</i></span>'; } }); }; },renderMissions);
+misGo=HOOK.wrap('misGo','87-races#_rGo',function(_rGo){ return function(){ const e=boardList()[misSel]; if(!e||e.kind!=='race') return _rGo(); raceStart(e.R.id); }; },misGo);
 /* ---- gates and ghost */
 const RGM={next:new THREE.MeshBasicMaterial({color:0x5dff8a,transparent:true,opacity:0.85}), gate:new THREE.MeshBasicMaterial({color:0xffb25a,transparent:true,opacity:0.6}), pole:new THREE.MeshLambertMaterial({color:0xe03a2a}), ghost:new THREE.MeshBasicMaterial({color:0x7fd0ff,transparent:true,opacity:0.35,depthWrite:false})};
 function raceGates(){ RACE.meshes.forEach(function(m){ scene.remove(m); }); RACE.meshes=[]; const R=RACE.def, G=RACE.gates;
@@ -89,10 +89,10 @@ function raceFinish(){
     setTimeout(function(){ el.classList.remove('hidden'); try{ document.exitPointerLock&&document.exitPointerLock(); }catch(e){} },900); }
   Object.assign(HM,{on:true,id:R.id,ended:true}); RACE.meshes.forEach(function(m){ m.visible=false; }); if(RACE.gm) RACE.gm.visible=false; RACE.def=null; RACE.keep=R;
 }
-const _rHm=hmStart; hmStart=function(id){ if(String(id).indexOf('r_')===0){ $('hmEnd').classList.add('hidden'); HM.on=false; return raceStart(id); } return _rHm(id); };
-const _rSetup=setupMission; setupMission=function(){ if(missionId!=='race') return _rSetup(); MLOG.length=0; MS.rings=MS.air=MS.ground=MS.recon=false; M={id:'race',t:0,started:false,done:false,scanIdx:0,scanT:0}; clearAir(); clearGround(); clearRecon(); ringIdx=0; courseT=null; updateRingVisuals(); aiClear(); };
-const _rUpdM=updateMission; updateMission=function(dt){ if(M.id==='race') return; return _rUpdM(dt); };
-const _rObj=bObjective; bObjective=function(){ if(state==='play'&&M&&M.id==='race') return null; return _rObj(); };
+hmStart=HOOK.wrap('hmStart','87-races#_rHm',function(_rHm){ return function(id){ if(String(id).indexOf('r_')===0){ $('hmEnd').classList.add('hidden'); HM.on=false; return raceStart(id); } return _rHm(id); }; },hmStart);
+setupMission=HOOK.wrap('setupMission','87-races#_rSetup',function(_rSetup){ return function(){ if(missionId!=='race') return _rSetup(); MLOG.length=0; MS.rings=MS.air=MS.ground=MS.recon=false; M={id:'race',t:0,started:false,done:false,scanIdx:0,scanT:0}; clearAir(); clearGround(); clearRecon(); ringIdx=0; courseT=null; updateRingVisuals(); aiClear(); }; },setupMission);
+updateMission=HOOK.wrap('updateMission','87-races#_rUpdM',function(_rUpdM){ return function(dt){ if(M.id==='race') return; return _rUpdM(dt); }; },updateMission);
+bObjective=HOOK.wrap('bObjective','87-races#_rObj',function(_rObj){ return function(){ if(state==='play'&&M&&M.id==='race') return null; return _rObj(); }; },bObjective);
 /* ---- HUD */
 function raceHUD(w,h,s){ const R=RACE.def; if(!R) return; const p=racePlayerPos(); if(!p) return; const g=RACE.gates[RACE.i], best=raceStore()[R.id], spl=best&&best.splits;
   hx.save(); hx.textAlign='center'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,.75)'; hx.shadowBlur=4; const y=Math.round((R.veh==='air'?(TOUCH.vis?104:94):(WALK.tvis?60:22))*s);
@@ -103,8 +103,8 @@ function raceHUD(w,h,s){ const R=RACE.def; if(!R) return; const p=racePlayerPos(
   if(g){ const d=Math.hypot(g[0]-p[0],g[2]-p[2]), b=Math.atan2(g[0]-p[0],g[2]-p[2]), rel=Math.atan2(Math.sin(b-p[3]-Math.PI),Math.cos(b-p[3]-Math.PI)); hx.save(); hx.translate(w/2,y+Math.round(44*s)); hx.rotate(-rel); hx.fillStyle='#5dff8a'; hx.beginPath(); hx.moveTo(0,-12*s); hx.lineTo(8*s,7*s); hx.lineTo(0,3*s); hx.lineTo(-8*s,7*s); hx.closePath(); hx.fill(); hx.restore();
     hx.font='600 '+Math.round(11*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#dfe9f1'; hx.fillText(Math.round(d)+' m'+(R.veh!=='car'&&R.veh!=='boat'?' · '+(g[1]-p[1]>0?'↑':'↓')+Math.abs(Math.round(g[1]-p[1]))+' m':''),w/2,y+Math.round(64*s)); }
   hx.restore(); }
-const _rHUD=drawHUD; drawHUD=function(){ _rHUD(); if(state==='play'&&RACE.def&&RACE.def.veh==='air') raceHUD(HW,HH,clamp(Math.min(HW,HH)/760,0.7,1.5)); };
-const _rWalkHUD=drawWalkHUD; drawWalkHUD=function(){ _rWalkHUD(); if(RACE.def&&(RACE.def.veh==='car'||RACE.def.veh==='boat')) raceHUD(HW,HH,clamp(Math.min(HW,HH)/760,0.7,1.5)); };
-const _rHeliHUD=heliHUD; heliHUD=function(w,h,s){ _rHeliHUD(w,h,s); if(RACE.def&&RACE.def.veh==='heli') raceHUD(w,h,s); };
+drawHUD=HOOK.wrap('drawHUD','87-races#_rHUD',function(_rHUD){ return function(){ _rHUD(); if(state==='play'&&RACE.def&&RACE.def.veh==='air') raceHUD(HW,HH,clamp(Math.min(HW,HH)/760,0.7,1.5)); }; },drawHUD);
+drawWalkHUD=HOOK.wrap('drawWalkHUD','87-races#_rWalkHUD',function(_rWalkHUD){ return function(){ _rWalkHUD(); if(RACE.def&&(RACE.def.veh==='car'||RACE.def.veh==='boat')) raceHUD(HW,HH,clamp(Math.min(HW,HH)/760,0.7,1.5)); }; },drawWalkHUD);
+heliHUD=HOOK.wrap('heliHUD','87-races#_rHeliHUD',function(_rHeliHUD){ return function(w,h,s){ _rHeliHUD(w,h,s); if(RACE.def&&RACE.def.veh==='heli') raceHUD(w,h,s); }; },heliHUD);
 /* no wingman or enemies during races and lessons */
-const _rAiCfg=aiCfg; aiCfg=function(){ const c=_rAiCfg(); if(M&&(M.id==='race'||M.id==='school')) return Object.assign({},c,{enemies:0,wing:false,sam:false}); return c; };
+aiCfg=HOOK.wrap('aiCfg','87-races#_rAiCfg',function(_rAiCfg){ return function(){ const c=_rAiCfg(); if(M&&(M.id==='race'||M.id==='school')) return Object.assign({},c,{enemies:0,wing:false,sam:false}); return c; }; },aiCfg);

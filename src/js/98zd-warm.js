@@ -24,13 +24,13 @@ function warmStep(budget){ if(WARM.done||SETTINGS.warm===false) return 0; const 
   WARM.n+=n; WARM.ms+=performance.now()-t0; if(WARM.i>=WARM.q.length){ WARM.done=true; WARM.at=Math.round(performance.now()); } return n; }
 function warmStart(){ if(SETTINGS.warm===false) return; if(!WARM.prog0) WARM.prog0=(renderer.info.programs||[]).length; warmScan(); }
 /* title menu only: in play the programs compile on first sight as before */
-const _wmCull=cullStep; cullStep=function(dt){ _wmCull(dt); if(!WARM.started||WARM.done) return; if(state!=='menu') return; try{ warmStep(8); }catch(e){} };
-const _wmTitle=enterTitle; enterTitle=function(){ const r=_wmTitle.apply(this,arguments); if(WARM.started){ try{ warmScan(); }catch(e){} } return r; };
+cullStep=HOOK.wrap('cullStep','98zd-warm#_wmCull',function(_wmCull){ return function(dt){ _wmCull(dt); if(!WARM.started||WARM.done) return; if(state!=='menu') return; try{ warmStep(8); }catch(e){} }; },cullStep);
+enterTitle=HOOK.wrap('enterTitle','98zd-warm#_wmTitle',function(_wmTitle){ return function(){ const r=_wmTitle.apply(this,arguments); if(WARM.started){ try{ warmScan(); }catch(e){} } return r; }; },enterTitle);
 setTimeout(function(){ if(WARM.started) return; WARM.started=true; try{ warmStart(); }catch(e){ console.warn('ısıtma',e); } },4600);   /* after merging (2.5 s) and baking (4 s) */
 /* start-up timings in the performance report */
 function bootInfo(){ const M={}; BOOT.marks.forEach(function(m){ M[m[0]]=m[1]; }); const steps=BOOT.stepMs.slice().sort(function(a,b){ return b[1]-a[1]; }).slice(0,4);
   const g=function(k){ return M[k]!=null?M[k]:null; }; return {js:g('betik'), mod:g('modüller'), world:g('dünya hazır'), ready:BOOT.ready, first:BOOT.first, slow:steps, warm:{n:WARM.n, ms:Math.round(WARM.ms), done:WARM.done, at:WARM.at||null, prog0:WARM.prog0||null}}; }
-const _wmRep=ptReport; ptReport=function(a){ const r=_wmRep(a); try{ r.boot=bootInfo(); }catch(e){} return r; };
-const _wmRes=ptResults; ptResults=function(rep,list){ _wmRes(rep,list); const b=rep&&rep.boot, el=$('ptResUI'); if(!b||!el||!el.querySelector) return; const m=el.querySelector('.ptmeta'); if(!m||!m.insertAdjacentHTML) return;
+ptReport=HOOK.wrap('ptReport','98zd-warm#_wmRep',function(_wmRep){ return function(a){ const r=_wmRep(a); try{ r.boot=bootInfo(); }catch(e){} return r; }; },ptReport);
+ptResults=HOOK.wrap('ptResults','98zd-warm#_wmRes',function(_wmRes){ return function(rep,list){ _wmRes(rep,list); const b=rep&&rep.boot, el=$('ptResUI'); if(!b||!el||!el.querySelector) return; const m=el.querySelector('.ptmeta'); if(!m||!m.insertAdjacentHTML) return;
   const s=function(v){ return v==null?'—':(v/1000).toFixed(1).replace('.',',')+' sn'; };
-  m.insertAdjacentHTML('afterend','<p class="ptmeta">Açılış: '+s(b.ready)+' (betik '+s(b.js)+', modüller '+s(b.mod)+', dünya '+s(b.world)+', ilk kare '+(b.first==null?'—':b.first+' ms')+') · en uzun adım: '+(b.slow&&b.slow[0]?envEsc(b.slow[0][0])+' '+b.slow[0][1]+' ms':'—')+' · ön derlenen shader: '+b.warm.n+(b.warm.done?'':' (sürüyor)')+'</p>'); };
+  m.insertAdjacentHTML('afterend','<p class="ptmeta">Açılış: '+s(b.ready)+' (betik '+s(b.js)+', modüller '+s(b.mod)+', dünya '+s(b.world)+', ilk kare '+(b.first==null?'—':b.first+' ms')+') · en uzun adım: '+(b.slow&&b.slow[0]?envEsc(b.slow[0][0])+' '+b.slow[0][1]+' ms':'—')+' · ön derlenen shader: '+b.warm.n+(b.warm.done?'':' (sürüyor)')+'</p>'); }; },ptResults);
