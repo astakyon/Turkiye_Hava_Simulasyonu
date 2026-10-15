@@ -53,19 +53,25 @@ function terrainH(x,z){
   return h;
 }
 
+/* Terrain tiles with levels of detail (V2.21). Before: one 30 km mesh, 300×300 cells of 100 m = 180 k triangles drawn in every
+   frame, also behind the camera. Now the same 100 m height grid (terrainH, sampled once) is cut into 6×6 tiles of 5 km; each
+   tile has four versions (every 1st, 2nd, 5th, 10th grid point: 100/200/500/1000 m) and shows the one its distance asks for
+   (98ze-terrain-lod.js). All versions use the same grid points, normals and colours, so a coarse tile is the fine one with
+   points left out. Where a fine tile meets a coarse one the small gap is hidden by a skirt (a strip hanging down from the
+   tile edge, in the edge colour). Heights for physics come from terrainH() as before, never from the drawn mesh. */
+const TER={N:6, SEG:50, STEPS:[1,2,5,10], tiles:[], mat:null, size:30000, cell:100, grid:301, tris:0};
 (function buildTerrain(){
-  const SIZE=30000, SEG=300;
-  const g = new THREE.PlaneGeometry(SIZE,SIZE,SEG,SEG); g.rotateX(-Math.PI/2);
-  const p = g.attributes.position;
-  for(let i=0;i<p.count;i++) p.setY(i, terrainH(p.getX(i), p.getZ(i)));
-  g.computeVertexNormals();
-  const nrm = g.attributes.normal, col = new Float32Array(p.count*3);
+  const SIZE=TER.size, GS=TER.grid, CELL=TER.cell, H0=-SIZE/2;
+  const H=new Float32Array(GS*GS); for(let j=0;j<GS;j++) for(let i=0;i<GS;i++) H[j*GS+i]=terrainH(H0+i*CELL,H0+j*CELL);
+  const NR=new Float32Array(GS*GS*3), hAt=function(i,j){ i=i<0?0:i>=GS?GS-1:i; j=j<0?0:j>=GS?GS-1:j; return H[j*GS+i]; };
+  for(let j=0;j<GS;j++) for(let i=0;i<GS;i++){ const dx=(hAt(i+1,j)-hAt(i-1,j))/(2*CELL), dz=(hAt(i,j+1)-hAt(i,j-1))/(2*CELL), l=Math.hypot(dx,1,dz), k=(j*GS+i)*3; NR[k]=-dx/l; NR[k+1]=1/l; NR[k+2]=-dz/l; }
+  const col = new Float32Array(GS*GS*3);
   const cDeep=new THREE.Color(0x17394d), cShallow=new THREE.Color(0x3d8a8a), cSand=new THREE.Color(0xd6c79b),
         cGA=new THREE.Color(0x4a7a38), cGB=new THREE.Color(0x7d9a4c), cDry=new THREE.Color(0x95905c),
         cRA=new THREE.Color(0x756e66), cRB=new THREE.Color(0x9a948c), cSnow=new THREE.Color(0xf1f5f9), cField=new THREE.Color(0x70a052);
   const A=new THREE.Color(), B=new THREE.Color();
-  for(let i=0;i<p.count;i++){
-    const x=p.getX(i), h=p.getY(i), z=p.getZ(i), ny=nrm.getY(i);
+  for(let v=0;v<GS*GS;v++){
+    const x=H0+(v%GS)*CELL, z=H0+Math.floor(v/GS)*CELL, h=H[v], ny=NR[v*3+1];
     const n1=fbm(x/310+5, z/310+9, 3);
     let pw=0; for(let k=0;k<PADS.length;k++) pw=Math.max(pw,padW(PADS[k],x,z));
     if(pw>0.25&&h>0.5&&h<600){ A.copy(cGA).lerp(cGB,n1*0.6); }
@@ -78,10 +84,27 @@ function terrainH(x,z){
       B.copy(cRA).lerp(cRB,n1); A.lerp(B,rock);
       A.lerp(cSnow, smooth(1050,1300,h+(n1-.5)*220)*smooth(0.45,0.78,ny));
     }
-    col[i*3]=A.r; col[i*3+1]=A.g; col[i*3+2]=A.b;
+    col[v*3]=A.r; col[v*3+1]=A.g; col[v*3+2]=A.b;
   }
-  g.setAttribute('color', new THREE.BufferAttribute(col,3));
-  scene.add(new THREE.Mesh(g, new THREE.MeshLambertMaterial({vertexColors:true})));
+  TER.mat=new THREE.MeshLambertMaterial({vertexColors:true});
+  /* one tile version: grid points i0..i0+SEG, j0..j0+SEG every 'st' points, plus a skirt along the four edges */
+  const tileGeo=function(i0,j0,st){ const n=TER.SEG/st, nv=(n+1)*(n+1), ns=4*(n+1); let hmin=1e9, hmax=-1e9;
+    const pos=new Float32Array((nv+ns)*3), nor=new Float32Array((nv+ns)*3), cl=new Float32Array((nv+ns)*3), idx=[];
+    const put=function(o,g,y){ pos[o*3]=H0+(g%GS)*CELL; pos[o*3+1]=y; pos[o*3+2]=H0+Math.floor(g/GS)*CELL; for(let c=0;c<3;c++){ nor[o*3+c]=NR[g*3+c]; cl[o*3+c]=col[g*3+c]; } };
+    for(let b=0;b<=n;b++) for(let a=0;a<=n;a++){ const g=(j0+b*st)*GS+(i0+a*st), h=H[g]; if(h<hmin) hmin=h; if(h>hmax) hmax=h; put(b*(n+1)+a,g,h); }
+    for(let b=0;b<n;b++) for(let a=0;a<n;a++){ const v0=b*(n+1)+a, v1=v0+n+1, v2=v0+1, v3=v1+1; idx.push(v0,v1,v2, v1,v3,v2); }
+    const depth=Math.min(600,40+(hmax-hmin)*0.3); let o=nv;
+    const edge=function(f){ const L=[]; for(let t=0;t<=n;t++) L.push(f(t)); return L; }, V=function(a,b){ return b*(n+1)+a; };
+    [edge(function(t){ return V(t,0); }),edge(function(t){ return V(t,n); }),edge(function(t){ return V(0,t); }),edge(function(t){ return V(n,t); })].forEach(function(E){
+      const base=o; E.forEach(function(v){ const a=v%(n+1), b=Math.floor(v/(n+1)), g=(j0+b*st)*GS+(i0+a*st); put(o,g,H[g]-depth); o++; });
+      for(let t=0;t<n;t++){ const ea=E[t], eb=E[t+1], sa=base+t, sb=base+t+1; idx.push(ea,sa,eb, eb,sa,sb, ea,eb,sa, eb,sb,sa); } });   /* both windings: seen from either side */
+    const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3)); g.setAttribute('normal',new THREE.BufferAttribute(nor,3)); g.setAttribute('color',new THREE.BufferAttribute(cl,3));
+    g.setIndex(idx); g.computeBoundingSphere(); g.computeBoundingBox(); g.userData.tris=n*n*2; g.userData.rng=hmax-hmin; return g; };
+  for(let tj=0;tj<TER.N;tj++) for(let ti=0;ti<TER.N;ti++){ const i0=ti*TER.SEG, j0=tj*TER.SEG;
+    const geos=TER.STEPS.map(function(st){ return tileGeo(i0,j0,st); });
+    const m=new THREE.Mesh(geos[0],TER.mat); m.userData.terrainTile=true; m.userData.noMerge=true; m.userData.noBake=true; m.matrixAutoUpdate=false;   /* identity, never moves */
+    const bb=geos[0].boundingBox; TER.tiles.push({m:m, geos:geos, lv:0, box:bb.clone(), rng:geos[0].userData.rng}); scene.add(m); }
+  TER.H=H;
 
   const wg = new THREE.PlaneGeometry(90000,90000); wg.rotateX(-Math.PI/2);
   const water = new THREE.Mesh(wg, new THREE.MeshPhongMaterial({color:0x2a7aa8, specular:0xffffff, shininess:90, transparent:true, opacity:0.84}));

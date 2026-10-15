@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.21 — 2026-10-15 · Arazi ayrıntı kademeleri
+- **Arazi parçalara bölündü:** 30 km'lik tek parça arazi (her karede 180 bin üçgen, kameranın arkası dahil) 5 km'lik 36 parçaya bölündü. Yakındaki parçalar eskisi gibi 100 m ayrıntıda, uzaktakiler 200, 500 ve 1000 m'de çiziliyor; kameranın görmediği parçalar hiç çizilmiyor. Uzak parçalar tek ağda birleştiği için çizim sayısı neredeyse aynı kaldı.
+- **Ölçüm (Yüksek kalite):** çizilen üçgen bilgisayarda uçuşta 397 bin → 276 bin, alçak uçuşta 574 bin → 438 bin; telefonda %26–40 daha az (ör. şehirde 1,02 milyon → 754 bin). Çizim sayısı +2–12.
+- **Görüntü korunuyor:** yakın arazi eskisiyle aynı noktalardan oluşuyor; dağlık parçalar silüet bozulmasın diye bir kademe daha ayrıntılı kalıyor. Kademe değişiminde titreme olmasın diye bekleme payı var, parça kenarlarındaki yarıklar eteklerle kapanıyor. Önce/sonra ekran görüntüleri neredeyse aynı.
+- Uçak ve araçların yer teması etkilenmiyor: yükseklik hesabı çizilen araziden değil, arazi formülünden geliyor.
+
 ## V2.20 — 2026-10-14 · Yükleme ekranı 2.0
 - **Menü artık hazır açılıyor:** yükleme ekranı kapandıktan sonra menüde süren hazırlık (doku paylaşımı, nesne ve model birleştirme, shader ön derleme, hesap kontrolü) artık yükleme ekranının altında yapılıyor. Profil ve yönetici düğmesi menüyle birlikte geliyor; arkadaki sinematik uçuş görüntüsü takılmadan, baştan başlıyor. Yükleme ekranı kareler düzene girince kapanıyor (en çok 6 sn hazırlık, hesap için en çok 3 sn bekleme).
 - **3B ay yıldız:** yükleme ekranında kendi ekseninde dönen, kalınlığı olan bir ay yıldız var. Dönüş tarayıcının ayrı iş parçacığında çalıştığı için oyun kurulurken de akıcı dönüyor.
