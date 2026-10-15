@@ -234,7 +234,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.24 | Kanca (olay) sistemi ve kare başına çöp | ✅ |
 | V2.25 | Kod düzeni | ✅ |
 | V2.26 | Kayıt ve depolama düzeni | ✅ |
-| V2.27 | Girdi yöneticisi | |
+| V2.27 | Girdi yöneticisi | ✅ |
 | V2.28 | Test ve yayın hattı | |
 | V2.29 | Özellik envanteri | |
 | V2.30 | Ekran ve akış sadeleştirme | |
