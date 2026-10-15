@@ -231,7 +231,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.21 | Arazi ayrıntı kademeleri | ✅ |
 | V2.22 | Grafik ayarları 2.0 | ✅ |
 | V2.23 | Bütün ayarların gözden geçirmesi | ✅ |
-| V2.24 | Kanca (olay) sistemi ve kare başına çöp | |
+| V2.24 | Kanca (olay) sistemi ve kare başına çöp | ✅ |
 | V2.25 | Kod düzeni | |
 | V2.26 | Kayıt ve depolama düzeni | |
 | V2.27 | Girdi yöneticisi | |
