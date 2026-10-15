@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.22 — 2026-10-15 · Grafik ayarları 2.0
+- **Daha sade grafik sekmesi:** temel ayarlar 7 satır: Grafik kalitesi, Gölgeler, Görsel efektler, Çözünürlük, FPS sınırı, Performans testi, Tam ekran. Geri kalanı iki açılır grupta: "Ayrıntılı ayarlar" ve "Grafik sorun giderme" (derinlik, iki katmanlı derinlik, güvenli mod, görüntü testi, tanılama).
+- **Otomatik hazır ayar:** Grafik kalitesi satırında Otomatik seçeneği var: cihazına göre kademe seçer ve FPS düşerse ayarları kendiliğinden hafifletir. Aynı işi yapan "Cihaza göre ayarla" ve "Performans modu" satırları kaldırıldı. Hazır ayarın üstüne kendi seçimini yaparsan "Özel" yazıyor; bir hazır ayara dokununca sıfırlanıyor.
+- **Ayrıntılı ayarlar:** görüş mesafesi, nesne ayrıntısı, bitki örtüsü, bulutlar, doku kalitesi ve efekt kalitesi artık ayrı ayrı ayarlanabiliyor (her biri "Hazır" ya da Düşük–Ultra). Ayrıca kenar yumuşatma, akıllı performans ve FPS göstergesi burada.
+- **Maliyet etiketleri:** her ayarın yanında az · orta · çok etki etiketi var.
+- **Canlı fark:** bir grafik ayarını değiştirince hemen altında çizim ve üçgen sayısının nasıl değiştiği görünüyor (ör. "çizim 201 → 200 · üçgen 375 bin → 355 bin"). Hiçbir ayar yeniden başlatma istemiyor (derinlik hassasiyeti hariç).
+
 ## V2.21 — 2026-10-15 · Arazi ayrıntı kademeleri
 - **Arazi parçalara bölündü:** 30 km'lik tek parça arazi (her karede 180 bin üçgen, kameranın arkası dahil) 5 km'lik 36 parçaya bölündü. Yakındaki parçalar eskisi gibi 100 m ayrıntıda, uzaktakiler 200, 500 ve 1000 m'de çiziliyor; kameranın görmediği parçalar hiç çizilmiyor. Uzak parçalar tek ağda birleştiği için çizim sayısı neredeyse aynı kaldı.
 - **Ölçüm (Yüksek kalite):** çizilen üçgen bilgisayarda uçuşta 397 bin → 276 bin, alçak uçuşta 574 bin → 438 bin; telefonda %26–40 daha az (ör. şehirde 1,02 milyon → 754 bin). Çizim sayısı +2–12.
