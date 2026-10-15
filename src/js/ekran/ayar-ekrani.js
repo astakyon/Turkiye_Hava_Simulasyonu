@@ -18,7 +18,6 @@ function syncSettingsUI(){
   Array.prototype.forEach.call($('setDepth').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.d===(SETTINGS.depth||'auto'))); });
   $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
   Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
-  Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
   Array.prototype.forEach.call($('setUiz').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.z===(SETTINGS.uiz||1))); });
   Array.prototype.forEach.call($('setCb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.c===(SETTINGS.cb||'off'))); });
   $('setHc').checked=!!SETTINGS.hc; $('setRm').checked=!!SETTINGS.rm; $('setRadioSub2').checked=SETTINGS.radioSub!==false; $('setRumble2').checked=SETTINGS.rumble;

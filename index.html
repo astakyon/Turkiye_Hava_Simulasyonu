@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V2.25">
+<meta name="game-version" content="V2.26">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#a10d1c">
@@ -61,36 +61,14 @@ button{ font:inherit; color:var(--ink); cursor:pointer; }
 /* title */
 #title{ display:block; }
 /* ---------- main menu: A (Komuta) and B (Sinematik) share one look */
-#title .tt-a,#title .tcap{ display:none; } #title .tt-b{ display:none; }
-#title.ui-a .tt-a,#title.ui-a .tcap{ display:block; } #title.ui-b .tt-b{ display:block; }
-.tt-a{ position:absolute; left:0; top:0; bottom:24px; width:min(470px,50vw); padding:max(18px,env(safe-area-inset-top)) 0 0 max(clamp(16px,3vw,44px),env(safe-area-inset-left));
-  background:linear-gradient(90deg,rgba(4,9,18,.96) 0%,rgba(4,9,18,.86) 62%,rgba(4,9,18,0) 100%); }
-.tt-a .brand .logo{ width:clamp(40px,6vw,64px); } .tt-a .brand h1{ font-size:clamp(26px,3.5vw,50px); line-height:1; margin:0; letter-spacing:.04em; white-space:nowrap; }
-.tt-a .brand .tag{ margin:4px 0 0; font-size:clamp(10px,1.2vw,14px); letter-spacing:.3em; color:#ffb3b8; text-transform:uppercase; font-weight:600; }
-.mbig{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:min(340px,40vw); margin-top:clamp(12px,4vh,30px); padding:clamp(8px,2vh,14px) 16px; border-radius:10px;
-  background:linear-gradient(135deg,#e30a17,#a3060f); border:1px solid #ff5560; color:#fff; text-align:left; }
-.mbig b{ font-size:clamp(18px,2.4vw,26px); letter-spacing:.06em; } .mbig small{ font-size:clamp(10px,1.2vw,13px); color:#ffd6d9; font-weight:500; }
+#title .tcap{ display:none; }
 .mlist{ list-style:none; margin:clamp(6px,2vh,14px) 0 0; padding:0; width:min(340px,40vw); }
 .mlist button{ width:100%; display:flex; align-items:center; gap:12px; height:clamp(32px,8.6vh,46px); padding:0 12px; border:0; border-left:3px solid transparent; background:none;
   font-size:clamp(13px,1.5vw,17px); font-weight:700; letter-spacing:.06em; color:#c9d6e2; text-align:left; white-space:nowrap; }
 .mlist span{ font-size:10px; color:#6f8296; width:18px; } .mlist small{ margin-left:auto; font-size:10px; color:#7f93a6; font-weight:500; letter-spacing:.1em; }
 .mlist button:hover,.mlist button.kf,.mlist button:focus-visible{ border-left-color:#e30a17; background:linear-gradient(90deg,rgba(227,10,23,.32),rgba(227,10,23,0)); color:#fff; outline:none; }
-.mbig.kf,.mbig:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
 .tcap{ position:absolute; right:max(20px,env(safe-area-inset-right)); bottom:36px; text-align:right; text-shadow:0 2px 8px rgba(0,0,0,.6); pointer-events:none; }
 .tcap b{ display:block; font-size:clamp(13px,1.7vw,18px); letter-spacing:.12em; } .tcap small{ font-size:10px; letter-spacing:.2em; color:#d6e6f2; }
-.tt-b{ position:absolute; inset:0 0 24px 0; background:linear-gradient(0deg,rgba(4,9,18,.94) 0%,rgba(4,9,18,.3) 38%,rgba(4,9,18,0) 56%),linear-gradient(180deg,rgba(4,9,18,.55),rgba(4,9,18,0) 30%); }
-.tb-top{ position:absolute; left:max(16px,env(safe-area-inset-left)); top:max(12px,env(safe-area-inset-top)); display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; letter-spacing:.24em; }
-.tb-top .logo{ width:30px; height:30px; }
-.tb-title{ position:absolute; left:0; right:0; top:clamp(34px,10vh,90px); text-align:center; pointer-events:none; }
-.tb-title h1{ margin:0; font-size:clamp(38px,8vw,104px); letter-spacing:.09em; line-height:1; text-shadow:0 4px 24px rgba(0,0,0,.5); }
-.tb-title p{ margin:4px 0 0; font-size:clamp(11px,1.5vw,18px); letter-spacing:.45em; color:#ffc2c6; }
-.tb-tiles{ position:absolute; left:50%; transform:translateX(-50%); bottom:calc(12px + 2vh); display:flex; gap:8px; width:min(1040px,calc(100vw - 32px)); }
-.tile{ position:relative; flex:1; height:clamp(62px,17vh,104px); border-radius:10px; background:rgba(10,18,32,.78); border:1px solid rgba(255,255,255,.18); padding:0 14px;
-  display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:left; color:#fff; backdrop-filter:blur(6px); }
-.tile b{ font-size:clamp(14px,1.9vw,22px); letter-spacing:.05em; white-space:nowrap; } .tile small{ font-size:clamp(10px,1.1vw,13px); color:#a9bccd; margin-top:3px; font-weight:500; }
-.tile i{ position:absolute; right:10px; top:8px; font-style:normal; font-size:10px; color:#7f93a6; letter-spacing:.1em; }
-.tile.p{ background:linear-gradient(135deg,#e30a17,#a3060f); border-color:#ff5560; } .tile.p small,.tile.p i{ color:#ffd6d9; }
-.tile:hover,.tile.kf,.tile:focus-visible{ border-color:#fff; outline:none; }
 .ticons{ position:absolute; right:max(14px,env(safe-area-inset-right)); top:max(12px,env(safe-area-inset-top)); display:flex; gap:8px; }
 .ic{ width:38px; height:38px; border-radius:50%; background:rgba(8,15,28,.62); border:1px solid rgba(255,255,255,.22); color:#fff; display:grid; place-items:center; padding:0; }
 .ic:hover{ background:rgba(8,15,28,.9); }
@@ -166,7 +144,7 @@ button{ font:inherit; color:var(--ink); cursor:pointer; }
 .mlist .rec{ color:#7dffb0; }
 .hint2{ display:block; margin-top:6px; font-size:11px; color:var(--dim); }
 @media (max-height:560px){ .misdet{ padding:10px 14px; } .misdet .d{ font-size:12px; } .mrow2 .btn{ padding:9px 12px; } }
-@media (max-width:640px){ .tt-a{ width:100%; } .mbig,.mlist{ width:calc(100vw - 32px); } .misdet{ left:16px; width:auto; top:auto; bottom:30px; } .mlist.mis{ width:calc(100vw - 32px); } }
+@media (max-width:640px){ .mlist{ width:calc(100vw - 32px); } .misdet{ left:16px; width:auto; top:auto; bottom:30px; } .mlist.mis{ width:calc(100vw - 32px); } }
 
 .mark{ width:56px; height:5px; background:var(--red); margin:0 0 22px; }
 #title h1{ margin:0; font-size:clamp(46px,8.4vw,112px); line-height:.94; letter-spacing:.02em; font-weight:700; }
@@ -635,7 +613,7 @@ html.cb-p #gl,html.cb-p #hud{ filter:url(#cbp); } html.cb-d #gl,html.cb-d #hud{ 
 /* admin + role gating */
 .mc.adm,.mitem[data-act="library"],.mitem[data-act="sounds"],.srow.libonly{ display:none!important; }
 html.is-admin .mc.adm,html.is-admin .mc[data-act="library"],html.is-admin .mc[data-act="sounds"],html.is-admin .srow.libonly{ display:flex!important; }
-html.is-admin .tile[data-act="library"],html.is-admin .mlist .mitem[data-act="library"]{ display:flex!important; }
+html.is-admin .mlist .mitem[data-act="library"]{ display:flex!important; }
 .admwrap{ max-width:980px; margin:0 auto; padding:clamp(60px,12vh,84px) 16px 24px; display:flex; flex-direction:column; gap:12px; zoom:var(--uiz,1); }
 .admsec{ display:flex; flex-direction:column; gap:10px; padding:16px; border:1px solid var(--edge); border-radius:var(--r3); background:var(--surf); animation:dsIn .22s var(--ease); }
 .admtbl{ overflow-x:auto; } .admtbl table{ width:100%; border-collapse:collapse; font-size:13px; } .admtbl th{ text-align:left; color:var(--dim); font-weight:600; padding:6px; border-bottom:1px solid var(--edge); }
@@ -1134,17 +1112,6 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
 <canvas id="hud"></canvas>
 
 <div id="title" class="screen">
-  <div class="tt-a ui" id="titleA">
-    <div class="brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p class="tag">Hedef Kızıl Elma</p></div></div>
-    <button class="mbig mitem" type="button" data-act="fly"><b>▶ UÇ</b><small id="flySubA"></small></button>
-    <ul class="mlist">
-      <li><button class="mitem" type="button" data-act="hangar" id="btnStart"><span>01</span>UÇAK SEÇ<small id="mAac"></small></button></li>
-      <li><button class="mitem" type="button" data-act="missions"><span>02</span>GÖREVLER<small id="mAmis"></small></button></li>
-      <li><button class="mitem" type="button" data-act="net" id="btnNet"><span>03</span>ÇOK OYUNCULU<small>4 KİŞİ</small></button></li>
-      <li><button class="mitem" type="button" data-act="library"><span>04</span>MODEL KÜTÜPHANESİ<small>3B İNCELE</small></button></li>
-      <li><button class="mitem" type="button" data-act="settings"><span>05</span>AYARLAR<small id="mAload"></small></button></li>
-    </ul>
-  </div>
   <div class="tcap" id="tCap"><b></b><small></small></div>
   <div class="tt-c" id="titleC">
     <header class="c-top"><div class="c-brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM3"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM3)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div></div>
@@ -1155,17 +1122,6 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
     <footer class="c-hint" id="cHint"></footer>
   </div>
 
-  <div class="tt-b" id="titleB">
-    <div class="tb-top"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM2"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM2)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><span>HİLAL KANATLAR</span></div>
-    <div class="tb-title"><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div>
-    <div class="tb-tiles ui">
-      <button class="tile p mitem" type="button" data-act="fly"><i>01</i><b>UÇ</b><small id="flySubB"></small></button>
-      <button class="tile mitem" type="button" data-act="missions"><i>02</i><b>GÖREVLER</b><small>İt dalaşı, yer hedefleri…</small></button>
-      <button class="tile mitem" type="button" data-act="net"><i>03</i><b>ÇOK OYUNCULU</b><small>Oda kur · koda katıl</small></button>
-      <button class="tile mitem" type="button" data-act="hangar"><i>04</i><b>HANGAR</b><small>Uçağını seç</small></button>
-      <button class="tile mitem" type="button" data-act="library"><i>05</i><b>MODELLER</b><small>3B kütüphane</small></button>
-    </div>
-  </div>
   <div class="ticons ui"><button class="ic" type="button" id="btnSettings" aria-label="Ayarlar" title="Ayarlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button><button class="ic" type="button" id="btnControls" aria-label="Kontroller" title="Kontroller"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 13H9l-1.6 1.8A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16.5" cy="11" r=".6" fill="currentColor"/><circle cx="18" cy="12.8" r=".6" fill="currentColor"/></svg></button><button class="ic" type="button" id="btnRecords" aria-label="Rekorlar" title="Rekorlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/></svg></button></div>
   <div class="sbar"><span id="sbAc"></span><span id="sbNet"></span><span class="v" id="verTag"></span></div>
 </div>
@@ -1428,7 +1384,6 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
       <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Gamepad ve telefonda titreşim</small></div><label class="tgl"><input type="checkbox" id="setRumble2"><i></i></label></div>
     </section>
     <section data-tab="a" class="hidden">
-      <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Yeni: gruplanmış menü ve ayrıntı paneli (klavye, gamepad, dokunmatik). Eski tasarımlar da seçilebilir</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Yeni (önerilen)</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
       <div class="srow"><div class="sl"><b>Köşe haritası</b><small>Uçarken ve gezerken sağ üstte küçük harita</small></div><label class="tgl"><input type="checkbox" id="setMini"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Kayıt yedeği</b><small id="saveInfo">İlerlemeni dosyaya ya da koda aktar, başka cihazda yükle (misafir oyuncular için; hesaplar zaten bulutta)</small></div><div class="srowc wrap"><button type="button" class="btn sm" id="btnSaveFile">⭳ Dosyaya indir</button><button type="button" class="btn sm" id="btnSaveOpen">Dosyadan yükle</button><button type="button" class="btn sm" id="btnSaveCode">Kodu kopyala</button><button type="button" class="btn sm" id="btnSaveLoad">Kodu yükle</button><input type="file" id="saveFile" accept=".json,application/json" hidden></div></div>
       <textarea id="saveTxt" class="inp savetxt hidden" rows="3" spellcheck="false"></textarea>
@@ -1770,7 +1725,7 @@ for(let i=0;i<n;i++){ const b=B[i], f=Math.max(0,Math.min(1,p*n-i)), fl=b.queryS
 if(!b.dataset.w){ const w=b.getBoundingClientRect().width; if(w>0){ b.dataset.w='1'; b.style.setProperty('--w',w+'px'); } }
 fl.style.width=(f*100).toFixed(1)+'%'; b.classList.toggle('on',f>0&&f<1); b.classList.toggle('full',f>=1); }
 el.setAttribute('aria-valuenow',String(Math.round(p*100))); }
-const HOOK={fns:{}, ev:{}, prof:false, ms:{}, n:{}, errs:{}, err:0, strict:typeof MessageChannel==='undefined'};    
+const HOOK={fns:{}, ev:{}, prof:false, ms:{}, n:{}, mx:{}, errs:{}, err:0, strict:typeof MessageChannel==='undefined'};    
  
 HOOK.wrap=function(name,id,factory,base){ let D=HOOK.fns[name];
 if(!D||(base&&base!==D.call)){ const N={name:name, base:base, layers:[], top:null}; HOOK.fns[name]=N; D=N;
@@ -1778,7 +1733,7 @@ N.call=function(a,b,c,d,e,f){ if(!N.top) HOOK.build(N); return N.top.call(this,a
 D.layers.push({id:id, f:factory}); D.top=null; return D.call; };
 HOOK.build=function(D){ const base=D.base||function(){}, bid=D.name+'#asıl';    
 let prev=function(a,b,c,d,e,f){ if(!HOOK.prof) return base.call(this,a,b,c,d,e,f); const t0=performance.now(), keep=HOOK._in; HOOK._in=0;
-try{ return base.call(this,a,b,c,d,e,f); } finally{ const dt=performance.now()-t0; HOOK.ms[bid]=(HOOK.ms[bid]||0)+dt-HOOK._in; HOOK.n[bid]=(HOOK.n[bid]||0)+1; HOOK._in=keep+dt; } };
+try{ return base.call(this,a,b,c,d,e,f); } finally{ const dt=performance.now()-t0; const own=dt-HOOK._in; HOOK.ms[bid]=(HOOK.ms[bid]||0)+own; HOOK.n[bid]=(HOOK.n[bid]||0)+1; if(own>(HOOK.mx[bid]||0)) HOOK.mx[bid]=own; HOOK._in=keep+dt; } };
 D.layers.forEach(function(L){ const below=prev; let reached=0;
 const next=function(a,b,c,d,e,f){ reached++; return below.call(this,a,b,c,d,e,f); };
 const fn=L.f(next);
@@ -1786,7 +1741,7 @@ prev=function(a,b,c,d,e,f){ const r0=reached;
 if(!HOOK.prof){ try{ return fn.call(this,a,b,c,d,e,f); }catch(x){ HOOK.fail(L.id,x); if(reached===r0) return below.call(this,a,b,c,d,e,f); return; } }
 const t0=performance.now(), keep=HOOK._in; HOOK._in=0;
 try{ return fn.call(this,a,b,c,d,e,f); }catch(x){ HOOK.fail(L.id,x); if(reached===r0) return below.call(this,a,b,c,d,e,f); }
-finally{ const dt=performance.now()-t0; HOOK.ms[L.id]=(HOOK.ms[L.id]||0)+dt-HOOK._in; HOOK.n[L.id]=(HOOK.n[L.id]||0)+1; HOOK._in=keep+dt; } }; });
+finally{ const dt=performance.now()-t0; const own=dt-HOOK._in; HOOK.ms[L.id]=(HOOK.ms[L.id]||0)+own; HOOK.n[L.id]=(HOOK.n[L.id]||0)+1; if(own>(HOOK.mx[L.id]||0)) HOOK.mx[L.id]=own; HOOK._in=keep+dt; } }; });
 D.top=prev; };
 HOOK._in=0;
  
@@ -1796,19 +1751,48 @@ HOOK.on=function(name,fn){ (HOOK.ev[name]||(HOOK.ev[name]=[])).push(fn); };
 HOOK.emit=function(name){ const L=HOOK.ev[name]; if(!L) return; const a=Array.prototype.slice.call(arguments,1);
 for(let i=0;i<L.length;i++){ try{ L[i].apply(null,a); }catch(e){ HOOK.err++; if(!HOOK.errs[name+'#'+i]){ HOOK.errs[name+'#'+i]=1; try{ console.error('Olay hatası ('+name+')',e); }catch(x){} } } } };
  
+HOOK.peaks=function(n){ return Object.keys(HOOK.mx).map(function(k){ return [k,HOOK.mx[k]]; }).sort(function(a,b){ return b[1]-a[1]; }).slice(0,n||8); };
 HOOK.top=function(n){ return Object.keys(HOOK.ms).map(function(k){ return [k,HOOK.ms[k]/(HOOK.n[k]||1),HOOK.n[k]]; }).sort(function(a,b){ return b[1]*b[2]-a[1]*a[2]; }).slice(0,n||10); };
-const GAME_VERSION='V2.25', GAME_DATE='2026-10-15';
+const GAME_VERSION='V2.26', GAME_DATE='2026-10-15';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
 function smooth(a,b,x){ const t = clamp((x-a)/(b-a),0,1); return t*t*(3-2*t); }
 function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 const FONT = '"Chakra Petch","Arial Narrow",system-ui,sans-serif';
+const DEPO={key:'ayy-kayit', bak:'ayy-kayit-yedek', bad:'ayy-kayit-bozuk', v:1, d:{}, from:'yeni', moved:0, dirty:false, t:0, saves:0, err:null,
+legacy:/^(ayy-|kaan-|ayyildiz|kaan_)/i};
+function depoLS(){ try{ return (typeof localStorage!=='undefined'&&localStorage)?localStorage:null; }catch(e){ return null; } }
+function depoParse(txt){ if(!txt) return null; try{ const o=JSON.parse(txt); if(o&&typeof o==='object'&&o.d&&typeof o.d==='object'&&o.v>=1){ const d={}; Object.keys(o.d).forEach(function(k){ if(typeof o.d[k]==='string') d[k]=o.d[k]; }); return d; } }catch(e){} return null; }
+function depoText(){ return JSON.stringify({v:DEPO.v, t:Date.now(), d:DEPO.d}); }
+function depoLoad(){ const ls=depoLS(); DEPO.d={}; if(!ls) { DEPO.from='bellek'; return; }
+let main=null, bak=null; try{ main=ls.getItem(DEPO.key); bak=ls.getItem(DEPO.bak); }catch(e){}
+const d=depoParse(main);
+if(d){ DEPO.d=d; DEPO.from='kayıt'; if(main!==bak) try{ ls.setItem(DEPO.bak,main); }catch(e){} }    
+else if(main!=null){ const b=depoParse(bak); try{ ls.setItem(DEPO.bad,main); }catch(e){}
+if(b){ DEPO.d=b; DEPO.from='yedek'; } else DEPO.from='bozuk'; depoWrite(); }
+else {  
+const keys=[]; try{ for(let i=0;i<ls.length;i++){ const k=ls.key(i); if(k&&DEPO.legacy.test(k)&&k.indexOf(DEPO.key)!==0) keys.push(k); } }catch(e){}
+keys.forEach(function(k){ try{ const v=ls.getItem(k); if(v!=null) DEPO.d[k]=v; }catch(e){} });
+DEPO.moved=keys.length; DEPO.from=keys.length?'taşındı':'yeni';
+if(depoWrite()&&depoParse(ls.getItem(DEPO.key))) keys.forEach(function(k){ try{ ls.removeItem(k); }catch(e){} });    
+} }
+function depoWrite(){ const ls=depoLS(); DEPO.dirty=false; if(!ls) return false; try{ ls.setItem(DEPO.key,depoText()); DEPO.saves++; DEPO.err=null; return true; }
+catch(e){ DEPO.err=String(e&&e.name||e); if(!DEPO.warned){ DEPO.warned=true; try{ setTimeout(function(){ if(typeof toast==='function') toast('Kayıt yazılamadı: tarayıcı depolaması dolu ya da kapalı','#ff5a4a'); },0); }catch(x){} } return false; } }
+function depoDirty(){ if(DEPO.dirty) return; DEPO.dirty=true; try{ setTimeout(function(){ if(DEPO.dirty) depoWrite(); },250); }catch(e){ depoWrite(); } }
+function stGet(k){ return Object.prototype.hasOwnProperty.call(DEPO.d,k)?DEPO.d[k]:null; }
+function stSet(k,v){ const s=String(v); if(DEPO.d[k]===s) return; DEPO.d[k]=s; depoDirty(); }
+function stDel(k){ if(!Object.prototype.hasOwnProperty.call(DEPO.d,k)) return; delete DEPO.d[k]; depoDirty(); }
+function stKeys(){ return Object.keys(DEPO.d); }
+function depoFlush(){ if(DEPO.dirty) depoWrite(); }
+depoLoad();
+try{ window.addEventListener('pagehide',depoFlush); document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') depoFlush(); }); }catch(e){}
+if(DEPO.from==='yedek'||DEPO.from==='bozuk') try{ setTimeout(function(){ if(typeof toast==='function') toast(DEPO.from==='yedek'?'Kayıt okunamadı — son yedekten geri yüklendi':'Kayıt okunamadı — oyun yeni kayıtla açıldı (eskisi ayrı saklandı)','#ffc24a'); },3000); }catch(e){}
  
 let renderer;
 const DEV=(function(){ let coarse=false, ua=(navigator.userAgent||''), st={};
 try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){}
-try{ st=JSON.parse(localStorage.getItem('kaan-sim-settings')||'{}')||{}; }catch(e){}
+try{ st=JSON.parse(stGet('kaan-sim-settings')||'{}')||{}; }catch(e){}
 const ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1), android=/Android/.test(ua);
 const mobile=ios||android||(coarse&&Math.min(screen.width,screen.height)<900), tablet=mobile&&Math.min(screen.width,screen.height)>=600;
 const depth=st.depth||'auto', safe=!!st.safeMode;
@@ -4235,7 +4219,7 @@ function regOf(id){ return REG[id]||{grp:'hava',cls:'iha',maker:''}; }
 function pickList(){ return AC_ORDER.filter(function(id){ const r=regOf(id); return r.grp===pickGrp&&(pickCls==='all'||r.cls===pickCls); }); }
 const modelCache={};
 let CUR=AIRCRAFT.kaan, activeId='kaan', model=null, planeGroup=null, selectedId='kaan';
-try{ const sv0=localStorage.getItem('kaan-sim-aircraft'); if(sv0&&AIRCRAFT[sv0]) selectedId=sv0; }catch(e){}
+try{ const sv0=stGet('kaan-sim-aircraft'); if(sv0&&AIRCRAFT[sv0]) selectedId=sv0; }catch(e){}
 function setAircraft(id){
 const def=AIRCRAFT[id]; if(!def) return;
 if(planeGroup) scene.remove(planeGroup);
@@ -5345,7 +5329,7 @@ S.pos.z+=(SERVICE.zc-S.pos.z)*Math.min(1,1.5*dt);
 if(S.speed>0){ svcT=0; return; }
 svcT+=dt; if(svcT>0.6) openService();
 }
-function saveLoadouts(){ try{ localStorage.setItem('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(e){} }
+function saveLoadouts(){ try{ stSet('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(e){} }
 function renderService(){
 const n=SLOTS[activeId]||0, used=WORDER.reduce(function(a,k){ return a+svcTmp[k]; },0);
 $('svcSub').textContent=CUR.name+' · '+(n>0?('silah yeri: '+n):'bu uçak silah taşımıyor');
@@ -5893,7 +5877,7 @@ Array.prototype.forEach.call($('missionSeg').children,function(b){ b.setAttribut
 $('mDesc').textContent=MISSIONS[missionId].desc;
 if($('aiEnemy')){ const c=aiCfg(); $('aiEnemy').value=String(c.enemies); $('aiWing').value=c.wing?'1':'0'; $('aiSkill').value=String(c.skill); $('aiSam').value=c.sam?'1':'0'; $('aiEnemy').disabled=(missionId==='dogfight'); $('aiSam').disabled=(missionId!=='free'); }
 }
-function selectMission(id){ missionId=id; try{ localStorage.setItem('kaan-sim-mission',id); }catch(e){} refreshMission(); }
+function selectMission(id){ missionId=id; try{ stSet('kaan-sim-mission',id); }catch(e){} refreshMission(); }
 function cycleMission(d){ selectMission(MORDER[(MORDER.indexOf(missionId)+d+MORDER.length)%MORDER.length]); }
 function buildMissionUI(){
 const box=$('missionSeg'); box.innerHTML='';
@@ -6048,14 +6032,14 @@ const SETTINGS={volume:0.8,quality:2,sens:1,rumble:true,invert:false,touch:'auto
 const SETTINGS_DEF=JSON.parse(JSON.stringify(SETTINGS));
 let RECORDS={};
 function loadStore(){
-try{ if(!localStorage.getItem('kaan-sim-settings') && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) SETTINGS.quality=1; }catch(e){}
-try{ const a=JSON.parse(localStorage.getItem('kaan-sim-settings')||'null'); if(a) Object.assign(SETTINGS,a); }catch(e){}
-try{ const b=JSON.parse(localStorage.getItem('kaan-sim-records')||'null'); if(b&&typeof b==='object') RECORDS=b; }catch(e){}
-try{ const l=JSON.parse(localStorage.getItem('kaan-sim-loadouts')||'null'); if(l&&typeof l==='object') Object.assign(LOADOUTS,l); }catch(e){}
-try{ const m=localStorage.getItem('kaan-sim-mission'); if(m&&MISSIONS[m]) missionId=m; }catch(e){}
+try{ if(!stGet('kaan-sim-settings') && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) SETTINGS.quality=1; }catch(e){}
+try{ const a=JSON.parse(stGet('kaan-sim-settings')||'null'); if(a) Object.assign(SETTINGS,a); }catch(e){}
+try{ const b=JSON.parse(stGet('kaan-sim-records')||'null'); if(b&&typeof b==='object') RECORDS=b; }catch(e){}
+try{ const l=JSON.parse(stGet('kaan-sim-loadouts')||'null'); if(l&&typeof l==='object') Object.assign(LOADOUTS,l); }catch(e){}
+try{ const m=stGet('kaan-sim-mission'); if(m&&MISSIONS[m]) missionId=m; }catch(e){}
 }
-function saveSettings(){ try{ localStorage.setItem('kaan-sim-settings',JSON.stringify(SETTINGS)); }catch(e){} }
-function saveRecords(){ try{ localStorage.setItem('kaan-sim-records',JSON.stringify(RECORDS)); }catch(e){} }
+function saveSettings(){ try{ stSet('kaan-sim-settings',JSON.stringify(SETTINGS)); }catch(e){} }
+function saveRecords(){ try{ stSet('kaan-sim-records',JSON.stringify(RECORDS)); }catch(e){} }
 function rec(id){ return RECORDS[id]||(RECORDS[id]={best:null,score:0}); }
 function noteScore(){ const r=rec(activeId); if(score>r.score){ r.score=score; saveRecords(); } }
 function applyVolume(){ if(master) master.gain.value=SETTINGS.volume; }
@@ -6214,8 +6198,8 @@ function sndU(id){ return SND.user[id]||{}; }
 function sndVol(id){ const u=sndU(id); return u.vol==null?1:u.vol; }
 function sndPitch(id){ const u=sndU(id); return u.pitch==null?1:u.pitch; }
 function sndOut(b){ return SND.bus[b]||master; }
-function sndLoad(){ try{ SND.user=JSON.parse(localStorage.getItem('ayy-sounds')||'{}')||{}; }catch(e){ SND.user={}; } }
-function sndSave(){ try{ localStorage.setItem('ayy-sounds',JSON.stringify(SND.user)); }catch(e){} }
+function sndLoad(){ try{ SND.user=JSON.parse(stGet('ayy-sounds')||'{}')||{}; }catch(e){ SND.user={}; } }
+function sndSave(){ try{ stSet('ayy-sounds',JSON.stringify(SND.user)); }catch(e){} }
 function busVol(b){ const V=SETTINGS.vol||{}; return V[b]==null?(b==='music'?0.6:1):V[b]; }
  
 function sndBuses(){
@@ -7239,8 +7223,8 @@ foot:{name:'Yaya', acts:[
 const CTRL_ORDER=['air','heli','land','sea','foot','gen'];
 const CTRL={kb:{}, pad:{}};
 function ctrlDefaults(){ CTRL_ORDER.forEach(function(s){ CTRL.kb[s]={}; CTRL.pad[s]={}; CTRL_DEF[s].acts.forEach(function(a){ CTRL.kb[s][a[0]]=a[2].slice(); CTRL.pad[s][a[0]]=a[3].slice(); }); }); }
-function ctrlLoad(){ ctrlDefaults(); try{ const o=JSON.parse(localStorage.getItem('ayy-controls')||'null'); if(o) ['kb','pad'].forEach(function(d){ for(const s in (o[d]||{})) for(const a in o[d][s]) if(CTRL[d][s]&&CTRL[d][s][a]) CTRL[d][s][a]=o[d][s][a].slice(0,3); }); }catch(e){} }
-function ctrlSave(){ try{ localStorage.setItem('ayy-controls',JSON.stringify(CTRL)); }catch(e){} }
+function ctrlLoad(){ ctrlDefaults(); try{ const o=JSON.parse(stGet('ayy-controls')||'null'); if(o) ['kb','pad'].forEach(function(d){ for(const s in (o[d]||{})) for(const a in o[d][s]) if(CTRL[d][s]&&CTRL[d][s][a]) CTRL[d][s][a]=o[d][s][a].slice(0,3); }); }catch(e){} }
+function ctrlSave(){ try{ stSet('ayy-controls',JSON.stringify(CTRL)); }catch(e){} }
 function ctrlResetScheme(dev,s){ CTRL_DEF[s].acts.forEach(function(a){ CTRL[dev][s][a[0]]=(dev==='kb'?a[2]:a[3]).slice(); }); ctrlSave(); }
 ctrlLoad();
  
@@ -7460,8 +7444,9 @@ function enterTitle(){ if(!NET.on) aiClear(); state='menu'; menuMode='title'; if
  
 let tFocus=0, startFrom='hangar', misSel=0;
 const START_TXT={hangar:'hangardan',runway:'pistten',air:'havada',walk:'üssü gezerek'};
-function uiStyle(){ const s=SETTINGS.ui||'auto'; if(s==='A'||s==='B') return s; return 'C'; }
-function titleItems(){ const st=uiStyle(), adm=typeof accIsAdmin==='function'&&accIsAdmin(); return Array.prototype.slice.call(document.querySelectorAll(st==='A'?'#titleA .mitem':(st==='B'?'#titleB .mitem':'#titleC .mitem:not([disabled])'))).filter(function(b){ return adm||['library','sounds','admin'].indexOf(b.dataset.act)<0; }); }
+ 
+function uiStyle(){ return 'C'; }
+function titleItems(){ const adm=typeof accIsAdmin==='function'&&accIsAdmin(); return Array.prototype.slice.call(document.querySelectorAll('#titleC .mitem:not([disabled])')).filter(function(b){ return adm||['library','sounds','admin'].indexOf(b.dataset.act)<0; }); }
 function titleFocus(i){ const L=titleItems(); if(!L.length) return; tFocus=(i+L.length)%L.length; L.forEach(function(b,j){ b.classList.toggle('kf',j===tFocus); });
 if(uiStyle()==='C'){ titleDetail(L[tFocus].dataset.act); try{ L[tFocus].scrollIntoView({block:'nearest'}); }catch(e){} } }
  
@@ -7493,11 +7478,8 @@ window.addEventListener('keydown',function(){ setLastIn('kb'); },true);
 window.addEventListener('pointerdown',function(e){ setLastIn(e.pointerType==='touch'?'touch':'kb'); },true);
 function refreshTitle(){
 const st=uiStyle(), a=AIRCRAFT[selectedId], r=regOf(selectedId);
-$('title').classList.toggle('ui-a',st==='A'); $('title').classList.toggle('ui-b',st==='B'); $('title').classList.toggle('ui-c',st==='C');
+$('title').classList.add('ui-c');
 if(st==='C'){ $('mc_missions').textContent=MORDER.length+' görev'; $('cName').textContent=SETTINGS.callsign||'Misafir pilot'; titleHints(); }
-const sub=a.short+' · '+MISSIONS[missionId==='net'?'free':missionId].name+' · '+START_TXT[startPick];
-$('flySubA').textContent=sub; $('flySubB').textContent=sub;
-$('mAac').textContent=AC_ORDER.length+' ARAÇ'; $('mAmis').textContent=MORDER.length+' GÖREV'; $('mAload').textContent=(uiStyle()==='A'?'ARAYÜZ · KOMUTA':'');
 $('tCap').querySelector('b').textContent=a.name; $('tCap').querySelector('small').textContent='Hilal Kanatlar · '+(CLASSES[r.cls]||'').toUpperCase();
 const sb='<b>'+a.name+'</b> · '+loadSummary(selectedId); $('sbAc').innerHTML=sb; $('sbAc2').innerHTML=sb;
 const on=(typeof navigator.onLine==='boolean')?navigator.onLine:true; $('sbNet').textContent=on?'İnternet var · çok oyunculu hazır':'Çevrimdışı'; $('sbNet').className=on?'on':'';
@@ -7573,14 +7555,13 @@ $('setFx').addEventListener('click',function(e){ const b=e.target.closest('butto
 $('setShadow').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.shadows=b.dataset.s==='1'; saveSettings(); applyShadows(); syncSettingsUI(); });
 $('setTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; setTab(b.dataset.tab); });
 function setTab(t){ Array.prototype.forEach.call($('setTabs').children,function(x){ x.setAttribute('aria-selected',String(x.dataset.tab===t)); }); Array.prototype.forEach.call(document.querySelectorAll('#settings section'),function(s){ s.classList.toggle('hidden',s.dataset.tab!==t); }); }
-$('setUi').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.ui=b.dataset.u; saveSettings(); syncSettingsUI(); refreshTitle(); });
 function enterHangar(){
 walkLeave(); WALK.from='play';
 if(!NET.on) aiClear();
 setPrep(false,[],''); state='menu'; menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2;
 setAircraft(selectedId); resetFlight('runway'); showScreen('hangarUI'); refreshHangarUI();
 }
-let startPick='hangar'; try{ const sp=localStorage.getItem('kaan-sim-start'); if(sp==='hangar'||sp==='runway'||sp==='air') startPick=sp; }catch(e){}
+let startPick='hangar'; try{ const sp=stGet('kaan-sim-start'); if(sp==='hangar'||sp==='runway'||sp==='air') startPick=sp; }catch(e){}
 const START_ORDER=['hangar','runway','air','walk'];
 function loadSummary(id){ const n=SLOTS[id]||0; if(n<=0) return 'silah taşımaz'; const l=loadoutOf(id), parts=WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }); return parts.join(' · ')||'boş'; }
 let loadFrom='hangar';
@@ -7603,7 +7584,7 @@ $('stSub').textContent=AIRCRAFT[selectedId].name+' · '+loadSummary(selectedId);
 Array.prototype.forEach.call($('startSeg').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.s===startPick)); });
 refreshMission();
 }
-function selectStart(s){ startPick=s; try{ localStorage.setItem('kaan-sim-start',s); }catch(e){} refreshStart(); }
+function selectStart(s){ startPick=s; try{ stSet('kaan-sim-start',s); }catch(e){} refreshStart(); }
 function cycleStart(d){ const n=START_ORDER.length; selectStart(START_ORDER[(START_ORDER.indexOf(startPick)+d+n)%n]); }
 function launchFrom(s){ selectStart(s); $('startUI').classList.add('hidden'); startGame(s); }
 function setupAdjust(k,d){
@@ -7639,7 +7620,7 @@ const LPRESETS=[
 {id:'rec',n:'Keşif (hafif)',f:function(id){ return wpnOf(id).indexOf('m1')>=0; },mix:function(id,n){ return {m1:Math.min(2,n)}; }},
 {id:'clr',n:'Boşalt',f:function(){ return true; },mix:function(){ return {}; }}];
 $('suPre').addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(!b) return; const P=LPRESETS.find(function(p){ return p.id===b.dataset.p; }), n=SLOTS[selectedId]||0, m=P.mix(selectedId,n), l=loadoutOf(selectedId);
-WORDER.forEach(function(k){ l[k]=m[k]||0; }); try{ localStorage.setItem('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(err){} if(typeof refreshStoresVisual==='function'&&activeId===selectedId){ applyLoadout(selectedId); } refreshSetup(); });
+WORDER.forEach(function(k){ l[k]=m[k]||0; }); try{ stSet('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(err){} if(typeof refreshStoresVisual==='function'&&activeId===selectedId){ applyLoadout(selectedId); } refreshSetup(); });
 $('suLoad').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled) setupAdjust(b.dataset.k,+b.dataset.d); });
 function aiSave(){ SETTINGS.ai={enemies:+$('aiEnemy').value,wing:$('aiWing').value==='1',skill:+$('aiSkill').value,sam:$('aiSam').value==='1'}; saveSettings(); }
 ['aiEnemy','aiWing','aiSkill','aiSam'].forEach(function(id){ $(id).addEventListener('change',aiSave); });
@@ -7737,7 +7718,7 @@ return row('HIZ','v',Math.round(P.v)+' km/sa',C&&Math.round(C.v))+row('MANEVRA',
 $('btnCmp').addEventListener('click',function(){ const cur=HSEL||selectedId; CMP=(CMP===cur)?null:cur; this.setAttribute('aria-pressed',String(!!CMP)); if(CMP) toast('Sabitlendi — şimdi karşılaştırmak için başka bir araç seç','#ffc24a'); refreshHangarUI(); });
 function selectAircraft(id){
 HSEL=null; if(pickCls==='heli'){ pickCls='all'; buildPicker(); }
-selectedId=id; try{ localStorage.setItem('kaan-sim-aircraft',id); }catch(e){}
+selectedId=id; try{ stSet('kaan-sim-aircraft',id); }catch(e){}
 if(state==='menu'){ setAircraft(id); resetFlight('runway'); }
 refreshHangarUI();
 }
@@ -7775,7 +7756,6 @@ Array.prototype.forEach.call($('setAA').children,function(b){ b.setAttribute('ar
 Array.prototype.forEach.call($('setDepth').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.d===(SETTINGS.depth||'auto'))); });
 $('btnSafe').textContent=SETTINGS.safeMode?'Güvenli modu kapat':'Güvenli mod';
 Array.prototype.forEach.call($('setShadow').children,function(b){ b.setAttribute('aria-pressed',String((b.dataset.s==='1')===shadowsOn())); });
-Array.prototype.forEach.call($('setUi').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.u===(SETTINGS.ui||'auto'))); });
 Array.prototype.forEach.call($('setUiz').children,function(b){ b.setAttribute('aria-pressed',String(+b.dataset.z===(SETTINGS.uiz||1))); });
 Array.prototype.forEach.call($('setCb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.c===(SETTINGS.cb||'off'))); });
 $('setHc').checked=!!SETTINGS.hc; $('setRm').checked=!!SETTINGS.rm; $('setRadioSub2').checked=SETTINGS.radioSub!==false; $('setRumble2').checked=SETTINGS.rumble;
@@ -8683,7 +8663,7 @@ if(was&&state!=='menu'){ $('missionEnd').classList.add('hidden'); enterTitle(); 
 netShowHome(); if(!silent) netStatus('');
 }
  
-function netNameVal(){ const v=($('netName').value||'').trim().slice(0,16)||'Pilot'; try{ localStorage.setItem('kaan-sim-name',v); }catch(e){} return v; }
+function netNameVal(){ const v=($('netName').value||'').trim().slice(0,16)||'Pilot'; try{ stSet('kaan-sim-name',v); }catch(e){} return v; }
 function netModeSel(){ const b=$('netMode').querySelector('[aria-pressed="true"]'); return (b&&NET_MODES[b.dataset.m])?b.dataset.m:'coop'; }
 function openNet(){ $('netUI').classList.remove('hidden'); if(NET.on&&!NET.started) netShowLobby(); else netShowHome(); }
 function closeNet(){ $('netUI').classList.add('hidden'); }
@@ -8710,7 +8690,7 @@ if(NET.host){ const r=NET.roster.find(function(x){ return x.id===NET.myId; }); i
 else netSend(NET.hconn,{t:'pick',ac:ac,team:team});
 }
 (function(){
-try{ $('netName').value=localStorage.getItem('kaan-sim-name')||''; }catch(e){}
+try{ $('netName').value=stGet('kaan-sim-name')||''; }catch(e){}
 $('netAc').innerHTML=AC_ORDER.map(function(id){ return '<option value="'+id+'">'+AIRCRAFT[id].short+'</option>'; }).join('');
 $('btnNetClose').addEventListener('click',function(){ if(NET.on&&!NET.started){ netLeave(); } closeNet(); });
 $('btnNetHost').addEventListener('click',netHost);
@@ -9034,7 +9014,7 @@ return hit;
 }
 function buildCar(){
 if(WALK.car.mesh){ buildVehicles(); return; }
-let ki=0; try{ const v=+localStorage.getItem('ayy-car'); if(v>=0&&v<CAR_SWAP) ki=v; }catch(e){}
+let ki=0; try{ const v=+stGet('ayy-car'); if(v>=0&&v<CAR_SWAP) ki=v; }catch(e){}
 WALK.car=vehNew(CAR_KINDS[ki].id,HG.X0+7,896,0); buildVehicles();
 }
 function carMake(){
@@ -9043,7 +9023,7 @@ const m=carBuild(CAR_KINDS[c.ki].id); c.m=m; c.K=m.kind; c.mesh=m.g; scene.add(m
 c.pitch=c.roll=c.bp=c.br=0; c.y=null;
 }
 function carSwap(){
-const c=WALK.car; if(c.ki>=CAR_SWAP){ toast(c.K.n+' değiştirilemez — başka araca yürüyüp bin','#ffc24a'); return; } c.ki=(c.ki+1)%CAR_SWAP; try{ localStorage.setItem('ayy-car',c.ki); }catch(e){}
+const c=WALK.car; if(c.ki>=CAR_SWAP){ toast(c.K.n+' değiştirilemez — başka araca yürüyüp bin','#ffc24a'); return; } c.ki=(c.ki+1)%CAR_SWAP; try{ stSet('ayy-car',c.ki); }catch(e){}
 carMake(); c.v=0; c._v=0; c.vx=c.vz=0; c.yr=0; placeCar(0); toast('🚙 '+c.K.n,'#b8ecff');
 }
  
@@ -9590,8 +9570,8 @@ function libOrbit(dx,dy){ LIB.yaw-=dx*0.007; LIB.pitch=clamp(LIB.pitch+dy*0.005,
 function libZoom(f){ LIB.dist=clamp(LIB.dist*f,LIB.dist0*0.25,LIB.dist0*3); LIB.idle=0; }
  
 const LIV={data:{}, base:{}, mats:{}};
-try{ LIV.data=JSON.parse(localStorage.getItem('ayy-livery')||'{}')||{}; }catch(e){ LIV.data={}; }
-function livSave(){ try{ localStorage.setItem('ayy-livery',JSON.stringify(LIV.data)); }catch(e){} }
+try{ LIV.data=JSON.parse(stGet('ayy-livery')||'{}')||{}; }catch(e){ LIV.data={}; }
+function livSave(){ try{ stSet('ayy-livery',JSON.stringify(LIV.data)); }catch(e){} }
 const LIV_COLORS=['#c3c9ce','#8e979f','#5d6670','#2f363d','#c9b48a','#6f7a52','#3f5a78','#e9ecef'];
 function meshArea(g){ const p=g.attributes.position, ix=g.index, a=new THREE.Vector3(), b=new THREE.Vector3(), c=new THREE.Vector3(); let s=0; const n=ix?ix.count:p.count;
 for(let i=0;i<n;i+=3){ const i0=ix?ix.getX(i):i, i1=ix?ix.getX(i+1):i+1, i2=ix?ix.getX(i+2):i+2; a.fromBufferAttribute(p,i0); b.fromBufferAttribute(p,i1); c.fromBufferAttribute(p,i2); s+=b.sub(a).cross(c.sub(a)).length()*0.5; } return s; }
@@ -10129,7 +10109,7 @@ if(!mini&&MAPV.pick&&CALL.pickPt){ const p=mapToScreen(CALL.pickPt[0],CALL.pickP
 x.restore(); }; },drawMap);
 closeMap=HOOK.wrap('closeMap','yuruyus/arac-cagirma#_callCloseMap',function(_callCloseMap){ return function(){ if(MAPV.pick){ MAPV.pick=false; CALL.pickKind=null; CALL.pickPt=null; } _callCloseMap(); }; },closeMap);
 const HO={assist:true, pj:[], lockT:0, lock:null, cand:null, aim:new THREE.Vector3(), aimDir:new THREE.Vector3(), gunCd:0, rearmT:0};
-try{ const v=localStorage.getItem('ayy-hassist'); if(v!=null) HO.assist=v==='1'; }catch(e){}
+try{ const v=stGet('ayy-hassist'); if(v!=null) HO.assist=v==='1'; }catch(e){}
 const HTGT=[];                
 const TROOPS=[];              
 const CRATES=[];              
@@ -10143,7 +10123,7 @@ if(Math.abs(inp.f)<0.08) inp.f=clamp(-vf/18,-0.85,0.85);
 if(Math.abs(inp.r)<0.08) inp.r=clamp(-vr/14,-0.85,0.85);
 if(H.sling||H.troops>0){   if(inp.c>0) inp.c*=H.sling?0.7:0.85; }
 return inp; }; },heliInput);
-function hoAssistToggle(){ HO.assist=!HO.assist; try{ localStorage.setItem('ayy-hassist',HO.assist?'1':'0'); }catch(e){} toast('Askı yardımı (hover assist): '+(HO.assist?'AÇIK':'KAPALI'),HO.assist?'#7dffb0':'#ffc24a'); }
+function hoAssistToggle(){ HO.assist=!HO.assist; try{ stSet('ayy-hassist',HO.assist?'1':'0'); }catch(e){} toast('Askı yardımı (hover assist): '+(HO.assist?'AÇIK':'KAPALI'),HO.assist?'#7dffb0':'#ffc24a'); }
  
 const HOM={};
 function hoMats(){ if(HOM.burnt) return HOM; HOM.burnt=new THREE.MeshLambertMaterial({color:0x1d1d1f}); HOM.olive=new THREE.MeshLambertMaterial({color:0x56603f}); HOM.crate=new THREE.MeshLambertMaterial({color:0x6b7048}); HOM.strap=new THREE.MeshLambertMaterial({color:0xd8a531}); HOM.skin=new THREE.MeshLambertMaterial({color:0xc69c78}); HOM.boot=new THREE.MeshLambertMaterial({color:0x222222}); return HOM; }
@@ -10339,7 +10319,7 @@ else if(o.t==='deliver'&&HM.crate&&HM.crate.broken) hmEnd(false,'Sandık hasar g
 function hmEnd(win,why){
 if(HM.ended) return; HM.ended=true; const M=HM.M, t=Math.round(HM.t), xp=win?M.xp+Math.max(0,Math.round((M.lim-HM.t)/4)):0;
 if(HM.beacon){ scene.remove(HM.beacon); HM.beacon=null; }
-let best=null; try{ const R=JSON.parse(localStorage.getItem('ayy-hrec')||'{}'); best=R[M.id]; if(win&&(!best||t<best)){ R[M.id]=t; localStorage.setItem('ayy-hrec',JSON.stringify(R)); } }catch(e){}
+let best=null; try{ const R=JSON.parse(stGet('ayy-hrec')||'{}'); best=R[M.id]; if(win&&(!best||t<best)){ R[M.id]=t; stSet('ayy-hrec',JSON.stringify(R)); } }catch(e){}
 if(win&&typeof careerAdd==='function') try{ careerAdd(xp,{heliMis:1},'Helikopter görevi: '+M.n); }catch(e){}
 if(typeof musSting==='function') try{ musSting(win?'victory':'defeat'); }catch(e){}
 if(typeof radioSay==='function') radioSay({w:'kule',t:win?'Görev tamamlandı. Tebrikler {cs}, üsse dönebilirsin.':'Görev başarısız: '+why+'.'},null,{force:true});
@@ -10354,7 +10334,7 @@ $('hmFree').addEventListener('click',function(){ hmQuit(); });
 $('hmHangar').addEventListener('click',function(){ hmQuit(); enterHangar(); }); })();
  
 function hmList(){ const el=$('hMis'); if(!el) return; if(!HSEL){ el.innerHTML=''; el.classList.add('hidden'); return; } el.classList.remove('hidden');
-let R={}; try{ R=JSON.parse(localStorage.getItem('ayy-hrec')||'{}'); }catch(e){}
+let R={}; try{ R=JSON.parse(stGet('ayy-hrec')||'{}'); }catch(e){}
 el.innerHTML='<p class="hmh">HELİKOPTER GÖREVLERİ</p>'+HMIS.filter(function(m){ return m.heli===HSEL; }).map(function(m){ const r=R[m.id];
 return '<button type="button" class="hmb" data-hm="'+m.id+'"><b>'+m.n+'</b><small>'+m.d+'</small><i>'+(r?'Rekor '+Math.floor(r/60)+':'+String(r%60).padStart(2,'0'):'Süre '+Math.round(m.lim/60)+' dk')+' · '+m.xp+' XP</i></button>'; }).join(''); }
 (function(){ const el=$('hMis'); if(el) el.addEventListener('click',function(e){ const b=e.target.closest('[data-hm]'); if(b) hmStart(b.dataset.hm); }); })();
@@ -10605,11 +10585,11 @@ const ACCOUNT_CFG={url:'https://dmxglgkunafjxscwyffp.supabase.co', key:'eyJhbGci
 const ACC={cfg:null, sb:null, user:null, prof:null, role:'player', status:'guest', dirtyT:0, lastPush:0, pulling:false, err:''};
 const UNITS={hava:'Hilal Kanatlar',deniz:'Mavi Kanatlar',kara:'Bozkurtlar'};
 const EMBLEMS=[['hilal','☾'],['kurt','🐺'],['kartal','🦅'],['yildiz','★'],['kalkan','🛡'],['simsek','⚡']];
-function accCfg(){ if(ACCOUNT_CFG.url&&ACCOUNT_CFG.key) return ACCOUNT_CFG; try{ const c=JSON.parse(localStorage.getItem('ayy-supa')||'null'); if(c&&c.url&&c.key) return c; }catch(e){} return null; }
+function accCfg(){ if(ACCOUNT_CFG.url&&ACCOUNT_CFG.key) return ACCOUNT_CFG; try{ const c=JSON.parse(stGet('ayy-supa')||'null'); if(c&&c.url&&c.key) return c; }catch(e){} return null; }
  
-function lpAll(){ try{ const L=JSON.parse(localStorage.getItem('ayy-profiles')||'null'); if(Array.isArray(L)&&L.length) return L; }catch(e){} return [{id:'g1',callsign:SETTINGS.callsign||'Hilal 1',unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}]; }
-function lpSave(L){ try{ localStorage.setItem('ayy-profiles',JSON.stringify(L)); }catch(e){} }
-function lpCurId(){ try{ return localStorage.getItem('ayy-prof-cur')||'g1'; }catch(e){ return 'g1'; } }
+function lpAll(){ try{ const L=JSON.parse(stGet('ayy-profiles')||'null'); if(Array.isArray(L)&&L.length) return L; }catch(e){} return [{id:'g1',callsign:SETTINGS.callsign||'Hilal 1',unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}]; }
+function lpSave(L){ try{ stSet('ayy-profiles',JSON.stringify(L)); }catch(e){} }
+function lpCurId(){ try{ return stGet('ayy-prof-cur')||'g1'; }catch(e){ return 'g1'; } }
 function lpCur(){ const L=lpAll(); return L.find(function(p){ return p.id===lpCurId(); })||L[0]; }
 function accProfile(){ if(ACC.prof) return ACC.prof; if(!ACC.local||ACC.local.id!==lpCurId()) ACC.local=lpCur(); return ACC.local; }
 function accSetProfile(patch){
@@ -10655,16 +10635,16 @@ function accPushProfile(){ if(!ACC.sb||!ACC.prof) return; const p=ACC.prof; ACC.
 function accPayload(){ return {v:1, t:Date.now(), settings:SETTINGS, ctrl:{kb:CTRL.kb,pad:CTRL.pad}, liv:(typeof LIV!=='undefined'?LIV.data:{}), load:LOADOUTS, rec:RECORDS, snd:SND.user}; }
 function accApply(d){
 if(!d) return;
-if(d.settings){ const keep={}; ['safeMode','depth','quality','shadows','fx','res','aa','fpsCap','split','autoPerf'].forEach(function(k){ keep[k]=SETTINGS[k]; }); Object.assign(SETTINGS,d.settings,keep);     saveSettings(); }
+if(d.settings){ const keep={}; ['safeMode','depth','quality','shadows','fx','res','aa','fpsCap','split','autoPerf','gd','tierAuto','terrainLod','warm','texShare','bake','merge','freeze','fxMerge','shadowEvery'].forEach(function(k){ keep[k]=SETTINGS[k]; }); Object.assign(SETTINGS,d.settings,keep);     saveSettings(); }
 if(d.ctrl){ if(d.ctrl.kb) CTRL.kb=d.ctrl.kb; if(d.ctrl.pad) CTRL.pad=d.ctrl.pad; ctrlSave(); }
 if(d.liv&&typeof LIV!=='undefined'){ LIV.data=d.liv; livSave(); }
 if(d.load){ Object.keys(LOADOUTS).forEach(function(k){ delete LOADOUTS[k]; }); Object.assign(LOADOUTS,d.load); saveLoadouts(); }
 if(d.rec){ RECORDS=d.rec; saveRecords(); }
 if(d.snd){ SND.user=d.snd; sndSave(); }
-try{ localStorage.setItem('ayy-save-t',String(d.t||Date.now())); }catch(e){}
+try{ stSet('ayy-save-t',String(d.t||Date.now())); }catch(e){}
 try{ if(typeof settingsApplyAll==='function') settingsApplyAll(); }catch(e){}
 }
-function accLocalT(){ try{ return +localStorage.getItem('ayy-save-t')||0; }catch(e){ return 0; } }
+function accLocalT(){ try{ return +stGet('ayy-save-t')||0; }catch(e){ return 0; } }
 function accPull(){
 if(!ACC.sb||!ACC.user) return Promise.resolve(); ACC.pulling=true;
 return ACC.sb.from('saves').select('data,updated_at').eq('user_id',ACC.user.id).maybeSingle().then(function(r){ ACC.pulling=false;
@@ -10675,11 +10655,11 @@ if(d&&d.t>accLocalT()) accApply(d); else if(!d||d.t<accLocalT()) return accPush(
 function accPush(now){
 if(!ACC.sb||!ACC.user||!ACC.prof) return Promise.resolve(false);
 if(!now&&typeof navigator!=='undefined'&&navigator.onLine===false) return Promise.resolve(false);
-const p=accPayload(); try{ localStorage.setItem('ayy-save-t',String(p.t)); }catch(e){}
+const p=accPayload(); try{ stSet('ayy-save-t',String(p.t)); }catch(e){}
 return ACC.sb.from('saves').upsert({user_id:ACC.user.id,data:p,updated_at:new Date().toISOString()}).then(function(r){ if(r.error) throw r.error; ACC.lastPush=Date.now(); ACC.dirtyT=0; ACC.status='online'; accChip(); return true; })
 .catch(function(e){ ACC.status='offline'; ACC.err=e&&e.message||String(e); accChip(); return false; });
 }
-function accDirty(){ try{ localStorage.setItem('ayy-save-t',String(Date.now())); }catch(e){} if(ACC.user&&ACC.prof&&!ACC.dirtyT){ ACC.dirtyT=Date.now(); ACC.status='pending'; accChip(); } }
+function accDirty(){ try{ stSet('ayy-save-t',String(Date.now())); }catch(e){} if(ACC.user&&ACC.prof&&!ACC.dirtyT){ ACC.dirtyT=Date.now(); ACC.status='pending'; accChip(); } }
 setInterval(function(){ if(ACC.dirtyT&&Date.now()-ACC.dirtyT>4000) accPush(); },1500);
 window.addEventListener('online',function(){ if(ACC.user&&ACC.prof) accPush(true); });
  
@@ -10738,14 +10718,14 @@ $('accSave').addEventListener('click',function(){ const cs=($('accCs').value||''
 const u=($('accUnit').querySelector('[aria-pressed="true"]')||{}).dataset, e=($('accEm').querySelector('[aria-pressed="true"]')||{}).dataset, unit=u&&u.u||'hava', em=e&&e.e||'hilal';
 if(ACC.user&&!ACC.prof) accCreateProfile(cs,unit,em).then(function(ok){ if(ok) accRender(); }); else { accSetProfile({callsign:cs,unit:unit,emblem:em}); accMsg('Kaydedildi'); accRender(); } });
 $('accProfList').addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(!b) return; const L=lpAll();
-if(b.dataset.p==='new'){ const id='g'+Date.now().toString(36); L.push({id:id,callsign:'Pilot '+(L.length+1),unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}); lpSave(L); try{ localStorage.setItem('ayy-prof-cur',id); }catch(err){} }
-else { lpSave(L); try{ localStorage.setItem('ayy-prof-cur',b.dataset.p); }catch(err){} }
+if(b.dataset.p==='new'){ const id='g'+Date.now().toString(36); L.push({id:id,callsign:'Pilot '+(L.length+1),unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}); lpSave(L); try{ stSet('ayy-prof-cur',id); }catch(err){} }
+else { lpSave(L); try{ stSet('ayy-prof-cur',b.dataset.p); }catch(err){} }
 ACC.local=null; const p=lpCur(); SETTINGS.callsign=p.callsign; saveSettings(); accChip(); accRender(); toast('Profil: '+p.callsign,'#b8ecff'); });
  
 $('btnSupa').addEventListener('click',function(){ const url=($('setSupaUrl').value||'').trim(), key=($('setSupaKey').value||'').trim();
-if(!url&&!key){ try{ localStorage.removeItem('ayy-supa'); }catch(e){} toast('Bulut bağlantısı kaldırıldı — sayfa yenileniyor','#ffc24a'); setTimeout(function(){ location.reload(); },900); return; }
+if(!url&&!key){ try{ stDel('ayy-supa'); }catch(e){} toast('Bulut bağlantısı kaldırıldı — sayfa yenileniyor','#ffc24a'); setTimeout(function(){ location.reload(); },900); return; }
 if(!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url)||key.length<40){ toast('Adres https://xxxx.supabase.co biçiminde, anahtar "anon public" olmalı','#ff6a5a'); return; }
-try{ localStorage.setItem('ayy-supa',JSON.stringify({url:url.replace(/\/$/,''),key:key})); }catch(e){} toast('Bağlanılıyor…','#b8ecff'); accInit().then(function(){ accOpen(); }); });
+try{ stSet('ayy-supa',JSON.stringify({url:url.replace(/\/$/,''),key:key})); }catch(e){} toast('Bağlanılıyor…','#b8ecff'); accInit().then(function(){ accOpen(); }); });
 })();
 const RANKS=[
 ['Er','ER',0],['Onbaşı','OBŞ',100],['Çavuş','ÇVŞ',300],['Uzman Çavuş','UZÇ',600],['Astsubay','ASB',1000],['Asteğmen','ASĞ',1500],['Teğmen','TĞM',2200],['Üsteğmen','ÜTĞ',3000],
@@ -10933,12 +10913,12 @@ recon:{cat:'kesif',diff:2,dur:9,xp:230,obj:['5 keşif noktasının üstünde 4 s
 function bMeta(e){ return e.kind==='heli'?{cat:'heli',diff:e.M.id==='h_poligon'||e.M.id==='h_asker'?1:2,dur:Math.round(e.M.lim/60),xp:e.M.xp,obj:e.M.obj.map(function(o){ return o.n; }),thr:e.M.id==='h_konvoy'?['Hareketli hedefler']:e.M.id==='h_yuk'?['Dağ rüzgârı, yük salınımı']:['Tehdit yok'],load:null,area:e.M.obj.reduce(function(a,o){ return o.x!=null?[o.x,o.z,3500]:a; },[e.M.spot[0],e.M.spot[1],3500])}:BMETA[e.id]; }
 function boardAll(){ const L=MORDER.map(function(id){ return {id:id,kind:'air',name:MISSIONS[id].name,desc:MISSIONS[id].desc}; });
 if(typeof HMIS!=='undefined') HMIS.forEach(function(M){ L.push({id:M.id,kind:'heli',name:M.n,desc:M.d,M:M}); }); return L; }
-const BF={cat:'all',diff:0,dur:'all',sort:'def'}; try{ Object.assign(BF,JSON.parse(localStorage.getItem('ayy-bf')||'{}')); }catch(e){}
+const BF={cat:'all',diff:0,dur:'all',sort:'def'}; try{ Object.assign(BF,JSON.parse(stGet('ayy-bf')||'{}')); }catch(e){}
 function boardList(){ let L=boardAll().filter(function(e){ const m=bMeta(e); if(BF.cat!=='all'&&m.cat!==BF.cat) return false; if(BF.diff&&m.diff!==BF.diff) return false; if(BF.dur==='short'&&!(m.dur>0&&m.dur<=7)) return false; if(BF.dur==='long'&&!(m.dur===0||m.dur>7)) return false; return true; });
 if(BF.sort==='xp') L=L.slice().sort(function(a,b){ return bMeta(b).xp-bMeta(a).xp; }); return L; }
 function misCount(){ return Math.max(1,boardList().length); }
-function bStars(id){ try{ return (JSON.parse(localStorage.getItem('ayy-stars')||'{}')[id])||0; }catch(e){ return 0; } }
-function bSetStars(id,n){ try{ const o=JSON.parse(localStorage.getItem('ayy-stars')||'{}'); if(n>(o[id]||0)){ o[id]=n; localStorage.setItem('ayy-stars',JSON.stringify(o)); } }catch(e){} }
+function bStars(id){ try{ return (JSON.parse(stGet('ayy-stars')||'{}')[id])||0; }catch(e){ return 0; } }
+function bSetStars(id,n){ try{ const o=JSON.parse(stGet('ayy-stars')||'{}'); if(n>(o[id]||0)){ o[id]=n; stSet('ayy-stars',JSON.stringify(o)); } }catch(e){} }
 function starsHTML(n,max){ let s=''; for(let i=0;i<(max||3);i++) s+='<i class="'+(i<n?'on':'')+'">★</i>'; return '<span class="stars">'+s+'</span>'; }
 const BVEH={v:'plane'};
  
@@ -10976,9 +10956,9 @@ if(e.kind==='heli'){ if(typeof hmStart==='function') hmStart(e.id); return; }
 if(e.id==='free'&&BVEH.v!=='plane'){ selectMission('free'); heliFromHangar(BVEH.v); return; }
 selectMission(e.id); preFlight('missions'); };
 openMissions=function(){ state='menu'; menuMode='missions'; showScreen('missionsUI'); const L=boardList(); misSel=Math.max(0,L.findIndex(function(e){ return e.id===missionId; })); renderMissions(); };
-(function(){ const f=$('misFilt'); if(f) f.addEventListener('click',function(e){ const b=e.target.closest('button[data-v]'); if(!b) return; const k=b.parentNode.dataset.k, v=b.dataset.v; BF[k]=k==='diff'?+v:v; try{ localStorage.setItem('ayy-bf',JSON.stringify(BF)); }catch(err){} misSel=0; renderMissions(); });
+(function(){ const f=$('misFilt'); if(f) f.addEventListener('click',function(e){ const b=e.target.closest('button[data-v]'); if(!b) return; const k=b.parentNode.dataset.k, v=b.dataset.v; BF[k]=k==='diff'?+v:v; try{ stSet('ayy-bf',JSON.stringify(BF)); }catch(err){} misSel=0; renderMissions(); });
 const br=$('misBrief'); if(br) br.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return;
-if(b.id==='btnBLoad'){ const en=boardList()[misSel], m=en&&bMeta(en), P=m&&LPRESETS.find(function(p){ return p.id===m.load; }); if(!P) return; const n=SLOTS[selectedId]||0, mix=P.mix(selectedId,n), l=loadoutOf(selectedId); WORDER.forEach(function(k){ l[k]=mix[k]||0; }); try{ localStorage.setItem('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(err){} toast('Yük: '+P.n,'#7dffb0'); return; }
+if(b.id==='btnBLoad'){ const en=boardList()[misSel], m=en&&bMeta(en), P=m&&LPRESETS.find(function(p){ return p.id===m.load; }); if(!P) return; const n=SLOTS[selectedId]||0, mix=P.mix(selectedId,n), l=loadoutOf(selectedId); WORDER.forEach(function(k){ l[k]=mix[k]||0; }); try{ stSet('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(err){} toast('Yük: '+P.n,'#7dffb0'); return; }
 if(b.dataset.v&&b.parentNode.dataset.k==='veh'){ BVEH.v=b.dataset.v; renderMissions(); } }); })();
  
 function bObjective(){ if(state!=='play'||!M||M.id==='free'||M.id==='net'||M.done) return null; const lim=MISSIONS[M.id].limit, rem=lim?Math.max(0,lim-M.t):null; let txt='', tgt=null;
@@ -11193,7 +11173,7 @@ steps:[{t:'Topla (Boşluk) bir kamyonu vur',ok:function(){ return gtargets.filte
 steps:[{t:'Rıhtımdaki fırkateynin helikopter güvertesine in',ok:function(H){ const d=H.ground&&deckAt(H.x,H.z,H.y+0.6); return !!d&&!d.mover; }},{t:'Kalk',ok:function(H){ return !H.ground; }},
 {t:'Açıktaki devriye korvetinin hareketli güvertesine in',ok:function(H){ const d=H.ground&&deckAt(H.x,H.z,H.y+0.6); return !!d&&!!d.mover&&!d.mover.K; }}]}];
 const LIC={pilot:{n:'Pilot lisansı',ids:['kalkis','tur','inis','ruzgar']},heli:{n:'Helikopter lisansı',ids:['hover','sapan','gemi']},silah:{n:'Silah sertifikası',ids:['silah']}};
-function schState(){ try{ return JSON.parse(localStorage.getItem('ayy-school')||'{}'); }catch(e){ return {}; } }
+function schState(){ try{ return JSON.parse(stGet('ayy-school')||'{}'); }catch(e){ return {}; } }
 function schDone(){ const s=schState(); return LESSONS.filter(function(L){ return s[L.id]; }).length; }
 function schLicOk(k){ const s=schState(); return LIC[k].ids.every(function(id){ return s[id]; }); }
 Object.keys(LIC).forEach(function(k){ MEDALS.push(['lic_'+k,LIC[k].n,LIC[k].ids.length>1?'Uçuş okulundaki ilgili dersleri bitir':'Uçuş okulunun silah dersini bitir',function(st){ return (st.school||[]).length&&LIC[k].ids.every(function(id){ return st.school.indexOf(id)>=0; }); }]); });
@@ -11239,7 +11219,7 @@ if(ok){ try{ sndPlay('ui_ok'); }catch(e){} toast('✓ '+st.t,'#7dffb0'); SCH.i++
 }
 function schEnd(ok,why){
 const L=SCH.cur; if(!L) return; const S0=schState();
-if(ok){ const first=!S0[L.id]; S0[L.id]=true; try{ localStorage.setItem('ayy-school',JSON.stringify(S0)); }catch(e){}
+if(ok){ const first=!S0[L.id]; S0[L.id]=true; try{ stSet('ayy-school',JSON.stringify(S0)); }catch(e){}
 try{ const p=accProfile(), st=p.stats||(p.stats={}); st.school=Object.keys(S0); if(typeof careerAdd==='function') careerAdd(L.veh==='air'?0:(first?L.xp:Math.round(L.xp/4)),null); }catch(e){}
 if(first&&schLicOk(L.lic)) setTimeout(function(){ toast('🎖 '+LIC[L.lic].n+' kazandın!','#ffd27a'); schSay('Tebrikler {cs}, '+LIC[L.lic].n.toLocaleLowerCase('tr-TR')+' almaya hak kazandın!'); },1200);
 else schSay('Ders tamam, tebrikler {cs}.'); }
@@ -11274,12 +11254,12 @@ const PSCHEMES=[
 {id:'gece',n:'Gece',r:6,liv:{color:'#2f363d',gloss:0.2,camo:3,camo2:'#1d2228'},sw:'#2f363d'},
 {id:'kizil',n:'Kızıl Elma',r:8,liv:{color:'#e9ecef',camo:3,camo2:'#c8102e',camoS:1.6,gloss:0.6},sw:'#c8102e'},
 {id:'altin',n:'Altın',r:11,liv:{color:'#c9a24a',gloss:0.9},sw:'#c9a24a'}];
-const PAINT={}; try{ Object.assign(PAINT,JSON.parse(localStorage.getItem('ayy-paint')||'{}')); }catch(e){}
+const PAINT={}; try{ Object.assign(PAINT,JSON.parse(stGet('ayy-paint')||'{}')); }catch(e){}
 function lockedAt(need){ if(typeof accIsAdmin==='function'&&accIsAdmin()) return false; if(SETTINGS.rankLocks===false) return false; return (accProfile().rank||0)<need; }
 applyLivery=HOOK.wrap('applyLivery','ag/kariyer-ilerleme#_pLiv',function(_pLiv){ return function(m){ const id=m&&m.acId, P=id&&PAINT[id]&&PSCHEMES.find(function(s){ return s.id===PAINT[id]; }); if(P&&P.liv){ LIV.data[id]=P.liv; } return _pLiv(m); }; },applyLivery);
 function paintSet(id,sid){ const P=PSCHEMES.find(function(s){ return s.id===sid; }); if(!P) return; if(lockedAt(P.r)){ toast('🔒 '+P.n+' boyası '+rankName(P.r)+' rütbesinde açılır','#ffc24a'); return; }
 if(sid==='std'){ delete PAINT[id]; delete LIV.data[id]; } else { PAINT[id]=sid; LIV.data[id]=P.liv; }
-try{ localStorage.setItem('ayy-paint',JSON.stringify(PAINT)); }catch(e){} liveryRefresh(id); paintUI(); toast('Boya: '+P.n,'#7dffb0'); }
+try{ stSet('ayy-paint',JSON.stringify(PAINT)); }catch(e){} liveryRefresh(id); paintUI(); toast('Boya: '+P.n,'#7dffb0'); }
 function paintUI(){ const el=$('hPaint'); if(!el) return; if(HSEL||!AIRCRAFT[selectedId]){ el.classList.add('hidden'); return; } el.classList.remove('hidden');
 const cur=PAINT[selectedId]||'std', skin=!!(MODELS.skins&&MODELS.skins[selectedId]);
 el.innerHTML='<p class="hmh">BOYA'+(skin?' <small>(içe aktarılmış modelde geçerli değil)</small>':'')+'</p><div class="pchips">'+PSCHEMES.map(function(P){ const lk=lockedAt(P.r);
@@ -11304,7 +11284,7 @@ const ACH=[
 ['places','Gezgin','Haritada 20 farklı yere git','placesN',20,250],
 ['eject','Paraşütçü','3 kez fırlat ve sağ kurtul','ejectOk',3,150],
 ['daily','Disiplinli','7 günlük görev tamamla','dailyDone',7,300]];
-function progStats(){ const st=accProfile().stats||{}, o=Object.assign({},st); let stars=0; try{ const s=JSON.parse(localStorage.getItem('ayy-stars')||'{}'); for(const k in s) stars+=s[k]||0; }catch(e){}
+function progStats(){ const st=accProfile().stats||{}, o=Object.assign({},st); let stars=0; try{ const s=JSON.parse(stGet('ayy-stars')||'{}'); for(const k in s) stars+=s[k]||0; }catch(e){}
 o.starsN=stars; o.schoolN=typeof schDone==='function'?schDone():0; o.placesN=(st.places||[]).length; return o; }
 const PG={busy:false};
 function achCheck(){ if(PG.busy) return; PG.busy=true; try{ const p=accProfile(), st=p.stats||(p.stats={}), got=st.ach||(st.ach=[]), v=progStats();
@@ -11366,8 +11346,8 @@ gates:function(){ const R=EXTRA_ROADS[1]||ENV.road, L=[]; let acc=0; for(let i=1
 {id:'r_boat',n:'Körfez tekne yarışı',veh:'boat',ac:'patrol',d:'Deniz Üssü açığındaki şamandıraların arasından Hücumbotla iki tur at.',R:22,
 gates:function(){ const L=[]; for(let lap=0;lap<2;lap++) for(let k=0;k<8;k++){ const a=-Math.PI/2+k/8*Math.PI*2, x=-2700+Math.cos(a)*520, z=-4600+Math.sin(a)*360; L.push([x,2.5,z]); } L.push(L[0].slice()); return L; }}];
 const RACE={on:false, def:null, gates:[], meshes:[], i:0, t:0, started:false, rec:[], recT:0, splits:[], ghost:null, gm:null, gi:0};
-function raceStore(){ try{ return JSON.parse(localStorage.getItem('ayy-race')||'{}'); }catch(e){ return {}; } }
-function raceSave(o){ try{ localStorage.setItem('ayy-race',JSON.stringify(o)); }catch(e){} }
+function raceStore(){ try{ return JSON.parse(stGet('ayy-race')||'{}'); }catch(e){ return {}; } }
+function raceSave(o){ try{ stSet('ayy-race',JSON.stringify(o)); }catch(e){} }
 function raceBest(id){ const s=raceStore()[id]; return s&&s.best||null; }
  
 boardAll=HOOK.wrap('boardAll','gorev/yarislar#_rAll',function(_rAll){ return function(){ return _rAll().concat(RACES.map(function(R){ return {id:R.id,kind:'race',name:'Yarış: '+R.n,desc:R.d,R:R}; })); }; },boardAll);
@@ -11466,8 +11446,8 @@ const ED_T={gt:{n:'Yer hedefi',c:'#ff8a5a'},at:{n:'Hava hedefi',c:'#ff4a6a'},en:
 const ED_GT=['truck','radar','depot','bunker','sam'];
 const ED={m:null, tool:'sel', sel:null, cx:0, cz:0, scale:0.03, drag:null, open:false};
 const CUS={local:[], pub:[], cur:null, st:null, keep:null};
-try{ CUS.local=JSON.parse(localStorage.getItem('ayy-cmis')||'[]')||[]; }catch(e){ CUS.local=[]; }
-function cusSave(){ try{ localStorage.setItem('ayy-cmis',JSON.stringify(CUS.local)); }catch(e){} }
+try{ CUS.local=JSON.parse(stGet('ayy-cmis')||'[]')||[]; }catch(e){ CUS.local=[]; }
+function cusSave(){ try{ stSet('ayy-cmis',JSON.stringify(CUS.local)); }catch(e){} }
 function edNew(){ return {v:1,id:'c'+Date.now().toString(36),n:'Yeni görev',d:'Hedefleri imha et.',ac:'any',lim:600,wx:'clear',tod:'day',items:[{id:1,t:'st',x:0,z:2500,h:0,alt:600}]}; }
 function edNextId(m){ return m.items.reduce(function(a,i){ return Math.max(a,i.id||0); },0)+1; }
  
@@ -11592,8 +11572,8 @@ bObjective=HOOK.wrap('bObjective','gorev/gorev-editoru#_cObj',function(_cObj){ r
 const tgt=bNearest(left.map(function(x){ return x.o.pos||{x:x.i.x,z:x.i.z}; })); const m=CUS.cur;
 return {name:m.n,txt:(st.max>1?'Aşama '+st.stage+'/'+st.max+' · ':'')+(cur.length-left.length)+'/'+cur.length+' hedef',rem:m.lim?Math.max(0,m.lim-M.t):null,tgt:tgt}; }; },bObjective);
 (function(){ const b=$('btnMEdit'); if(b) b.addEventListener('click',function(){ $('missionEnd').classList.add('hidden'); enterHangar(); openMissions(); if(CUS.cur){ const L=CUS.local.find(function(x){ return x.id===CUS.cur.id; }); edOpen(L||CUS.cur); } }); })();
-const PLAY={mode:'career'}; try{ const v=localStorage.getItem('ayy-playmode'); if(v==='quick'||v==='career') PLAY.mode=v; }catch(e){}
-function playMode(m){ PLAY.mode=m; try{ localStorage.setItem('ayy-playmode',m); }catch(e){} document.documentElement.classList.toggle('quick',m==='quick'); }
+const PLAY={mode:'career'}; try{ const v=stGet('ayy-playmode'); if(v==='quick'||v==='career') PLAY.mode=v; }catch(e){}
+function playMode(m){ PLAY.mode=m; try{ stSet('ayy-playmode',m); }catch(e){} document.documentElement.classList.toggle('quick',m==='quick'); }
 const NAV={level:'root'};
 const NAV_IC={
 start:'<path d="M7 5l12 7-12 7z"/>', net:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/>',
@@ -12196,7 +12176,7 @@ rumble=HOOK.wrap('rumble','kontrol/telefon#_hRumble',function(_hRumble){ return 
 try{ navigator.vibrate(Math.round(clamp((ms||40)*Math.max(weak||0,strong||0,0.3),8,400))); }catch(e){} }; },rumble);
  
 const SAVE_KEYS=/^(ayy-|kaan-|ayyildiz|kaan_)/i;
-function saveCollect(){ const d={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(SAVE_KEYS.test(k)) d[k]=localStorage.getItem(k); } }catch(e){} return d; }
+function saveCollect(){ const d={}; stKeys().forEach(function(k){ if(SAVE_KEYS.test(k)) d[k]=stGet(k); }); return d; }    
 function saveExport(){ const data=saveCollect(); return {app:'AyYildiz-HedefKizilElma', kind:'save', ver:GAME_VERSION, at:new Date().toISOString(), n:Object.keys(data).length, data:data}; }
 function b64e(s){ return btoa(unescape(encodeURIComponent(s))); } function b64d(s){ return decodeURIComponent(escape(atob(s))); }
 function saveCode(){ return 'AYK1.'+b64e(JSON.stringify(saveExport())); }
@@ -12206,8 +12186,8 @@ if(!o||o.kind!=='save'||!o.data||typeof o.data!=='object') return {err:'Bu bir o
 const keys=Object.keys(o.data).filter(function(k){ return SAVE_KEYS.test(k)&&typeof o.data[k]==='string'; }); if(!keys.length) return {err:'Kayıt boş'};
 return {o:o, keys:keys}; }
 function saveImport(txt,noReload){ const r=saveParse(txt); if(r.err){ toast(r.err,'#ff6a5a'); return false; }
-try{ Object.keys(saveCollect()).forEach(function(k){ localStorage.removeItem(k); }); r.keys.forEach(function(k){ localStorage.setItem(k,r.o.data[k]); }); }catch(e){ toast('Kayıt yazılamadı: tarayıcı depolaması kapalı olabilir','#ff6a5a'); return false; }
-toast('Kayıt yüklendi ('+r.keys.length+' öğe, '+(r.o.ver||'')+') — oyun yeniden başlıyor','#7dffb0'); if(!noReload) setTimeout(function(){ try{ location.reload(); }catch(e){} },1200); return true; }
+try{ Object.keys(saveCollect()).forEach(function(k){ stDel(k); }); r.keys.forEach(function(k){ stSet(k,r.o.data[k]); }); }catch(e){ toast('Kayıt yazılamadı: tarayıcı depolaması kapalı olabilir','#ff6a5a'); return false; }
+depoFlush(); toast('Kayıt yüklendi ('+r.keys.length+' öğe, '+(r.o.ver||'')+') — oyun yeniden başlıyor','#7dffb0'); if(!noReload) setTimeout(function(){ try{ location.reload(); }catch(e){} },1200); return true; }
 function saveDownload(){ const o=saveExport(), blob=new Blob([JSON.stringify(o,null,1)],{type:'application/json'}), a=document.createElement('a');
 a.href=URL.createObjectURL(blob); a.download='ay-yildiz-kayit-'+new Date().toISOString().slice(0,10)+'.json'; document.body.appendChild(a); a.click(); setTimeout(function(){ try{ URL.revokeObjectURL(a.href); a.remove(); }catch(e){} },2000);
 toast(o.n+' öğe dosyaya yazıldı','#7dffb0'); }
@@ -12285,8 +12265,8 @@ const cp=Math.cos(MENUV.pitch), sp=Math.sin(MENUV.pitch); camera.position.set(ME
 const gy=Math.max(groundH(camera.position.x,camera.position.z),0)+1.2; if(camera.position.y<gy) camera.position.y=gy; camera.lookAt(MENUV.tgt);
 if(Math.abs(50-lastFov)>0.05){ camera.fov=50; lastFov=50; camera.updateProjectionMatrix(); } camera.updateMatrixWorld(); }; },menuCam);
  
-const LASTV={v:null}; try{ const s=localStorage.getItem('ayy-lastv'); if(s) LASTV.v=JSON.parse(s); }catch(e){}
-function lastSet(v){ LASTV.v=v; try{ localStorage.setItem('ayy-lastv',JSON.stringify(v)); }catch(e){} }
+const LASTV={v:null}; try{ const s=stGet('ayy-lastv'); if(s) LASTV.v=JSON.parse(s); }catch(e){}
+function lastSet(v){ LASTV.v=v; try{ stSet('ayy-lastv',JSON.stringify(v)); }catch(e){} }
 function lastName(v){ v=v||LASTV.v; if(!v) return AIRCRAFT.kaan.name; if(v.t==='ac') return (AIRCRAFT[v.id]||AIRCRAFT.kaan).name; if(v.t==='heli') return HELI_DEF[v.id].name; const h=hvOf(v.t,v.id); return h?h[1]:'—'; }
 function vehStart(v){ if(v.g==='kara'){ startWalk(); const c=vehNew(v.id,HG.X0+9,896,Math.PI/2); c.called=true; WALK.car=c; WALK.mode='car'; c.v=0; WALK.cy=0; WALK.pos.set(c.x,groundH(c.x,c.z)+1.7,c.z); toast(c.K.n+' — W/S gaz-fren · A/D direksiyon · E in','#b8ecff'); }
 else { startWalk(); buildBoats(); let b=BOATS.find(function(x){ return x.id===v.id&&x.id!=='anadolu'; });
@@ -12313,8 +12293,8 @@ el.innerHTML=START3.map(function(s){ return '<button type="button" data-s="'+s[0
 refreshSetup=HOOK.wrap('refreshSetup','ekran/menu-duzeltmeleri#_m3Setup',function(_m3Setup){ return function(){ _m3Setup(); m3StartUI(); m3Groups(); const b=$('btnLoadDone'); if(b) b.textContent=loadFrom==='missions'?'▶ Göreve başla':'▶ Uçuşa başla';
 const k=document.querySelector('#setupUI .step'); if(k) k.textContent=(SLOTS[selectedId]>0?'Silah yükü':'Uçuş öncesi')+' · başlama yeri'; }; },refreshSetup);
  
-const LGRP={}; try{ Object.assign(LGRP,JSON.parse(localStorage.getItem('ayy-lgroups')||'{}')); }catch(e){}
-function lgSave(){ try{ localStorage.setItem('ayy-lgroups',JSON.stringify(LGRP)); }catch(e){} }
+const LGRP={}; try{ Object.assign(LGRP,JSON.parse(stGet('ayy-lgroups')||'{}')); }catch(e){}
+function lgSave(){ try{ stSet('ayy-lgroups',JSON.stringify(LGRP)); }catch(e){} }
 function lgName(l){ return WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }).join(' ')||'Boş'; }
 function m3Groups(){ const el=$('suGrp'); if(!el) return; const n=SLOTS[selectedId]||0; el.classList.toggle('hidden',!(n>0)); if(!(n>0)) return; const L=LGRP[selectedId]||[];
 el.innerHTML='<span class="lgk">Gruplarım</span>'+L.map(function(g,i){ return '<span class="lg"><button type="button" data-g="'+i+'" title="'+lgName(g.l)+'">'+String(g.n).replace(/[<>&]/g,'')+'</button><button type="button" class="x" data-gx="'+i+'" aria-label="Sil">×</button></span>'; }).join('')+
@@ -12554,8 +12534,8 @@ syncSettingsUI=HOOK.wrap('syncSettingsUI','performans/optimizasyon-1#_p2Sync',fu
 const sp=$('setSplit'); if(sp){ sp.checked=SETTINGS.split!==false; sp.disabled=!!DEV.logDepth; } }; },syncSettingsUI);
 const PCARD={tab:'ozet', lg:'in'};
 if($('loginUI')) MODALS.push('loginUI');
-try{ const t=localStorage.getItem('ayy-pctab'); if(t) PCARD.tab=t; }catch(e){}
-function pcTab(t){ PCARD.tab=t; try{ localStorage.setItem('ayy-pctab',t); }catch(e){}
+try{ const t=stGet('ayy-pctab'); if(t) PCARD.tab=t; }catch(e){}
+function pcTab(t){ PCARD.tab=t; try{ stSet('ayy-pctab',t); }catch(e){}
 const ui=$('acctUI'); if(!ui) return; ui.querySelectorAll('.pc-tab').forEach(function(s){ s.classList.toggle('hidden',s.dataset.t!==t); });
 const nv=$('pcTabs'); if(nv) nv.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-selected',String(b.dataset.t===t)); }); }
 function pcHero(){ const p=accProfile(), h=$('pcHero'); if(!h) return; h.dataset.u=p.unit||'hava';
@@ -12599,12 +12579,12 @@ const cs=$('accCs'); if(cs) cs.addEventListener('keydown',function(e){ e.stopPro
 })();
  
 const ANN={seen:{}, list:[], cur:null, t:0, ch:null, poll:null};
-try{ ANN.seen=JSON.parse(localStorage.getItem('ayy-ann-seen')||'{}')||{}; }catch(e){}
+try{ ANN.seen=JSON.parse(stGet('ayy-ann-seen')||'{}')||{}; }catch(e){}
 const ANN_DUR=[['f','Anlık (bir kez gösterilir)'],['600','10 dakika'],['3600','1 saat'],['86400','1 gün'],['0','Kalıcı']];
 function annParse(a){ const m=/^⏱(f|\d+)\|/.exec(String(a.text||'')); const k=m?m[1]:'0', txt=m?String(a.text).slice(m[0].length):String(a.text||''), t0=new Date(a.created_at).getTime()||Date.now();
 const flash=k==='f', sec=flash?180:+k, exp=sec>0?t0+sec*1000:Infinity; return {id:a.id, text:txt, flash:flash, sec:sec, t0:t0, exp:exp, active:a.active!==false}; }
 function annLabel(o){ if(o.flash) return 'Anlık'; if(!o.sec) return 'Kalıcı'; const r=o.exp-Date.now(); if(r<=0) return 'Süresi doldu'; return r>3600e3?Math.round(r/3600e3)+' sa kaldı':Math.max(1,Math.round(r/60e3))+' dk kaldı'; }
-function annSeen(id){ ANN.seen[id]=Date.now(); try{ const k=Object.keys(ANN.seen); if(k.length>60) k.slice(0,k.length-60).forEach(function(x){ delete ANN.seen[x]; }); localStorage.setItem('ayy-ann-seen',JSON.stringify(ANN.seen)); }catch(e){} }
+function annSeen(id){ ANN.seen[id]=Date.now(); try{ const k=Object.keys(ANN.seen); if(k.length>60) k.slice(0,k.length-60).forEach(function(x){ delete ANN.seen[x]; }); stSet('ayy-ann-seen',JSON.stringify(ANN.seen)); }catch(e){} }
 function annBar(){ let el=$('annBar'); if(el) return el; el=document.createElement('div'); el.id='annBar'; el.className='annbar hidden'; el.setAttribute('role','status');
 el.innerHTML='<b>📢 DUYURU</b><span id="annTxt"></span><button type="button" aria-label="Kapat" id="annX">✕</button>'; document.body.appendChild(el);
 el.querySelector('#annX').addEventListener('click',function(){ annHide(); }); return el; }
@@ -13434,7 +13414,7 @@ if(/swiftshader|llvmpipe|softpipe|microsoft basic/.test(g)) return 0;
 if(/intel/.test(g)&&!/arc/.test(g)) return 1; if(/rtx|radeon rx|gtx 1[06]\d0|apple m[1-9]|arc a/.test(g)||mem>=16) return 3; return 2; }
 function devTierApply(silent){ const q=devTier(); SETTINGS.quality=q; SETTINGS.fx=null; SETTINGS.shadows=null; SETTINGS.res='auto'; SETTINGS.autoPerf=true; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI();
 if(!silent) toast('Cihaza göre ayarlandı: '+['Düşük','Orta','Yüksek','Ultra'][q]+' ('+DEV.kind+(DEV.gpu&&DEV.gpu!=='?'?' · '+String(DEV.gpu).slice(0,40):'')+')','#7dffb0'); }
-loadStore=HOOK.wrap('loadStore','performans/optimizasyon-2#_p3Load',function(_p3Load){ return function(){ let first=false; try{ first=!localStorage.getItem('kaan-sim-settings'); }catch(e){} _p3Load(); if(first){ try{ SETTINGS.quality=devTier(); SETTINGS.tierAuto=true; }catch(e){} } }; },loadStore);
+loadStore=HOOK.wrap('loadStore','performans/optimizasyon-2#_p3Load',function(_p3Load){ return function(){ let first=false; try{ first=!stGet('kaan-sim-settings'); }catch(e){} _p3Load(); if(first){ try{ SETTINGS.quality=devTier(); SETTINGS.tierAuto=true; }catch(e){} } }; },loadStore);
 (function(){ const b=$('btnTier'); if(b) b.addEventListener('click',function(){ devTierApply(false); }); })();
  
 function menuCovered(){ if(state!=='menu'||!document.querySelector) return false; return !!document.querySelector('.modal.fs:not(.hidden), #settings:not(.hidden), #records:not(.hidden), #campUI:not(.hidden)'); }
@@ -13467,7 +13447,7 @@ navRender=HOOK.wrap('navRender','ekran/surum-notlari#_rnNav',function(_rnNav){ r
 const k=h.indexOf('data-act="net"'); if(k<0) return; const j=h.indexOf('</button>',k)+9; el.innerHTML=h.slice(0,j)+navBtn('notes','Yenilikler',GAME_VERSION+' sürüm notları','news')+h.slice(j); tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
 titleAct=HOOK.wrap('titleAct','ekran/surum-notlari#_rnAct',function(_rnAct){ return function(act){ if(act==='notes'&&state==='menu') return relOpen(); return _rnAct(act); }; },titleAct);
  
-const RELNOTES=[{"v": "V2.25", "d": "2026-10-15", "t": "Kod düzeni", "md": "- **Kod düzeni:** 124 modül konu klasörlerine taşındı: çekirdek, dünya, modeller, uçuş, savaş, görev, ekran, kontrol, ses, yürüyüş, ağ, performans ve veri. \"98b\", \"98zf\" gibi numaralı yama modülleri kalmadı; her dosyanın adı ne yaptığını söylüyor. Yükleme sırası tek bir listede (`src/js/SIRA.txt`) tutuluyor. Taşımadan sonra oyunun kodu bayt bayt aynıydı.\n- **Büyük modüller bölündü:** yapay zekâ ve çevrimiçi oyun (4 parça), model kütüphanesi (3 parça), ana menü (3 parça).\n- **Daha küçük dosya:** oyun dosyası 2 011 KB'tan 1 798 KB'a indi (−%10,6). Kod yorumları ve girintiler artık yalnız yayınlanan dosyadan çıkarılıyor (kaynak kodda duruyorlar); envanter verisindeki tekrar eden metinler tek listede toplandı (406 → 329 KB).\n- **Temizlik:** kullanılmayan 7 işlev silindi; her açılışta konsola düşen 9 \"flatShading\" uyarısı ve 35 Canvas uyarısı giderildi."}, {"v": "V2.24", "d": "2026-10-15", "t": "Kanca sistemi ve kare başına çöp", "md": "- **Kanca kaydı:** modüllerin birbirini genişletme biçimi baştan düzenlendi. 284 \"sarmalama\"nın 279'u tek bir kanca kaydına taşındı. Artık bir modülde hata çıkarsa yalnız o modül atlanıyor, oyunun geri kalanı çalışmaya devam ediyor (eskiden aynı zincirdeki diğer modüller de duruyordu). Davranış değişmedi; bütün testler aynı.\n- **Performans testinde modül maliyeti:** test sonucunda \"En pahalı modüller\" satırı var: hangi modülün kare başına kaç ms harcadığı görünüyor.\n- **Daha az çöp:** uçuşta kare başına üretilen geçici bellek ~%26 azaldı (çöp toplayıcı daha seyrek çalışır, telefonda ani takılma riski azalır). Yapay zekâ uçaklarının parça birleştirmesi artık her hareketli parça için ayrı ayrı değil, bir kerede yeniden kuruluyor (yeniden kurulum 32 → 9); akrobasi algılayıcısı, martılar, koyunlar, trafik, simge yapılar ve HUD yazıları her karede yeni nesne üretmiyor.\n- **Ses:** motor sesi sustuğunda 1,5 saniye sonra ses işlemcisinden çıkarılıyor (menüde, yürürken boşa hesaplanmıyor); ses ayarları yalnız değiştiğinde yazılıyor."}, {"v": "V2.23", "d": "2026-10-15", "t": "Bütün ayarların gözden geçirmesi", "md": "- **Tekrar eden ayarlar kaldırıldı:** \"Telsiz altyazıları\" artık yalnız Erişilebilirlik'te, \"Kumanda titreşimi\" yalnız Kontroller → Gamepad'de. İki ayrı \"Çubuk hassasiyeti\" satırı \"Kumanda çubuk hassasiyeti\" ve \"Dokunmatik çubuk hassasiyeti\" oldu.\n- **Her satırın açıklaması var:** yalnız yüzde gösteren satırlar (duyarlılık, ölü bölge, düğme boyutu, saydamlık, ses seviyesi…) artık neyi değiştirdiklerini de yazıyor.\n- **Varsayılana dön (↺):** bir ayar varsayılandan farklıysa adının yanında küçük ↺ düğmesi çıkıyor; basınca yalnız o ayar varsayılana dönüyor (47 satırda).\n- **Arama her yerde:** ayar araması bütün sekmelerde, Kontroller'in Klavye/Gamepad/Dokunmatik panellerinde ve Grafik'in açılır gruplarında buluyor; eşleşen grup kendiliğinden açılıyor."}, {"v": "V2.22", "d": "2026-10-15", "t": "Grafik ayarları 2.0", "md": "- **Daha sade grafik sekmesi:** temel ayarlar 7 satır: Grafik kalitesi, Gölgeler, Görsel efektler, Çözünürlük, FPS sınırı, Performans testi, Tam ekran. Geri kalanı iki açılır grupta: \"Ayrıntılı ayarlar\" ve \"Grafik sorun giderme\" (derinlik, iki katmanlı derinlik, güvenli mod, görüntü testi, tanılama).\n- **Otomatik hazır ayar:** Grafik kalitesi satırında Otomatik seçeneği var: cihazına göre kademe seçer ve FPS düşerse ayarları kendiliğinden hafifletir. Aynı işi yapan \"Cihaza göre ayarla\" ve \"Performans modu\" satırları kaldırıldı. Hazır ayarın üstüne kendi seçimini yaparsan \"Özel\" yazıyor; bir hazır ayara dokununca sıfırlanıyor.\n- **Ayrıntılı ayarlar:** görüş mesafesi, nesne ayrıntısı, bitki örtüsü, bulutlar, doku kalitesi ve efekt kalitesi artık ayrı ayrı ayarlanabiliyor (her biri \"Hazır\" ya da Düşük–Ultra). Ayrıca kenar yumuşatma, akıllı performans ve FPS göstergesi burada.\n- **Maliyet etiketleri:** her ayarın yanında az · orta · çok etki etiketi var.\n- **Canlı fark:** bir grafik ayarını değiştirince hemen altında çizim ve üçgen sayısının nasıl değiştiği görünüyor (ör. \"çizim 201 → 200 · üçgen 375 bin → 355 bin\"). Hiçbir ayar yeniden başlatma istemiyor (derinlik hassasiyeti hariç)."}, {"v": "V2.21", "d": "2026-10-15", "t": "Arazi ayrıntı kademeleri", "md": "- **Arazi parçalara bölündü:** 30 km'lik tek parça arazi (her karede 180 bin üçgen, kameranın arkası dahil) 5 km'lik 36 parçaya bölündü. Yakındaki parçalar eskisi gibi 100 m ayrıntıda, uzaktakiler 200, 500 ve 1000 m'de çiziliyor; kameranın görmediği parçalar hiç çizilmiyor. Uzak parçalar tek ağda birleştiği için çizim sayısı neredeyse aynı kaldı.\n- **Ölçüm (Yüksek kalite):** çizilen üçgen bilgisayarda uçuşta 397 bin → 276 bin, alçak uçuşta 574 bin → 438 bin; telefonda %26–40 daha az (ör. şehirde 1,02 milyon → 754 bin). Çizim sayısı +2–12.\n- **Görüntü korunuyor:** yakın arazi eskisiyle aynı noktalardan oluşuyor; dağlık parçalar silüet bozulmasın diye bir kademe daha ayrıntılı kalıyor. Kademe değişiminde titreme olmasın diye bekleme payı var, parça kenarlarındaki yarıklar eteklerle kapanıyor. Önce/sonra ekran görüntüleri neredeyse aynı.\n- Uçak ve araçların yer teması etkilenmiyor: yükseklik hesabı çizilen araziden değil, arazi formülünden geliyor."}, {"v": "V2.20", "d": "2026-10-14", "t": "Yükleme ekranı 2.0", "md": "- **Menü artık hazır açılıyor:** yükleme ekranı kapandıktan sonra menüde süren hazırlık (doku paylaşımı, nesne ve model birleştirme, shader ön derleme, hesap kontrolü) artık yükleme ekranının altında yapılıyor. Profil ve yönetici düğmesi menüyle birlikte geliyor; arkadaki sinematik uçuş görüntüsü takılmadan, baştan başlıyor. Yükleme ekranı kareler düzene girince kapanıyor (en çok 6 sn hazırlık, hesap için en çok 3 sn bekleme).\n- **3B ay yıldız:** yükleme ekranında kendi ekseninde dönen, kalınlığı olan bir ay yıldız var. Dönüş tarayıcının ayrı iş parçacığında çalıştığı için oyun kurulurken de akıcı dönüyor.\n- **Uçaklı ilerleme çubuğu:** düz çubuk yerine KAAN, HÜRJET, KIZILELMA, AKINCI ve TB2 siluetleri kuyruktan buruna sırayla kırmızıyla doluyor."}, {"v": "V2.19", "d": "2026-10-14", "t": "Açılış hızı", "md": "- **Yükleme ekranı:** oyun açılırken donmuş menü yerine yükleme ekranı ve gerçek ilerlemeyi gösteren bir çubuk çıkıyor (\"Deniz üssü kuruluyor\", \"Hangar kuruluyor\"…). Dünya 17 adımda kuruluyor; tarayıcı arada ekranı çizebiliyor, telefonda \"sayfa yanıt vermiyor\" uyarısı riski azaldı. Yükleme bitmeden basılan tuşlar ve dokunuşlar yok sayılıyor.\n- **Shader ön derleme:** ana menüdeyken sahnedeki bütün malzemeler (gizli patlama parçacıkları, flare'ler, henüz görülmemiş bölgeler dahil) karede ~8 ms ayrılarak önceden derleniyor. Böylece uçarken yeni bir bölgeye ilk girişte shader derleme takılması olmuyor. Menüden hızlı çıkılırsa kalanlar eskisi gibi ilk görüldüğünde derleniyor.\n- **Performans testinde açılış süresi:** rapora açılış süreleri (betik, modüller, dünya kurulumu, ilk kare), en uzun kurulum adımı ve önceden derlenen shader sayısı eklendi.\n- Envanterin arama metni artık açılışta değil, ilk aramada hazırlanıyor.\n- Ölçülen ama değiştirilmeyen: ilk patlama ve flare'de yeni shader derlenmiyor; telefondaki tek 33 ms'lik kare büyük olasılıkla ekran kartı yükü (yeni raporla bakılacak). Envanter verisinin ayrıştırılması 1,6 ms, ertelemeye değmez."}, {"v": "V2.18", "d": "2026-10-14", "t": "Bellek ve dokular", "md": "- **Doku belleği azaldı:** bilgisayarda ~111 MB'tan ~87 MB'a, telefonda ~111 MB'tan ~44 MB'a. Açılışta tuvalde çizilen 476 dokunun yalnız 321'i farklı resimdi; aynı pencere/tabela resmi her bina için yeniden çiziliyordu. Aynı resim ve aynı ayarlara sahip 145 kopya artık tek dokuyu paylaşıyor, kopyalar bellekten siliniyor.\n- **Telefonda büyük dokular yarıya iniyor:** 1024 piksel ve üstü 45 doku (ör. 2048×256 tabelalar) telefonda yarı boyutta. Bilgisayarda Düşük/Orta kalitede yalnız 2048 ve üstü yarıya iniyor; Yüksek/Ultra'da dokunulmuyor. Önce/sonra ekran görüntüleri aynı.\n- **Telefonda anizotropik süzme 2×** (Android rehberi: mobilde daha fazlası çok pahalı); bilgisayarda 16×'e kadar kalıyor.\n- **Güvenlik bekçisi:** oyun paylaşılan ya da küçültülen bir dokuyu sonradan yeniden çizerse (değişen tabela, ekran) o doku hemen kendi tam boy kopyasına dönüyor. Ölçümde geri dönme olmadı. `SETTINGS.texShare=false` ile tamamen kapanabiliyor.\n- Çizim sayısı değişmedi: üsteki binaların dokuları gerçekten farklı resimler; birleşmeleri için doku atlası gerekiyor (sonraya bırakıldı). Doku sıkıştırma (ASTC/ETC2) tuvalde çizilen dokulara uygulanamıyor."}];
+const RELNOTES=[{"v": "V2.26", "d": "2026-10-15", "t": "Kayıt ve depolama düzeni", "md": "- **Tek kayıt:** oyunun tarayıcıya yazdığı 28 ayrı kayıt (ayarlar, profiller, rekorlar, boyalar, yarış ve okul ilerlemesi…) artık tek, sürüm numaralı bir kayıtta duruyor. Güncellemeden sonraki ilk açılışta eski kayıtlar kendiliğinden taşınıyor, doğrulanıyor ve eskileri siliniyor; hiçbir ilerleme kaybolmuyor.\n- **Yedek:** her oturumda son sağlam kayıt yedekleniyor. Kayıt bozulursa oyun yedekten açılıyor ve bunu söylüyor; ikisi de bozuksa yeni kayıtla açılıyor (bozuk kayıt silinmeden ayrı saklanıyor).\n- **Bulut senkronu:** grafik ayarlarının yeni ayrıntılı grupları ve \"Otomatik\" seçimi de artık cihaza özel kalıyor (bilgisayarın ayarı telefona geçmiyor).\n- **Ana menü:** isteğin üzerine yalnız yeni ana menü kaldı; eski \"Komuta\" ve \"Sinematik\" tasarımları ve Arayüz'deki seçim satırı kaldırıldı.\n- **Telefon raporundaki sorunlar:** açılış telefonda 12 sn sürmüştü; bunun 7,3 sn'si yükleme ekranındaki doku paylaşımıydı. Bu iş artık yükleme ekranından çıkarıldı, küçük parmak iziyle arka planda birkaç ms'lik dilimlerle yapılıyor. Uçuşta görülen takılmaların şüphelisi olan uzak arazi ağı, her değişimde yeniden kurulmak yerine yerinde güncelleniyor. Performans testi raporu artık her modülün \"en uzun tek çağrısını\" da gösteriyor, böylece kalan takılmaların kaynağı görülebilecek."}, {"v": "V2.25", "d": "2026-10-15", "t": "Kod düzeni", "md": "- **Kod düzeni:** 124 modül konu klasörlerine taşındı: çekirdek, dünya, modeller, uçuş, savaş, görev, ekran, kontrol, ses, yürüyüş, ağ, performans ve veri. \"98b\", \"98zf\" gibi numaralı yama modülleri kalmadı; her dosyanın adı ne yaptığını söylüyor. Yükleme sırası tek bir listede (`src/js/SIRA.txt`) tutuluyor. Taşımadan sonra oyunun kodu bayt bayt aynıydı.\n- **Büyük modüller bölündü:** yapay zekâ ve çevrimiçi oyun (4 parça), model kütüphanesi (3 parça), ana menü (3 parça).\n- **Daha küçük dosya:** oyun dosyası 2 011 KB'tan 1 798 KB'a indi (−%10,6). Kod yorumları ve girintiler artık yalnız yayınlanan dosyadan çıkarılıyor (kaynak kodda duruyorlar); envanter verisindeki tekrar eden metinler tek listede toplandı (406 → 329 KB).\n- **Temizlik:** kullanılmayan 7 işlev silindi; her açılışta konsola düşen 9 \"flatShading\" uyarısı ve 35 Canvas uyarısı giderildi."}, {"v": "V2.24", "d": "2026-10-15", "t": "Kanca sistemi ve kare başına çöp", "md": "- **Kanca kaydı:** modüllerin birbirini genişletme biçimi baştan düzenlendi. 284 \"sarmalama\"nın 279'u tek bir kanca kaydına taşındı. Artık bir modülde hata çıkarsa yalnız o modül atlanıyor, oyunun geri kalanı çalışmaya devam ediyor (eskiden aynı zincirdeki diğer modüller de duruyordu). Davranış değişmedi; bütün testler aynı.\n- **Performans testinde modül maliyeti:** test sonucunda \"En pahalı modüller\" satırı var: hangi modülün kare başına kaç ms harcadığı görünüyor.\n- **Daha az çöp:** uçuşta kare başına üretilen geçici bellek ~%26 azaldı (çöp toplayıcı daha seyrek çalışır, telefonda ani takılma riski azalır). Yapay zekâ uçaklarının parça birleştirmesi artık her hareketli parça için ayrı ayrı değil, bir kerede yeniden kuruluyor (yeniden kurulum 32 → 9); akrobasi algılayıcısı, martılar, koyunlar, trafik, simge yapılar ve HUD yazıları her karede yeni nesne üretmiyor.\n- **Ses:** motor sesi sustuğunda 1,5 saniye sonra ses işlemcisinden çıkarılıyor (menüde, yürürken boşa hesaplanmıyor); ses ayarları yalnız değiştiğinde yazılıyor."}, {"v": "V2.23", "d": "2026-10-15", "t": "Bütün ayarların gözden geçirmesi", "md": "- **Tekrar eden ayarlar kaldırıldı:** \"Telsiz altyazıları\" artık yalnız Erişilebilirlik'te, \"Kumanda titreşimi\" yalnız Kontroller → Gamepad'de. İki ayrı \"Çubuk hassasiyeti\" satırı \"Kumanda çubuk hassasiyeti\" ve \"Dokunmatik çubuk hassasiyeti\" oldu.\n- **Her satırın açıklaması var:** yalnız yüzde gösteren satırlar (duyarlılık, ölü bölge, düğme boyutu, saydamlık, ses seviyesi…) artık neyi değiştirdiklerini de yazıyor.\n- **Varsayılana dön (↺):** bir ayar varsayılandan farklıysa adının yanında küçük ↺ düğmesi çıkıyor; basınca yalnız o ayar varsayılana dönüyor (47 satırda).\n- **Arama her yerde:** ayar araması bütün sekmelerde, Kontroller'in Klavye/Gamepad/Dokunmatik panellerinde ve Grafik'in açılır gruplarında buluyor; eşleşen grup kendiliğinden açılıyor."}, {"v": "V2.22", "d": "2026-10-15", "t": "Grafik ayarları 2.0", "md": "- **Daha sade grafik sekmesi:** temel ayarlar 7 satır: Grafik kalitesi, Gölgeler, Görsel efektler, Çözünürlük, FPS sınırı, Performans testi, Tam ekran. Geri kalanı iki açılır grupta: \"Ayrıntılı ayarlar\" ve \"Grafik sorun giderme\" (derinlik, iki katmanlı derinlik, güvenli mod, görüntü testi, tanılama).\n- **Otomatik hazır ayar:** Grafik kalitesi satırında Otomatik seçeneği var: cihazına göre kademe seçer ve FPS düşerse ayarları kendiliğinden hafifletir. Aynı işi yapan \"Cihaza göre ayarla\" ve \"Performans modu\" satırları kaldırıldı. Hazır ayarın üstüne kendi seçimini yaparsan \"Özel\" yazıyor; bir hazır ayara dokununca sıfırlanıyor.\n- **Ayrıntılı ayarlar:** görüş mesafesi, nesne ayrıntısı, bitki örtüsü, bulutlar, doku kalitesi ve efekt kalitesi artık ayrı ayrı ayarlanabiliyor (her biri \"Hazır\" ya da Düşük–Ultra). Ayrıca kenar yumuşatma, akıllı performans ve FPS göstergesi burada.\n- **Maliyet etiketleri:** her ayarın yanında az · orta · çok etki etiketi var.\n- **Canlı fark:** bir grafik ayarını değiştirince hemen altında çizim ve üçgen sayısının nasıl değiştiği görünüyor (ör. \"çizim 201 → 200 · üçgen 375 bin → 355 bin\"). Hiçbir ayar yeniden başlatma istemiyor (derinlik hassasiyeti hariç)."}, {"v": "V2.21", "d": "2026-10-15", "t": "Arazi ayrıntı kademeleri", "md": "- **Arazi parçalara bölündü:** 30 km'lik tek parça arazi (her karede 180 bin üçgen, kameranın arkası dahil) 5 km'lik 36 parçaya bölündü. Yakındaki parçalar eskisi gibi 100 m ayrıntıda, uzaktakiler 200, 500 ve 1000 m'de çiziliyor; kameranın görmediği parçalar hiç çizilmiyor. Uzak parçalar tek ağda birleştiği için çizim sayısı neredeyse aynı kaldı.\n- **Ölçüm (Yüksek kalite):** çizilen üçgen bilgisayarda uçuşta 397 bin → 276 bin, alçak uçuşta 574 bin → 438 bin; telefonda %26–40 daha az (ör. şehirde 1,02 milyon → 754 bin). Çizim sayısı +2–12.\n- **Görüntü korunuyor:** yakın arazi eskisiyle aynı noktalardan oluşuyor; dağlık parçalar silüet bozulmasın diye bir kademe daha ayrıntılı kalıyor. Kademe değişiminde titreme olmasın diye bekleme payı var, parça kenarlarındaki yarıklar eteklerle kapanıyor. Önce/sonra ekran görüntüleri neredeyse aynı.\n- Uçak ve araçların yer teması etkilenmiyor: yükseklik hesabı çizilen araziden değil, arazi formülünden geliyor."}, {"v": "V2.20", "d": "2026-10-14", "t": "Yükleme ekranı 2.0", "md": "- **Menü artık hazır açılıyor:** yükleme ekranı kapandıktan sonra menüde süren hazırlık (doku paylaşımı, nesne ve model birleştirme, shader ön derleme, hesap kontrolü) artık yükleme ekranının altında yapılıyor. Profil ve yönetici düğmesi menüyle birlikte geliyor; arkadaki sinematik uçuş görüntüsü takılmadan, baştan başlıyor. Yükleme ekranı kareler düzene girince kapanıyor (en çok 6 sn hazırlık, hesap için en çok 3 sn bekleme).\n- **3B ay yıldız:** yükleme ekranında kendi ekseninde dönen, kalınlığı olan bir ay yıldız var. Dönüş tarayıcının ayrı iş parçacığında çalıştığı için oyun kurulurken de akıcı dönüyor.\n- **Uçaklı ilerleme çubuğu:** düz çubuk yerine KAAN, HÜRJET, KIZILELMA, AKINCI ve TB2 siluetleri kuyruktan buruna sırayla kırmızıyla doluyor."}, {"v": "V2.19", "d": "2026-10-14", "t": "Açılış hızı", "md": "- **Yükleme ekranı:** oyun açılırken donmuş menü yerine yükleme ekranı ve gerçek ilerlemeyi gösteren bir çubuk çıkıyor (\"Deniz üssü kuruluyor\", \"Hangar kuruluyor\"…). Dünya 17 adımda kuruluyor; tarayıcı arada ekranı çizebiliyor, telefonda \"sayfa yanıt vermiyor\" uyarısı riski azaldı. Yükleme bitmeden basılan tuşlar ve dokunuşlar yok sayılıyor.\n- **Shader ön derleme:** ana menüdeyken sahnedeki bütün malzemeler (gizli patlama parçacıkları, flare'ler, henüz görülmemiş bölgeler dahil) karede ~8 ms ayrılarak önceden derleniyor. Böylece uçarken yeni bir bölgeye ilk girişte shader derleme takılması olmuyor. Menüden hızlı çıkılırsa kalanlar eskisi gibi ilk görüldüğünde derleniyor.\n- **Performans testinde açılış süresi:** rapora açılış süreleri (betik, modüller, dünya kurulumu, ilk kare), en uzun kurulum adımı ve önceden derlenen shader sayısı eklendi.\n- Envanterin arama metni artık açılışta değil, ilk aramada hazırlanıyor.\n- Ölçülen ama değiştirilmeyen: ilk patlama ve flare'de yeni shader derlenmiyor; telefondaki tek 33 ms'lik kare büyük olasılıkla ekran kartı yükü (yeni raporla bakılacak). Envanter verisinin ayrıştırılması 1,6 ms, ertelemeye değmez."}];
 const PT={run:false, k:1, steps:[], si:-1, st:0, seg:null, segs:[], last:0, ring:new Float32Array(240), ri:0, heap:0, saved:null, warm:false,
 gq:null, path:null, pathT:0, spawned:[], fxT:0, ui:null, rep:null, reports:[], v:new THREE.Vector3()};
  
@@ -13632,8 +13612,8 @@ const rep=ptReport(aborted); PT.rep=rep; ptStore(rep); ptOverlay(false,true);
 try{ if(state==='play'||state==='walk'||state==='paused'||state==='map') enterTitle(); }catch(e){}
 setTimeout(function(){ ptResults(rep); },60); }
  
-function ptStore(rep){ try{ const L=JSON.parse(localStorage.getItem('ayy-perf')||'[]'); L.unshift(rep); localStorage.setItem('ayy-perf',JSON.stringify(L.slice(0,5))); }catch(e){} }
-function ptLocal(){ try{ return JSON.parse(localStorage.getItem('ayy-perf')||'[]'); }catch(e){ return []; } }
+function ptStore(rep){ try{ const L=JSON.parse(stGet('ayy-perf')||'[]'); L.unshift(rep); stSet('ayy-perf',JSON.stringify(L.slice(0,5))); }catch(e){} }
+function ptLocal(){ try{ return JSON.parse(stGet('ayy-perf')||'[]'); }catch(e){ return []; } }
 function ptSend(rep){ const c=(typeof ACCOUNT_CFG!=='undefined'?ACCOUNT_CFG:null)||(typeof ACC!=='undefined'&&ACC.cfg)||null;
 if(!c||!c.url||!c.key) return Promise.reject(new Error('bulut yok'));
 const body={version:rep.v, device:(rep.model||'')+' · '+rep.dev.kind, gpu:rep.dev.gpu, summary:rep.sum, data:rep};
@@ -13690,7 +13670,7 @@ el.onclick=function(e){ const b=e.target.closest('[data-pt]'); if(!b) return; co
 if(k==='x'){ el.classList.add('hidden'); if(state==='menu'&&typeof refreshTitle==='function') refreshTitle(); }
 if(k==='copy'){ meta(); const t=JSON.stringify(r); const done=function(){ msg('Rapor panoya kopyalandı ('+Math.round(t.length/1024)+' KB). Sohbete yapıştırabilirsin.'); };
 try{ navigator.clipboard.writeText(t).then(done,function(){ ptCopyFallback(t); done(); }); }catch(_){ ptCopyFallback(t); done(); } }
-if(k==='send'){ meta(); b.disabled=true; msg('Gönderiliyor…'); ptSend(r).then(function(){ r.sent=true; msg('Rapor gönderildi. Teşekkürler!'); try{ const L=ptLocal(); if(L[0]&&L[0].at===r.at){ L[0]=r; localStorage.setItem('ayy-perf',JSON.stringify(L)); } }catch(_){} })
+if(k==='send'){ meta(); b.disabled=true; msg('Gönderiliyor…'); ptSend(r).then(function(){ r.sent=true; msg('Rapor gönderildi. Teşekkürler!'); try{ const L=ptLocal(); if(L[0]&&L[0].at===r.at){ L[0]=r; stSet('ayy-perf',JSON.stringify(L)); } }catch(_){} })
 .catch(function(err){ b.disabled=false; msg('Gönderilemedi ('+String(err.message||err).slice(0,90)+'). Rapor bu cihazda saklandı; "Kopyala" ile paylaşabilirsin.',true); }); }
 if(k==='prev'){ const i=list.indexOf(rep); ptResults(list[(i+1)%list.length],list); }
 if(k==='again'){ el.classList.add('hidden'); ptOpen(); } }; }
@@ -13909,36 +13889,46 @@ if(PERF2.lvl>b){ PERF2.ups=(PERF2.ups||[]).filter(function(t){ return now-t<3000
 if(PERF2.ups.length>=3&&!PERF2.lock){ PERF2.lock=true; toast('Cihaz ısındığı için kalite bu oturumda sabitlendi (menüye dönünce sıfırlanır)','#b8ecff'); } } }; },perfLadder);
 enterTitle=HOOK.wrap('enterTitle','performans/efekt-gecisleri#_sq17Title',function(_sq17Title){ return function(){ PERF2.lock=false; PERF2.ups=[]; return _sq17Title.apply(this,arguments); }; },enterTitle);
 const TXS={done:false, links:[], shrunk:[], saved:0, shared:0, halved:0, t:0, cv:null};
-function txsSig(im){ if(!TXS.cv){ TXS.cv=document.createElement('canvas'); TXS.cv.width=TXS.cv.height=8; } const cx=TXS.cv.getContext('2d',{willReadFrequently:true}); cx.clearRect(0,0,8,8); cx.drawImage(im,0,0,8,8); const d=cx.getImageData(0,0,8,8).data; let h=0; for(let i=0;i<d.length;i++) h=(h*31+d[i])|0; return (im.width||0)+'x'+(im.height||0)+':'+h; }
- 
-function txsPix(im){ const c=TXS.rc||(TXS.rc=document.createElement('canvas')); if(c.width!==im.width||c.height!==im.height){ c.width=im.width; c.height=im.height; }
-const x=TXS.rx||(TXS.rx=c.getContext('2d',{willReadFrequently:true}));
-x.clearRect(0,0,c.width,c.height); x.drawImage(im,0,0); return x.getImageData(0,0,c.width,c.height).data; }
-function txsSame(a,b){ if(a===b) return true; if(a.width!==b.width||a.height!==b.height) return false; try{ if(!a.getContext||!b.getContext) return false;
-const da=txsPix(a), db=txsPix(b); if(da.length!==db.length) return false; for(let i=0;i<da.length;i+=4){ if(da[i]!==db[i]||da[i+1]!==db[i+1]||da[i+2]!==db[i+2]||da[i+3]!==db[i+3]) return false; } return true; }catch(e){ return false; } }
+function txsSig(im){ if(!TXS.cv){ TXS.cv=document.createElement('canvas'); TXS.cv.width=TXS.cv.height=32; } const cx=TXS.cx||(TXS.cx=TXS.cv.getContext('2d',{willReadFrequently:true}));
+cx.clearRect(0,0,32,32); cx.drawImage(im,0,0,32,32); const d=cx.getImageData(0,0,32,32).data; let h1=0x811c9dc5|0, h2=7;
+for(let i=0;i<d.length;i++){ h1=Math.imul(h1^d[i],16777619); h2=(h2*31+d[i])|0; } return (im.width||0)+'x'+(im.height||0)+':'+(h1>>>0).toString(36)+(h2>>>0).toString(36); }
 function txsParams(t){ return [t.wrapS,t.wrapT,t.magFilter,t.minFilter,t.generateMipmaps?1:0,t.flipY?1:0,t.encoding,t.format,t.type,t.premultiplyAlpha?1:0,t.repeat.x,t.repeat.y,t.offset.x,t.offset.y,t.rotation,t.center.x,t.center.y].join(','); }
 const TXS_SLOTS=['map','emissiveMap','alphaMap','bumpMap','normalMap','roughnessMap','metalnessMap','aoMap','lightMap'];
 function txsCollect(){ const uses=new Map(); scene.traverse(function(o){ const ms=o.material?(Array.isArray(o.material)?o.material:[o.material]):[]; ms.forEach(function(m){ if(!m) return; TXS_SLOTS.forEach(function(k){ const t=m[k]; if(t&&t.isTexture&&!t.isCubeTexture&&t.image&&t.image.getContext){ let L=uses.get(t); if(!L){ L=[]; uses.set(t,L); } L.push([m,k]); } }); }); }); return uses; }
-function txsShare(){ if(SETTINGS.texShare===false) return 0; const uses=txsCollect(), groups=new Map(); let n=0;
-uses.forEach(function(L,t){ if(t.userData&&t.userData.txsOwn) return; let s; try{ s=txsSig(t.image)+'|'+txsParams(t); }catch(e){ return; } let G=groups.get(s); if(!G){ G=[]; groups.set(s,G); } G.push(t); });
-groups.forEach(function(G){ if(G.length<2) return; const canon=G[0]; for(let i=1;i<G.length;i++){ const t=G[i]; if(!txsSame(canon.image,t.image)) continue;
-const L=uses.get(t); L.forEach(function(u){ u[0][u[1]]=canon; u[0].needsUpdate=true; }); TXS.links.push({orig:t, canon:canon, users:L, ov:t.version, cv:canon.version});
-TXS.saved+=t.image.width*t.image.height*4*1.33; try{ t.dispose(); }catch(e){} n++; } });
-TXS.shared+=n; return n; }
+ 
+function txsShareStep(budget){ if(SETTINGS.texShare===false){ TXS.job=null; return true; }
+const J=TXS.job||(TXS.job={uses:txsCollect(), list:null, i:0}); if(!J.list){ J.list=[]; J.uses.forEach(function(L,t){ if(!(t.userData&&t.userData.txsOwn)) J.list.push(t); }); }
+const t0=performance.now(), S=TXS.sigs||(TXS.sigs=new Map());
+while(J.i<J.list.length){ const t=J.list[J.i++], c=S.get(t); if(!c||c.v!==t.version){ let s=null; try{ s=txsSig(t.image)+'|'+txsParams(t); }catch(e){} S.set(t,{s:s,v:t.version}); } if(performance.now()-t0>budget) return false; }
+const groups=new Map(); let n=0; J.list.forEach(function(t){ const c=S.get(t); if(!c||!c.s) return; let G=groups.get(c.s); if(!G){ G=[]; groups.set(c.s,G); } G.push(t); });
+groups.forEach(function(G){ if(G.length<2) return; const canon=G[0]; for(let i=1;i<G.length;i++){ const t=G[i];
+const L=J.uses.get(t); L.forEach(function(u){ u[0][u[1]]=canon; u[0].needsUpdate=true; }); TXS.links.push({orig:t, canon:canon, users:L, ov:t.version, cv:canon.version});
+TXS.saved+=t.image.width*t.image.height*4*1.33; try{ t.dispose(); }catch(e){} S.delete(t); n++; } });
+TXS.shared+=n; TXS.job=null; return true; }
+function txsShare(){ while(!txsShareStep(1e9)){} return TXS.shared; }
  
 function txsLimit(){ if(DEV.mobile) return 1024; const q=SETTINGS.quality||0; return q<=1?2048:1e9; }
-function txsShrink(){ if(SETTINGS.texShare===false) return 0; const lim=txsLimit(); if(lim>=1e9) return 0; let n=0; const seen=new Set(TXS.shrunk.map(function(s){ return s.t; }));
-txsCollect().forEach(function(L,t){ if(seen.has(t)) return; const im=t.image; const w=im.width||0, h=im.height||0; if(Math.max(w,h)<lim) return;
+function txsShrink(max){ if(SETTINGS.texShare===false) return 0; const lim=txsLimit(); if(lim>=1e9) return 0; let n=0; const seen=new Set(TXS.shrunk.map(function(s){ return s.t; }));
+txsCollect().forEach(function(L,t){ if(seen.has(t)||(max&&n>=max)) return; const im=t.image; const w=im.width||0, h=im.height||0; if(Math.max(w,h)<lim) return;
+txsHalve(t); n++; });
+return n; }
+function txsHalve(t){ const im=t.image, w=im.width||0, h=im.height||0;
 const c=document.createElement('canvas'); c.width=Math.max(1,w>>1); c.height=Math.max(1,h>>1); const cx=c.getContext('2d'); cx.imageSmoothingEnabled=true; try{ cx.imageSmoothingQuality='high'; }catch(e){} cx.drawImage(im,0,0,c.width,c.height);
-t.image=c; t.needsUpdate=true; TXS.shrunk.push({t:t, full:im, v:t.version}); TXS.links.forEach(function(l){ if(l.canon===t) l.cv=t.version; }); TXS.saved+=(w*h-c.width*c.height)*4*1.33; n++; });
-TXS.halved+=n; return n; }
+t.image=c; t.needsUpdate=true; TXS.shrunk.push({t:t, full:im, v:t.version}); TXS.links.forEach(function(l){ if(l.canon===t) l.cv=t.version; }); TXS.saved+=(w*h-c.width*c.height)*4*1.33; TXS.halved++; }
  
 function txsWatch(){ for(let i=TXS.links.length-1;i>=0;i--){ const l=TXS.links[i]; if(l.orig.version!==l.ov||l.canon.version!==l.cv){ l.users.forEach(function(u){ if(u[0][u[1]]===l.canon){ u[0][u[1]]=l.orig; u[0].needsUpdate=true; } }); l.orig.userData.txsOwn=true; l.orig.needsUpdate=true; TXS.links.splice(i,1); TXS.reverted=(TXS.reverted||0)+1; } }
 for(let i=TXS.shrunk.length-1;i>=0;i--){ const s=TXS.shrunk[i]; if(s.t.version!==s.v){ if(s.t.image!==s.full&&s.t.image.width<s.full.width){   s.t.image=s.full; s.t.needsUpdate=true; } s.t.userData.txsOwn=true; TXS.shrunk.splice(i,1); TXS.reverted=(TXS.reverted||0)+1; } } }
-function txsRun(){ try{ txsShare(); }catch(e){ console.warn('doku paylaşımı',e); } try{ txsShrink(); }catch(e){ console.warn('doku küçültme',e); } TXS.done=true; }
-cullStep=HOOK.wrap('cullStep','performans/doku-bellegi#_txsCull',function(_txsCull){ return function(dt){ _txsCull(dt); TXS.t+=dt||0; if(TXS.t>1){ TXS.t=0; try{ txsWatch(); }catch(e){} } }; },cullStep);
-setTimeout(function(){ if(!TXS.done) txsRun(); },2200);                                          
-setTimeout(function(){ try{ txsShare(); txsShrink(); }catch(e){} },9000);    
+function txsRun(){ try{ txsShare(); }catch(e){ console.warn('doku paylaşımı',e); } try{ txsShrink(); }catch(e){ console.warn('doku küçültme',e); } TXS.done=true; TXS.run=false; }
+ 
+function txsBgStep(){ if(!TXS.run) return; const menu=state==='menu'||state==='paused'||state==='map', budget=menu?6:2;
+try{ if(TXS.phase!=='shrink'){ if(txsShareStep(budget)) TXS.phase='shrink'; return; }
+if(!TXS.sq){ const lim=txsLimit(), seen=new Set(TXS.shrunk.map(function(x){ return x.t; })); TXS.sq=[]; if(lim<1e9) txsCollect().forEach(function(L,t){ const im=t.image; if(!seen.has(t)&&im&&Math.max(im.width||0,im.height||0)>=lim) TXS.sq.push(t); }); }
+const t=TXS.sq.pop(); if(t){ if(TXS.shrunk.every(function(x){ return x.t!==t; })) txsHalve(t); return; }
+TXS.sq=null; TXS.run=false; TXS.phase=null; TXS.done=true; TXS.at=Math.round(performance.now()); }catch(e){ TXS.run=false; TXS.done=true; console.warn('doku',e); } }
+cullStep=HOOK.wrap('cullStep','performans/doku-bellegi#_txsCull',function(_txsCull){ return function(dt){ _txsCull(dt); txsBgStep(); TXS.t+=dt||0; if(TXS.t>1){ TXS.t=0; try{ txsWatch(); }catch(e){} } }; },cullStep);
+function txsStart(){ if(SETTINGS.texShare===false) return; TXS.run=true; TXS.phase=null; TXS.job=null; TXS.sq=null; }
+setTimeout(txsStart,2200);     
+setTimeout(txsStart,9000);     
 const WARM={q:[], seen:new Set(), px:null, lights:[], i:0, done:false, ms:0, n:0, prog0:0, at:0, t:0};
 function warmKey(o){ const m=o.material; return m.uuid+'|'+(o.isInstancedMesh?'i':'')+(o.isSkinnedMesh?'k':'')+(o.isPoints?'p':'')+(o.isSprite?'s':'')+(o.isLine?'l':'')+(o.geometry&&o.geometry.attributes&&o.geometry.attributes.color?'c':''); }
 function warmScan(){ WARM.q=[]; WARM.i=0; WARM.lights=[];
@@ -13979,16 +13969,19 @@ for(let i=0;i<TER.tiles.length;i++){ const t=TER.tiles[i]; let lv=off?0:terLevel
 if(lv!==t.lv||force){ t.lv=lv; t.m.geometry=t.geos[lv]; TLOD.sw++; } tris+=t.geos[t.lv].userData.tris; }
 TLOD.tris=tris; TER.tris=tris; terFar(off); }
  
+function terFarInit(){ if(TLOD.far) return TLOD.far; let nv=0, ni=0; TER.tiles.forEach(function(t){ let v=0, i=0; for(let l=1;l<4;l++){ v=Math.max(v,t.geos[l].attributes.position.count); i=Math.max(i,t.geos[l].index.count); } nv+=v; ni+=i; });
+const g=new THREE.BufferGeometry(); ['position','normal','color'].forEach(function(n){ const A=new THREE.BufferAttribute(new Float32Array(nv*3),3); A.usage=THREE.DynamicDrawUsage||A.usage; g.setAttribute(n,A); });
+const I=new THREE.BufferAttribute(nv>65535?new Uint32Array(ni):new Uint16Array(ni),1); I.usage=THREE.DynamicDrawUsage||I.usage; g.setIndex(I);
+g.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,0,0),TER.size); g.setDrawRange(0,0);
+const m=new THREE.Mesh(g,TER.mat); m.userData.terrainTile=true; m.userData.noMerge=true; m.userData.noBake=true; m.userData.noWarm=false; m.userData.rs=true; m.userData.cs=false; m.receiveShadow=renderer.shadowMap.enabled; m.castShadow=false; m.matrixAutoUpdate=false; m.frustumCulled=false;
+scene.add(m); TLOD.far=m; return m; }
 function terFar(off){ let key=''; for(let i=0;i<TER.tiles.length;i++){ const t=TER.tiles[i], far=!off&&t.lv>0; t.m.visible=!far; if(far) key+=i+':'+t.lv+','; }
 if(key===TLOD.key) return; TLOD.key=key; TLOD.rebuilds=(TLOD.rebuilds||0)+1;
-if(TLOD.far){ scene.remove(TLOD.far); TLOD.far.geometry.dispose(); TLOD.far=null; } if(!key) return;
-const L=TER.tiles.filter(function(t){ return !off&&t.lv>0; }).map(function(t){ return t.geos[t.lv]; });
-let nv=0, ni=0; L.forEach(function(g){ nv+=g.attributes.position.count; ni+=g.index.count; });
-const pos=new Float32Array(nv*3), nor=new Float32Array(nv*3), col=new Float32Array(nv*3), idx=nv>65535?new Uint32Array(ni):new Uint16Array(ni); let ov=0, oi=0;
-L.forEach(function(g){ pos.set(g.attributes.position.array,ov*3); nor.set(g.attributes.normal.array,ov*3); col.set(g.attributes.color.array,ov*3); const I=g.index.array; for(let k=0;k<I.length;k++) idx[oi+k]=I[k]+ov; ov+=g.attributes.position.count; oi+=I.length; });
-const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3)); g.setAttribute('normal',new THREE.BufferAttribute(nor,3)); g.setAttribute('color',new THREE.BufferAttribute(col,3)); g.setIndex(new THREE.BufferAttribute(idx,1)); g.computeBoundingSphere();
-const m=new THREE.Mesh(g,TER.mat); m.userData.terrainTile=true; m.userData.noMerge=true; m.userData.noBake=true; m.userData.rs=true; m.userData.cs=false; m.receiveShadow=renderer.shadowMap.enabled; m.castShadow=false; m.matrixAutoUpdate=false; m.frustumCulled=false;
-scene.add(m); TLOD.far=m; }
+const m=terFarInit(), G=m.geometry, P=G.attributes.position, N=G.attributes.normal, C=G.attributes.color, I=G.index; m.visible=!!key;
+let ov=0, oi=0; if(key) TER.tiles.forEach(function(t){ if(off||t.lv===0) return; const g=t.geos[t.lv];
+P.array.set(g.attributes.position.array,ov*3); N.array.set(g.attributes.normal.array,ov*3); C.array.set(g.attributes.color.array,ov*3);
+const S=g.index.array, D=I.array; for(let k=0;k<S.length;k++) D[oi+k]=S[k]+ov; ov+=g.attributes.position.count; oi+=S.length; });
+[P,N,C].forEach(function(A){ A.updateRange.offset=0; A.updateRange.count=ov*3; A.needsUpdate=true; }); I.updateRange.offset=0; I.updateRange.count=oi; I.needsUpdate=true; G.setDrawRange(0,oi); }
 cullStep=HOOK.wrap('cullStep','dunya/arazi-kademeleri#_tlCull',function(_tlCull){ return function(dt){ _tlCull(dt); TLOD.t+=dt||0; if(TLOD.t>0.25){ TLOD.t=0; try{ terLodStep(); }catch(e){} } }; },cullStep);
 applyQuality=HOOK.wrap('applyQuality','dunya/arazi-kademeleri#_tlQ',function(_tlQ){ return function(){ const r=_tlQ.apply(this,arguments); try{ terLodStep(true); }catch(e){} return r; }; },applyQuality);
 const GD_KEYS=['view','detail','trees','clouds','tex','fx'], GD_IDS={view:'gdView',detail:'gdDetail',trees:'gdTrees',clouds:'gdClouds',tex:'gdTex',fx:'gdFx'};
@@ -14056,7 +14049,7 @@ const RD=[['setRes','seg:r','auto'],['setCap','seg:c','auto'],['setAA','seg:a','
 ['setTouch','seg:t','auto'],['tchSize','range',function(){ return rdTchDef('size'); },function(){ return Math.round(touchOpt().size*100); }],['tchOp','range',function(){ return rdTchDef('op'); },function(){ return Math.round(touchOpt().op*100); }],['tchStick','range',function(){ return rdTchDef('stick'); },function(){ return Math.round(touchOpt().stick*100); }],['tchLeft','chk',false,function(){ return touchOpt().left; }],['tchFloat','chk',false,function(){ return !!(SETTINGS.tch||{}).float; }],
 ['setVol','range',80,function(){ return Math.round(SETTINGS.volume*100); }],['setMusic','chk',true],['setUiSnd','chk',true],['setRadioTts','chk',true],
 ['setUiz','seg:z','1'],['setCb','seg:c','off'],['setHc','chk',false],['setRm','chk',false],['setRadioSub2','chk',true],
-['setUi','seg:u','auto'],['setMini','chk',false],['setNotes','seg:n','30']];
+['setMini','chk',false],['setNotes','seg:n','30']];
 function rdVal(d){ return typeof d==='function'?d():d; }
 function rdDiff(r){ const el=$(r[0]); if(!el) return false; const k=r[1];
 if(k==='fn') return !!r[2]();
@@ -14078,13 +14071,13 @@ syncSettingsUI=HOOK.wrap('syncSettingsUI','ekran/ayarlar-gozden-gecirme#_rdSync'
 (function(){ const s=$('setSearch'); if(!s||!s.addEventListener) return; s.addEventListener('input',function(){ const q=s.value.trim(), st=$('settings'); if(!st||!st.querySelectorAll) return;
 Array.prototype.forEach.call(st.querySelectorAll('details'),function(d){ if(q) d.open=!!d.querySelector('.srow:not(.nomatch):not(.dup)'); });
 Array.prototype.forEach.call(st.querySelectorAll('.srow.dup'),function(r){ r.classList.add('nomatch'); }); }); })();
-ptStart=HOOK.wrap('ptStart','performans/modul-maliyeti#start',function(next){ return function(o){ HOOK.ms={}; HOOK.n={}; HOOK.prof=true; return next(o); }; },ptStart);
+ptStart=HOOK.wrap('ptStart','performans/modul-maliyeti#start',function(next){ return function(o){ HOOK.ms={}; HOOK.n={}; HOOK.mx={}; HOOK.prof=true; return next(o); }; },ptStart);
 ptFinish=HOOK.wrap('ptFinish','performans/modul-maliyeti#finish',function(next){ return function(a){ const r=next(a); HOOK.prof=false; return r; }; },ptFinish);
 ptReport=HOOK.wrap('ptReport','performans/modul-maliyeti#report',function(next){ return function(a){ const r=next(a);
-try{ r.hooks=HOOK.top(8).map(function(h){ return [h[0], Math.round(h[1]*1000)/1000, h[2]]; }); r.hookErr=HOOK.err; }catch(e){} return r; }; },ptReport);
+try{ r.hooks=HOOK.top(8).map(function(h){ return [h[0], Math.round(h[1]*1000)/1000, h[2]]; }); r.hookErr=HOOK.err; r.peaks=HOOK.peaks(8).map(function(h){ return [h[0], Math.round(h[1]*10)/10]; });     }catch(e){} return r; }; },ptReport);
 ptResults=HOOK.wrap('ptResults','performans/modul-maliyeti#results',function(next){ return function(rep,list){ next(rep,list); const el=$('ptResUI'), h=rep&&rep.hooks; if(!el||!h||!h.length||!el.querySelector) return;
 const m=el.querySelectorAll('.ptmeta'); const last=m&&m[m.length-1]; if(!last||!last.insertAdjacentHTML) return;
-last.insertAdjacentHTML('afterend','<p class="ptmeta">En pahalı modüller: '+h.slice(0,5).map(function(x){ return envEsc(/#asıl$/.test(x[0])?x[0].replace('#asıl',''):x[0].replace(/#.*/,''))+' '+String(x[1]).replace('.',',')+' ms'; }).join(' · ')+(rep.hookErr?' · modül hatası: '+rep.hookErr:'')+'</p>'); }; },ptResults);
+last.insertAdjacentHTML('afterend','<p class="ptmeta">En pahalı modüller: '+h.slice(0,5).map(function(x){ return envEsc(/#asıl$/.test(x[0])?x[0].replace('#asıl',''):x[0].replace(/#.*/,''))+' '+String(x[1]).replace('.',',')+' ms'; }).join(' · ')+(rep.hookErr?' · modül hatası: '+rep.hookErr:'')+'</p>'+(rep.peaks&&rep.peaks.length?'<p class="ptmeta">En uzun tek çağrı: '+rep.peaks.slice(0,4).map(function(x){ return envEsc(x[0].replace(/^[a-z]+\//,''))+' '+String(x[1]).replace('.',',')+' ms'; }).join(' · ')+'</p>':'')); }; },ptResults);
  
 bootMark('modüller');
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert;
@@ -14113,8 +14106,7 @@ const pulse=1+0.04*Math.sin(T*4); if(rings[ringIdx]) rings[ringIdx].mesh.scale.s
 renderFrame(dt);
 drawHUD(); miniStep(dt); audioUpdate(); radioStep(dt); careerStep(dt); updateTouchUI(); updateWalkTouch();
 }
- 
-const BOOT_POST=[['Dokular düzenleniyor',function(){ txsRun(); },2],['Nesneler birleştiriliyor',function(){ if(SETTINGS.merge!==false) mrgRun(); },4],
+const BOOT_POST=[['Nesneler birleştiriliyor',function(){ if(SETTINGS.merge!==false) mrgRun(); },4],
 ['Modeller birleştiriliyor',function(){ if(SETTINGS.bake!==false&&!BK.started){ BK.started=true; bkScan(); } },3],
 ['Grafikler hazırlanıyor',function(){ if(!WARM.started){ WARM.started=true; warmStart(); } warmStep(BOOT.hold?40:1e9); return !WARM.done&&SETTINGS.warm!==false; },5],
 ['Hesap kontrol ediliyor',function(){ return BOOT.acc; },1]];

@@ -3,8 +3,8 @@
    and KARİYER → Görevler (unlocked by rank), Eğitim, Serbest gezi and Hangar (XP counts, aircraft / vehicles / paints
    unlock with rank). Settings, records and admin are small buttons next to the profile chip; the model and sound
    libraries moved into the admin panel. */
-const PLAY={mode:'career'}; try{ const v=localStorage.getItem('ayy-playmode'); if(v==='quick'||v==='career') PLAY.mode=v; }catch(e){}
-function playMode(m){ PLAY.mode=m; try{ localStorage.setItem('ayy-playmode',m); }catch(e){} document.documentElement.classList.toggle('quick',m==='quick'); }
+const PLAY={mode:'career'}; try{ const v=stGet('ayy-playmode'); if(v==='quick'||v==='career') PLAY.mode=v; }catch(e){}
+function playMode(m){ PLAY.mode=m; try{ stSet('ayy-playmode',m); }catch(e){} document.documentElement.classList.toggle('quick',m==='quick'); }
 const NAV={level:'root'};
 const NAV_IC={
   start:'<path d="M7 5l12 7-12 7z"/>', net:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/>',

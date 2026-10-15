@@ -26,8 +26,9 @@ function frame(now){
   renderFrame(dt);
   drawHUD(); miniStep(dt); audioUpdate(); radioStep(dt); careerStep(dt); updateTouchUI(); updateWalkTouch();
 }
-/* finishing under the loading screen (V2.20); the same jobs also have their own timers, which then find them done */
-const BOOT_POST=[['Dokular düzenleniyor',function(){ txsRun(); },2],['Nesneler birleştiriliyor',function(){ if(SETTINGS.merge!==false) mrgRun(); },4],
+/* finishing under the loading screen (V2.20); the same jobs also have their own timers, which then find them done.
+   V2.26: texture sharing left this list — on a phone it took 7.3 s here; it now runs in the background (doku-bellegi). */
+const BOOT_POST=[['Nesneler birleştiriliyor',function(){ if(SETTINGS.merge!==false) mrgRun(); },4],
   ['Modeller birleştiriliyor',function(){ if(SETTINGS.bake!==false&&!BK.started){ BK.started=true; bkScan(); } },3],
   ['Grafikler hazırlanıyor',function(){ if(!WARM.started){ WARM.started=true; warmStart(); } warmStep(BOOT.hold?40:1e9); return !WARM.done&&SETTINGS.warm!==false; },5],
   ['Hesap kontrol ediliyor',function(){ return BOOT.acc; },1]];

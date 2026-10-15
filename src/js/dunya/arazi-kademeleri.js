@@ -19,15 +19,20 @@ function terLodStep(force){ if(typeof TER==='undefined'||!TER.tiles.length||!cam
     if(lv!==t.lv||force){ t.lv=lv; t.m.geometry=t.geos[lv]; TLOD.sw++; } tris+=t.geos[t.lv].userData.tris; }
   TLOD.tris=tris; TER.tris=tris; terFar(off); }
 /* the coarse tiles as one mesh */
+/* V2.26: one mesh with buffers made once for the largest case; a change only copies the coarse tiles in and uploads the used
+   part (no new geometry, no garbage — the phone report showed 11 slow frames in flight, when the far set changed). */
+function terFarInit(){ if(TLOD.far) return TLOD.far; let nv=0, ni=0; TER.tiles.forEach(function(t){ let v=0, i=0; for(let l=1;l<4;l++){ v=Math.max(v,t.geos[l].attributes.position.count); i=Math.max(i,t.geos[l].index.count); } nv+=v; ni+=i; });
+  const g=new THREE.BufferGeometry(); ['position','normal','color'].forEach(function(n){ const A=new THREE.BufferAttribute(new Float32Array(nv*3),3); A.usage=THREE.DynamicDrawUsage||A.usage; g.setAttribute(n,A); });
+  const I=new THREE.BufferAttribute(nv>65535?new Uint32Array(ni):new Uint16Array(ni),1); I.usage=THREE.DynamicDrawUsage||I.usage; g.setIndex(I);
+  g.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,0,0),TER.size); g.setDrawRange(0,0);
+  const m=new THREE.Mesh(g,TER.mat); m.userData.terrainTile=true; m.userData.noMerge=true; m.userData.noBake=true; m.userData.noWarm=false; m.userData.rs=true; m.userData.cs=false; m.receiveShadow=renderer.shadowMap.enabled; m.castShadow=false; m.matrixAutoUpdate=false; m.frustumCulled=false;
+  scene.add(m); TLOD.far=m; return m; }
 function terFar(off){ let key=''; for(let i=0;i<TER.tiles.length;i++){ const t=TER.tiles[i], far=!off&&t.lv>0; t.m.visible=!far; if(far) key+=i+':'+t.lv+','; }
   if(key===TLOD.key) return; TLOD.key=key; TLOD.rebuilds=(TLOD.rebuilds||0)+1;
-  if(TLOD.far){ scene.remove(TLOD.far); TLOD.far.geometry.dispose(); TLOD.far=null; } if(!key) return;
-  const L=TER.tiles.filter(function(t){ return !off&&t.lv>0; }).map(function(t){ return t.geos[t.lv]; });
-  let nv=0, ni=0; L.forEach(function(g){ nv+=g.attributes.position.count; ni+=g.index.count; });
-  const pos=new Float32Array(nv*3), nor=new Float32Array(nv*3), col=new Float32Array(nv*3), idx=nv>65535?new Uint32Array(ni):new Uint16Array(ni); let ov=0, oi=0;
-  L.forEach(function(g){ pos.set(g.attributes.position.array,ov*3); nor.set(g.attributes.normal.array,ov*3); col.set(g.attributes.color.array,ov*3); const I=g.index.array; for(let k=0;k<I.length;k++) idx[oi+k]=I[k]+ov; ov+=g.attributes.position.count; oi+=I.length; });
-  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3)); g.setAttribute('normal',new THREE.BufferAttribute(nor,3)); g.setAttribute('color',new THREE.BufferAttribute(col,3)); g.setIndex(new THREE.BufferAttribute(idx,1)); g.computeBoundingSphere();
-  const m=new THREE.Mesh(g,TER.mat); m.userData.terrainTile=true; m.userData.noMerge=true; m.userData.noBake=true; m.userData.rs=true; m.userData.cs=false; m.receiveShadow=renderer.shadowMap.enabled; m.castShadow=false; m.matrixAutoUpdate=false; m.frustumCulled=false;
-  scene.add(m); TLOD.far=m; }
+  const m=terFarInit(), G=m.geometry, P=G.attributes.position, N=G.attributes.normal, C=G.attributes.color, I=G.index; m.visible=!!key;
+  let ov=0, oi=0; if(key) TER.tiles.forEach(function(t){ if(off||t.lv===0) return; const g=t.geos[t.lv];
+    P.array.set(g.attributes.position.array,ov*3); N.array.set(g.attributes.normal.array,ov*3); C.array.set(g.attributes.color.array,ov*3);
+    const S=g.index.array, D=I.array; for(let k=0;k<S.length;k++) D[oi+k]=S[k]+ov; ov+=g.attributes.position.count; oi+=S.length; });
+  [P,N,C].forEach(function(A){ A.updateRange.offset=0; A.updateRange.count=ov*3; A.needsUpdate=true; }); I.updateRange.offset=0; I.updateRange.count=oi; I.needsUpdate=true; G.setDrawRange(0,oi); }
 cullStep=HOOK.wrap('cullStep','dunya/arazi-kademeleri#_tlCull',function(_tlCull){ return function(dt){ _tlCull(dt); TLOD.t+=dt||0; if(TLOD.t>0.25){ TLOD.t=0; try{ terLodStep(); }catch(e){} } }; },cullStep);
 applyQuality=HOOK.wrap('applyQuality','dunya/arazi-kademeleri#_tlQ',function(_tlQ){ return function(){ const r=_tlQ.apply(this,arguments); try{ terLodStep(true); }catch(e){} return r; }; },applyQuality);

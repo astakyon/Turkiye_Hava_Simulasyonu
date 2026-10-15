@@ -13,12 +13,12 @@
      signing in on another device. İHA exam climbs to 150 m and the instructor explains how to climb without stalling. */
 /* ================= announcements ================= */
 const ANN={seen:{}, list:[], cur:null, t:0, ch:null, poll:null};
-try{ ANN.seen=JSON.parse(localStorage.getItem('ayy-ann-seen')||'{}')||{}; }catch(e){}
+try{ ANN.seen=JSON.parse(stGet('ayy-ann-seen')||'{}')||{}; }catch(e){}
 const ANN_DUR=[['f','Anlık (bir kez gösterilir)'],['600','10 dakika'],['3600','1 saat'],['86400','1 gün'],['0','Kalıcı']];
 function annParse(a){ const m=/^⏱(f|\d+)\|/.exec(String(a.text||'')); const k=m?m[1]:'0', txt=m?String(a.text).slice(m[0].length):String(a.text||''), t0=new Date(a.created_at).getTime()||Date.now();
   const flash=k==='f', sec=flash?180:+k, exp=sec>0?t0+sec*1000:Infinity; return {id:a.id, text:txt, flash:flash, sec:sec, t0:t0, exp:exp, active:a.active!==false}; }
 function annLabel(o){ if(o.flash) return 'Anlık'; if(!o.sec) return 'Kalıcı'; const r=o.exp-Date.now(); if(r<=0) return 'Süresi doldu'; return r>3600e3?Math.round(r/3600e3)+' sa kaldı':Math.max(1,Math.round(r/60e3))+' dk kaldı'; }
-function annSeen(id){ ANN.seen[id]=Date.now(); try{ const k=Object.keys(ANN.seen); if(k.length>60) k.slice(0,k.length-60).forEach(function(x){ delete ANN.seen[x]; }); localStorage.setItem('ayy-ann-seen',JSON.stringify(ANN.seen)); }catch(e){} }
+function annSeen(id){ ANN.seen[id]=Date.now(); try{ const k=Object.keys(ANN.seen); if(k.length>60) k.slice(0,k.length-60).forEach(function(x){ delete ANN.seen[x]; }); stSet('ayy-ann-seen',JSON.stringify(ANN.seen)); }catch(e){} }
 function annBar(){ let el=$('annBar'); if(el) return el; el=document.createElement('div'); el.id='annBar'; el.className='annbar hidden'; el.setAttribute('role','status');
   el.innerHTML='<b>📢 DUYURU</b><span id="annTxt"></span><button type="button" aria-label="Kapat" id="annX">✕</button>'; document.body.appendChild(el);
   el.querySelector('#annX').addEventListener('click',function(){ annHide(); }); return el; }

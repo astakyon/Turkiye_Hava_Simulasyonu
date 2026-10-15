@@ -1,5 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
-try{ localStorage.removeItem('ayy-school'); }catch(e){}
+try{ stDel('ayy-school'); }catch(e){}
 BF.cat='okul'; BF.diff=0; BF.dur='all'; T('8 lessons on the board',boardList().length===8,boardList().length);
 openMissions(); T('board shows lessons',/DERS/.test($('misList').innerHTML)); BF.cat='all';
 /* take-off lesson */

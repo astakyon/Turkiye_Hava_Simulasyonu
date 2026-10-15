@@ -12,10 +12,10 @@ gyroOnEvt({beta:0,gamma:-55}); gyroStep(); T_('pitch axis responds',Math.abs(GYR
 selectedId='kaan'; setAircraft('kaan'); missionId='free'; SETTINGS.ai={enemies:0,wing:false,skill:1}; startGame('air'); gyroOnEvt({beta:25,gamma:-40}); pollPad(); T_('gyro -> PAD.roll in flight',PAD.roll>0.5,PAD.roll);
 gyroStop(); pollPad(); T_('off: no input',PAD.roll===0);
 /* save backup round trip */
-localStorage.setItem('ayy-test','merhaba ğüşıöç'); localStorage.setItem('other-app','x');
+stSet('ayy-test','merhaba ğüşıöç'); localStorage.setItem('other-app','x');
 const code=saveCode(); T_('code prefix',/^AYK1\./.test(code));
 const r=saveParse(code); T_('code parses',!r.err&&r.keys.indexOf('ayy-test')>=0&&r.keys.indexOf('other-app')<0,r.err);
-localStorage.setItem('ayy-test','değişti'); saveImport(code,true); T_('import restores values (Turkish chars)',localStorage.getItem('ayy-test')==='merhaba ğüşıöç',localStorage.getItem('ayy-test'));
+stSet('ayy-test','değişti'); saveImport(code,true); T_('import restores values (Turkish chars)',stGet('ayy-test')==='merhaba ğüşıöç',stGet('ayy-test'));
 T_('foreign keys untouched',localStorage.getItem('other-app')==='x');
 T_('JSON file also accepted',!saveParse(JSON.stringify(saveExport())).err);
 T_('garbage rejected',!!saveParse('AYK1.@@@').err&&!!saveParse('{"a":1}').err);

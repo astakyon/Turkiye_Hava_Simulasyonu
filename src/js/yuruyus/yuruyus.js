@@ -22,7 +22,7 @@ function pushCircle(p,r,boxes,skipAc){
 }
 function buildCar(){
   if(WALK.car.mesh){ buildVehicles(); return; }
-  let ki=0; try{ const v=+localStorage.getItem('ayy-car'); if(v>=0&&v<CAR_SWAP) ki=v; }catch(e){}
+  let ki=0; try{ const v=+stGet('ayy-car'); if(v>=0&&v<CAR_SWAP) ki=v; }catch(e){}
   WALK.car=vehNew(CAR_KINDS[ki].id,HG.X0+7,896,0); buildVehicles();
 }
 function carMake(){
@@ -31,7 +31,7 @@ function carMake(){
   c.pitch=c.roll=c.bp=c.br=0; c.y=null;
 }
 function carSwap(){
-  const c=WALK.car; if(c.ki>=CAR_SWAP){ toast(c.K.n+' değiştirilemez — başka araca yürüyüp bin','#ffc24a'); return; } c.ki=(c.ki+1)%CAR_SWAP; try{ localStorage.setItem('ayy-car',c.ki); }catch(e){}
+  const c=WALK.car; if(c.ki>=CAR_SWAP){ toast(c.K.n+' değiştirilemez — başka araca yürüyüp bin','#ffc24a'); return; } c.ki=(c.ki+1)%CAR_SWAP; try{ stSet('ayy-car',c.ki); }catch(e){}
   carMake(); c.v=0; c._v=0; c.vx=c.vz=0; c.yr=0; placeCar(0); toast('🚙 '+c.K.n,'#b8ecff');
 }
 /* place the car on the terrain: height and tilt from the four wheel contact points, plus body squat/dive/roll from the motion */

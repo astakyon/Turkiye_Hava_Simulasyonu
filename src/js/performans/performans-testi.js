@@ -177,8 +177,8 @@ function ptFinish(aborted){ if(!PT.run) return; const prev=PT.steps[PT.si]; try{
   try{ if(state==='play'||state==='walk'||state==='paused'||state==='map') enterTitle(); }catch(e){}
   setTimeout(function(){ ptResults(rep); },60); }
 /* ---- storage, sending */
-function ptStore(rep){ try{ const L=JSON.parse(localStorage.getItem('ayy-perf')||'[]'); L.unshift(rep); localStorage.setItem('ayy-perf',JSON.stringify(L.slice(0,5))); }catch(e){} }
-function ptLocal(){ try{ return JSON.parse(localStorage.getItem('ayy-perf')||'[]'); }catch(e){ return []; } }
+function ptStore(rep){ try{ const L=JSON.parse(stGet('ayy-perf')||'[]'); L.unshift(rep); stSet('ayy-perf',JSON.stringify(L.slice(0,5))); }catch(e){} }
+function ptLocal(){ try{ return JSON.parse(stGet('ayy-perf')||'[]'); }catch(e){ return []; } }
 function ptSend(rep){ const c=(typeof ACCOUNT_CFG!=='undefined'?ACCOUNT_CFG:null)||(typeof ACC!=='undefined'&&ACC.cfg)||null;
   if(!c||!c.url||!c.key) return Promise.reject(new Error('bulut yok'));
   const body={version:rep.v, device:(rep.model||'')+' · '+rep.dev.kind, gpu:rep.dev.gpu, summary:rep.sum, data:rep};
@@ -235,7 +235,7 @@ function ptResults(rep,list){ const r=rep, d=r.dev||{}, f=function(v){ return v=
     if(k==='x'){ el.classList.add('hidden'); if(state==='menu'&&typeof refreshTitle==='function') refreshTitle(); }
     if(k==='copy'){ meta(); const t=JSON.stringify(r); const done=function(){ msg('Rapor panoya kopyalandı ('+Math.round(t.length/1024)+' KB). Sohbete yapıştırabilirsin.'); };
       try{ navigator.clipboard.writeText(t).then(done,function(){ ptCopyFallback(t); done(); }); }catch(_){ ptCopyFallback(t); done(); } }
-    if(k==='send'){ meta(); b.disabled=true; msg('Gönderiliyor…'); ptSend(r).then(function(){ r.sent=true; msg('Rapor gönderildi. Teşekkürler!'); try{ const L=ptLocal(); if(L[0]&&L[0].at===r.at){ L[0]=r; localStorage.setItem('ayy-perf',JSON.stringify(L)); } }catch(_){} })
+    if(k==='send'){ meta(); b.disabled=true; msg('Gönderiliyor…'); ptSend(r).then(function(){ r.sent=true; msg('Rapor gönderildi. Teşekkürler!'); try{ const L=ptLocal(); if(L[0]&&L[0].at===r.at){ L[0]=r; stSet('ayy-perf',JSON.stringify(L)); } }catch(_){} })
       .catch(function(err){ b.disabled=false; msg('Gönderilemedi ('+String(err.message||err).slice(0,90)+'). Rapor bu cihazda saklandı; "Kopyala" ile paylaşabilirsin.',true); }); }
     if(k==='prev'){ const i=list.indexOf(rep); ptResults(list[(i+1)%list.length],list); }
     if(k==='again'){ el.classList.add('hidden'); ptOpen(); } }; }

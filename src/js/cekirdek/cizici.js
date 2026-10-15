@@ -4,7 +4,7 @@ let renderer;
    with low precision, which showed up as black waves / bands; also cheaper). The choice can be overridden in Ayarlar → Grafik. */
 const DEV=(function(){ let coarse=false, ua=(navigator.userAgent||''), st={};
   try{ coarse=window.matchMedia('(pointer:coarse)').matches; }catch(e){}
-  try{ st=JSON.parse(localStorage.getItem('kaan-sim-settings')||'{}')||{}; }catch(e){}
+  try{ st=JSON.parse(stGet('kaan-sim-settings')||'{}')||{}; }catch(e){}
   const ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1), android=/Android/.test(ua);
   const mobile=ios||android||(coarse&&Math.min(screen.width,screen.height)<900), tablet=mobile&&Math.min(screen.width,screen.height)>=600;
   const depth=st.depth||'auto', safe=!!st.safeMode;

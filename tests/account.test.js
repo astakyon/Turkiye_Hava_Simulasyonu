@@ -16,7 +16,7 @@ window.supabase={createClient:function(){ return {auth:{onAuthStateChange:functi
   signInWithPassword:function(c){ session={user:{id:'u1',email:c.email}}; setTimeout0(function(){ authCb('SIGNED_IN',session); }); return Promise.resolve({data:{session:session},error:null}); },
   signOut:function(){ session=null; return Promise.resolve({}); }}, from:Q, storage:{from:function(){ return {getPublicUrl:function(p){ return {data:{publicUrl:'https://x/'+p}}; }}; }}}; }};
 const later=[]; function setTimeout0(f){ later.push(f); }
-localStorage.setItem('ayy-supa',JSON.stringify({url:'https://abc.supabase.co',key:'x'.repeat(60)}));
+stSet('ayy-supa',JSON.stringify({url:'https://abc.supabase.co',key:'x'.repeat(60)}));
 (async function(){
   await accInit(); T('guest after init',ACC.cfg&&!ACC.user&&ACC.status==='guest',ACC.status);
   T('no admin before login (cloud on)',!accIsAdmin());
@@ -32,7 +32,7 @@ localStorage.setItem('ayy-supa',JSON.stringify({url:'https://abc.supabase.co',ke
   DB.profiles.u1.role='admin'; await accAfterLogin(); T('admin role from server',accIsAdmin());
   await accSignOut(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); T('signed out',!ACC.user&&ACC.status==='guest');
   /* local profiles */
-  const L=lpAll(); L.push({id:'g2',callsign:'Mavi 2',unit:'deniz',emblem:'kartal',xp:0,rank:0,stats:{}}); lpSave(L); localStorage.setItem('ayy-prof-cur','g2'); ACC.local=null; T('local profile switch',accProfile().callsign==='Mavi 2');
+  const L=lpAll(); L.push({id:'g2',callsign:'Mavi 2',unit:'deniz',emblem:'kartal',xp:0,rank:0,stats:{}}); lpSave(L); stSet('ayy-prof-cur','g2'); ACC.local=null; T('local profile switch',accProfile().callsign==='Mavi 2');
   T('remote config loaded',ADM.cfg&&ADM.cfg.xpMul===2,JSON.stringify(ADM.cfg));
   const p0=accProfile(), x0=p0.xp||0; careerAdd(10,null); T('xp multiplier',(accProfile().xp||0)-x0===20,(accProfile().xp||0)-x0);
   enterTitle(); ACC.role='player'; T('player cannot open libraries',(titleAct('library'),state==='menu'&&menuMode==='title'));

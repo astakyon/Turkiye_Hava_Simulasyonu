@@ -59,7 +59,7 @@ function serviceStep(dt){
   if(S.speed>0){ svcT=0; return; }
   svcT+=dt; if(svcT>0.6) openService();
 }
-function saveLoadouts(){ try{ localStorage.setItem('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(e){} }
+function saveLoadouts(){ try{ stSet('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(e){} }
 function renderService(){
   const n=SLOTS[activeId]||0, used=WORDER.reduce(function(a,k){ return a+svcTmp[k]; },0);
   $('svcSub').textContent=CUR.name+' · '+(n>0?('silah yeri: '+n):'bu uçak silah taşımıyor');

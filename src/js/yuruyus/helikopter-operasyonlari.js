@@ -5,7 +5,7 @@
    T625 GÖKBEY: troops (B on the ground: board / unload) and sling load (B in the air over a crate or a light vehicle).
    Helicopter missions are started from the hangar's helicopter tab. */
 const HO={assist:true, pj:[], lockT:0, lock:null, cand:null, aim:new THREE.Vector3(), aimDir:new THREE.Vector3(), gunCd:0, rearmT:0};
-try{ const v=localStorage.getItem('ayy-hassist'); if(v!=null) HO.assist=v==='1'; }catch(e){}
+try{ const v=stGet('ayy-hassist'); if(v!=null) HO.assist=v==='1'; }catch(e){}
 const HTGT=[];               /* helicopter mission targets */
 const TROOPS=[];             /* soldier figures on the ground */
 const CRATES=[];             /* sling-loadable crates */
@@ -19,7 +19,7 @@ heliInput=HOOK.wrap('heliInput','yuruyus/helikopter-operasyonlari#_hoInput',func
   if(Math.abs(inp.r)<0.08) inp.r=clamp(-vr/14,-0.85,0.85);
   if(H.sling||H.troops>0){ /* loaded: slower climb */ if(inp.c>0) inp.c*=H.sling?0.7:0.85; }
   return inp; }; },heliInput);
-function hoAssistToggle(){ HO.assist=!HO.assist; try{ localStorage.setItem('ayy-hassist',HO.assist?'1':'0'); }catch(e){} toast('Askı yardımı (hover assist): '+(HO.assist?'AÇIK':'KAPALI'),HO.assist?'#7dffb0':'#ffc24a'); }
+function hoAssistToggle(){ HO.assist=!HO.assist; try{ stSet('ayy-hassist',HO.assist?'1':'0'); }catch(e){} toast('Askı yardımı (hover assist): '+(HO.assist?'AÇIK':'KAPALI'),HO.assist?'#7dffb0':'#ffc24a'); }
 /* ---- targets */
 const HOM={};
 function hoMats(){ if(HOM.burnt) return HOM; HOM.burnt=new THREE.MeshLambertMaterial({color:0x1d1d1f}); HOM.olive=new THREE.MeshLambertMaterial({color:0x56603f}); HOM.crate=new THREE.MeshLambertMaterial({color:0x6b7048}); HOM.strap=new THREE.MeshLambertMaterial({color:0xd8a531}); HOM.skin=new THREE.MeshLambertMaterial({color:0xc69c78}); HOM.boot=new THREE.MeshLambertMaterial({color:0x222222}); return HOM; }
@@ -215,7 +215,7 @@ function hmStep(dt){
 function hmEnd(win,why){
   if(HM.ended) return; HM.ended=true; const M=HM.M, t=Math.round(HM.t), xp=win?M.xp+Math.max(0,Math.round((M.lim-HM.t)/4)):0;
   if(HM.beacon){ scene.remove(HM.beacon); HM.beacon=null; }
-  let best=null; try{ const R=JSON.parse(localStorage.getItem('ayy-hrec')||'{}'); best=R[M.id]; if(win&&(!best||t<best)){ R[M.id]=t; localStorage.setItem('ayy-hrec',JSON.stringify(R)); } }catch(e){}
+  let best=null; try{ const R=JSON.parse(stGet('ayy-hrec')||'{}'); best=R[M.id]; if(win&&(!best||t<best)){ R[M.id]=t; stSet('ayy-hrec',JSON.stringify(R)); } }catch(e){}
   if(win&&typeof careerAdd==='function') try{ careerAdd(xp,{heliMis:1},'Helikopter görevi: '+M.n); }catch(e){}
   if(typeof musSting==='function') try{ musSting(win?'victory':'defeat'); }catch(e){}
   if(typeof radioSay==='function') radioSay({w:'kule',t:win?'Görev tamamlandı. Tebrikler {cs}, üsse dönebilirsin.':'Görev başarısız: '+why+'.'},null,{force:true});
@@ -230,7 +230,7 @@ function hmQuit(){ $('hmEnd').classList.add('hidden'); hmClean(); HM.on=false; }
   $('hmHangar').addEventListener('click',function(){ hmQuit(); enterHangar(); }); })();
 /* missions list in the hangar (helicopter tab) */
 function hmList(){ const el=$('hMis'); if(!el) return; if(!HSEL){ el.innerHTML=''; el.classList.add('hidden'); return; } el.classList.remove('hidden');
-  let R={}; try{ R=JSON.parse(localStorage.getItem('ayy-hrec')||'{}'); }catch(e){}
+  let R={}; try{ R=JSON.parse(stGet('ayy-hrec')||'{}'); }catch(e){}
   el.innerHTML='<p class="hmh">HELİKOPTER GÖREVLERİ</p>'+HMIS.filter(function(m){ return m.heli===HSEL; }).map(function(m){ const r=R[m.id];
     return '<button type="button" class="hmb" data-hm="'+m.id+'"><b>'+m.n+'</b><small>'+m.d+'</small><i>'+(r?'Rekor '+Math.floor(r/60)+':'+String(r%60).padStart(2,'0'):'Süre '+Math.round(m.lim/60)+' dk')+' · '+m.xp+' XP</i></button>'; }).join(''); }
 (function(){ const el=$('hMis'); if(el) el.addEventListener('click',function(e){ const b=e.target.closest('[data-hm]'); if(b) hmStart(b.dataset.hm); }); })();

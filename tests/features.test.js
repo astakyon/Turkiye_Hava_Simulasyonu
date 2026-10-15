@@ -62,5 +62,5 @@ startGame; state='menu'; menuMode='hangar'; selectedId='kaan';
 openLoadout(); T('modal loadout mode',svcMode==='loadout'&&state==='menu');
 svcTmp={gp:2,bnk:0,m1:2,m2:0,m3:0}; closeService(true);
 T('saved',LOADOUTS.kaan.gp===2&&LOADOUTS.kaan.m1===2); T('state stays menu',state==='menu',state);
-T('persist',!!store['kaan-sim-loadouts']);
+T('persist',!!stGet('kaan-sim-loadouts'));
 console.log('pass',ok,'fail',bad);

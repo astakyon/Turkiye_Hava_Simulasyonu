@@ -65,8 +65,8 @@ menuCam=HOOK.wrap('menuCam','ekran/menu-duzeltmeleri#_m3MenuCam',function(_m3Men
   const gy=Math.max(groundH(camera.position.x,camera.position.z),0)+1.2; if(camera.position.y<gy) camera.position.y=gy; camera.lookAt(MENUV.tgt);
   if(Math.abs(50-lastFov)>0.05){ camera.fov=50; lastFov=50; camera.updateProjectionMatrix(); } camera.updateMatrixWorld(); }; },menuCam);
 /* ---------- starting with any vehicle; the last one is remembered for HIZLI OYUN */
-const LASTV={v:null}; try{ const s=localStorage.getItem('ayy-lastv'); if(s) LASTV.v=JSON.parse(s); }catch(e){}
-function lastSet(v){ LASTV.v=v; try{ localStorage.setItem('ayy-lastv',JSON.stringify(v)); }catch(e){} }
+const LASTV={v:null}; try{ const s=stGet('ayy-lastv'); if(s) LASTV.v=JSON.parse(s); }catch(e){}
+function lastSet(v){ LASTV.v=v; try{ stSet('ayy-lastv',JSON.stringify(v)); }catch(e){} }
 function lastName(v){ v=v||LASTV.v; if(!v) return AIRCRAFT.kaan.name; if(v.t==='ac') return (AIRCRAFT[v.id]||AIRCRAFT.kaan).name; if(v.t==='heli') return HELI_DEF[v.id].name; const h=hvOf(v.t,v.id); return h?h[1]:'—'; }
 function vehStart(v){ if(v.g==='kara'){ startWalk(); const c=vehNew(v.id,HG.X0+9,896,Math.PI/2); c.called=true; WALK.car=c; WALK.mode='car'; c.v=0; WALK.cy=0; WALK.pos.set(c.x,groundH(c.x,c.z)+1.7,c.z); toast(c.K.n+' — W/S gaz-fren · A/D direksiyon · E in','#b8ecff'); }
   else { startWalk(); buildBoats(); let b=BOATS.find(function(x){ return x.id===v.id&&x.id!=='anadolu'; });
@@ -93,8 +93,8 @@ function m3StartUI(){ const el=$('suStart'); if(!el) return; if(startPick==='wal
 refreshSetup=HOOK.wrap('refreshSetup','ekran/menu-duzeltmeleri#_m3Setup',function(_m3Setup){ return function(){ _m3Setup(); m3StartUI(); m3Groups(); const b=$('btnLoadDone'); if(b) b.textContent=loadFrom==='missions'?'▶ Göreve başla':'▶ Uçuşa başla';
   const k=document.querySelector('#setupUI .step'); if(k) k.textContent=(SLOTS[selectedId]>0?'Silah yükü':'Uçuş öncesi')+' · başlama yeri'; }; },refreshSetup);
 /* ---------- my quick groups (per aircraft) */
-const LGRP={}; try{ Object.assign(LGRP,JSON.parse(localStorage.getItem('ayy-lgroups')||'{}')); }catch(e){}
-function lgSave(){ try{ localStorage.setItem('ayy-lgroups',JSON.stringify(LGRP)); }catch(e){} }
+const LGRP={}; try{ Object.assign(LGRP,JSON.parse(stGet('ayy-lgroups')||'{}')); }catch(e){}
+function lgSave(){ try{ stSet('ayy-lgroups',JSON.stringify(LGRP)); }catch(e){} }
 function lgName(l){ return WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }).join(' ')||'Boş'; }
 function m3Groups(){ const el=$('suGrp'); if(!el) return; const n=SLOTS[selectedId]||0; el.classList.toggle('hidden',!(n>0)); if(!(n>0)) return; const L=LGRP[selectedId]||[];
   el.innerHTML='<span class="lgk">Gruplarım</span>'+L.map(function(g,i){ return '<span class="lg"><button type="button" data-g="'+i+'" title="'+lgName(g.l)+'">'+String(g.n).replace(/[<>&]/g,'')+'</button><button type="button" class="x" data-gx="'+i+'" aria-label="Sil">×</button></span>'; }).join('')+

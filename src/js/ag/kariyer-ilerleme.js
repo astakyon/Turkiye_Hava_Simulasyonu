@@ -11,12 +11,12 @@ const PSCHEMES=[
   {id:'gece',n:'Gece',r:6,liv:{color:'#2f363d',gloss:0.2,camo:3,camo2:'#1d2228'},sw:'#2f363d'},
   {id:'kizil',n:'Kızıl Elma',r:8,liv:{color:'#e9ecef',camo:3,camo2:'#c8102e',camoS:1.6,gloss:0.6},sw:'#c8102e'},
   {id:'altin',n:'Altın',r:11,liv:{color:'#c9a24a',gloss:0.9},sw:'#c9a24a'}];
-const PAINT={}; try{ Object.assign(PAINT,JSON.parse(localStorage.getItem('ayy-paint')||'{}')); }catch(e){}
+const PAINT={}; try{ Object.assign(PAINT,JSON.parse(stGet('ayy-paint')||'{}')); }catch(e){}
 function lockedAt(need){ if(typeof accIsAdmin==='function'&&accIsAdmin()) return false; if(SETTINGS.rankLocks===false) return false; return (accProfile().rank||0)<need; }
 applyLivery=HOOK.wrap('applyLivery','ag/kariyer-ilerleme#_pLiv',function(_pLiv){ return function(m){ const id=m&&m.acId, P=id&&PAINT[id]&&PSCHEMES.find(function(s){ return s.id===PAINT[id]; }); if(P&&P.liv){ LIV.data[id]=P.liv; } return _pLiv(m); }; },applyLivery);
 function paintSet(id,sid){ const P=PSCHEMES.find(function(s){ return s.id===sid; }); if(!P) return; if(lockedAt(P.r)){ toast('🔒 '+P.n+' boyası '+rankName(P.r)+' rütbesinde açılır','#ffc24a'); return; }
   if(sid==='std'){ delete PAINT[id]; delete LIV.data[id]; } else { PAINT[id]=sid; LIV.data[id]=P.liv; }
-  try{ localStorage.setItem('ayy-paint',JSON.stringify(PAINT)); }catch(e){} liveryRefresh(id); paintUI(); toast('Boya: '+P.n,'#7dffb0'); }
+  try{ stSet('ayy-paint',JSON.stringify(PAINT)); }catch(e){} liveryRefresh(id); paintUI(); toast('Boya: '+P.n,'#7dffb0'); }
 function paintUI(){ const el=$('hPaint'); if(!el) return; if(HSEL||!AIRCRAFT[selectedId]){ el.classList.add('hidden'); return; } el.classList.remove('hidden');
   const cur=PAINT[selectedId]||'std', skin=!!(MODELS.skins&&MODELS.skins[selectedId]);
   el.innerHTML='<p class="hmh">BOYA'+(skin?' <small>(içe aktarılmış modelde geçerli değil)</small>':'')+'</p><div class="pchips">'+PSCHEMES.map(function(P){ const lk=lockedAt(P.r);
@@ -41,7 +41,7 @@ const ACH=[
   ['places','Gezgin','Haritada 20 farklı yere git','placesN',20,250],
   ['eject','Paraşütçü','3 kez fırlat ve sağ kurtul','ejectOk',3,150],
   ['daily','Disiplinli','7 günlük görev tamamla','dailyDone',7,300]];
-function progStats(){ const st=accProfile().stats||{}, o=Object.assign({},st); let stars=0; try{ const s=JSON.parse(localStorage.getItem('ayy-stars')||'{}'); for(const k in s) stars+=s[k]||0; }catch(e){}
+function progStats(){ const st=accProfile().stats||{}, o=Object.assign({},st); let stars=0; try{ const s=JSON.parse(stGet('ayy-stars')||'{}'); for(const k in s) stars+=s[k]||0; }catch(e){}
   o.starsN=stars; o.schoolN=typeof schDone==='function'?schDone():0; o.placesN=(st.places||[]).length; return o; }
 const PG={busy:false};
 function achCheck(){ if(PG.busy) return; PG.busy=true; try{ const p=accProfile(), st=p.stats||(p.stats={}), got=st.ach||(st.ach=[]), v=progStats();

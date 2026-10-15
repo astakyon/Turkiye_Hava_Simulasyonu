@@ -48,7 +48,7 @@ const LESSONS=[
    steps:[{t:'Rıhtımdaki fırkateynin helikopter güvertesine in',ok:function(H){ const d=H.ground&&deckAt(H.x,H.z,H.y+0.6); return !!d&&!d.mover; }},{t:'Kalk',ok:function(H){ return !H.ground; }},
      {t:'Açıktaki devriye korvetinin hareketli güvertesine in',ok:function(H){ const d=H.ground&&deckAt(H.x,H.z,H.y+0.6); return !!d&&!!d.mover&&!d.mover.K; }}]}];
 const LIC={pilot:{n:'Pilot lisansı',ids:['kalkis','tur','inis','ruzgar']},heli:{n:'Helikopter lisansı',ids:['hover','sapan','gemi']},silah:{n:'Silah sertifikası',ids:['silah']}};
-function schState(){ try{ return JSON.parse(localStorage.getItem('ayy-school')||'{}'); }catch(e){ return {}; } }
+function schState(){ try{ return JSON.parse(stGet('ayy-school')||'{}'); }catch(e){ return {}; } }
 function schDone(){ const s=schState(); return LESSONS.filter(function(L){ return s[L.id]; }).length; }
 function schLicOk(k){ const s=schState(); return LIC[k].ids.every(function(id){ return s[id]; }); }
 Object.keys(LIC).forEach(function(k){ MEDALS.push(['lic_'+k,LIC[k].n,LIC[k].ids.length>1?'Uçuş okulundaki ilgili dersleri bitir':'Uçuş okulunun silah dersini bitir',function(st){ return (st.school||[]).length&&LIC[k].ids.every(function(id){ return st.school.indexOf(id)>=0; }); }]); });
@@ -94,7 +94,7 @@ function schStep(dt){
 }
 function schEnd(ok,why){
   const L=SCH.cur; if(!L) return; const S0=schState();
-  if(ok){ const first=!S0[L.id]; S0[L.id]=true; try{ localStorage.setItem('ayy-school',JSON.stringify(S0)); }catch(e){}
+  if(ok){ const first=!S0[L.id]; S0[L.id]=true; try{ stSet('ayy-school',JSON.stringify(S0)); }catch(e){}
     try{ const p=accProfile(), st=p.stats||(p.stats={}); st.school=Object.keys(S0); if(typeof careerAdd==='function') careerAdd(L.veh==='air'?0:(first?L.xp:Math.round(L.xp/4)),null); }catch(e){}
     if(first&&schLicOk(L.lic)) setTimeout(function(){ toast('🎖 '+LIC[L.lic].n+' kazandın!','#ffd27a'); schSay('Tebrikler {cs}, '+LIC[L.lic].n.toLocaleLowerCase('tr-TR')+' almaya hak kazandın!'); },1200);
     else schSay('Ders tamam, tebrikler {cs}.'); }

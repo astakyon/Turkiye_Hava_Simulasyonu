@@ -66,7 +66,7 @@ function regOf(id){ return REG[id]||{grp:'hava',cls:'iha',maker:''}; }
 function pickList(){ return AC_ORDER.filter(function(id){ const r=regOf(id); return r.grp===pickGrp&&(pickCls==='all'||r.cls===pickCls); }); }
 const modelCache={};
 let CUR=AIRCRAFT.kaan, activeId='kaan', model=null, planeGroup=null, selectedId='kaan';
-try{ const sv0=localStorage.getItem('kaan-sim-aircraft'); if(sv0&&AIRCRAFT[sv0]) selectedId=sv0; }catch(e){}
+try{ const sv0=stGet('kaan-sim-aircraft'); if(sv0&&AIRCRAFT[sv0]) selectedId=sv0; }catch(e){}
 function setAircraft(id){
   const def=AIRCRAFT[id]; if(!def) return;
   if(planeGroup) scene.remove(planeGroup);

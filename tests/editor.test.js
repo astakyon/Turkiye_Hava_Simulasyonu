@@ -1,5 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
-try{ localStorage.removeItem('ayy-cmis'); }catch(e){} CUS.local=[];
+try{ stDel('ayy-cmis'); }catch(e){} CUS.local=[];
 BF.cat='ozel'; T('new mission entry on board',boardList().some(function(e){ return e.kind==='cnew'; }));
 edOpen(null); T('editor opens',ED.open&&ED.m.items.length===1);
 const m=ED.m; m.n='Test görevi'; m.lim=600;

@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------ livery: base colour, camouflage, gloss (code-built aircraft) */
 const LIV={data:{}, base:{}, mats:{}};
-try{ LIV.data=JSON.parse(localStorage.getItem('ayy-livery')||'{}')||{}; }catch(e){ LIV.data={}; }
-function livSave(){ try{ localStorage.setItem('ayy-livery',JSON.stringify(LIV.data)); }catch(e){} }
+try{ LIV.data=JSON.parse(stGet('ayy-livery')||'{}')||{}; }catch(e){ LIV.data={}; }
+function livSave(){ try{ stSet('ayy-livery',JSON.stringify(LIV.data)); }catch(e){} }
 const LIV_COLORS=['#c3c9ce','#8e979f','#5d6670','#2f363d','#c9b48a','#6f7a52','#3f5a78','#e9ecef'];
 function meshArea(g){ const p=g.attributes.position, ix=g.index, a=new THREE.Vector3(), b=new THREE.Vector3(), c=new THREE.Vector3(); let s=0; const n=ix?ix.count:p.count;
   for(let i=0;i<n;i+=3){ const i0=ix?ix.getX(i):i, i1=ix?ix.getX(i+1):i+1, i2=ix?ix.getX(i+2):i+2; a.fromBufferAttribute(p,i0); b.fromBufferAttribute(p,i1); c.fromBufferAttribute(p,i2); s+=b.sub(a).cross(c.sub(a)).length()*0.5; } return s; }

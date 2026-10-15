@@ -1,6 +1,13 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.26 — 2026-10-15 · Kayıt ve depolama düzeni
+- **Tek kayıt:** oyunun tarayıcıya yazdığı 28 ayrı kayıt (ayarlar, profiller, rekorlar, boyalar, yarış ve okul ilerlemesi…) artık tek, sürüm numaralı bir kayıtta duruyor. Güncellemeden sonraki ilk açılışta eski kayıtlar kendiliğinden taşınıyor, doğrulanıyor ve eskileri siliniyor; hiçbir ilerleme kaybolmuyor.
+- **Yedek:** her oturumda son sağlam kayıt yedekleniyor. Kayıt bozulursa oyun yedekten açılıyor ve bunu söylüyor; ikisi de bozuksa yeni kayıtla açılıyor (bozuk kayıt silinmeden ayrı saklanıyor).
+- **Bulut senkronu:** grafik ayarlarının yeni ayrıntılı grupları ve "Otomatik" seçimi de artık cihaza özel kalıyor (bilgisayarın ayarı telefona geçmiyor).
+- **Ana menü:** isteğin üzerine yalnız yeni ana menü kaldı; eski "Komuta" ve "Sinematik" tasarımları ve Arayüz'deki seçim satırı kaldırıldı.
+- **Telefon raporundaki sorunlar:** açılış telefonda 12 sn sürmüştü; bunun 7,3 sn'si yükleme ekranındaki doku paylaşımıydı. Bu iş artık yükleme ekranından çıkarıldı, küçük parmak iziyle arka planda birkaç ms'lik dilimlerle yapılıyor. Uçuşta görülen takılmaların şüphelisi olan uzak arazi ağı, her değişimde yeniden kurulmak yerine yerinde güncelleniyor. Performans testi raporu artık her modülün "en uzun tek çağrısını" da gösteriyor, böylece kalan takılmaların kaynağı görülebilecek.
+
 ## V2.25 — 2026-10-15 · Kod düzeni
 - **Kod düzeni:** 124 modül konu klasörlerine taşındı: çekirdek, dünya, modeller, uçuş, savaş, görev, ekran, kontrol, ses, yürüyüş, ağ, performans ve veri. "98b", "98zf" gibi numaralı yama modülleri kalmadı; her dosyanın adı ne yaptığını söylüyor. Yükleme sırası tek bir listede (`src/js/SIRA.txt`) tutuluyor. Taşımadan sonra oyunun kodu bayt bayt aynıydı.
 - **Büyük modüller bölündü:** yapay zekâ ve çevrimiçi oyun (4 parça), model kütüphanesi (3 parça), ana menü (3 parça).

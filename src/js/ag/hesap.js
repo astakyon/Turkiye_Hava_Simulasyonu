@@ -5,11 +5,11 @@
 const ACC={cfg:null, sb:null, user:null, prof:null, role:'player', status:'guest', dirtyT:0, lastPush:0, pulling:false, err:''};
 const UNITS={hava:'Hilal Kanatlar',deniz:'Mavi Kanatlar',kara:'Bozkurtlar'};
 const EMBLEMS=[['hilal','☾'],['kurt','🐺'],['kartal','🦅'],['yildiz','★'],['kalkan','🛡'],['simsek','⚡']];
-function accCfg(){ if(ACCOUNT_CFG.url&&ACCOUNT_CFG.key) return ACCOUNT_CFG; try{ const c=JSON.parse(localStorage.getItem('ayy-supa')||'null'); if(c&&c.url&&c.key) return c; }catch(e){} return null; }
+function accCfg(){ if(ACCOUNT_CFG.url&&ACCOUNT_CFG.key) return ACCOUNT_CFG; try{ const c=JSON.parse(stGet('ayy-supa')||'null'); if(c&&c.url&&c.key) return c; }catch(e){} return null; }
 /* ---- local (guest) profiles */
-function lpAll(){ try{ const L=JSON.parse(localStorage.getItem('ayy-profiles')||'null'); if(Array.isArray(L)&&L.length) return L; }catch(e){} return [{id:'g1',callsign:SETTINGS.callsign||'Hilal 1',unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}]; }
-function lpSave(L){ try{ localStorage.setItem('ayy-profiles',JSON.stringify(L)); }catch(e){} }
-function lpCurId(){ try{ return localStorage.getItem('ayy-prof-cur')||'g1'; }catch(e){ return 'g1'; } }
+function lpAll(){ try{ const L=JSON.parse(stGet('ayy-profiles')||'null'); if(Array.isArray(L)&&L.length) return L; }catch(e){} return [{id:'g1',callsign:SETTINGS.callsign||'Hilal 1',unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}]; }
+function lpSave(L){ try{ stSet('ayy-profiles',JSON.stringify(L)); }catch(e){} }
+function lpCurId(){ try{ return stGet('ayy-prof-cur')||'g1'; }catch(e){ return 'g1'; } }
 function lpCur(){ const L=lpAll(); return L.find(function(p){ return p.id===lpCurId(); })||L[0]; }
 function accProfile(){ if(ACC.prof) return ACC.prof; if(!ACC.local||ACC.local.id!==lpCurId()) ACC.local=lpCur(); return ACC.local; }
 function accSetProfile(patch){
@@ -55,16 +55,16 @@ function accPushProfile(){ if(!ACC.sb||!ACC.prof) return; const p=ACC.prof; ACC.
 function accPayload(){ return {v:1, t:Date.now(), settings:SETTINGS, ctrl:{kb:CTRL.kb,pad:CTRL.pad}, liv:(typeof LIV!=='undefined'?LIV.data:{}), load:LOADOUTS, rec:RECORDS, snd:SND.user}; }
 function accApply(d){
   if(!d) return;
-  if(d.settings){ const keep={}; ['safeMode','depth','quality','shadows','fx','res','aa','fpsCap','split','autoPerf'].forEach(function(k){ keep[k]=SETTINGS[k]; }); Object.assign(SETTINGS,d.settings,keep);   /* graphics stay per device (a PC's shadows / effects must not land on a phone) */ saveSettings(); }
+  if(d.settings){ const keep={}; ['safeMode','depth','quality','shadows','fx','res','aa','fpsCap','split','autoPerf','gd','tierAuto','terrainLod','warm','texShare','bake','merge','freeze','fxMerge','shadowEvery'].forEach(function(k){ keep[k]=SETTINGS[k]; }); Object.assign(SETTINGS,d.settings,keep);   /* graphics stay per device (a PC's shadows / effects must not land on a phone); V2.26: also the detailed groups (gd) and the Otomatik preset */ saveSettings(); }
   if(d.ctrl){ if(d.ctrl.kb) CTRL.kb=d.ctrl.kb; if(d.ctrl.pad) CTRL.pad=d.ctrl.pad; ctrlSave(); }
   if(d.liv&&typeof LIV!=='undefined'){ LIV.data=d.liv; livSave(); }
   if(d.load){ Object.keys(LOADOUTS).forEach(function(k){ delete LOADOUTS[k]; }); Object.assign(LOADOUTS,d.load); saveLoadouts(); }
   if(d.rec){ RECORDS=d.rec; saveRecords(); }
   if(d.snd){ SND.user=d.snd; sndSave(); }
-  try{ localStorage.setItem('ayy-save-t',String(d.t||Date.now())); }catch(e){}
+  try{ stSet('ayy-save-t',String(d.t||Date.now())); }catch(e){}
   try{ if(typeof settingsApplyAll==='function') settingsApplyAll(); }catch(e){}
 }
-function accLocalT(){ try{ return +localStorage.getItem('ayy-save-t')||0; }catch(e){ return 0; } }
+function accLocalT(){ try{ return +stGet('ayy-save-t')||0; }catch(e){ return 0; } }
 function accPull(){
   if(!ACC.sb||!ACC.user) return Promise.resolve(); ACC.pulling=true;
   return ACC.sb.from('saves').select('data,updated_at').eq('user_id',ACC.user.id).maybeSingle().then(function(r){ ACC.pulling=false;
@@ -75,11 +75,11 @@ function accPull(){
 function accPush(now){
   if(!ACC.sb||!ACC.user||!ACC.prof) return Promise.resolve(false);
   if(!now&&typeof navigator!=='undefined'&&navigator.onLine===false) return Promise.resolve(false);
-  const p=accPayload(); try{ localStorage.setItem('ayy-save-t',String(p.t)); }catch(e){}
+  const p=accPayload(); try{ stSet('ayy-save-t',String(p.t)); }catch(e){}
   return ACC.sb.from('saves').upsert({user_id:ACC.user.id,data:p,updated_at:new Date().toISOString()}).then(function(r){ if(r.error) throw r.error; ACC.lastPush=Date.now(); ACC.dirtyT=0; ACC.status='online'; accChip(); return true; })
     .catch(function(e){ ACC.status='offline'; ACC.err=e&&e.message||String(e); accChip(); return false; });
 }
-function accDirty(){ try{ localStorage.setItem('ayy-save-t',String(Date.now())); }catch(e){} if(ACC.user&&ACC.prof&&!ACC.dirtyT){ ACC.dirtyT=Date.now(); ACC.status='pending'; accChip(); } }
+function accDirty(){ try{ stSet('ayy-save-t',String(Date.now())); }catch(e){} if(ACC.user&&ACC.prof&&!ACC.dirtyT){ ACC.dirtyT=Date.now(); ACC.status='pending'; accChip(); } }
 setInterval(function(){ if(ACC.dirtyT&&Date.now()-ACC.dirtyT>4000) accPush(); },1500);
 window.addEventListener('online',function(){ if(ACC.user&&ACC.prof) accPush(true); });
 /* any local save marks the cloud copy dirty */
@@ -138,12 +138,12 @@ function accRender(){
     const u=($('accUnit').querySelector('[aria-pressed="true"]')||{}).dataset, e=($('accEm').querySelector('[aria-pressed="true"]')||{}).dataset, unit=u&&u.u||'hava', em=e&&e.e||'hilal';
     if(ACC.user&&!ACC.prof) accCreateProfile(cs,unit,em).then(function(ok){ if(ok) accRender(); }); else { accSetProfile({callsign:cs,unit:unit,emblem:em}); accMsg('Kaydedildi'); accRender(); } });
   $('accProfList').addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(!b) return; const L=lpAll();
-    if(b.dataset.p==='new'){ const id='g'+Date.now().toString(36); L.push({id:id,callsign:'Pilot '+(L.length+1),unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}); lpSave(L); try{ localStorage.setItem('ayy-prof-cur',id); }catch(err){} }
-    else { lpSave(L); try{ localStorage.setItem('ayy-prof-cur',b.dataset.p); }catch(err){} }
+    if(b.dataset.p==='new'){ const id='g'+Date.now().toString(36); L.push({id:id,callsign:'Pilot '+(L.length+1),unit:'hava',emblem:'hilal',xp:0,rank:0,stats:{}}); lpSave(L); try{ stSet('ayy-prof-cur',id); }catch(err){} }
+    else { lpSave(L); try{ stSet('ayy-prof-cur',b.dataset.p); }catch(err){} }
     ACC.local=null; const p=lpCur(); SETTINGS.callsign=p.callsign; saveSettings(); accChip(); accRender(); toast('Profil: '+p.callsign,'#b8ecff'); });
   /* cloud connection from the settings (advanced) */
   $('btnSupa').addEventListener('click',function(){ const url=($('setSupaUrl').value||'').trim(), key=($('setSupaKey').value||'').trim();
-    if(!url&&!key){ try{ localStorage.removeItem('ayy-supa'); }catch(e){} toast('Bulut bağlantısı kaldırıldı — sayfa yenileniyor','#ffc24a'); setTimeout(function(){ location.reload(); },900); return; }
+    if(!url&&!key){ try{ stDel('ayy-supa'); }catch(e){} toast('Bulut bağlantısı kaldırıldı — sayfa yenileniyor','#ffc24a'); setTimeout(function(){ location.reload(); },900); return; }
     if(!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url)||key.length<40){ toast('Adres https://xxxx.supabase.co biçiminde, anahtar "anon public" olmalı','#ff6a5a'); return; }
-    try{ localStorage.setItem('ayy-supa',JSON.stringify({url:url.replace(/\/$/,''),key:key})); }catch(e){} toast('Bağlanılıyor…','#b8ecff'); accInit().then(function(){ accOpen(); }); });
+    try{ stSet('ayy-supa',JSON.stringify({url:url.replace(/\/$/,''),key:key})); }catch(e){} toast('Bağlanılıyor…','#b8ecff'); accInit().then(function(){ accOpen(); }); });
 })();

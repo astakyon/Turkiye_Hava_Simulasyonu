@@ -12,7 +12,7 @@ for(let i=0;i<20;i++) setupAdjust('m2',1);
 T('capped',loadoutOf('kaan').m2===SLOTS.kaan);
 setupAdjust('m2',-1); setupAdjust('m2',-1); setupAdjust('gp',1); setupAdjust('gp',1);
 T('INV applied',INV.gp===2,JSON.stringify(INV));
-T('saved',JSON.parse(store['kaan-sim-loadouts']).kaan.gp===2);
+T('saved',JSON.parse(stGet('kaan-sim-loadouts')).kaan.gp===2);
 key('Escape'); T('back hangar',menuMode==='hangar');
 refreshTitle(); T('sum updated',/GP×2/.test(els.sbAc.innerHTML),els.sbAc.innerHTML);
 key('Enter'); T('loadout step',menuMode==='loadout'); T('start options on the loadout screen',/data-s="air"/.test(els.suStart.innerHTML));

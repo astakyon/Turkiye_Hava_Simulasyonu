@@ -7,17 +7,6 @@
 <canvas id="hud"></canvas>
 
 <div id="title" class="screen">
-  <div class="tt-a ui" id="titleA">
-    <div class="brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p class="tag">Hedef Kızıl Elma</p></div></div>
-    <button class="mbig mitem" type="button" data-act="fly"><b>▶ UÇ</b><small id="flySubA"></small></button>
-    <ul class="mlist">
-      <li><button class="mitem" type="button" data-act="hangar" id="btnStart"><span>01</span>UÇAK SEÇ<small id="mAac"></small></button></li>
-      <li><button class="mitem" type="button" data-act="missions"><span>02</span>GÖREVLER<small id="mAmis"></small></button></li>
-      <li><button class="mitem" type="button" data-act="net" id="btnNet"><span>03</span>ÇOK OYUNCULU<small>4 KİŞİ</small></button></li>
-      <li><button class="mitem" type="button" data-act="library"><span>04</span>MODEL KÜTÜPHANESİ<small>3B İNCELE</small></button></li>
-      <li><button class="mitem" type="button" data-act="settings"><span>05</span>AYARLAR<small id="mAload"></small></button></li>
-    </ul>
-  </div>
   <div class="tcap" id="tCap"><b></b><small></small></div>
   <div class="tt-c" id="titleC">
     <header class="c-top"><div class="c-brand"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM3"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM3)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><div><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div></div>
@@ -28,17 +17,6 @@
     <footer class="c-hint" id="cHint"></footer>
   </div>
 
-  <div class="tt-b" id="titleB">
-    <div class="tb-top"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><mask id="lgM2"><rect width="120" height="120" fill="#fff"/><circle cx="66" cy="60" r="34" fill="#000"/></mask></defs><circle cx="52" cy="60" r="42" fill="#e30a17" mask="url(#lgM2)"/><polygon fill="#e30a17" points="94,60 76.9,65.6 87.4,51.0 87.4,69.0 76.9,54.4"/></svg><span>HİLAL KANATLAR</span></div>
-    <div class="tb-title"><h1>AY YILDIZ</h1><p>HEDEF KIZIL ELMA</p></div>
-    <div class="tb-tiles ui">
-      <button class="tile p mitem" type="button" data-act="fly"><i>01</i><b>UÇ</b><small id="flySubB"></small></button>
-      <button class="tile mitem" type="button" data-act="missions"><i>02</i><b>GÖREVLER</b><small>İt dalaşı, yer hedefleri…</small></button>
-      <button class="tile mitem" type="button" data-act="net"><i>03</i><b>ÇOK OYUNCULU</b><small>Oda kur · koda katıl</small></button>
-      <button class="tile mitem" type="button" data-act="hangar"><i>04</i><b>HANGAR</b><small>Uçağını seç</small></button>
-      <button class="tile mitem" type="button" data-act="library"><i>05</i><b>MODELLER</b><small>3B kütüphane</small></button>
-    </div>
-  </div>
   <div class="ticons ui"><button class="ic" type="button" id="btnSettings" aria-label="Ayarlar" title="Ayarlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button><button class="ic" type="button" id="btnControls" aria-label="Kontroller" title="Kontroller"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L15 13H9l-1.6 1.8A3 3 0 0 1 2 13v-1a4 4 0 0 1 4-4z"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16.5" cy="11" r=".6" fill="currentColor"/><circle cx="18" cy="12.8" r=".6" fill="currentColor"/></svg></button><button class="ic" type="button" id="btnRecords" aria-label="Rekorlar" title="Rekorlar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8"/></svg></button></div>
   <div class="sbar"><span id="sbAc"></span><span id="sbNet"></span><span class="v" id="verTag"></span></div>
 </div>
@@ -301,7 +279,6 @@
       <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Gamepad ve telefonda titreşim</small></div><label class="tgl"><input type="checkbox" id="setRumble2"><i></i></label></div>
     </section>
     <section data-tab="a" class="hidden">
-      <div class="srow"><div class="sl"><b>Ana menü tasarımı</b><small>Yeni: gruplanmış menü ve ayrıntı paneli (klavye, gamepad, dokunmatik). Eski tasarımlar da seçilebilir</small></div><div class="seg" id="setUi"><button type="button" data-u="auto">Yeni (önerilen)</button><button type="button" data-u="A">Komuta</button><button type="button" data-u="B">Sinematik</button></div></div>
       <div class="srow"><div class="sl"><b>Köşe haritası</b><small>Uçarken ve gezerken sağ üstte küçük harita</small></div><label class="tgl"><input type="checkbox" id="setMini"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Kayıt yedeği</b><small id="saveInfo">İlerlemeni dosyaya ya da koda aktar, başka cihazda yükle (misafir oyuncular için; hesaplar zaten bulutta)</small></div><div class="srowc wrap"><button type="button" class="btn sm" id="btnSaveFile">⭳ Dosyaya indir</button><button type="button" class="btn sm" id="btnSaveOpen">Dosyadan yükle</button><button type="button" class="btn sm" id="btnSaveCode">Kodu kopyala</button><button type="button" class="btn sm" id="btnSaveLoad">Kodu yükle</button><input type="file" id="saveFile" accept=".json,application/json" hidden></div></div>
       <textarea id="saveTxt" class="inp savetxt hidden" rows="3" spellcheck="false"></textarea>

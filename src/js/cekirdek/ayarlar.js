@@ -3,14 +3,14 @@ const SETTINGS={volume:0.8,quality:2,sens:1,rumble:true,invert:false,touch:'auto
 const SETTINGS_DEF=JSON.parse(JSON.stringify(SETTINGS));
 let RECORDS={};
 function loadStore(){
-  try{ if(!localStorage.getItem('kaan-sim-settings') && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) SETTINGS.quality=1; }catch(e){}
-  try{ const a=JSON.parse(localStorage.getItem('kaan-sim-settings')||'null'); if(a) Object.assign(SETTINGS,a); }catch(e){}
-  try{ const b=JSON.parse(localStorage.getItem('kaan-sim-records')||'null'); if(b&&typeof b==='object') RECORDS=b; }catch(e){}
-  try{ const l=JSON.parse(localStorage.getItem('kaan-sim-loadouts')||'null'); if(l&&typeof l==='object') Object.assign(LOADOUTS,l); }catch(e){}
-  try{ const m=localStorage.getItem('kaan-sim-mission'); if(m&&MISSIONS[m]) missionId=m; }catch(e){}
+  try{ if(!stGet('kaan-sim-settings') && window.matchMedia && window.matchMedia('(pointer:coarse)').matches) SETTINGS.quality=1; }catch(e){}
+  try{ const a=JSON.parse(stGet('kaan-sim-settings')||'null'); if(a) Object.assign(SETTINGS,a); }catch(e){}
+  try{ const b=JSON.parse(stGet('kaan-sim-records')||'null'); if(b&&typeof b==='object') RECORDS=b; }catch(e){}
+  try{ const l=JSON.parse(stGet('kaan-sim-loadouts')||'null'); if(l&&typeof l==='object') Object.assign(LOADOUTS,l); }catch(e){}
+  try{ const m=stGet('kaan-sim-mission'); if(m&&MISSIONS[m]) missionId=m; }catch(e){}
 }
-function saveSettings(){ try{ localStorage.setItem('kaan-sim-settings',JSON.stringify(SETTINGS)); }catch(e){} }
-function saveRecords(){ try{ localStorage.setItem('kaan-sim-records',JSON.stringify(RECORDS)); }catch(e){} }
+function saveSettings(){ try{ stSet('kaan-sim-settings',JSON.stringify(SETTINGS)); }catch(e){} }
+function saveRecords(){ try{ stSet('kaan-sim-records',JSON.stringify(RECORDS)); }catch(e){} }
 function rec(id){ return RECORDS[id]||(RECORDS[id]={best:null,score:0}); }
 function noteScore(){ const r=rec(activeId); if(score>r.score){ r.score=score; saveRecords(); } }
 function applyVolume(){ if(master) master.gain.value=SETTINGS.volume; }

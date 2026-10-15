@@ -1,5 +1,5 @@
 let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',n,i===undefined?'':i);} }
-try{ localStorage.removeItem('ayy-race'); }catch(e){}
+try{ stDel('ayy-race'); }catch(e){}
 BF.cat='yaris'; T('4 races on the board',boardList().length===4); BF.cat='all';
 RACES.filter(function(R){ return !R.exam; }).forEach(function(R){ const G=R.gates(); T(R.id+' gates',G.length>=8,G.length);
   if(R.veh==='boat') T('buoys on water',G.every(function(g){ return terrainH(g[0],g[2])<-4; }),G.map(function(g){ return Math.round(terrainH(g[0],g[2])); }).join(','));

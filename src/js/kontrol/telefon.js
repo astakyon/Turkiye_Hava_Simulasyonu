@@ -28,7 +28,7 @@ rumble=HOOK.wrap('rumble','kontrol/telefon#_hRumble',function(_hRumble){ return 
   try{ navigator.vibrate(Math.round(clamp((ms||40)*Math.max(weak||0,strong||0,0.3),8,400))); }catch(e){} }; },rumble);
 /* ---- save backup */
 const SAVE_KEYS=/^(ayy-|kaan-|ayyildiz|kaan_)/i;
-function saveCollect(){ const d={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(SAVE_KEYS.test(k)) d[k]=localStorage.getItem(k); } }catch(e){} return d; }
+function saveCollect(){ const d={}; stKeys().forEach(function(k){ if(SAVE_KEYS.test(k)) d[k]=stGet(k); }); return d; }   /* V2.26: from the one save record (old backup files keep the same keys) */
 function saveExport(){ const data=saveCollect(); return {app:'AyYildiz-HedefKizilElma', kind:'save', ver:GAME_VERSION, at:new Date().toISOString(), n:Object.keys(data).length, data:data}; }
 function b64e(s){ return btoa(unescape(encodeURIComponent(s))); } function b64d(s){ return decodeURIComponent(escape(atob(s))); }
 function saveCode(){ return 'AYK1.'+b64e(JSON.stringify(saveExport())); }
@@ -38,8 +38,8 @@ function saveParse(txt){ txt=String(txt||'').trim(); let o=null;
   const keys=Object.keys(o.data).filter(function(k){ return SAVE_KEYS.test(k)&&typeof o.data[k]==='string'; }); if(!keys.length) return {err:'Kayıt boş'};
   return {o:o, keys:keys}; }
 function saveImport(txt,noReload){ const r=saveParse(txt); if(r.err){ toast(r.err,'#ff6a5a'); return false; }
-  try{ Object.keys(saveCollect()).forEach(function(k){ localStorage.removeItem(k); }); r.keys.forEach(function(k){ localStorage.setItem(k,r.o.data[k]); }); }catch(e){ toast('Kayıt yazılamadı: tarayıcı depolaması kapalı olabilir','#ff6a5a'); return false; }
-  toast('Kayıt yüklendi ('+r.keys.length+' öğe, '+(r.o.ver||'')+') — oyun yeniden başlıyor','#7dffb0'); if(!noReload) setTimeout(function(){ try{ location.reload(); }catch(e){} },1200); return true; }
+  try{ Object.keys(saveCollect()).forEach(function(k){ stDel(k); }); r.keys.forEach(function(k){ stSet(k,r.o.data[k]); }); }catch(e){ toast('Kayıt yazılamadı: tarayıcı depolaması kapalı olabilir','#ff6a5a'); return false; }
+  depoFlush(); toast('Kayıt yüklendi ('+r.keys.length+' öğe, '+(r.o.ver||'')+') — oyun yeniden başlıyor','#7dffb0'); if(!noReload) setTimeout(function(){ try{ location.reload(); }catch(e){} },1200); return true; }
 function saveDownload(){ const o=saveExport(), blob=new Blob([JSON.stringify(o,null,1)],{type:'application/json'}), a=document.createElement('a');
   a.href=URL.createObjectURL(blob); a.download='ay-yildiz-kayit-'+new Date().toISOString().slice(0,10)+'.json'; document.body.appendChild(a); a.click(); setTimeout(function(){ try{ URL.revokeObjectURL(a.href); a.remove(); }catch(e){} },2000);
   toast(o.n+' öğe dosyaya yazıldı','#7dffb0'); }

@@ -5,8 +5,8 @@
    instead of one long page. All existing element ids stay, so career, medals, licences and cloud code keep working. */
 const PCARD={tab:'ozet', lg:'in'};
 if($('loginUI')) MODALS.push('loginUI');
-try{ const t=localStorage.getItem('ayy-pctab'); if(t) PCARD.tab=t; }catch(e){}
-function pcTab(t){ PCARD.tab=t; try{ localStorage.setItem('ayy-pctab',t); }catch(e){}
+try{ const t=stGet('ayy-pctab'); if(t) PCARD.tab=t; }catch(e){}
+function pcTab(t){ PCARD.tab=t; try{ stSet('ayy-pctab',t); }catch(e){}
   const ui=$('acctUI'); if(!ui) return; ui.querySelectorAll('.pc-tab').forEach(function(s){ s.classList.toggle('hidden',s.dataset.t!==t); });
   const nv=$('pcTabs'); if(nv) nv.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-selected',String(b.dataset.t===t)); }); }
 function pcHero(){ const p=accProfile(), h=$('pcHero'); if(!h) return; h.dataset.u=p.unit||'hava';

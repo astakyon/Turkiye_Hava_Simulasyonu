@@ -23,7 +23,7 @@ const RD=[['setRes','seg:r','auto'],['setCap','seg:c','auto'],['setAA','seg:a','
   ['setTouch','seg:t','auto'],['tchSize','range',function(){ return rdTchDef('size'); },function(){ return Math.round(touchOpt().size*100); }],['tchOp','range',function(){ return rdTchDef('op'); },function(){ return Math.round(touchOpt().op*100); }],['tchStick','range',function(){ return rdTchDef('stick'); },function(){ return Math.round(touchOpt().stick*100); }],['tchLeft','chk',false,function(){ return touchOpt().left; }],['tchFloat','chk',false,function(){ return !!(SETTINGS.tch||{}).float; }],
   ['setVol','range',80,function(){ return Math.round(SETTINGS.volume*100); }],['setMusic','chk',true],['setUiSnd','chk',true],['setRadioTts','chk',true],
   ['setUiz','seg:z','1'],['setCb','seg:c','off'],['setHc','chk',false],['setRm','chk',false],['setRadioSub2','chk',true],
-  ['setUi','seg:u','auto'],['setMini','chk',false],['setNotes','seg:n','30']];
+  ['setMini','chk',false],['setNotes','seg:n','30']];
 function rdVal(d){ return typeof d==='function'?d():d; }
 function rdDiff(r){ const el=$(r[0]); if(!el) return false; const k=r[1];
   if(k==='fn') return !!r[2]();

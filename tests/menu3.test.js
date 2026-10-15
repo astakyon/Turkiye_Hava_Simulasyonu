@@ -14,7 +14,7 @@ selectedId='kaan'; setAircraft('kaan'); preFlight('hangar'); const l=loadoutOf('
 LGRP.kaan=[]; m3Groups(); $('suGrp').innerHTML; // add via handler logic
 (function(){ const L=LGRP.kaan, c={}; c[w[0]]=2; L.push({n:'Test',l:c}); lgSave(); })();
 WORDER.forEach(function(k){ l[k]=0; }); refreshSetup(); lgApply(0); T_('group applies counts',loadoutOf('kaan')[w[0]]===2,JSON.stringify(loadoutOf('kaan')));
-T_('groups persist',/Test/.test(localStorage.getItem('ayy-lgroups')||''));
+T_('groups persist',/Test/.test(stGet('ayy-lgroups')||''));
 loadDone(); pauseGame(); toMenuFromPause();
 /* hangar cycles through every vehicle and starts with land / sea ones */
 titleAct('start'); titleAct('q_free'); selectV({t:'ac',id:'akinci'}); cycleAircraft(1); T_('after the last aircraft comes the T129',HSEL==='t129',HSEL);

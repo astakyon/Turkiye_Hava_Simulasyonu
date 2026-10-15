@@ -37,8 +37,8 @@ const CTRL_DEF={
 const CTRL_ORDER=['air','heli','land','sea','foot','gen'];
 const CTRL={kb:{}, pad:{}};
 function ctrlDefaults(){ CTRL_ORDER.forEach(function(s){ CTRL.kb[s]={}; CTRL.pad[s]={}; CTRL_DEF[s].acts.forEach(function(a){ CTRL.kb[s][a[0]]=a[2].slice(); CTRL.pad[s][a[0]]=a[3].slice(); }); }); }
-function ctrlLoad(){ ctrlDefaults(); try{ const o=JSON.parse(localStorage.getItem('ayy-controls')||'null'); if(o) ['kb','pad'].forEach(function(d){ for(const s in (o[d]||{})) for(const a in o[d][s]) if(CTRL[d][s]&&CTRL[d][s][a]) CTRL[d][s][a]=o[d][s][a].slice(0,3); }); }catch(e){} }
-function ctrlSave(){ try{ localStorage.setItem('ayy-controls',JSON.stringify(CTRL)); }catch(e){} }
+function ctrlLoad(){ ctrlDefaults(); try{ const o=JSON.parse(stGet('ayy-controls')||'null'); if(o) ['kb','pad'].forEach(function(d){ for(const s in (o[d]||{})) for(const a in o[d][s]) if(CTRL[d][s]&&CTRL[d][s][a]) CTRL[d][s][a]=o[d][s][a].slice(0,3); }); }catch(e){} }
+function ctrlSave(){ try{ stSet('ayy-controls',JSON.stringify(CTRL)); }catch(e){} }
 function ctrlResetScheme(dev,s){ CTRL_DEF[s].acts.forEach(function(a){ CTRL[dev][s][a[0]]=(dev==='kb'?a[2]:a[3]).slice(); }); ctrlSave(); }
 ctrlLoad();
 /* keyboard: held / pressed-this-event */

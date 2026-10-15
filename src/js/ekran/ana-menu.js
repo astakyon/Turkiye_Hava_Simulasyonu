@@ -7,8 +7,9 @@ function enterTitle(){ if(!NET.on) aiClear(); state='menu'; menuMode='title'; if
 /* ---------- main menu (A: Komuta, B: Sinematik) */
 let tFocus=0, startFrom='hangar', misSel=0;
 const START_TXT={hangar:'hangardan',runway:'pistten',air:'havada',walk:'üssü gezerek'};
-function uiStyle(){ const s=SETTINGS.ui||'auto'; if(s==='A'||s==='B') return s; return 'C'; }
-function titleItems(){ const st=uiStyle(), adm=typeof accIsAdmin==='function'&&accIsAdmin(); return Array.prototype.slice.call(document.querySelectorAll(st==='A'?'#titleA .mitem':(st==='B'?'#titleB .mitem':'#titleC .mitem:not([disabled])'))).filter(function(b){ return adm||['library','sounds','admin'].indexOf(b.dataset.act)<0; }); }
+/* V2.26: only the current main menu is kept (the older 'Komuta' and 'Sinematik' designs were removed at the player's request) */
+function uiStyle(){ return 'C'; }
+function titleItems(){ const adm=typeof accIsAdmin==='function'&&accIsAdmin(); return Array.prototype.slice.call(document.querySelectorAll('#titleC .mitem:not([disabled])')).filter(function(b){ return adm||['library','sounds','admin'].indexOf(b.dataset.act)<0; }); }
 function titleFocus(i){ const L=titleItems(); if(!L.length) return; tFocus=(i+L.length)%L.length; L.forEach(function(b,j){ b.classList.toggle('kf',j===tFocus); });
   if(uiStyle()==='C'){ titleDetail(L[tFocus].dataset.act); try{ L[tFocus].scrollIntoView({block:'nearest'}); }catch(e){} } }
 /* detail panel of the new menu: what the focused item does, live facts, one big action */
@@ -40,11 +41,8 @@ window.addEventListener('keydown',function(){ setLastIn('kb'); },true);
 window.addEventListener('pointerdown',function(e){ setLastIn(e.pointerType==='touch'?'touch':'kb'); },true);
 function refreshTitle(){
   const st=uiStyle(), a=AIRCRAFT[selectedId], r=regOf(selectedId);
-  $('title').classList.toggle('ui-a',st==='A'); $('title').classList.toggle('ui-b',st==='B'); $('title').classList.toggle('ui-c',st==='C');
+  $('title').classList.add('ui-c');
   if(st==='C'){ $('mc_missions').textContent=MORDER.length+' görev'; $('cName').textContent=SETTINGS.callsign||'Misafir pilot'; titleHints(); }
-  const sub=a.short+' · '+MISSIONS[missionId==='net'?'free':missionId].name+' · '+START_TXT[startPick];
-  $('flySubA').textContent=sub; $('flySubB').textContent=sub;
-  $('mAac').textContent=AC_ORDER.length+' ARAÇ'; $('mAmis').textContent=MORDER.length+' GÖREV'; $('mAload').textContent=(uiStyle()==='A'?'ARAYÜZ · KOMUTA':'');
   $('tCap').querySelector('b').textContent=a.name; $('tCap').querySelector('small').textContent='Hilal Kanatlar · '+(CLASSES[r.cls]||'').toUpperCase();
   const sb='<b>'+a.name+'</b> · '+loadSummary(selectedId); $('sbAc').innerHTML=sb; $('sbAc2').innerHTML=sb;
   const on=(typeof navigator.onLine==='boolean')?navigator.onLine:true; $('sbNet').textContent=on?'İnternet var · çok oyunculu hazır':'Çevrimdışı'; $('sbNet').className=on?'on':'';

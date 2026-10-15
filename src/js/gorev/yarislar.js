@@ -14,8 +14,8 @@ const RACES=[
   {id:'r_boat',n:'Körfez tekne yarışı',veh:'boat',ac:'patrol',d:'Deniz Üssü açığındaki şamandıraların arasından Hücumbotla iki tur at.',R:22,
    gates:function(){ const L=[]; for(let lap=0;lap<2;lap++) for(let k=0;k<8;k++){ const a=-Math.PI/2+k/8*Math.PI*2, x=-2700+Math.cos(a)*520, z=-4600+Math.sin(a)*360; L.push([x,2.5,z]); } L.push(L[0].slice()); return L; }}];
 const RACE={on:false, def:null, gates:[], meshes:[], i:0, t:0, started:false, rec:[], recT:0, splits:[], ghost:null, gm:null, gi:0};
-function raceStore(){ try{ return JSON.parse(localStorage.getItem('ayy-race')||'{}'); }catch(e){ return {}; } }
-function raceSave(o){ try{ localStorage.setItem('ayy-race',JSON.stringify(o)); }catch(e){} }
+function raceStore(){ try{ return JSON.parse(stGet('ayy-race')||'{}'); }catch(e){ return {}; } }
+function raceSave(o){ try{ stSet('ayy-race',JSON.stringify(o)); }catch(e){} }
 function raceBest(id){ const s=raceStore()[id]; return s&&s.best||null; }
 /* ---- board */
 boardAll=HOOK.wrap('boardAll','gorev/yarislar#_rAll',function(_rAll){ return function(){ return _rAll().concat(RACES.map(function(R){ return {id:R.id,kind:'race',name:'Yarış: '+R.n,desc:R.d,R:R}; })); }; },boardAll);

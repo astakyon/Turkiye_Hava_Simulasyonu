@@ -3,6 +3,7 @@
 cekirdek/acilis.js
 cekirdek/kanca.js
 cekirdek/temel.js
+cekirdek/depo.js
 cekirdek/cizici.js
 dunya/gok-isik.js
 dunya/arazi.js

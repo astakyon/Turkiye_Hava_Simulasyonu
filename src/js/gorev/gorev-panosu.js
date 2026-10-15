@@ -13,12 +13,12 @@ const BMETA={
 function bMeta(e){ return e.kind==='heli'?{cat:'heli',diff:e.M.id==='h_poligon'||e.M.id==='h_asker'?1:2,dur:Math.round(e.M.lim/60),xp:e.M.xp,obj:e.M.obj.map(function(o){ return o.n; }),thr:e.M.id==='h_konvoy'?['Hareketli hedefler']:e.M.id==='h_yuk'?['Dağ rüzgârı, yük salınımı']:['Tehdit yok'],load:null,area:e.M.obj.reduce(function(a,o){ return o.x!=null?[o.x,o.z,3500]:a; },[e.M.spot[0],e.M.spot[1],3500])}:BMETA[e.id]; }
 function boardAll(){ const L=MORDER.map(function(id){ return {id:id,kind:'air',name:MISSIONS[id].name,desc:MISSIONS[id].desc}; });
   if(typeof HMIS!=='undefined') HMIS.forEach(function(M){ L.push({id:M.id,kind:'heli',name:M.n,desc:M.d,M:M}); }); return L; }
-const BF={cat:'all',diff:0,dur:'all',sort:'def'}; try{ Object.assign(BF,JSON.parse(localStorage.getItem('ayy-bf')||'{}')); }catch(e){}
+const BF={cat:'all',diff:0,dur:'all',sort:'def'}; try{ Object.assign(BF,JSON.parse(stGet('ayy-bf')||'{}')); }catch(e){}
 function boardList(){ let L=boardAll().filter(function(e){ const m=bMeta(e); if(BF.cat!=='all'&&m.cat!==BF.cat) return false; if(BF.diff&&m.diff!==BF.diff) return false; if(BF.dur==='short'&&!(m.dur>0&&m.dur<=7)) return false; if(BF.dur==='long'&&!(m.dur===0||m.dur>7)) return false; return true; });
   if(BF.sort==='xp') L=L.slice().sort(function(a,b){ return bMeta(b).xp-bMeta(a).xp; }); return L; }
 function misCount(){ return Math.max(1,boardList().length); }
-function bStars(id){ try{ return (JSON.parse(localStorage.getItem('ayy-stars')||'{}')[id])||0; }catch(e){ return 0; } }
-function bSetStars(id,n){ try{ const o=JSON.parse(localStorage.getItem('ayy-stars')||'{}'); if(n>(o[id]||0)){ o[id]=n; localStorage.setItem('ayy-stars',JSON.stringify(o)); } }catch(e){} }
+function bStars(id){ try{ return (JSON.parse(stGet('ayy-stars')||'{}')[id])||0; }catch(e){ return 0; } }
+function bSetStars(id,n){ try{ const o=JSON.parse(stGet('ayy-stars')||'{}'); if(n>(o[id]||0)){ o[id]=n; stSet('ayy-stars',JSON.stringify(o)); } }catch(e){} }
 function starsHTML(n,max){ let s=''; for(let i=0;i<(max||3);i++) s+='<i class="'+(i<n?'on':'')+'">★</i>'; return '<span class="stars">'+s+'</span>'; }
 const BVEH={v:'plane'};
 /* ---- render */
@@ -56,9 +56,9 @@ misGo=function(){ const e=boardList()[misSel]; if(!e) return;
   if(e.id==='free'&&BVEH.v!=='plane'){ selectMission('free'); heliFromHangar(BVEH.v); return; }
   selectMission(e.id); preFlight('missions'); };
 openMissions=function(){ state='menu'; menuMode='missions'; showScreen('missionsUI'); const L=boardList(); misSel=Math.max(0,L.findIndex(function(e){ return e.id===missionId; })); renderMissions(); };
-(function(){ const f=$('misFilt'); if(f) f.addEventListener('click',function(e){ const b=e.target.closest('button[data-v]'); if(!b) return; const k=b.parentNode.dataset.k, v=b.dataset.v; BF[k]=k==='diff'?+v:v; try{ localStorage.setItem('ayy-bf',JSON.stringify(BF)); }catch(err){} misSel=0; renderMissions(); });
+(function(){ const f=$('misFilt'); if(f) f.addEventListener('click',function(e){ const b=e.target.closest('button[data-v]'); if(!b) return; const k=b.parentNode.dataset.k, v=b.dataset.v; BF[k]=k==='diff'?+v:v; try{ stSet('ayy-bf',JSON.stringify(BF)); }catch(err){} misSel=0; renderMissions(); });
   const br=$('misBrief'); if(br) br.addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return;
-    if(b.id==='btnBLoad'){ const en=boardList()[misSel], m=en&&bMeta(en), P=m&&LPRESETS.find(function(p){ return p.id===m.load; }); if(!P) return; const n=SLOTS[selectedId]||0, mix=P.mix(selectedId,n), l=loadoutOf(selectedId); WORDER.forEach(function(k){ l[k]=mix[k]||0; }); try{ localStorage.setItem('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(err){} toast('Yük: '+P.n,'#7dffb0'); return; }
+    if(b.id==='btnBLoad'){ const en=boardList()[misSel], m=en&&bMeta(en), P=m&&LPRESETS.find(function(p){ return p.id===m.load; }); if(!P) return; const n=SLOTS[selectedId]||0, mix=P.mix(selectedId,n), l=loadoutOf(selectedId); WORDER.forEach(function(k){ l[k]=mix[k]||0; }); try{ stSet('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(err){} toast('Yük: '+P.n,'#7dffb0'); return; }
     if(b.dataset.v&&b.parentNode.dataset.k==='veh'){ BVEH.v=b.dataset.v; renderMissions(); } }); })();
 /* ---- objective line under the compass */
 function bObjective(){ if(state!=='play'||!M||M.id==='free'||M.id==='net'||M.done) return null; const lim=MISSIONS[M.id].limit, rem=lim?Math.max(0,lim-M.t):null; let txt='', tgt=null;

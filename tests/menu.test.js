@@ -2,9 +2,7 @@ let ok=0,bad=0; function T(n,c,i){ if(c){ok++;} else {bad++; console.log('FAIL',
 playMode('quick');
 function key(code){ (listeners.keydown||[]).forEach(f=>f({code,key:code,preventDefault(){},repeat:false,target:{tagName:'X'}})); }
 enterTitle(); T('title',menuMode==='title');
-SETTINGS.ui='A'; refreshTitle(); T('ui-a', uiStyle()==='A');
-SETTINGS.ui='B'; refreshTitle(); T('ui-b', uiStyle()==='B');
-T('fly sub text',/KAAN/.test(els.flySubB.textContent),els.flySubB.textContent);
+SETTINGS.ui='A'; refreshTitle(); T('old designs removed: always the current menu (V2.26)', uiStyle()==='C');
 // cinematic: placeModel moves plane along path
 placeModel(0.1); const p1=planeGroup.position.clone(); placeModel(0.5); T('cine moves',planeGroup.position.distanceTo(p1)>5); T('cine visible',cineOn());
 menuCam(0.05); T('camera near plane',camera.position.distanceTo(planeGroup.position)<200,camera.position.distanceTo(planeGroup.position));

@@ -4,14 +4,13 @@ $('setFx').addEventListener('click',function(e){ const b=e.target.closest('butto
 $('setShadow').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.shadows=b.dataset.s==='1'; saveSettings(); applyShadows(); syncSettingsUI(); });
 $('setTabs').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; setTab(b.dataset.tab); });
 function setTab(t){ Array.prototype.forEach.call($('setTabs').children,function(x){ x.setAttribute('aria-selected',String(x.dataset.tab===t)); }); Array.prototype.forEach.call(document.querySelectorAll('#settings section'),function(s){ s.classList.toggle('hidden',s.dataset.tab!==t); }); }
-$('setUi').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.ui=b.dataset.u; saveSettings(); syncSettingsUI(); refreshTitle(); });
 function enterHangar(){
   walkLeave(); WALK.from='play';
   if(!NET.on) aiClear();
   setPrep(false,[],''); state='menu'; menuMode='hangar'; MENUV.idle=0; MENUV.zoom=1; MENUV.pitch=0.2;
   setAircraft(selectedId); resetFlight('runway'); showScreen('hangarUI'); refreshHangarUI();
 }
-let startPick='hangar'; try{ const sp=localStorage.getItem('kaan-sim-start'); if(sp==='hangar'||sp==='runway'||sp==='air') startPick=sp; }catch(e){}
+let startPick='hangar'; try{ const sp=stGet('kaan-sim-start'); if(sp==='hangar'||sp==='runway'||sp==='air') startPick=sp; }catch(e){}
 const START_ORDER=['hangar','runway','air','walk'];
 function loadSummary(id){ const n=SLOTS[id]||0; if(n<=0) return 'silah taşımaz'; const l=loadoutOf(id), parts=WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }); return parts.join(' · ')||'boş'; }
 let loadFrom='hangar';
@@ -34,7 +33,7 @@ function refreshStart(){
   Array.prototype.forEach.call($('startSeg').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.s===startPick)); });
   refreshMission();
 }
-function selectStart(s){ startPick=s; try{ localStorage.setItem('kaan-sim-start',s); }catch(e){} refreshStart(); }
+function selectStart(s){ startPick=s; try{ stSet('kaan-sim-start',s); }catch(e){} refreshStart(); }
 function cycleStart(d){ const n=START_ORDER.length; selectStart(START_ORDER[(START_ORDER.indexOf(startPick)+d+n)%n]); }
 function launchFrom(s){ selectStart(s); $('startUI').classList.add('hidden'); startGame(s); }
 function setupAdjust(k,d){
@@ -70,7 +69,7 @@ const LPRESETS=[
   {id:'rec',n:'Keşif (hafif)',f:function(id){ return wpnOf(id).indexOf('m1')>=0; },mix:function(id,n){ return {m1:Math.min(2,n)}; }},
   {id:'clr',n:'Boşalt',f:function(){ return true; },mix:function(){ return {}; }}];
 $('suPre').addEventListener('click',function(e){ const b=e.target.closest('button[data-p]'); if(!b) return; const P=LPRESETS.find(function(p){ return p.id===b.dataset.p; }), n=SLOTS[selectedId]||0, m=P.mix(selectedId,n), l=loadoutOf(selectedId);
-  WORDER.forEach(function(k){ l[k]=m[k]||0; }); try{ localStorage.setItem('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(err){} if(typeof refreshStoresVisual==='function'&&activeId===selectedId){ applyLoadout(selectedId); } refreshSetup(); });
+  WORDER.forEach(function(k){ l[k]=m[k]||0; }); try{ stSet('kaan-sim-loadouts',JSON.stringify(LOADOUTS)); }catch(err){} if(typeof refreshStoresVisual==='function'&&activeId===selectedId){ applyLoadout(selectedId); } refreshSetup(); });
 $('suLoad').addEventListener('click',function(e){ const b=e.target.closest('button'); if(b&&!b.disabled) setupAdjust(b.dataset.k,+b.dataset.d); });
 function aiSave(){ SETTINGS.ai={enemies:+$('aiEnemy').value,wing:$('aiWing').value==='1',skill:+$('aiSkill').value,sam:$('aiSam').value==='1'}; saveSettings(); }
 ['aiEnemy','aiWing','aiSkill','aiSam'].forEach(function(id){ $(id).addEventListener('change',aiSave); });
@@ -168,7 +167,7 @@ function perfHTML(id){
 $('btnCmp').addEventListener('click',function(){ const cur=HSEL||selectedId; CMP=(CMP===cur)?null:cur; this.setAttribute('aria-pressed',String(!!CMP)); if(CMP) toast('Sabitlendi — şimdi karşılaştırmak için başka bir araç seç','#ffc24a'); refreshHangarUI(); });
 function selectAircraft(id){
   HSEL=null; if(pickCls==='heli'){ pickCls='all'; buildPicker(); }
-  selectedId=id; try{ localStorage.setItem('kaan-sim-aircraft',id); }catch(e){}
+  selectedId=id; try{ stSet('kaan-sim-aircraft',id); }catch(e){}
   if(state==='menu'){ setAircraft(id); resetFlight('runway'); }
   refreshHangarUI();
 }

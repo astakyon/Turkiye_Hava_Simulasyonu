@@ -10,8 +10,8 @@ const ED_T={gt:{n:'Yer hedefi',c:'#ff8a5a'},at:{n:'Hava hedefi',c:'#ff4a6a'},en:
 const ED_GT=['truck','radar','depot','bunker','sam'];
 const ED={m:null, tool:'sel', sel:null, cx:0, cz:0, scale:0.03, drag:null, open:false};
 const CUS={local:[], pub:[], cur:null, st:null, keep:null};
-try{ CUS.local=JSON.parse(localStorage.getItem('ayy-cmis')||'[]')||[]; }catch(e){ CUS.local=[]; }
-function cusSave(){ try{ localStorage.setItem('ayy-cmis',JSON.stringify(CUS.local)); }catch(e){} }
+try{ CUS.local=JSON.parse(stGet('ayy-cmis')||'[]')||[]; }catch(e){ CUS.local=[]; }
+function cusSave(){ try{ stSet('ayy-cmis',JSON.stringify(CUS.local)); }catch(e){} }
 function edNew(){ return {v:1,id:'c'+Date.now().toString(36),n:'Yeni görev',d:'Hedefleri imha et.',ac:'any',lim:600,wx:'clear',tod:'day',items:[{id:1,t:'st',x:0,z:2500,h:0,alt:600}]}; }
 function edNextId(m){ return m.items.reduce(function(a,i){ return Math.max(a,i.id||0); },0)+1; }
 /* ---- share code */

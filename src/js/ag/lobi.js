@@ -1,6 +1,6 @@
 /* ------------------------------------------------------------------ online lobby UI (from yapay-zeka-ag, V2.25) */
 // ---------- lobby UI
-function netNameVal(){ const v=($('netName').value||'').trim().slice(0,16)||'Pilot'; try{ localStorage.setItem('kaan-sim-name',v); }catch(e){} return v; }
+function netNameVal(){ const v=($('netName').value||'').trim().slice(0,16)||'Pilot'; try{ stSet('kaan-sim-name',v); }catch(e){} return v; }
 function netModeSel(){ const b=$('netMode').querySelector('[aria-pressed="true"]'); return (b&&NET_MODES[b.dataset.m])?b.dataset.m:'coop'; }
 function openNet(){ $('netUI').classList.remove('hidden'); if(NET.on&&!NET.started) netShowLobby(); else netShowHome(); }
 function closeNet(){ $('netUI').classList.add('hidden'); }
@@ -27,7 +27,7 @@ function netPick(ac,team){
   else netSend(NET.hconn,{t:'pick',ac:ac,team:team});
 }
 (function(){
-  try{ $('netName').value=localStorage.getItem('kaan-sim-name')||''; }catch(e){}
+  try{ $('netName').value=stGet('kaan-sim-name')||''; }catch(e){}
   $('netAc').innerHTML=AC_ORDER.map(function(id){ return '<option value="'+id+'">'+AIRCRAFT[id].short+'</option>'; }).join('');
   $('btnNetClose').addEventListener('click',function(){ if(NET.on&&!NET.started){ netLeave(); } closeNet(); });
   $('btnNetHost').addEventListener('click',netHost);

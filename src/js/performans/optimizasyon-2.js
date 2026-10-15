@@ -115,7 +115,7 @@ function devTier(){ const g=String(DEV.gpu||'').toLowerCase(), mem=navigator.dev
   if(/intel/.test(g)&&!/arc/.test(g)) return 1; if(/rtx|radeon rx|gtx 1[06]\d0|apple m[1-9]|arc a/.test(g)||mem>=16) return 3; return 2; }
 function devTierApply(silent){ const q=devTier(); SETTINGS.quality=q; SETTINGS.fx=null; SETTINGS.shadows=null; SETTINGS.res='auto'; SETTINGS.autoPerf=true; PERF.scale=1; saveSettings(); applyQuality(); syncSettingsUI();
   if(!silent) toast('Cihaza göre ayarlandı: '+['Düşük','Orta','Yüksek','Ultra'][q]+' ('+DEV.kind+(DEV.gpu&&DEV.gpu!=='?'?' · '+String(DEV.gpu).slice(0,40):'')+')','#7dffb0'); }
-loadStore=HOOK.wrap('loadStore','performans/optimizasyon-2#_p3Load',function(_p3Load){ return function(){ let first=false; try{ first=!localStorage.getItem('kaan-sim-settings'); }catch(e){} _p3Load(); if(first){ try{ SETTINGS.quality=devTier(); SETTINGS.tierAuto=true; }catch(e){} } }; },loadStore);
+loadStore=HOOK.wrap('loadStore','performans/optimizasyon-2#_p3Load',function(_p3Load){ return function(){ let first=false; try{ first=!stGet('kaan-sim-settings'); }catch(e){} _p3Load(); if(first){ try{ SETTINGS.quality=devTier(); SETTINGS.tierAuto=true; }catch(e){} } }; },loadStore);
 (function(){ const b=$('btnTier'); if(b) b.addEventListener('click',function(){ devTierApply(false); }); })();
 /* ---- full-screen menus: draw the scene at 10 FPS */
 function menuCovered(){ if(state!=='menu'||!document.querySelector) return false; return !!document.querySelector('.modal.fs:not(.hidden), #settings:not(.hidden), #records:not(.hidden), #campUI:not(.hidden)'); }
