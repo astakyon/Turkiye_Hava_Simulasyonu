@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.29 — 2026-10-15 · Ana menü: Hızlı Oyun ve Kariyer
+- **BAŞLA kalktı:** ana menünün ilk sırasında artık **Hızlı Oyun**, **Kariyer** ve **Çok Oyunculu** var. Kariyer'e ulaşmak için ara bir menüden geçmek gerekmiyor.
+- **Hızlı Oyun:** BAŞLA'nın içindeki her şey Kariyer hariç buraya taşındı: Hemen Başla (en son aracınla tek tıkla), Serbest Uçuş / Sürüş, Hızlı Görev ve Üssü Gez. Kariyerden bağımsız: her şey açık, tecrübe puanı ya da rütbe ilerlemesi kariyere işlemiyor.
+- **Hızlı Savaş (yeni):** botlara karşı, havada başlayan dört hızlı mod. Uçak en son kullandığın uçak; it dalaşı modlarında yavaş bir İHA seçiliyse yerine KAAN geliyor.
+  - **İt Dalaşı:** üç dalga düşman savaş uçağı, kanat adamın yanında.
+  - **Serbest Çatışma:** süre ve hedef yok, dört düşman uçağı ve hava savunması.
+  - **Yer Taarruzu:** hava savunmalı yer hedefleri; önlemeye iki düşman uçağı kalkıyor.
+  - **Hava Hedefleri:** 8 hedef, 7 dakika.
+
+  Bu modların düşman ve SAM ayarları yalnız o savaş için geçerli; kayıtlı yapay zekâ ayarların değişmiyor.
+- **Harekât yalnız Kariyer'de:** "Harekât: Kızıl Elma" Hızlı Oyun'dan çıkarıldı. Hikâye bonusu ve kayıtlı ilerlemesiyle Kariyer'in ilk sırasında duruyor.
+- **Geri ve Esc:** Hızlı Savaş'tan Hızlı Oyun'a, Hızlı Oyun'dan ya da Kariyer'den ana menüye dönüyor.
+
 ## V2.28 — 2026-10-15 · Görüntü, ses ve dokunmatik düzeltmeleri
 - **Uçaktaki gölge titremesi giderildi:** 300 m'nin üstünde gölge haritası her 4 karede bir çiziliyordu. Uçak o arada 10–15 m ilerlediği için kanadın gövdeye, kuyruğun kanada düşen gölgesi saniyede 15 kez yanıp sönüyordu. Artık yüksekte gölge kutusu yalnızca uçağı kapsıyor (150 m yerine birkaç metre), her karede çiziliyor ve uçağın üzerine ortalanıyor. Gölge ayrıntısı yaklaşık 3 kat incelikte (KAAN'da 7 cm yerine 2 cm). Gölge sapması da bu ölçüye göre ayarlandı, gövdedeki koyu bantlar kalktı. Menüdeki uçuş görüntüsü için de aynısı geçerli.
 - **Telefonda daha net görüntü:**

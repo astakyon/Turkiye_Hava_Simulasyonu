@@ -4,10 +4,11 @@ selectedId='kaan'; setAircraft('kaan'); missionId='free'; SETTINGS.ai={enemies:0
 let err=null; ['rain','snow','storm'].forEach(function(k){ wxSet(k); try{ for(let i=0;i<50;i++) wxStep(0.05); }catch(e){ err=e.message; } }); wxSet('clear'); for(let i=0;i<200;i++) wxStep(0.1);
 T('rain / snow in flight do not throw',!err,err);
 /* menu levels */
-enterTitle(); T('root: start + net',/data-act="start"/.test($('cNav').innerHTML)&&/data-act="net"/.test($('cNav').innerHTML)&&!/data-act="settings"/.test($('cNav').innerHTML));
-titleAct('start'); T('start: quick play + career',/q_free/.test($('cNav').innerHTML)&&/careerMenu/.test($('cNav').innerHTML));
+enterTitle(); T('root: quick play + career + net',/data-act="start"/.test($('cNav').innerHTML)&&/data-act="careerMenu"/.test($('cNav').innerHTML)&&/data-act="net"/.test($('cNav').innerHTML)&&!/data-act="settings"/.test($('cNav').innerHTML));
+titleAct('start'); T('quick play: no career inside',/q_free/.test($('cNav').innerHTML)&&!/careerMenu/.test($('cNav').innerHTML));
+titleAct('back'); T('quick play back to root',NAV.level==='root');
 titleAct('careerMenu'); T('career: missions, school, walk, hangar',['c_missions','c_school','c_walk','c_hangar'].every(function(a){ return $('cNav').innerHTML.indexOf(a)>=0; }));
-titleAct('back'); T('back to start',NAV.level==='start'); titleAct('back'); T('back to root',NAV.level==='root');
+titleAct('back'); T('career back to root',NAV.level==='root');
 T('no library buttons in the menu',!/data-act="library"|data-act="sounds"|data-act="career"/.test($('cNav').innerHTML));
 /* quick play: no XP, no locks */
 const p=accProfile(); p.rank=0; p.xp=0;

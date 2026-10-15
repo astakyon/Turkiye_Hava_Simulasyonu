@@ -15,7 +15,7 @@ const NAV_IC={
 function navBtn(act,title,sub,ic,cls){ return '<button class="mitem mc'+(cls?' '+cls:'')+'" type="button" data-act="'+act+'"><svg class="mi-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">'+NAV_IC[ic]+'</svg><span class="mt"><b>'+title+'</b><small>'+sub+'</small></span></button>'; }
 function navRender(){
   const el=$('cNav'); if(!el) return; const p=accProfile(), r=p.rank||0; let h='';
-  if(NAV.level==='root') h='<p class="mg">OYNA</p>'+navBtn('start','Başla','Hızlı oyun ya da kariyer','start')+navBtn('net','Çok Oyunculu','4 kişi · sesli sohbet','net');
+  if(NAV.level==='root') h='<p class="mg">OYNA</p>'+navBtn('start','Hızlı Oyun','Hemen uç, gez, botlara karşı savaş','bolt')+navBtn('careerMenu','Kariyer',rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP','star','car')+navBtn('net','Çok Oyunculu','4 kişi · sesli sohbet','net');
   else if(NAV.level==='start') h='<p class="mg">HIZLI OYUN <small>· puan kazandırmaz, her şey açık</small></p>'+navBtn('q_free','Serbest Uçuş','Süresiz, düşmansız','plane')+navBtn('q_walk','Üssü Gez','Yürü, sür, helikoptere bin','walk')+navBtn('q_hangar','Hangar','Bütün uçaklar ve boyalar','hangar')+
     '<p class="mg">KARİYER</p>'+navBtn('careerMenu','Kariyer',rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP','star','car')+navBtn('back','Geri','','back','bk');
   else h='<p class="mg">KARİYER <small>· '+rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP</small></p>'+navBtn('c_missions','Görevler',navMisSub(),'target')+navBtn('c_school','Eğitim',(typeof schDone==='function'?schDone():0)+' / 8 ders · lisans','school')+
@@ -23,6 +23,8 @@ function navRender(){
   el.innerHTML=h; tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }
 function navMisSub(){ const L=boardAll().filter(function(e){ return e.kind!=='school'&&e.kind!=='cnew'; }), open=L.filter(function(e){ return !misLocked(e); }).length; return open+' / '+L.length+' görev açık'; }
 function navGo(level){ NAV.level=level; tFocus=0; navRender(); }
+/* V2.29: one level up — Hızlı Savaş → Hızlı Oyun → ana menü; Kariyer → ana menü */
+function navUp(){ return NAV.level==='battle'?'start':'root'; }
 /* ---- mission requirements by rank (career) */
 const MREQ={free:0,rings:0,air:1,recon:2,strike:3,dogfight:4,h_asker:1,h_poligon:2,h_yuk:3,h_konvoy:4};
 function misReq(e){ if(!e) return 0; if(MREQ[e.id]!=null) return MREQ[e.id]; if(e.kind==='dyn'&&e.D) return [0,1,2,4][e.D.diff||1]; if(e.kind==='race') return 1; return 0; }
@@ -35,7 +37,7 @@ callLocked=function(id){ if(PLAY.mode!=='career'||SETTINGS.rankLocks===false) re
 careerAdd=HOOK.wrap('careerAdd','ekran/ana-menu-2#_m2Add',function(_m2Add){ return function(xp,patch,why){ if(PLAY.mode==='quick') return; return _m2Add(xp,patch,why); }; },careerAdd);
 /* ---- detail panel and actions */
 const NAV_D={
-  start:['OYNA','Başla','Hızlı oyun: hemen uç, gez ya da hangarı incele — puan kazandırmaz, her şey açık. Kariyer: görevler, eğitim ve ilerleme.',[],'Seç'],
+  start:['OYNA','Hızlı Oyun','Kariyerden bağımsız: hemen uç, üssü gez, botlara karşı hızlı savaşa gir. Her şey açık, puan ve ilerleme kariyere işlemez.',[],'Seç'],
   q_free:['HIZLI OYUN','Serbest Uçuş','Adayı dilediğin gibi keşfet. Bu modda tecrübe puanı kazanılmaz, bütün uçaklar açık.',[],'▶ Uçuşa başla'],
   q_walk:['HIZLI OYUN','Üssü Gez','Yürü, araçlara ve helikopterlere bin, araç çağır. Puan kazandırmaz.',[],'▶ Gezmeye başla'],
   q_hangar:['HIZLI OYUN','Hangar','Bütün uçakları, helikopterleri ve boyaları dene. Kilit yok.',[],'Hangara git'],
@@ -49,7 +51,7 @@ titleDetail=HOOK.wrap('titleDetail','ekran/ana-menu-2#_m2Detail',function(_m2Det
   const chips=act==='careerMenu'||act.indexOf('c_')===0?['<span>Rütbe <b>'+rankName(p.rank||0)+'</b></span>','<span>TP <b>'+(p.xp||0).toLocaleString('tr-TR')+'</b></span>']:(act.indexOf('q_')===0?['<span>Puan <b>kazanılmaz</b></span>','<span>Kilit <b>yok</b></span>']:[]);
   $('cdK').textContent=d[0]; $('cdT').textContent=d[1]; $('cdD').textContent=d[2]; $('cdC').innerHTML=chips.join(''); $('cdGo').textContent=d[4]; $('cdGo').dataset.act=act; $('cdGo').disabled=false; el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim'); }; },titleDetail);
 const _m2Act=titleAct; titleAct=function(act){ if(state!=='menu') return;
-  if(act==='start') return navGo('start'); if(act==='careerMenu') return navGo('career'); if(act==='back') return navGo(NAV.level==='career'?'start':'root');
+  if(act==='start') return navGo('start'); if(act==='careerMenu') return navGo('career'); if(act==='back') return navGo(navUp());
   if(act==='q_free'){ playMode('quick'); return _m2Act('free'); } if(act==='q_walk'){ playMode('quick'); return _m2Act('walk'); } if(act==='q_hangar'){ playMode('quick'); return _m2Act('hangar'); }
   if(act==='c_missions'){ playMode('career'); BF.cat='all'; misSel=0; return openMissions(); } if(act==='c_school'){ playMode('career'); return _m2Act('school'); }
   if(act==='c_walk'){ playMode('career'); return _m2Act('walk'); } if(act==='c_hangar'){ playMode('career'); return _m2Act('hangar'); }
@@ -57,7 +59,7 @@ const _m2Act=titleAct; titleAct=function(act){ if(state!=='menu') return;
   return _m2Act(act); };
 refreshTitle=HOOK.wrap('refreshTitle','ekran/ana-menu-2#_m2Refresh',function(_m2Refresh){ return function(){ if(!$('mc_missions')){ const s=document.createElement('span'); s.id='mc_missions'; s.hidden=true; document.body.appendChild(s); } _m2Refresh(); navRender(); }; },refreshTitle);
 /* Esc goes up one level in the menu */
-INPUT.on('keydown',function(e){ if(state==='menu'&&menuMode==='title'&&e.code==='Escape'&&NAV.level!=='root'&&!(typeof anyModalOpen==='function'&&anyModalOpen())){ e.preventDefault(); e.stopImmediatePropagation(); navGo(NAV.level==='career'?'start':'root'); } },true,'ekran/ana-menu-2','menü');
+INPUT.on('keydown',function(e){ if(state==='menu'&&menuMode==='title'&&e.code==='Escape'&&NAV.level!=='root'&&!(typeof anyModalOpen==='function'&&anyModalOpen())){ e.preventDefault(); e.stopImmediatePropagation(); navGo(navUp()); } },true,'ekran/ana-menu-2','menü');
 /* header buttons + admin library row (built here so the page skeleton stays small) */
 (function(){ const ic=function(d){ return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">'+d+'</svg>'; };
   const pr=$('cProf'); if(pr&&pr.parentNode&&!$('cIbtns')&&document.createElement){ const d=document.createElement('div'); d.className='c-ibtns ui'; d.id='cIbtns';

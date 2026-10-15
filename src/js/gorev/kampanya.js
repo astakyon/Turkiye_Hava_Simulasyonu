@@ -118,8 +118,8 @@ if(typeof MEDALS!=='undefined'&&!MEDALS.some(function(m){ return m[0]==='kizilel
 NAV_IC.camp='<path d="M4 20l6-14 4 8 3-5 3 11z"/>';
 navRender=HOOK.wrap('navRender','gorev/kampanya#_cmNav',function(_cmNav){ return function(){ _cmNav(); const el=$('cNav'); if(!el) return; const h=el.innerHTML; if(h.indexOf('_camp"')>=0) return;
   const sub=campDoneN()+' / '+CAMP_CH.length+' bölüm · hikâyeli harekât';
-  if(NAV.level==='start'){ const k='data-act="q_mis"', i=h.indexOf(k); if(i<0) return; const j=h.lastIndexOf('<button',i); el.innerHTML=h.slice(0,j)+navBtn('q_camp','Harekât: Kızıl Elma',sub,'camp')+h.slice(j); }
-  else if(NAV.level==='career'){ const k='data-act="c_missions"', i=h.indexOf(k); if(i<0) return; const j=h.lastIndexOf('<button',i); el.innerHTML=h.slice(0,j)+navBtn('c_camp','Harekât: Kızıl Elma',sub,'camp')+h.slice(j); }
+  /* V2.29: Harekât is a career story (saved progress, story TP) — only under Kariyer, not in Hızlı Oyun */
+  if(NAV.level==='career'){ const k='data-act="c_missions"', i=h.indexOf(k); if(i<0) return; const j=h.lastIndexOf('<button',i); el.innerHTML=h.slice(0,j)+navBtn('c_camp','Harekât: Kızıl Elma',sub,'camp')+h.slice(j); }
   else return; tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
 NAV_D.q_camp=['HIZLI OYUN','Harekât: Kızıl Elma','Sekiz bölümlük hikâyeli harekât: keşif, önleme, hava desteği, arama-kurtarma, deniz devriyesi, helikopter taarruzu, refakat ve final. Bölümler sırayla açılır.',[],'Harekâtı aç'];
 NAV_D.c_camp=['KARİYER','Harekât: Kızıl Elma','Sekiz bölümlük hikâyeli harekât. Her bölüm ilk tamamlamada hikâye bonusu TP verir; final Kızıl Elma madalyasını kazandırır.',[],'Harekâtı aç'];

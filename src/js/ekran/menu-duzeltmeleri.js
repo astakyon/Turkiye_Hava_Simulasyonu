@@ -114,22 +114,43 @@ function lgApply(i){ const g=(LGRP[selectedId]||[])[i]; if(!g) return; const l=l
   if(host&&ai){ host.appendChild(ai); } if(host&&sp){ host.appendChild(sp); } })();
 /* ---------- title menu: quick play items */
 NAV_IC.bolt='<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'; NAV_IC.flag='<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>';
-navRender=HOOK.wrap('navRender','ekran/menu-duzeltmeleri#_m3Nav',function(_m3Nav){ return function(){ _m3Nav(); if(NAV.level!=='start') return; const el=$('cNav'); if(!el) return;
-  const p=accProfile(), r=p.rank||0;
-  el.innerHTML='<p class="mg">HIZLI OYUN <small>· her şey açık, puan kazandırmaz</small></p>'+navBtn('q_quick','Hızlı Oyun',lastName()+' ile hemen başla','bolt')+navBtn('q_free','Serbest Uçuş / Sürüş','Hangarda aracını seç','plane')+
-    navBtn('q_mis','Hızlı Görev','Bütün görevler açık','target')+navBtn('q_walk','Üssü Gez','Başlayacağın üssü seç','walk')+
-    '<p class="mg">KARİYER</p>'+navBtn('careerMenu','Kariyer',rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP','star','car')+navBtn('back','Geri','','back','bk');
+navRender=HOOK.wrap('navRender','ekran/menu-duzeltmeleri#_m3Nav',function(_m3Nav){ return function(){ _m3Nav(); if(NAV.level!=='start'&&NAV.level!=='battle') return; const el=$('cNav'); if(!el) return;
+  /* V2.29: Hızlı Oyun holds everything that was under BAŞLA except Kariyer (Harekât is a career story, it stays there) */
+  if(NAV.level==='battle') el.innerHTML='<p class="mg">HIZLI SAVAŞ <small>· botlara karşı, havada başlar</small></p>'+QB_MODES.map(function(m){ return navBtn(m.act,m.n,m.s,m.ic); }).join('')+navBtn('back','Geri','','back','bk');
+  else el.innerHTML='<p class="mg">HIZLI OYUN <small>· kariyerden bağımsız, her şey açık</small></p>'+navBtn('q_quick','Hemen Başla',lastName()+' ile tek tıkla','bolt')+navBtn('q_battle','Hızlı Savaş','Botlara karşı: it dalaşı, çatışma, taarruz','sword')+navBtn('q_free','Serbest Uçuş / Sürüş','Hangarda aracını seç','plane')+
+    navBtn('q_mis','Hızlı Görev','Bütün görevler açık','target')+navBtn('q_walk','Üssü Gez','Başlayacağın üssü seç','walk')+navBtn('back','Geri','','back','bk');
   tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
-Object.assign(NAV_D,{q_quick:['HIZLI OYUN','Hızlı Oyun','En son kullandığın araçla tek tıkla oyuna gir: uçak, helikopter, tank ya da gemi.',[],'▶ Hemen başla'],
+Object.assign(NAV_D,{q_quick:['HIZLI OYUN','Hemen Başla','En son kullandığın araçla tek tıkla oyuna gir: uçak, helikopter, tank ya da gemi.',[],'▶ Hemen başla'],
+  q_battle:['HIZLI OYUN','Hızlı Savaş','Kariyerden bağımsız, botlara karşı hızlı savaş: havada başlarsın, düşman hemen gelir. Uçak en son kullandığın uçak; zorluk Ayarlar\'daki yapay zekâ zorluğu.',[],'Savaş seç'],
   q_free:['HIZLI OYUN','Serbest Uçuş / Sürüş','Hangara git; uçak, helikopter, kara ya da deniz aracını seç, silah yükünü ve başlama yerini belirle. Süre ve kısıt yok.',[],'Hangara git'],
   q_mis:['HIZLI OYUN','Hızlı Görev','Bütün görevler kilitsiz: uçak, helikopter, dinamik görevler ve yarışlar. Düşman, kanat adamı ve zorluk görev ekranında.',[],'Görevleri aç'],
   q_walk:['HIZLI OYUN','Üssü Gez','Hava, deniz ya da kara üssünde başla: yürü, araçlara ve helikopterlere bin.',[],'Üs seç']});
 titleAct=HOOK.wrap('titleAct','ekran/menu-duzeltmeleri#_m3Act',function(_m3Act){ return function(act){ if(state!=='menu') return;
   if(act==='q_quick') return quickPlay();
+  if(act==='q_battle') return navGo('battle');
+  const qb=QB_MODES.find(function(m){ return m.act===act; }); if(qb) return qbStart(qb);
   if(act==='q_free'){ playMode('quick'); if(missionId!=='free') selectMission('free'); VSEL=null; enterHangar(); buildPicker(); return; }
   if(act==='q_mis'){ playMode('quick'); BF.cat='all'; misSel=0; return openMissions(); }
   if(act==='q_walk'){ playMode('quick'); return basePickOpen(); }
   return _m3Act(act); }; },titleAct);
+/* ---------- V2.29 Hızlı Savaş: career-independent quick battles against bots, starting in the air with the last aircraft */
+NAV_IC.sword='<path d="M14.5 3H21v6.5L9 21.5 2.5 15z"/><path d="M5 13l6 6M3 21l3-3"/>'; NAV_IC.shield='<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>'; NAV_IC.bomb='<circle cx="11" cy="14" r="7"/><path d="M15 8l3-3M18 5l2 1M19 3v2"/>';
+const QB_MODES=[
+  {act:'qb_dog', n:'İt Dalaşı', s:'3 dalga düşman savaş uçağı', ic:'sword', mis:'dogfight', jet:true, ai:{wing:true},
+    d:'Kırmızı kuvvetin üç dalga savaş uçağı üstüne geliyor. Füze ve topla düşür, flare ile füzeden kaç. Kanat adamın yanında.'},
+  {act:'qb_brawl', n:'Serbest Çatışma', s:'Bitmeyen düşman, hava savunması', ic:'shield', mis:'free', jet:true, ai:{enemies:4, wing:true, sam:true},
+    d:'Süre ve hedef yok: dört düşman uçağı ve hava savunması ile serbest çatışma. Düşen düşmanın yerine yenisi gelir; istediğin zaman duraklatıp çık.'},
+  {act:'qb_strike', n:'Yer Taarruzu', s:'Hava savunmalı yer hedefleri', ic:'bomb', mis:'strike', ai:{enemies:2, sam:true},
+    d:'Hava savunma bataryaları dahil bütün yer hedeflerini 10 dakikada imha et. İki düşman uçağı önleme için kalkar.'},
+  {act:'qb_air', n:'Hava Hedefleri', s:'8 hedef, 7 dakika', ic:'target', mis:'air', ai:{enemies:0},
+    d:'Havadaki 8 hedefi 7 dakikada vur. Isınmak ve silahları denemek için kısa bir savaş.'}];
+QB_MODES.forEach(function(m){ NAV_D[m.act]=['HIZLI SAVAŞ',m.n,m.d,[],'▶ Savaşa gir']; });
+const QB={on:false, cfg:null, mode:null};
+aiCfg=HOOK.wrap('aiCfg','ekran/menu-duzeltmeleri#_qbCfg',function(_qbCfg){ return function(){ const c=_qbCfg(); if(!QB.on||!QB.cfg||NET.on) return c; return Object.assign({},c,QB.cfg); }; },aiCfg);
+function qbStart(m){ playMode('quick'); const v=LASTV.v; selectedId=(v&&v.t==='ac'&&AIRCRAFT[v.id]&&(!m.jet||AIRCRAFT[v.id].airV>=150))?v.id:'kaan';   /* dogfights need a jet: a slow drone falls back to KAAN */ setAircraft(selectedId);
+  QB.on=true; QB.mode=m.act; QB.cfg=Object.assign({},m.ai); selectMission(m.mis); startGame('air'); }
+enterTitle=HOOK.wrap('enterTitle','ekran/menu-duzeltmeleri#_qbTitle',function(_qbTitle){ return function(){ QB.on=false; QB.cfg=null; QB.mode=null; return _qbTitle.apply(this,arguments); }; },enterTitle);
+enterHangar=HOOK.wrap('enterHangar','ekran/menu-duzeltmeleri#_qbHangar',function(_qbHangar){ return function(){ QB.on=false; QB.cfg=null; QB.mode=null; return _qbHangar.apply(this,arguments); }; },enterHangar);
 /* base picker for ÜSSÜ GEZ */
 const BASES=['base','naval','land','uav','marina','village','hilalkent','anadolukent'];
 function basePickOpen(){ const el=$('baseUI'); if(!el) return; const L=BASES.map(placeById).filter(function(p){ return p&&p.g; });
