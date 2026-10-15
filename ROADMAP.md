@@ -229,7 +229,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.19 | Açılış hızı | ✅ |
 | V2.20 | Yükleme ekranı 2.0 | ✅ |
 | V2.21 | Arazi ayrıntı kademeleri | ✅ |
-| V2.22 | Grafik ayarları 2.0 | |
+| V2.22 | Grafik ayarları 2.0 | ✅ |
 | V2.23 | Bütün ayarların gözden geçirmesi | |
 | V2.24 | Kanca (olay) sistemi ve kare başına çöp | |
 | V2.25 | Kod düzeni | |
