@@ -235,11 +235,14 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.25 | Kod düzeni | ✅ |
 | V2.26 | Kayıt ve depolama düzeni | ✅ |
 | V2.27 | Girdi yöneticisi | ✅ |
-| V2.28 | Test ve yayın hattı | |
-| V2.29 | Özellik envanteri | |
-| V2.30 | Ekran ve akış sadeleştirme | |
-| V2.31 | Oynanış ve metin tutarlılığı | |
-| V2.32 | Belgeler ve sürüm geçmişi | |
+| V2.28 | Görüntü, ses ve dokunmatik düzeltmeleri (oyuncu isteği) | |
+| V2.29 | Ana menü: Hızlı oyun ve Kariyer (oyuncu isteği) | |
+| V2.30 | Mühimmat yerleşimi ve zemine gömülme (oyuncu isteği) | |
+| V2.31 | Test ve yayın hattı | |
+| V2.32 | Özellik envanteri | |
+| V2.33 | Ekran ve akış sadeleştirme | |
+| V2.34 | Oynanış ve metin tutarlılığı | |
+| V2.35 | Belgeler ve sürüm geçmişi | |
 
 ### Faz 16 — Model yenileme serisi (her model onaya sunulur; düzen yol haritasından sonra)
 
@@ -247,15 +250,15 @@ Her model Defence Turk sayfasındaki fotoğraflara bakılarak ve gerçek ölçü
 
 | Sürüm | Model | Durum |
 |---|---|---|
-| V2.33 | TUSAŞ KAAN | |
-| V2.34 | Bayraktar TB2 | |
-| V2.35 | Bayraktar TB3 | |
-| V2.36 | Bayraktar Akıncı | |
-| V2.37 | Baykar Kızılelma | |
-| V2.38 | TUSAŞ ANKA ve ANKA-3 | |
-| V2.39 | TUSAŞ Aksungur | |
-| V2.40 | TUSAŞ Hürjet ve Hürkuş | |
-| V2.41 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
+| V2.36 | TUSAŞ KAAN | |
+| V2.37 | Bayraktar TB2 | |
+| V2.38 | Bayraktar TB3 | |
+| V2.39 | Bayraktar Akıncı | |
+| V2.40 | Baykar Kızılelma | |
+| V2.41 | TUSAŞ ANKA ve ANKA-3 | |
+| V2.42 | TUSAŞ Aksungur | |
+| V2.43 | TUSAŞ Hürjet ve Hürkuş | |
+| V2.44 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
 
 ## Sonraki öneriler (sırası sonra belirlenecek)
 

@@ -263,6 +263,7 @@
     <section data-tab="s" class="hidden">
       <div class="srow"><div class="sl"><b>Ses seviyesi</b><small>Bütün seslerin ana düzeyi; kanalları aşağıdaki karışımdan ayrı ayarla · <output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
       <div class="srow"><div class="sl"><b>Müzik</b><small>Oyunun kendi bestesi: ana menü teması, sakin uçuş, çatışma, zafer ve yenilgi; duruma göre değişir</small></div><label class="tgl"><input type="checkbox" id="setMusic"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Müzik sıklığı</b><small>Ara ara: bir tema yaklaşık bir dakika çalar, sonra birkaç dakika sessizlik (her seferinde farklı ton) · Sürekli: hiç durmaz · Yalnız çatışma: sadece savaşta ve görev sonunda</small></div><div class="seg" id="setMusMode"><button type="button" data-m="ara">Ara ara</button><button type="button" data-m="surekli">Sürekli</button><button type="button" data-m="catisma">Yalnız çatışma</button></div></div>
       <div class="srow"><div class="sl"><b>Arayüz sesleri</b><small>Düğme, sekme ve bildirim sesleri</small></div><label class="tgl"><input type="checkbox" id="setUiSnd"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Telsiz konuşmaları</b><small>Kule, kanat adamı ve AWACS çağrıları tarayıcının Türkçe sesiyle okunur (cihazına göre ses değişir)</small></div><label class="tgl"><input type="checkbox" id="setRadioTts"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Telsiz altyazıları</b><small>Konuşmalar ekranda yazıyla da görünür</small></div><label class="tgl"><input type="checkbox" id="setRadioSub"><i></i></label></div>
@@ -514,11 +515,11 @@
 <div id="lndUI" class="lndui hidden" aria-live="polite"><div class="lhd">PİST</div><div class="lbox"><div class="lgs"><i></i></div><div><div class="lgl">Merkez hattı</div><div class="llat"><i></i></div><div class="lgl">Süzülüş: elmas ortada = doğru açı</div></div></div><div class="ltip"></div><div class="lsp"></div><div class="lau">OTO İNİŞ</div></div>
 <div id="visOv" class="visov hidden" aria-hidden="true"></div>
 <div id="touch" class="touch hidden">
-  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tChat" class="hidden">SOHBET</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tVis">GÖRÜŞ</button><button type="button" id="tEject" class="hidden warn">FIRLAT</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
+  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tChat" class="hidden">SOHBET</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tVis">GÖRÜŞ</button><button type="button" id="tEject" class="hidden warn">FIRLAT</button><button type="button" id="tGear" class="hidden">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
   <div class="ttaxi"><button type="button" id="tAuto" class="hidden">OTO TAKSİ</button><button type="button" id="tSkip" class="hidden">PİSTE GEÇ</button></div>
   <div class="tstick" id="tStick"><div class="tknob" id="tKnob"></div></div>
   <div class="tright" id="tRight">
-    <button type="button" id="tFlare" class="tb flare">FLARE</button>
+    <div class="trow"><button type="button" id="tGearB" class="tb gearb" aria-label="İniş takımı">TEKER</button><button type="button" id="tFlare" class="tb flare">FLARE</button></div>
     <button type="button" id="tFire" class="tb fire">ATEŞ</button>
     <div class="tyaw"><button type="button" id="tYawL" aria-label="Sola dümen">◀</button><button type="button" id="tYawR" aria-label="Sağa dümen">▶</button></div>
   </div>

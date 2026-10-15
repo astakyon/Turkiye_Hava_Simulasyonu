@@ -58,7 +58,7 @@ function sndPitch(id){ const u=sndU(id); return u.pitch==null?1:u.pitch; }
 function sndOut(b){ return SND.bus[b]||master; }
 function sndLoad(){ try{ SND.user=JSON.parse(stGet('ayy-sounds')||'{}')||{}; }catch(e){ SND.user={}; } }
 function sndSave(){ try{ stSet('ayy-sounds',JSON.stringify(SND.user)); }catch(e){} }
-function busVol(b){ const V=SETTINGS.vol||{}; return V[b]==null?(b==='music'?0.6:1):V[b]; }
+function busVol(b){ const V=SETTINGS.vol||{}; return V[b]==null?(b==='music'?0.45:1):V[b]; }   /* V2.28: music default 0.6 → 0.45 */
 /* buses are created with the audio context */
 function sndBuses(){
   if(!AC||SND.bus.sfx) return;

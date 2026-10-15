@@ -25,7 +25,7 @@ function syncSettingsUI(){
   { const c=(typeof accCfg==='function')&&accCfg(); $('setSupaUrl').value=c?c.url:''; $('setSupaKey').value=c&&!ACCOUNT_CFG.key?c.key:''; }
   if(typeof sndMixHTML==='function') $('setMix').innerHTML=sndMixHTML();
   $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
-  $('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
+  $('setMusic').checked=SETTINGS.music!==false; Array.prototype.forEach.call($('setMusMode').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.m===musMode())); }); $('setUiSnd').checked=SETTINGS.uiSnd!==false;
   $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
   if($('setFuel')) Array.prototype.forEach.call($('setFuel').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.f===(SETTINGS.fuel||'on'))); });
   Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
@@ -102,6 +102,7 @@ $('setRes').addEventListener('click',function(e){ const b=e.target.closest('butt
 $('setAA').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.aa=b.dataset.a; saveSettings(); if(FX.on){ try{ fxBuild(); }catch(err){} } syncSettingsUI(); });
 $('btnSndOpen').addEventListener('click',function(){ openSoundLib(); });
 $('setMusic').addEventListener('change',function(e){ SETTINGS.music=e.target.checked; saveSettings(); });
+$('setMusMode').addEventListener('click',function(e){ const b=e.target.closest('button[data-m]'); if(!b) return; SETTINGS.musMode=b.dataset.m; MUS.rest=0; MUS.phName=null; saveSettings(); syncSettingsUI(); });
 $('setUiSnd').addEventListener('change',function(e){ SETTINGS.uiSnd=e.target.checked; saveSettings(); });
 /* interface sounds: clicks, back, confirm, hover (mouse only) */
 (function(){ let last=null, lastT=0;

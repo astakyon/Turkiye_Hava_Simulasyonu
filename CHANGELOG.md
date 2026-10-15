@@ -1,6 +1,22 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.28 — 2026-10-15 · Görüntü, ses ve dokunmatik düzeltmeleri
+- **Uçaktaki gölge titremesi giderildi:** 300 m'nin üstünde gölge haritası her 4 karede bir çiziliyordu. Uçak o arada 10–15 m ilerlediği için kanadın gövdeye, kuyruğun kanada düşen gölgesi saniyede 15 kez yanıp sönüyordu. Artık yüksekte gölge kutusu yalnızca uçağı kapsıyor (150 m yerine birkaç metre), her karede çiziliyor ve uçağın üzerine ortalanıyor. Gölge ayrıntısı yaklaşık 3 kat incelikte (KAAN'da 7 cm yerine 2 cm). Gölge sapması da bu ölçüye göre ayarlandı, gövdedeki koyu bantlar kalktı. Menüdeki uçuş görüntüsü için de aynısı geçerli.
+- **Telefonda daha net görüntü:**
+  - Yüksek ve Ultra kalitede kenarlar artık 4× MSAA ile yumuşatılıyor. Eskiden FXAA kullanılıyordu; kenarları bulanıklaştırıyor ve tırtıklı bırakıyordu.
+  - Otomatik çözünürlük telefonda en çok %80'e iniyor (eskiden %70). 2,8× ekranda görüntü 1,2× çizilmişti, pikselleşme buradan geliyordu.
+  - FPS yine düşerse önce efektler ve gölgeler kısılıyor, 60 FPS hedefi korunuyor.
+- **Gökyüzünde renk bantları yok:** gökyüzü geçişi ve renk düzeltmesi, gözle görülmeyen ince bir gürültüyle (dither) çiziliyor. Ufuk üstündeki basamak basamak renk şeritleri kayboldu.
+- **Müzik ara ara çalıyor:** menü ve uçuş teması yaklaşık bir dakika çalıyor, sonra 1,5–3,5 dakika sessizlik oluyor (motor, rüzgâr ve telsiz duyuluyor). Her yeni bölüm başka bir tonda ve bazen daha sade bir düzenlemeyle başlıyor. Çatışma müziği tehlike anında hemen giriyor; uzun çatışmalarda tonu değişiyor. Müzik sesinin varsayılanı %60'tan %45'e indi. Ayarlar → Ses → Müzik sıklığı: Ara ara · Sürekli · Yalnız çatışma.
+- **Telefonda iniş takımı düğmesi:** FLARE'in yanına her zaman görünen yuvarlak bir TEKER düğmesi geldi. Düğme takımın durumunu gösteriyor (▼ AÇIK / ▲ KAPALI). Eskiden üst çubuğun sonunda yalnızca havadayken çıkan, kolay gözden kaçan bir "TAKIM" yazısıydı.
+- **Yol haritası:** senin istediğin üç sürüm araya girdi:
+  - V2.28 bu düzeltmeler;
+  - V2.29 ana menüde Hızlı oyun ve Kariyer;
+  - V2.30 mühimmat yerleşimi ve zemine gömülme.
+
+  Test ve yayın hattı V2.31'e, model serisi V2.36'ya kaydı.
+
 ## V2.27 — 2026-10-15 · Girdi yöneticisi
 - **Tek girdi yöneticisi:** 23 modülün pencereye ayrı ayrı bağladığı klavye dinleyicileri tek bir girdi yöneticisinde toplandı. Tuşlar aynı sırayla ve aynı şekilde çalışıyor; bir modülde hata çıkarsa diğer tuşlar çalışmaya devam ediyor. Her kısayolun hangi modüle ve hangi bağlama (uçuş, yürüyüş, araç, menü, harita…) ait olduğu kayıtlı.
 - **Kısayol çakışması yok:** bütün şemalar tarandı; F2 (görev günlüğü), F3 (tekrar), F4 (işaret), F6 (duman), F7 (füzeden kaçış), F8 (kanat adamı) birbirine ya da başka tuşa çakışmıyor. Araç ve tekne kamerasının C tuşu genel kamerayla bilerek aynı. Yeni bir çakışmayı test kendiliğinden yakalıyor.

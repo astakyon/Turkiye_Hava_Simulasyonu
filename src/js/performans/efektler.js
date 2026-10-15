@@ -19,7 +19,7 @@ const GRADE_SHADER={
     '  float l=dot(c,vec3(0.2126,0.7152,0.0722)); c=mix(vec3(l),c,uSat); c=(c-0.5)*uCon+0.5;',
     '  c+=vec3(0.014,0.005,-0.012)*smoothstep(0.45,1.0,l)+vec3(-0.008,0.0,0.012)*(1.0-smoothstep(0.0,0.4,l));',
     '  c*=1.0-uVig*smoothstep(0.42,1.05,r*1.3);',
-    '  gl_FragColor=vec4(clamp(c,0.0,1.0),1.0);',
+    '  c+=(fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(0.06711056,0.00583715))))-0.5)/255.0; gl_FragColor=vec4(clamp(c,0.0,1.0),1.0);',
     '}'].join('\n')
 };
 function applyFX(){

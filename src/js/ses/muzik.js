@@ -2,8 +2,18 @@
    Tracks: menu theme (D minor, war drums, a Hicaz-flavoured lead), calm flight, combat, and short victory / defeat stingers.
    A small step sequencer schedules notes ~0.2 s ahead on the audio clock. Any track can be replaced by a file in the Sound Library
    (Müzik). The game picks the track from the state: menus → theme, flying → calm, enemies near / threats → combat. */
-const MUS={out:null, verb:null, cur:null, gain:null, step:0, next:0, bar:0, want:null, file:null, lastSting:-9};
-const mtof=function(m){ return 440*Math.pow(2,(m-69)/12); };
+const MUS={out:null, verb:null, cur:null, gain:null, step:0, next:0, bar:0, want:null, file:null, lastSting:-9, tr:0, sparse:false, loops:0, phT:0, phLen:0, rest:0, phName:null, phases:0};
+const mtof=function(m){ return 440*Math.pow(2,(m+MUS.tr-69)/12); };
+/* V2.28 — music in phrases. Player report: the music that never stops gives a headache after a while. The menu and flight
+   themes looped 8 bars (21–25 s) for as long as one stayed there, always in the same key with every part playing.
+   • "Ara ara" (new default): a theme plays for about a minute, fades out, and the game is silent (engine, wind, radio) for
+     1½–3½ minutes before the next phrase. Every phrase gets a different key and arrangement (sometimes without the plucked line).
+     Combat music still comes in at once when there is a threat, and goes 12 s after it; long fights change key every 4 loops.
+   • "Sürekli": the old behaviour. "Yalnız çatışma": only combat music and the victory / defeat stingers. Kapalı: the Müzik switch.
+   • The music volume default went from 60 % to 45 % of the master volume (only if the player never moved that slider). */
+const MUS_REST={menu:[60,120], calm:[90,210]}, MUS_LEN={menu:[55,80], calm:[60,90]}, MUS_TR=[0,-2,3,-5,2];
+function musMode(){ const m=SETTINGS.musMode; return m==='surekli'||m==='catisma'?m:'ara'; }
+function musRand(a){ return a[0]+Math.random()*(a[1]-a[0]); }
 function musInit(){
   if(!AC||MUS.out) return;
   MUS.out=AC.createGain(); MUS.out.gain.value=1; MUS.out.connect(sndOut('music'));
@@ -21,7 +31,7 @@ function iStr(dest,t,m,dur,v){ const o=AC.createOscillator(), o2=AC.createOscill
   o.type='sawtooth'; o2.type='sawtooth'; o.frequency.value=mtof(m); o2.frequency.value=mtof(m); o2.detune.value=9; lfo.frequency.value=5.2; lg.gain.value=4; lfo.connect(lg); lg.connect(o.detune); lg.connect(o2.detune);
   f.type='lowpass'; f.frequency.setValueAtTime(700,t); f.frequency.linearRampToValueAtTime(2200,t+Math.min(0.3,dur*0.5)); o.connect(f); o2.connect(f); f.connect(g); mEnv(g,t,0.06,dur*0.7,0.35,v);
   mSend(g,dest,0.5); [o,o2,lfo].forEach(function(x){ x.start(t); x.stop(t+dur+0.5); }); }
-function iPluck(dest,t,m,v,type){ const o=AC.createOscillator(), f=AC.createBiquadFilter(), g=AC.createGain(); o.type=type||'triangle'; o.frequency.value=mtof(m);
+function iPluck(dest,t,m,v,type){ if(MUS.sparse&&Math.random()<0.6) return; const o=AC.createOscillator(), f=AC.createBiquadFilter(), g=AC.createGain(); o.type=type||'triangle'; o.frequency.value=mtof(m);
   f.type='lowpass'; f.frequency.setValueAtTime(3200,t); f.frequency.exponentialRampToValueAtTime(500,t+0.25); o.connect(f); f.connect(g); mEnv(g,t,0.005,0.02,0.32,v); mSend(g,dest,0.45); o.start(t); o.stop(t+0.5); }
 function iBass(dest,t,m,dur,v){ const o=AC.createOscillator(), f=AC.createBiquadFilter(), g=AC.createGain(); o.type='sawtooth'; o.frequency.value=mtof(m); f.type='lowpass'; f.frequency.setValueAtTime(420,t); f.frequency.exponentialRampToValueAtTime(160,t+dur);
   o.connect(f); f.connect(g); mEnv(g,t,0.008,dur*0.6,dur*0.4+0.05,v); g.connect(dest); o.start(t); o.stop(t+dur+0.2); }
@@ -67,15 +77,21 @@ const MUS_T={
   const d={id:'mus_'+m[0],cat:'muzik',n:m[1],d:m[2],bus:'music',music:m[0]}; SND_DEFS.push(d); SNDI[d.id]=d; });
 function musWanted(){
   if(SETTINGS.music===false) return null;
-  if(state==='menu'||state==='library') return 'menu';
+  if(state==='menu'||state==='library') return musPhrase('menu');
   if(state==='play'){
     const threat=(typeof RWR!=='undefined'&&RWR.msl>0)||(typeof CUE!=='undefined'&&CUE.level>=1)||ACT.some(function(a){ return a.team==='red'&&a.alive&&a.pos.distanceToSquared(S.pos)<6500*6500; });
     if(threat){ MUS.combatT=AC.currentTime; return 'combat'; }
     if(MUS.cur==='combat'&&AC.currentTime-(MUS.combatT||0)<12) return 'combat';   /* stay a little after the fight */
-    return 'calm'; }
-  if(state==='walk') return 'calm';
+    return musPhrase('calm'); }
+  if(state==='walk') return musPhrase('calm');
   return MUS.cur;   /* paused, map, mission end: keep what plays */
 }
+/* phrase / rest cycle for the calm themes (menu, flight, walking) */
+function musPhrase(w){ const mode=musMode(); if(mode==='catisma') return null; if(mode==='surekli'||!AC) return w; const now=AC.currentTime;
+  if(MUS.rest>now&&MUS.phName===w) return null;                                   /* still resting */
+  if(MUS.cur===w&&MUS.phName===w){ if(now-MUS.phT>MUS.phLen){ MUS.rest=now+musRand(MUS_REST[w]||[90,180]); return null; } return w; }
+  /* a new phrase (first time, after a rest, or after a change of scene) */
+  MUS.phName=w; MUS.phT=now; MUS.phLen=musRand(MUS_LEN[w]||[60,90]); MUS.rest=0; MUS.phases++; MUS.newPh=true; return w; }
 function musStart(name){
   const t=AC.currentTime;
   if(MUS.gain){ const g=MUS.gain; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value,t); g.gain.linearRampToValueAtTime(0.0001,t+1.6); setTimeout(function(){ try{ g.disconnect(); }catch(e){} },2600); }
@@ -84,7 +100,10 @@ function musStart(name){
   const g=AC.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(sndVol('mus_'+name),t+(MUS_T[name].once?0.05:2.2)); g.connect(MUS.out); MUS.gain=g;
   const buf=SND.buf['mus_'+name];
   if(buf){ const s=AC.createBufferSource(); s.buffer=buf; s.loop=!MUS_T[name].once; s.playbackRate.value=sndPitch('mus_'+name); s.connect(g); s.start(t); MUS.file=s; return; }
-  MUS.step=0; MUS.bar=0; MUS.next=t+0.08;
+  MUS.step=0; MUS.bar=0; MUS.loops=0; MUS.next=t+0.08;
+  if(!MUS_T[name].once&&musMode()!=='surekli'){ if(MUS.newPh||name==='combat'){ MUS.tr=name==='combat'?0:MUS_TR[MUS.phases%MUS_TR.length]; MUS.sparse=name!=='combat'&&MUS.phases%2===0; } MUS.newPh=false; }
+  else if(MUS_T[name].once){ /* stingers keep their written key */ MUS.trKeep=MUS.tr; MUS.tr=0; MUS.sparse=false; }
+  else { MUS.tr=0; MUS.sparse=false; }
 }
 /* one-shot stinger over the current music (ducks it) */
 function musSting(name){
@@ -102,7 +121,7 @@ function musStep(){
   while(MUS.next<ahead){
     if(tr.once&&MUS.bar>=tr.bars){ MUS.next=1e9; break; }
     try{ tr.tick(MUS.gain,MUS.bar%tr.bars,MUS.step,MUS.next,sd); }catch(e){}
-    MUS.next+=sd; MUS.step++; if(MUS.step>=16){ MUS.step=0; MUS.bar++; if(!tr.once&&MUS.bar>=tr.bars) MUS.bar=0; }
+    MUS.next+=sd; MUS.step++; if(MUS.step>=16){ MUS.step=0; MUS.bar++; if(!tr.once&&MUS.bar>=tr.bars){ MUS.bar=0; MUS.loops++; if(name==='combat'&&musMode()!=='surekli'&&MUS.loops%4===0) MUS.tr=MUS.tr?0:5; } }
   }
 }
 /* previews in the Sound Library: a few bars on their own */

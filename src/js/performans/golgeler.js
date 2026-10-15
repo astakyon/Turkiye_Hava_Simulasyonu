@@ -30,7 +30,28 @@ function shNeed(){ SHU.n++; if(typeof PT!=='undefined'&&PT.run) return true;   /
   if(state==='walk') return true;
   if(state==='play'){ let agl=999; try{ agl=S.pos.y-Math.max(0,groundH(S.pos.x,S.pos.z)); }catch(e){} if(agl<300||S.onGround) return true; }
   return SHU.n%4===0; }
-shadowFollow=HOOK.wrap('shadowFollow','performans/golgeler#_shFollow',function(_shFollow){ return function(){ if(!renderer.shadowMap.enabled){ SHU.upd=true; return; } SHU.upd=SETTINGS.shadowEvery===true||shNeed(); if(SHU.upd) _shFollow(); }; },shadowFollow);
+/* V2.28 aircraft shadow mode. Player report: the shadows on the aircraft flickered in flight. Above 300 m the map was redrawn only
+   every 4th frame, but the aircraft moves 10–15 m in those frames, so its own shadows (wing on fuselage, tail on wing) were looked
+   up in a picture taken where it was a moment ago — they jumped on and off at 15 Hz. Now, high above the ground (and on the menu
+   flight), the shadow box shrinks to the aircraft alone: a few metres around it instead of 150 m, redrawn every frame, centred on
+   the aircraft without texel snapping (snapping keeps still ground steady; for a moving aircraft it is what makes edges crawl).
+   The ground under a high aircraft never showed its shadow anyway, so only the aircraft's own draw calls are added. Texels are
+   ~3× smaller (KAAN: 2 cm instead of 7 cm at 2048) and the bias is sized to them, so the dark bands of acne are gone too. */
+const SHP={mode:0, r:24, grp:null, box:new THREE.Box3(), sph:new THREE.Sphere(), f:new THREE.Vector3(), n:0};
+function shPlaneR(){ let g=null; try{ g=planeGroup; }catch(e){} if(!g) return 24; if(SHP.grp!==g){ SHP.grp=g; try{ SHP.box.setFromObject(g); SHP.box.getBoundingSphere(SHP.sph); SHP.r=Math.max(8,Math.min(60,SHP.sph.radius)); }catch(e){ SHP.r=24; } } return SHP.r; }
+function shPlaneWanted(){ if(!renderer.shadowMap.enabled||SETTINGS.shadowPlane===false) return false; let g=null; try{ g=planeGroup; }catch(e){} if(!g||!g.visible) return false;
+  let p=null; if(state==='play'&&!S.crashed&&!S.onGround) p=S.pos; else if(state==='menu'&&typeof cineOn==='function'&&cineOn()) p=g.position; if(!p) return false;
+  let agl=999; try{ agl=p.y-Math.max(0,groundH(p.x,p.z)); }catch(e){} return agl>(SHP.mode?260:320); }
+function shPlaneSet(on){ const c=sunLight.shadow.camera, sh=sunLight.shadow; SHP.mode=on?1:0;
+  if(on){ const r=shPlaneR()*1.08+3, tex=2*r/(sh.mapSize.x||2048); SHP.R=r; c.left=c.bottom=-r; c.right=c.top=r; c.near=1800-r-4; c.far=1800+r+4; sh.bias=-Math.max(0.01,tex*0.6)/(c.far-c.near); if('normalBias' in sh) sh.normalBias=Math.max(0.015,tex*1.4); }
+  else { SHP.R=75; c.left=c.bottom=-75; c.right=c.top=75; c.near=1200; c.far=2400; sh.bias=DEV.mobile?-0.0012:-0.0008; if('normalBias' in sh) sh.normalBias=DEV.mobile?0.08:0.05; }
+  c.updateProjectionMatrix(); renderer.shadowMap.needsUpdate=true; }
+shadowFollow=HOOK.wrap('shadowFollow','performans/golgeler#_shFollow',function(_shFollow){ return function(){ if(!renderer.shadowMap.enabled){ SHU.upd=true; if(SHP.mode) shPlaneSet(false); return; }
+  const want=shPlaneWanted(); if(want!==!!SHP.mode||(want&&SHP.grp!==planeGroup)) shPlaneSet(want);
+  if(SHP.mode){ SHU.n++; SHU.upd=true; SHP.n++; const g=planeGroup; g.getWorldPosition(SHP.f); sunLight.target.position.copy(SHP.f); sunLight.position.copy(SHP.f).addScaledVector(SUN,1800); sunLight.target.updateMatrixWorld(); return; }
+  SHU.upd=SETTINGS.shadowEvery===true||shNeed(); if(SHU.upd) _shFollow(); }; },shadowFollow);
+/* the map size changes with the quality level: re-fit the aircraft box to it */
+applyShadows=HOOK.wrap('applyShadows','performans/golgeler#_shpApply',function(_shpApply){ return function(){ _shpApply(); if(SHP.mode) shPlaneSet(true); }; },applyShadows);
 renderFrame=HOOK.wrap('renderFrame','performans/golgeler#_shRF',function(_shRF){ return function(dt){ if(renderer.shadowMap.enabled){ renderer.shadowMap.autoUpdate=false; if(SHU.upd){ renderer.shadowMap.needsUpdate=true; SHU.drawn++; } else SHU.skipped++; } _shRF(dt); }; },renderFrame);
 /* small-caster pass: after merging (2.5 s) and baking (4 s), then every 5 s for rebuilt cells / models */
 cullStep=HOOK.wrap('cullStep','performans/golgeler#_shCull',function(_shCull){ return function(dt){ _shCull(dt); SHU.t=(SHU.t||0)+(dt||0); if(SHU.t>5){ SHU.t=0; try{ if(renderer.shadowMap.enabled) shSmallCasters(); }catch(e){} } }; },cullStep);

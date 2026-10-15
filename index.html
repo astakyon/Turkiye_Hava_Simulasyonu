@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V2.27">
+<meta name="game-version" content="V2.28">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#a10d1c">
@@ -333,6 +333,10 @@ kbd{ font:inherit; font-size:12px; font-weight:600; min-width:24px; padding:3px 
 .tb.fire{ width:var(--tf); height:var(--tf); font-size:15px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
 .tb.fire small{ font-size:10px; font-weight:600; opacity:.9; }
 .tb.flare{ width:var(--tfl); height:var(--tfl); font-size:10px; align-self:flex-end; }
+.trow{ display:flex; gap:8px; align-self:flex-end; align-items:flex-end; pointer-events:none; } .trow > *{ pointer-events:auto; }
+.trow .tb.flare{ align-self:auto; }
+.tb.gearb{ width:var(--tfl); height:var(--tfl); font-size:9px; line-height:1.1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+.tb.gearb b{ font-size:15px; line-height:1; } .tb.gearb.down{ border-color:rgba(125,255,176,.85); } .tb.gearb.up{ border-color:rgba(255,194,74,.85); } .tb.gearb.lock{ opacity:.55; }
 .ttaxi{ position:absolute; left:50%; transform:translateX(-50%); top:max(64px,calc(env(safe-area-inset-top,0px) + 58px)); display:flex; gap:8px; }
 .ttaxi button{ height:38px; padding:0 14px; border-radius:19px; border:2px solid rgba(184,236,255,.6); background:rgba(8,15,28,.6); color:#fff; font:700 12px "Chakra Petch",system-ui,sans-serif; pointer-events:auto; }
 .twpn{ position:absolute; pointer-events:auto; touch-action:none; }
@@ -1368,6 +1372,7 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
     <section data-tab="s" class="hidden">
       <div class="srow"><div class="sl"><b>Ses seviyesi</b><small>Bütün seslerin ana düzeyi; kanalları aşağıdaki karışımdan ayrı ayarla · <output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
       <div class="srow"><div class="sl"><b>Müzik</b><small>Oyunun kendi bestesi: ana menü teması, sakin uçuş, çatışma, zafer ve yenilgi; duruma göre değişir</small></div><label class="tgl"><input type="checkbox" id="setMusic"><i></i></label></div>
+      <div class="srow"><div class="sl"><b>Müzik sıklığı</b><small>Ara ara: bir tema yaklaşık bir dakika çalar, sonra birkaç dakika sessizlik (her seferinde farklı ton) · Sürekli: hiç durmaz · Yalnız çatışma: sadece savaşta ve görev sonunda</small></div><div class="seg" id="setMusMode"><button type="button" data-m="ara">Ara ara</button><button type="button" data-m="surekli">Sürekli</button><button type="button" data-m="catisma">Yalnız çatışma</button></div></div>
       <div class="srow"><div class="sl"><b>Arayüz sesleri</b><small>Düğme, sekme ve bildirim sesleri</small></div><label class="tgl"><input type="checkbox" id="setUiSnd"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Telsiz konuşmaları</b><small>Kule, kanat adamı ve AWACS çağrıları tarayıcının Türkçe sesiyle okunur (cihazına göre ses değişir)</small></div><label class="tgl"><input type="checkbox" id="setRadioTts"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Telsiz altyazıları</b><small>Konuşmalar ekranda yazıyla da görünür</small></div><label class="tgl"><input type="checkbox" id="setRadioSub"><i></i></label></div>
@@ -1619,11 +1624,11 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
 <div id="lndUI" class="lndui hidden" aria-live="polite"><div class="lhd">PİST</div><div class="lbox"><div class="lgs"><i></i></div><div><div class="lgl">Merkez hattı</div><div class="llat"><i></i></div><div class="lgl">Süzülüş: elmas ortada = doğru açı</div></div></div><div class="ltip"></div><div class="lsp"></div><div class="lau">OTO İNİŞ</div></div>
 <div id="visOv" class="visov hidden" aria-hidden="true"></div>
 <div id="touch" class="touch hidden">
-  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tChat" class="hidden">SOHBET</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tVis">GÖRÜŞ</button><button type="button" id="tEject" class="hidden warn">FIRLAT</button><button type="button" id="tGear">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
+  <div class="ttop"><button type="button" id="tPause" aria-label="Duraklat">❚❚</button><button type="button" id="tMap">HARİTA</button><button type="button" id="tRadio">TELSİZ</button><button type="button" id="tPtt" class="hidden">🎙</button><button type="button" id="tChat" class="hidden">SOHBET</button><button type="button" id="tCam">KAMERA</button><button type="button" id="tVis">GÖRÜŞ</button><button type="button" id="tEject" class="hidden warn">FIRLAT</button><button type="button" id="tGear" class="hidden">TAKIM</button><button type="button" id="tBrake">FREN</button></div>
   <div class="ttaxi"><button type="button" id="tAuto" class="hidden">OTO TAKSİ</button><button type="button" id="tSkip" class="hidden">PİSTE GEÇ</button></div>
   <div class="tstick" id="tStick"><div class="tknob" id="tKnob"></div></div>
   <div class="tright" id="tRight">
-    <button type="button" id="tFlare" class="tb flare">FLARE</button>
+    <div class="trow"><button type="button" id="tGearB" class="tb gearb" aria-label="İniş takımı">TEKER</button><button type="button" id="tFlare" class="tb flare">FLARE</button></div>
     <button type="button" id="tFire" class="tb fire">ATEŞ</button>
     <div class="tyaw"><button type="button" id="tYawL" aria-label="Sola dümen">◀</button><button type="button" id="tYawR" aria-label="Sağa dümen">▶</button></div>
   </div>
@@ -1775,7 +1780,7 @@ return out; };
  
 (function(){ if(typeof window==='undefined'||!window.addEventListener) return; ['keydown','keyup'].forEach(function(t){ [true,false].forEach(function(cap){ const key=t+(cap?':c':':b');
 INPUT.h[key]=INPUT.h[key]||[]; INPUT.real[key]=function(e){ INPUT.dispatch(key,e); }; window.addEventListener(t,INPUT.real[key],cap); }); }); })();
-const GAME_VERSION='V2.27', GAME_DATE='2026-10-15';
+const GAME_VERSION='V2.28', GAME_DATE='2026-10-15';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -1848,7 +1853,7 @@ fragmentShader:'uniform float sunK; uniform vec3 top; uniform vec3 mid; uniform 
 'void main(){ vec3 d=normalize(vP); float h=clamp(d.y,0.0,1.0); vec3 c=mix(hor,mid,smoothstep(0.0,0.2,h)); c=mix(c,top,smoothstep(0.16,0.9,h));'+
 'float s=max(dot(d,sun),0.0); c=mix(c,vec3(1.0,0.95,0.86),pow(1.0-h,6.0)*0.35);'+           
 'c+=vec3(1.0,0.86,0.62)*(pow(s,6.0)*0.18*(1.0-h*0.6)) + vec3(1.0,0.96,0.85)*(pow(s,48.0)*0.45+pow(s,900.0)*2.2*sunK+pow(s,160.0)*0.5*(sunK-1.0));'+    
-'if(d.y<0.0) c=hor; gl_FragColor=vec4(c,1.0); }'
+'if(d.y<0.0) c=hor; c+=(fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(0.06711056,0.00583715))))-0.5)/255.0; gl_FragColor=vec4(c,1.0); }'    
 })
 );
 sky.renderOrder=-1000; sky.frustumCulled=false; scene.add(sky);
@@ -6066,7 +6071,7 @@ function rec(id){ return RECORDS[id]||(RECORDS[id]={best:null,score:0}); }
 function noteScore(){ const r=rec(activeId); if(score>r.score){ r.score=score; saveRecords(); } }
 function applyVolume(){ if(master) master.gain.value=SETTINGS.volume; }
 const PERF={base:1,scale:1,acc:0,n:0,t:0,low:0,high:0,fps:60,told:false};
-function perfMin(){ return DEV.mobile?0.7:0.85; }
+function perfMin(){ return DEV.mobile?0.8:0.85; }    
 function perfStep(dt){
 PERF.acc+=dt; PERF.n++;
 if(PERF.acc<1) return;
@@ -6222,7 +6227,7 @@ function sndPitch(id){ const u=sndU(id); return u.pitch==null?1:u.pitch; }
 function sndOut(b){ return SND.bus[b]||master; }
 function sndLoad(){ try{ SND.user=JSON.parse(stGet('ayy-sounds')||'{}')||{}; }catch(e){ SND.user={}; } }
 function sndSave(){ try{ stSet('ayy-sounds',JSON.stringify(SND.user)); }catch(e){} }
-function busVol(b){ const V=SETTINGS.vol||{}; return V[b]==null?(b==='music'?0.6:1):V[b]; }
+function busVol(b){ const V=SETTINGS.vol||{}; return V[b]==null?(b==='music'?0.45:1):V[b]; }    
  
 function sndBuses(){
 if(!AC||SND.bus.sfx) return;
@@ -6307,8 +6312,11 @@ else if(b.dataset.act==='reset'){ sndReset(id).then(syncSoundLib); syncSoundLib(
 void lib;
 })();
 function sndPlayPreview(id){ if(!AC) return null; const d=SNDI[id]; const g=AC.createGain(); g.gain.value=busVol(d.bus); g.connect(master); return sndPlay(id,{dest:g}); }
-const MUS={out:null, verb:null, cur:null, gain:null, step:0, next:0, bar:0, want:null, file:null, lastSting:-9};
-const mtof=function(m){ return 440*Math.pow(2,(m-69)/12); };
+const MUS={out:null, verb:null, cur:null, gain:null, step:0, next:0, bar:0, want:null, file:null, lastSting:-9, tr:0, sparse:false, loops:0, phT:0, phLen:0, rest:0, phName:null, phases:0};
+const mtof=function(m){ return 440*Math.pow(2,(m+MUS.tr-69)/12); };
+const MUS_REST={menu:[60,120], calm:[90,210]}, MUS_LEN={menu:[55,80], calm:[60,90]}, MUS_TR=[0,-2,3,-5,2];
+function musMode(){ const m=SETTINGS.musMode; return m==='surekli'||m==='catisma'?m:'ara'; }
+function musRand(a){ return a[0]+Math.random()*(a[1]-a[0]); }
 function musInit(){
 if(!AC||MUS.out) return;
 MUS.out=AC.createGain(); MUS.out.gain.value=1; MUS.out.connect(sndOut('music'));
@@ -6326,7 +6334,7 @@ function iStr(dest,t,m,dur,v){ const o=AC.createOscillator(), o2=AC.createOscill
 o.type='sawtooth'; o2.type='sawtooth'; o.frequency.value=mtof(m); o2.frequency.value=mtof(m); o2.detune.value=9; lfo.frequency.value=5.2; lg.gain.value=4; lfo.connect(lg); lg.connect(o.detune); lg.connect(o2.detune);
 f.type='lowpass'; f.frequency.setValueAtTime(700,t); f.frequency.linearRampToValueAtTime(2200,t+Math.min(0.3,dur*0.5)); o.connect(f); o2.connect(f); f.connect(g); mEnv(g,t,0.06,dur*0.7,0.35,v);
 mSend(g,dest,0.5); [o,o2,lfo].forEach(function(x){ x.start(t); x.stop(t+dur+0.5); }); }
-function iPluck(dest,t,m,v,type){ const o=AC.createOscillator(), f=AC.createBiquadFilter(), g=AC.createGain(); o.type=type||'triangle'; o.frequency.value=mtof(m);
+function iPluck(dest,t,m,v,type){ if(MUS.sparse&&Math.random()<0.6) return; const o=AC.createOscillator(), f=AC.createBiquadFilter(), g=AC.createGain(); o.type=type||'triangle'; o.frequency.value=mtof(m);
 f.type='lowpass'; f.frequency.setValueAtTime(3200,t); f.frequency.exponentialRampToValueAtTime(500,t+0.25); o.connect(f); f.connect(g); mEnv(g,t,0.005,0.02,0.32,v); mSend(g,dest,0.45); o.start(t); o.stop(t+0.5); }
 function iBass(dest,t,m,dur,v){ const o=AC.createOscillator(), f=AC.createBiquadFilter(), g=AC.createGain(); o.type='sawtooth'; o.frequency.value=mtof(m); f.type='lowpass'; f.frequency.setValueAtTime(420,t); f.frequency.exponentialRampToValueAtTime(160,t+dur);
 o.connect(f); f.connect(g); mEnv(g,t,0.008,dur*0.6,dur*0.4+0.05,v); g.connect(dest); o.start(t); o.stop(t+dur+0.2); }
@@ -6372,15 +6380,21 @@ if(s===0) iPad(o,t,[50,53,57],sd*16,0.14,700); if(s===8) iTaiko(o,t,0.35); }}
 const d={id:'mus_'+m[0],cat:'muzik',n:m[1],d:m[2],bus:'music',music:m[0]}; SND_DEFS.push(d); SNDI[d.id]=d; });
 function musWanted(){
 if(SETTINGS.music===false) return null;
-if(state==='menu'||state==='library') return 'menu';
+if(state==='menu'||state==='library') return musPhrase('menu');
 if(state==='play'){
 const threat=(typeof RWR!=='undefined'&&RWR.msl>0)||(typeof CUE!=='undefined'&&CUE.level>=1)||ACT.some(function(a){ return a.team==='red'&&a.alive&&a.pos.distanceToSquared(S.pos)<6500*6500; });
 if(threat){ MUS.combatT=AC.currentTime; return 'combat'; }
 if(MUS.cur==='combat'&&AC.currentTime-(MUS.combatT||0)<12) return 'combat';    
-return 'calm'; }
-if(state==='walk') return 'calm';
+return musPhrase('calm'); }
+if(state==='walk') return musPhrase('calm');
 return MUS.cur;    
 }
+ 
+function musPhrase(w){ const mode=musMode(); if(mode==='catisma') return null; if(mode==='surekli'||!AC) return w; const now=AC.currentTime;
+if(MUS.rest>now&&MUS.phName===w) return null;                                    
+if(MUS.cur===w&&MUS.phName===w){ if(now-MUS.phT>MUS.phLen){ MUS.rest=now+musRand(MUS_REST[w]||[90,180]); return null; } return w; }
+ 
+MUS.phName=w; MUS.phT=now; MUS.phLen=musRand(MUS_LEN[w]||[60,90]); MUS.rest=0; MUS.phases++; MUS.newPh=true; return w; }
 function musStart(name){
 const t=AC.currentTime;
 if(MUS.gain){ const g=MUS.gain; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value,t); g.gain.linearRampToValueAtTime(0.0001,t+1.6); setTimeout(function(){ try{ g.disconnect(); }catch(e){} },2600); }
@@ -6389,7 +6403,10 @@ MUS.cur=name; MUS.gain=null; if(!name) return;
 const g=AC.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(sndVol('mus_'+name),t+(MUS_T[name].once?0.05:2.2)); g.connect(MUS.out); MUS.gain=g;
 const buf=SND.buf['mus_'+name];
 if(buf){ const s=AC.createBufferSource(); s.buffer=buf; s.loop=!MUS_T[name].once; s.playbackRate.value=sndPitch('mus_'+name); s.connect(g); s.start(t); MUS.file=s; return; }
-MUS.step=0; MUS.bar=0; MUS.next=t+0.08;
+MUS.step=0; MUS.bar=0; MUS.loops=0; MUS.next=t+0.08;
+if(!MUS_T[name].once&&musMode()!=='surekli'){ if(MUS.newPh||name==='combat'){ MUS.tr=name==='combat'?0:MUS_TR[MUS.phases%MUS_TR.length]; MUS.sparse=name!=='combat'&&MUS.phases%2===0; } MUS.newPh=false; }
+else if(MUS_T[name].once){   MUS.trKeep=MUS.tr; MUS.tr=0; MUS.sparse=false; }
+else { MUS.tr=0; MUS.sparse=false; }
 }
  
 function musSting(name){
@@ -6407,7 +6424,7 @@ if(MUS.next<AC.currentTime-0.5) MUS.next=AC.currentTime+0.05;
 while(MUS.next<ahead){
 if(tr.once&&MUS.bar>=tr.bars){ MUS.next=1e9; break; }
 try{ tr.tick(MUS.gain,MUS.bar%tr.bars,MUS.step,MUS.next,sd); }catch(e){}
-MUS.next+=sd; MUS.step++; if(MUS.step>=16){ MUS.step=0; MUS.bar++; if(!tr.once&&MUS.bar>=tr.bars) MUS.bar=0; }
+MUS.next+=sd; MUS.step++; if(MUS.step>=16){ MUS.step=0; MUS.bar++; if(!tr.once&&MUS.bar>=tr.bars){ MUS.bar=0; MUS.loops++; if(name==='combat'&&musMode()!=='surekli'&&MUS.loops%4===0) MUS.tr=MUS.tr?0:5; } }
 }
 }
  
@@ -6958,7 +6975,7 @@ fragmentShader:[
 '  float l=dot(c,vec3(0.2126,0.7152,0.0722)); c=mix(vec3(l),c,uSat); c=(c-0.5)*uCon+0.5;',
 '  c+=vec3(0.014,0.005,-0.012)*smoothstep(0.45,1.0,l)+vec3(-0.008,0.0,0.012)*(1.0-smoothstep(0.0,0.4,l));',
 '  c*=1.0-uVig*smoothstep(0.42,1.05,r*1.3);',
-'  gl_FragColor=vec4(clamp(c,0.0,1.0),1.0);',
+'  c+=(fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(0.06711056,0.00583715))))-0.5)/255.0; gl_FragColor=vec4(clamp(c,0.0,1.0),1.0);',
 '}'].join('\n')
 };
 function applyFX(){
@@ -7771,7 +7788,7 @@ $('setAdv').checked=!!SETTINGS.advUi; $('settings').classList.toggle('basic',!SE
 { const c=(typeof accCfg==='function')&&accCfg(); $('setSupaUrl').value=c?c.url:''; $('setSupaKey').value=c&&!ACCOUNT_CFG.key?c.key:''; }
 if(typeof sndMixHTML==='function') $('setMix').innerHTML=sndMixHTML();
 $('setRadioTts').checked=SETTINGS.radioTts!==false; $('setRadioSub').checked=SETTINGS.radioSub!==false; $('setCallsign').value=SETTINGS.callsign||'';
-$('setMusic').checked=SETTINGS.music!==false; $('setUiSnd').checked=SETTINGS.uiSnd!==false;
+$('setMusic').checked=SETTINGS.music!==false; Array.prototype.forEach.call($('setMusMode').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.m===musMode())); }); $('setUiSnd').checked=SETTINGS.uiSnd!==false;
 $('setMini').checked=!!SETTINGS.minimap; $('setLock').checked=SETTINGS.lockOn; $('setInv').checked=invertY; $('setRumble').checked=SETTINGS.rumble; $('setAuto').checked=SETTINGS.autoPerf; $('setFps').checked=SETTINGS.fps; $('fps').classList.toggle('hidden',!SETTINGS.fps);
 if($('setFuel')) Array.prototype.forEach.call($('setFuel').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.f===(SETTINGS.fuel||'on'))); });
 Array.prototype.forEach.call($('setBomb').children,function(b){ b.setAttribute('aria-pressed',String(b.dataset.b===SETTINGS.bombAssist)); });
@@ -7846,6 +7863,7 @@ $('setRes').addEventListener('click',function(e){ const b=e.target.closest('butt
 $('setAA').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; SETTINGS.aa=b.dataset.a; saveSettings(); if(FX.on){ try{ fxBuild(); }catch(err){} } syncSettingsUI(); });
 $('btnSndOpen').addEventListener('click',function(){ openSoundLib(); });
 $('setMusic').addEventListener('change',function(e){ SETTINGS.music=e.target.checked; saveSettings(); });
+$('setMusMode').addEventListener('click',function(e){ const b=e.target.closest('button[data-m]'); if(!b) return; SETTINGS.musMode=b.dataset.m; MUS.rest=0; MUS.phName=null; saveSettings(); syncSettingsUI(); });
 $('setUiSnd').addEventListener('change',function(e){ SETTINGS.uiSnd=e.target.checked; saveSettings(); });
  
 (function(){ let last=null, lastT=0;
@@ -8006,7 +8024,7 @@ if(b.k==='gun'){ TOUCH.arm='gun'; toast('Seçili: '+(CUR.weapon==='TOP'?'Top':'M
 else if(INV[b.k]>0){ selectWeapon(b.k); TOUCH.arm=b.k; } });
 hold('tYawL',function(v){ TOUCH.yawL=v; TOUCH.yaw=(TOUCH.yawR?1:0)-(TOUCH.yawL?1:0); });
 hold('tYawR',function(v){ TOUCH.yawR=v; TOUCH.yaw=(TOUCH.yawR?1:0)-(TOUCH.yawL?1:0); });
-tap('tFlare',function(){ dropFlares(); }); tap('tGear',function(){ toggleGear(); }); tap('tCam',function(){ toggleCam(); });
+tap('tFlare',function(){ dropFlares(); }); tap('tGear',function(){ toggleGear(); }); tap('tGearB',function(){ toggleGear(); }); tap('tCam',function(){ toggleCam(); });
 tap('tPause',function(){ pauseGame(); }); tap('tMap',function(){ openMap(); }); tap('tAuto',function(){ toggleAutoTaxi(); }); tap('tSkip',function(){ skipTaxi(); });
 ['touch'].forEach(function(id){ $(id).addEventListener('contextmenu',function(e){ e.preventDefault(); }); });
 })();
@@ -8027,8 +8045,9 @@ else if(TOUCH.arm!=='gun'&&TOUCH.arm!==selW&&INV[selW]>0) TOUCH.arm=selW;
 const armLbl=TOUCH.arm==='gun'?(CUR.weapon==='TOP'?'TOP':'MÜHİMMAT'):(WEAPONS[TOUCH.arm].short+' · '+INV[TOUCH.arm]);
 if($('tFire').dataset.l!==armLbl){ $('tFire').dataset.l=armLbl; $('tFire').innerHTML='ATEŞ<small>'+armLbl+'</small>'; $('tFire').classList.toggle('wpn',TOUCH.arm!=='gun'); }
 $('tFlare').innerHTML='FLARE<br>'+flaresLeft; $('tFlare').classList.toggle('off',flaresLeft<=0);
-const air=!S.onGround; $('tGear').classList.toggle('hidden',!air); $('tBrake').classList.toggle('hidden',air);
-$('tGear').textContent=S.gear?'TAKIM ▲':'TAKIM ▼';
+const air=!S.onGround; $('tBrake').classList.toggle('hidden',air);
+ 
+const gb=$('tGearB'), gk=(S.gear?'d':'u')+(air?'a':'g'); if(gb&&gb.dataset.k!==gk){ gb.dataset.k=gk; gb.innerHTML='<b>'+(S.gear?'▼':'▲')+'</b>TEKER<br>'+(S.gear?'AÇIK':'KAPALI'); gb.classList.toggle('down',S.gear); gb.classList.toggle('up',!S.gear); gb.classList.toggle('lock',!air&&S.gear); gb.setAttribute('aria-label','İniş takımı '+(S.gear?'açık — kaldır':'kapalı — indir')); }
 const sr=$('tStick').getBoundingClientRect(), rr=$('tRight').getBoundingClientRect(); TLAY.L=sr.right+10; TLAY.R=rr.left-10; TLAY.ok=TLAY.R>TLAY.L;
 const wpn=$('tWpn'); if(WPANEL){ wpn.style.left=WPANEL.x+'px'; wpn.style.top=(WPANEL.y-8)+'px'; wpn.style.width=WPANEL.w+'px'; wpn.style.height=(WPANEL.h+12)+'px'; wpn.style.display=''; } else wpn.style.display='none';
 }
@@ -13455,7 +13474,7 @@ navRender=HOOK.wrap('navRender','ekran/surum-notlari#_rnNav',function(_rnNav){ r
 const k=h.indexOf('data-act="net"'); if(k<0) return; const j=h.indexOf('</button>',k)+9; el.innerHTML=h.slice(0,j)+navBtn('notes','Yenilikler',GAME_VERSION+' sürüm notları','news')+h.slice(j); tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
 titleAct=HOOK.wrap('titleAct','ekran/surum-notlari#_rnAct',function(_rnAct){ return function(act){ if(act==='notes'&&state==='menu') return relOpen(); return _rnAct(act); }; },titleAct);
  
-const RELNOTES=[{"v": "V2.27", "d": "2026-10-15", "t": "Girdi yöneticisi", "md": "- **Tek girdi yöneticisi:** 23 modülün pencereye ayrı ayrı bağladığı klavye dinleyicileri tek bir girdi yöneticisinde toplandı. Tuşlar aynı sırayla ve aynı şekilde çalışıyor; bir modülde hata çıkarsa diğer tuşlar çalışmaya devam ediyor. Her kısayolun hangi modüle ve hangi bağlama (uçuş, yürüyüş, araç, menü, harita…) ait olduğu kayıtlı.\n- **Kısayol çakışması yok:** bütün şemalar tarandı; F2 (görev günlüğü), F3 (tekrar), F4 (işaret), F6 (duman), F7 (füzeden kaçış), F8 (kanat adamı) birbirine ya da başka tuşa çakışmıyor. Araç ve tekne kamerasının C tuşu genel kamerayla bilerek aynı. Yeni bir çakışmayı test kendiliğinden yakalıyor.\n- **Yardım ekranı:** kontroller yardımı artık helikopter ve deniz aracı dahil bütün şemaları, sonradan eklenen F tuşlarını ve sabit tuşları (1–5, menü okları) kendiliğinden listeliyor. Bütün kısayollar Ayarlar → Kontroller'de değiştirilebiliyor.\n- **Eski görev listesi silindi:** V1.76'da görev panosu gelince hiç çalışmayan ilk görev listesinin kodu kaldırıldı (görev ekranının görünüşü ve çalışması aynı)."}, {"v": "V2.26", "d": "2026-10-15", "t": "Kayıt ve depolama düzeni", "md": "- **Tek kayıt:** oyunun tarayıcıya yazdığı 28 ayrı kayıt (ayarlar, profiller, rekorlar, boyalar, yarış ve okul ilerlemesi…) artık tek, sürüm numaralı bir kayıtta duruyor. Güncellemeden sonraki ilk açılışta eski kayıtlar kendiliğinden taşınıyor, doğrulanıyor ve eskileri siliniyor; hiçbir ilerleme kaybolmuyor.\n- **Yedek:** her oturumda son sağlam kayıt yedekleniyor. Kayıt bozulursa oyun yedekten açılıyor ve bunu söylüyor; ikisi de bozuksa yeni kayıtla açılıyor (bozuk kayıt silinmeden ayrı saklanıyor).\n- **Bulut senkronu:** grafik ayarlarının yeni ayrıntılı grupları ve \"Otomatik\" seçimi de artık cihaza özel kalıyor (bilgisayarın ayarı telefona geçmiyor).\n- **Ana menü:** isteğin üzerine yalnız yeni ana menü kaldı; eski \"Komuta\" ve \"Sinematik\" tasarımları ve Arayüz'deki seçim satırı kaldırıldı.\n- **Telefon raporundaki sorunlar:** açılış telefonda 12 sn sürmüştü; bunun 7,3 sn'si yükleme ekranındaki doku paylaşımıydı. Bu iş artık yükleme ekranından çıkarıldı, küçük parmak iziyle arka planda birkaç ms'lik dilimlerle yapılıyor. Uçuşta görülen takılmaların şüphelisi olan uzak arazi ağı, her değişimde yeniden kurulmak yerine yerinde güncelleniyor. Performans testi raporu artık her modülün \"en uzun tek çağrısını\" da gösteriyor, böylece kalan takılmaların kaynağı görülebilecek."}, {"v": "V2.25", "d": "2026-10-15", "t": "Kod düzeni", "md": "- **Kod düzeni:** 124 modül konu klasörlerine taşındı: çekirdek, dünya, modeller, uçuş, savaş, görev, ekran, kontrol, ses, yürüyüş, ağ, performans ve veri. \"98b\", \"98zf\" gibi numaralı yama modülleri kalmadı; her dosyanın adı ne yaptığını söylüyor. Yükleme sırası tek bir listede (`src/js/SIRA.txt`) tutuluyor. Taşımadan sonra oyunun kodu bayt bayt aynıydı.\n- **Büyük modüller bölündü:** yapay zekâ ve çevrimiçi oyun (4 parça), model kütüphanesi (3 parça), ana menü (3 parça).\n- **Daha küçük dosya:** oyun dosyası 2 011 KB'tan 1 798 KB'a indi (−%10,6). Kod yorumları ve girintiler artık yalnız yayınlanan dosyadan çıkarılıyor (kaynak kodda duruyorlar); envanter verisindeki tekrar eden metinler tek listede toplandı (406 → 329 KB).\n- **Temizlik:** kullanılmayan 7 işlev silindi; her açılışta konsola düşen 9 \"flatShading\" uyarısı ve 35 Canvas uyarısı giderildi."}, {"v": "V2.24", "d": "2026-10-15", "t": "Kanca sistemi ve kare başına çöp", "md": "- **Kanca kaydı:** modüllerin birbirini genişletme biçimi baştan düzenlendi. 284 \"sarmalama\"nın 279'u tek bir kanca kaydına taşındı. Artık bir modülde hata çıkarsa yalnız o modül atlanıyor, oyunun geri kalanı çalışmaya devam ediyor (eskiden aynı zincirdeki diğer modüller de duruyordu). Davranış değişmedi; bütün testler aynı.\n- **Performans testinde modül maliyeti:** test sonucunda \"En pahalı modüller\" satırı var: hangi modülün kare başına kaç ms harcadığı görünüyor.\n- **Daha az çöp:** uçuşta kare başına üretilen geçici bellek ~%26 azaldı (çöp toplayıcı daha seyrek çalışır, telefonda ani takılma riski azalır). Yapay zekâ uçaklarının parça birleştirmesi artık her hareketli parça için ayrı ayrı değil, bir kerede yeniden kuruluyor (yeniden kurulum 32 → 9); akrobasi algılayıcısı, martılar, koyunlar, trafik, simge yapılar ve HUD yazıları her karede yeni nesne üretmiyor.\n- **Ses:** motor sesi sustuğunda 1,5 saniye sonra ses işlemcisinden çıkarılıyor (menüde, yürürken boşa hesaplanmıyor); ses ayarları yalnız değiştiğinde yazılıyor."}, {"v": "V2.23", "d": "2026-10-15", "t": "Bütün ayarların gözden geçirmesi", "md": "- **Tekrar eden ayarlar kaldırıldı:** \"Telsiz altyazıları\" artık yalnız Erişilebilirlik'te, \"Kumanda titreşimi\" yalnız Kontroller → Gamepad'de. İki ayrı \"Çubuk hassasiyeti\" satırı \"Kumanda çubuk hassasiyeti\" ve \"Dokunmatik çubuk hassasiyeti\" oldu.\n- **Her satırın açıklaması var:** yalnız yüzde gösteren satırlar (duyarlılık, ölü bölge, düğme boyutu, saydamlık, ses seviyesi…) artık neyi değiştirdiklerini de yazıyor.\n- **Varsayılana dön (↺):** bir ayar varsayılandan farklıysa adının yanında küçük ↺ düğmesi çıkıyor; basınca yalnız o ayar varsayılana dönüyor (47 satırda).\n- **Arama her yerde:** ayar araması bütün sekmelerde, Kontroller'in Klavye/Gamepad/Dokunmatik panellerinde ve Grafik'in açılır gruplarında buluyor; eşleşen grup kendiliğinden açılıyor."}, {"v": "V2.22", "d": "2026-10-15", "t": "Grafik ayarları 2.0", "md": "- **Daha sade grafik sekmesi:** temel ayarlar 7 satır: Grafik kalitesi, Gölgeler, Görsel efektler, Çözünürlük, FPS sınırı, Performans testi, Tam ekran. Geri kalanı iki açılır grupta: \"Ayrıntılı ayarlar\" ve \"Grafik sorun giderme\" (derinlik, iki katmanlı derinlik, güvenli mod, görüntü testi, tanılama).\n- **Otomatik hazır ayar:** Grafik kalitesi satırında Otomatik seçeneği var: cihazına göre kademe seçer ve FPS düşerse ayarları kendiliğinden hafifletir. Aynı işi yapan \"Cihaza göre ayarla\" ve \"Performans modu\" satırları kaldırıldı. Hazır ayarın üstüne kendi seçimini yaparsan \"Özel\" yazıyor; bir hazır ayara dokununca sıfırlanıyor.\n- **Ayrıntılı ayarlar:** görüş mesafesi, nesne ayrıntısı, bitki örtüsü, bulutlar, doku kalitesi ve efekt kalitesi artık ayrı ayrı ayarlanabiliyor (her biri \"Hazır\" ya da Düşük–Ultra). Ayrıca kenar yumuşatma, akıllı performans ve FPS göstergesi burada.\n- **Maliyet etiketleri:** her ayarın yanında az · orta · çok etki etiketi var.\n- **Canlı fark:** bir grafik ayarını değiştirince hemen altında çizim ve üçgen sayısının nasıl değiştiği görünüyor (ör. \"çizim 201 → 200 · üçgen 375 bin → 355 bin\"). Hiçbir ayar yeniden başlatma istemiyor (derinlik hassasiyeti hariç)."}, {"v": "V2.21", "d": "2026-10-15", "t": "Arazi ayrıntı kademeleri", "md": "- **Arazi parçalara bölündü:** 30 km'lik tek parça arazi (her karede 180 bin üçgen, kameranın arkası dahil) 5 km'lik 36 parçaya bölündü. Yakındaki parçalar eskisi gibi 100 m ayrıntıda, uzaktakiler 200, 500 ve 1000 m'de çiziliyor; kameranın görmediği parçalar hiç çizilmiyor. Uzak parçalar tek ağda birleştiği için çizim sayısı neredeyse aynı kaldı.\n- **Ölçüm (Yüksek kalite):** çizilen üçgen bilgisayarda uçuşta 397 bin → 276 bin, alçak uçuşta 574 bin → 438 bin; telefonda %26–40 daha az (ör. şehirde 1,02 milyon → 754 bin). Çizim sayısı +2–12.\n- **Görüntü korunuyor:** yakın arazi eskisiyle aynı noktalardan oluşuyor; dağlık parçalar silüet bozulmasın diye bir kademe daha ayrıntılı kalıyor. Kademe değişiminde titreme olmasın diye bekleme payı var, parça kenarlarındaki yarıklar eteklerle kapanıyor. Önce/sonra ekran görüntüleri neredeyse aynı.\n- Uçak ve araçların yer teması etkilenmiyor: yükseklik hesabı çizilen araziden değil, arazi formülünden geliyor."}, {"v": "V2.20", "d": "2026-10-14", "t": "Yükleme ekranı 2.0", "md": "- **Menü artık hazır açılıyor:** yükleme ekranı kapandıktan sonra menüde süren hazırlık (doku paylaşımı, nesne ve model birleştirme, shader ön derleme, hesap kontrolü) artık yükleme ekranının altında yapılıyor. Profil ve yönetici düğmesi menüyle birlikte geliyor; arkadaki sinematik uçuş görüntüsü takılmadan, baştan başlıyor. Yükleme ekranı kareler düzene girince kapanıyor (en çok 6 sn hazırlık, hesap için en çok 3 sn bekleme).\n- **3B ay yıldız:** yükleme ekranında kendi ekseninde dönen, kalınlığı olan bir ay yıldız var. Dönüş tarayıcının ayrı iş parçacığında çalıştığı için oyun kurulurken de akıcı dönüyor.\n- **Uçaklı ilerleme çubuğu:** düz çubuk yerine KAAN, HÜRJET, KIZILELMA, AKINCI ve TB2 siluetleri kuyruktan buruna sırayla kırmızıyla doluyor."}];
+const RELNOTES=[{"v": "V2.28", "d": "2026-10-15", "t": "Görüntü, ses ve dokunmatik düzeltmeleri", "md": "- **Uçaktaki gölge titremesi giderildi:** 300 m'nin üstünde gölge haritası her 4 karede bir çiziliyordu. Uçak o arada 10–15 m ilerlediği için kanadın gövdeye, kuyruğun kanada düşen gölgesi saniyede 15 kez yanıp sönüyordu. Artık yüksekte gölge kutusu yalnızca uçağı kapsıyor (150 m yerine birkaç metre), her karede çiziliyor ve uçağın üzerine ortalanıyor. Gölge ayrıntısı yaklaşık 3 kat incelikte (KAAN'da 7 cm yerine 2 cm). Gölge sapması da bu ölçüye göre ayarlandı, gövdedeki koyu bantlar kalktı. Menüdeki uçuş görüntüsü için de aynısı geçerli.\n- **Telefonda daha net görüntü:**\n  - Yüksek ve Ultra kalitede kenarlar artık 4× MSAA ile yumuşatılıyor. Eskiden FXAA kullanılıyordu; kenarları bulanıklaştırıyor ve tırtıklı bırakıyordu.\n  - Otomatik çözünürlük telefonda en çok %80'e iniyor (eskiden %70). 2,8× ekranda görüntü 1,2× çizilmişti, pikselleşme buradan geliyordu.\n  - FPS yine düşerse önce efektler ve gölgeler kısılıyor, 60 FPS hedefi korunuyor.\n- **Gökyüzünde renk bantları yok:** gökyüzü geçişi ve renk düzeltmesi, gözle görülmeyen ince bir gürültüyle (dither) çiziliyor. Ufuk üstündeki basamak basamak renk şeritleri kayboldu.\n- **Müzik ara ara çalıyor:** menü ve uçuş teması yaklaşık bir dakika çalıyor, sonra 1,5–3,5 dakika sessizlik oluyor (motor, rüzgâr ve telsiz duyuluyor). Her yeni bölüm başka bir tonda ve bazen daha sade bir düzenlemeyle başlıyor. Çatışma müziği tehlike anında hemen giriyor; uzun çatışmalarda tonu değişiyor. Müzik sesinin varsayılanı %60'tan %45'e indi. Ayarlar → Ses → Müzik sıklığı: Ara ara · Sürekli · Yalnız çatışma.\n- **Telefonda iniş takımı düğmesi:** FLARE'in yanına her zaman görünen yuvarlak bir TEKER düğmesi geldi. Düğme takımın durumunu gösteriyor (▼ AÇIK / ▲ KAPALI). Eskiden üst çubuğun sonunda yalnızca havadayken çıkan, kolay gözden kaçan bir \"TAKIM\" yazısıydı.\n- **Yol haritası:** senin istediğin üç sürüm araya girdi:\n  - V2.28 bu düzeltmeler;\n  - V2.29 ana menüde Hızlı oyun ve Kariyer;\n  - V2.30 mühimmat yerleşimi ve zemine gömülme.\n\n  Test ve yayın hattı V2.31'e, model serisi V2.36'ya kaydı."}, {"v": "V2.27", "d": "2026-10-15", "t": "Girdi yöneticisi", "md": "- **Tek girdi yöneticisi:** 23 modülün pencereye ayrı ayrı bağladığı klavye dinleyicileri tek bir girdi yöneticisinde toplandı. Tuşlar aynı sırayla ve aynı şekilde çalışıyor; bir modülde hata çıkarsa diğer tuşlar çalışmaya devam ediyor. Her kısayolun hangi modüle ve hangi bağlama (uçuş, yürüyüş, araç, menü, harita…) ait olduğu kayıtlı.\n- **Kısayol çakışması yok:** bütün şemalar tarandı; F2 (görev günlüğü), F3 (tekrar), F4 (işaret), F6 (duman), F7 (füzeden kaçış), F8 (kanat adamı) birbirine ya da başka tuşa çakışmıyor. Araç ve tekne kamerasının C tuşu genel kamerayla bilerek aynı. Yeni bir çakışmayı test kendiliğinden yakalıyor.\n- **Yardım ekranı:** kontroller yardımı artık helikopter ve deniz aracı dahil bütün şemaları, sonradan eklenen F tuşlarını ve sabit tuşları (1–5, menü okları) kendiliğinden listeliyor. Bütün kısayollar Ayarlar → Kontroller'de değiştirilebiliyor.\n- **Eski görev listesi silindi:** V1.76'da görev panosu gelince hiç çalışmayan ilk görev listesinin kodu kaldırıldı (görev ekranının görünüşü ve çalışması aynı)."}, {"v": "V2.26", "d": "2026-10-15", "t": "Kayıt ve depolama düzeni", "md": "- **Tek kayıt:** oyunun tarayıcıya yazdığı 28 ayrı kayıt (ayarlar, profiller, rekorlar, boyalar, yarış ve okul ilerlemesi…) artık tek, sürüm numaralı bir kayıtta duruyor. Güncellemeden sonraki ilk açılışta eski kayıtlar kendiliğinden taşınıyor, doğrulanıyor ve eskileri siliniyor; hiçbir ilerleme kaybolmuyor.\n- **Yedek:** her oturumda son sağlam kayıt yedekleniyor. Kayıt bozulursa oyun yedekten açılıyor ve bunu söylüyor; ikisi de bozuksa yeni kayıtla açılıyor (bozuk kayıt silinmeden ayrı saklanıyor).\n- **Bulut senkronu:** grafik ayarlarının yeni ayrıntılı grupları ve \"Otomatik\" seçimi de artık cihaza özel kalıyor (bilgisayarın ayarı telefona geçmiyor).\n- **Ana menü:** isteğin üzerine yalnız yeni ana menü kaldı; eski \"Komuta\" ve \"Sinematik\" tasarımları ve Arayüz'deki seçim satırı kaldırıldı.\n- **Telefon raporundaki sorunlar:** açılış telefonda 12 sn sürmüştü; bunun 7,3 sn'si yükleme ekranındaki doku paylaşımıydı. Bu iş artık yükleme ekranından çıkarıldı, küçük parmak iziyle arka planda birkaç ms'lik dilimlerle yapılıyor. Uçuşta görülen takılmaların şüphelisi olan uzak arazi ağı, her değişimde yeniden kurulmak yerine yerinde güncelleniyor. Performans testi raporu artık her modülün \"en uzun tek çağrısını\" da gösteriyor, böylece kalan takılmaların kaynağı görülebilecek."}, {"v": "V2.25", "d": "2026-10-15", "t": "Kod düzeni", "md": "- **Kod düzeni:** 124 modül konu klasörlerine taşındı: çekirdek, dünya, modeller, uçuş, savaş, görev, ekran, kontrol, ses, yürüyüş, ağ, performans ve veri. \"98b\", \"98zf\" gibi numaralı yama modülleri kalmadı; her dosyanın adı ne yaptığını söylüyor. Yükleme sırası tek bir listede (`src/js/SIRA.txt`) tutuluyor. Taşımadan sonra oyunun kodu bayt bayt aynıydı.\n- **Büyük modüller bölündü:** yapay zekâ ve çevrimiçi oyun (4 parça), model kütüphanesi (3 parça), ana menü (3 parça).\n- **Daha küçük dosya:** oyun dosyası 2 011 KB'tan 1 798 KB'a indi (−%10,6). Kod yorumları ve girintiler artık yalnız yayınlanan dosyadan çıkarılıyor (kaynak kodda duruyorlar); envanter verisindeki tekrar eden metinler tek listede toplandı (406 → 329 KB).\n- **Temizlik:** kullanılmayan 7 işlev silindi; her açılışta konsola düşen 9 \"flatShading\" uyarısı ve 35 Canvas uyarısı giderildi."}, {"v": "V2.24", "d": "2026-10-15", "t": "Kanca sistemi ve kare başına çöp", "md": "- **Kanca kaydı:** modüllerin birbirini genişletme biçimi baştan düzenlendi. 284 \"sarmalama\"nın 279'u tek bir kanca kaydına taşındı. Artık bir modülde hata çıkarsa yalnız o modül atlanıyor, oyunun geri kalanı çalışmaya devam ediyor (eskiden aynı zincirdeki diğer modüller de duruyordu). Davranış değişmedi; bütün testler aynı.\n- **Performans testinde modül maliyeti:** test sonucunda \"En pahalı modüller\" satırı var: hangi modülün kare başına kaç ms harcadığı görünüyor.\n- **Daha az çöp:** uçuşta kare başına üretilen geçici bellek ~%26 azaldı (çöp toplayıcı daha seyrek çalışır, telefonda ani takılma riski azalır). Yapay zekâ uçaklarının parça birleştirmesi artık her hareketli parça için ayrı ayrı değil, bir kerede yeniden kuruluyor (yeniden kurulum 32 → 9); akrobasi algılayıcısı, martılar, koyunlar, trafik, simge yapılar ve HUD yazıları her karede yeni nesne üretmiyor.\n- **Ses:** motor sesi sustuğunda 1,5 saniye sonra ses işlemcisinden çıkarılıyor (menüde, yürürken boşa hesaplanmıyor); ses ayarları yalnız değiştiğinde yazılıyor."}, {"v": "V2.23", "d": "2026-10-15", "t": "Bütün ayarların gözden geçirmesi", "md": "- **Tekrar eden ayarlar kaldırıldı:** \"Telsiz altyazıları\" artık yalnız Erişilebilirlik'te, \"Kumanda titreşimi\" yalnız Kontroller → Gamepad'de. İki ayrı \"Çubuk hassasiyeti\" satırı \"Kumanda çubuk hassasiyeti\" ve \"Dokunmatik çubuk hassasiyeti\" oldu.\n- **Her satırın açıklaması var:** yalnız yüzde gösteren satırlar (duyarlılık, ölü bölge, düğme boyutu, saydamlık, ses seviyesi…) artık neyi değiştirdiklerini de yazıyor.\n- **Varsayılana dön (↺):** bir ayar varsayılandan farklıysa adının yanında küçük ↺ düğmesi çıkıyor; basınca yalnız o ayar varsayılana dönüyor (47 satırda).\n- **Arama her yerde:** ayar araması bütün sekmelerde, Kontroller'in Klavye/Gamepad/Dokunmatik panellerinde ve Grafik'in açılır gruplarında buluyor; eşleşen grup kendiliğinden açılıyor."}, {"v": "V2.22", "d": "2026-10-15", "t": "Grafik ayarları 2.0", "md": "- **Daha sade grafik sekmesi:** temel ayarlar 7 satır: Grafik kalitesi, Gölgeler, Görsel efektler, Çözünürlük, FPS sınırı, Performans testi, Tam ekran. Geri kalanı iki açılır grupta: \"Ayrıntılı ayarlar\" ve \"Grafik sorun giderme\" (derinlik, iki katmanlı derinlik, güvenli mod, görüntü testi, tanılama).\n- **Otomatik hazır ayar:** Grafik kalitesi satırında Otomatik seçeneği var: cihazına göre kademe seçer ve FPS düşerse ayarları kendiliğinden hafifletir. Aynı işi yapan \"Cihaza göre ayarla\" ve \"Performans modu\" satırları kaldırıldı. Hazır ayarın üstüne kendi seçimini yaparsan \"Özel\" yazıyor; bir hazır ayara dokununca sıfırlanıyor.\n- **Ayrıntılı ayarlar:** görüş mesafesi, nesne ayrıntısı, bitki örtüsü, bulutlar, doku kalitesi ve efekt kalitesi artık ayrı ayrı ayarlanabiliyor (her biri \"Hazır\" ya da Düşük–Ultra). Ayrıca kenar yumuşatma, akıllı performans ve FPS göstergesi burada.\n- **Maliyet etiketleri:** her ayarın yanında az · orta · çok etki etiketi var.\n- **Canlı fark:** bir grafik ayarını değiştirince hemen altında çizim ve üçgen sayısının nasıl değiştiği görünüyor (ör. \"çizim 201 → 200 · üçgen 375 bin → 355 bin\"). Hiçbir ayar yeniden başlatma istemiyor (derinlik hassasiyeti hariç)."}, {"v": "V2.21", "d": "2026-10-15", "t": "Arazi ayrıntı kademeleri", "md": "- **Arazi parçalara bölündü:** 30 km'lik tek parça arazi (her karede 180 bin üçgen, kameranın arkası dahil) 5 km'lik 36 parçaya bölündü. Yakındaki parçalar eskisi gibi 100 m ayrıntıda, uzaktakiler 200, 500 ve 1000 m'de çiziliyor; kameranın görmediği parçalar hiç çizilmiyor. Uzak parçalar tek ağda birleştiği için çizim sayısı neredeyse aynı kaldı.\n- **Ölçüm (Yüksek kalite):** çizilen üçgen bilgisayarda uçuşta 397 bin → 276 bin, alçak uçuşta 574 bin → 438 bin; telefonda %26–40 daha az (ör. şehirde 1,02 milyon → 754 bin). Çizim sayısı +2–12.\n- **Görüntü korunuyor:** yakın arazi eskisiyle aynı noktalardan oluşuyor; dağlık parçalar silüet bozulmasın diye bir kademe daha ayrıntılı kalıyor. Kademe değişiminde titreme olmasın diye bekleme payı var, parça kenarlarındaki yarıklar eteklerle kapanıyor. Önce/sonra ekran görüntüleri neredeyse aynı.\n- Uçak ve araçların yer teması etkilenmiyor: yükseklik hesabı çizilen araziden değil, arazi formülünden geliyor."}];
 const PT={run:false, k:1, steps:[], si:-1, st:0, seg:null, segs:[], last:0, ring:new Float32Array(240), ri:0, heap:0, saved:null, warm:false,
 gq:null, path:null, pathT:0, spawned:[], fxT:0, ui:null, rep:null, reports:[], v:new THREE.Vector3()};
  
@@ -13721,7 +13740,7 @@ fxDefault=HOOK.wrap('fxDefault','performans/efekt-kalitesi#_q13Def',function(_q1
 function fxBloomScale(){ const c=gpuClass(); if(c==='igpu'||c==='mobile'||c==='soft') return 0.5; return (SETTINGS.quality>=3&&(c==='dgpu'||c==='apple'))?1:0.5; }    
 function fxAAChoice(){ const c=gpuClass(), set=SETTINGS.aa&&SETTINGS.aa!=='auto'?SETTINGS.aa:null;
 if(set) return (c==='igpu'&&set==='msaa8')?'msaa4':set;
-if(DEV.mobile) return 'auto'; if(c==='igpu'||c==='soft') return 'fxaa'; return SETTINGS.quality>=3?'msaa8':'auto'; }
+if(DEV.mobile) return (SETTINGS.quality>=2&&!DEV.safe)?'msaa4':'auto';     if(c==='igpu'||c==='soft') return 'fxaa'; return SETTINGS.quality>=3?'msaa8':'auto'; }
 fxBuild=function(){
 const gl=renderer.getContext(), w2=!!renderer.capabilities.isWebGL2, cls=gpuClass();
 const halfOK=w2?!!(gl.getExtension('EXT_color_buffer_float')||gl.getExtension('EXT_color_buffer_half_float')):!!(gl.getExtension('OES_texture_half_float')&&gl.getExtension('EXT_color_buffer_half_float'));
@@ -13865,7 +13884,21 @@ if(!SUN.equals(SHU.sun)){ SHU.sun.copy(SUN); return true; }
 if(state==='walk') return true;
 if(state==='play'){ let agl=999; try{ agl=S.pos.y-Math.max(0,groundH(S.pos.x,S.pos.z)); }catch(e){} if(agl<300||S.onGround) return true; }
 return SHU.n%4===0; }
-shadowFollow=HOOK.wrap('shadowFollow','performans/golgeler#_shFollow',function(_shFollow){ return function(){ if(!renderer.shadowMap.enabled){ SHU.upd=true; return; } SHU.upd=SETTINGS.shadowEvery===true||shNeed(); if(SHU.upd) _shFollow(); }; },shadowFollow);
+const SHP={mode:0, r:24, grp:null, box:new THREE.Box3(), sph:new THREE.Sphere(), f:new THREE.Vector3(), n:0};
+function shPlaneR(){ let g=null; try{ g=planeGroup; }catch(e){} if(!g) return 24; if(SHP.grp!==g){ SHP.grp=g; try{ SHP.box.setFromObject(g); SHP.box.getBoundingSphere(SHP.sph); SHP.r=Math.max(8,Math.min(60,SHP.sph.radius)); }catch(e){ SHP.r=24; } } return SHP.r; }
+function shPlaneWanted(){ if(!renderer.shadowMap.enabled||SETTINGS.shadowPlane===false) return false; let g=null; try{ g=planeGroup; }catch(e){} if(!g||!g.visible) return false;
+let p=null; if(state==='play'&&!S.crashed&&!S.onGround) p=S.pos; else if(state==='menu'&&typeof cineOn==='function'&&cineOn()) p=g.position; if(!p) return false;
+let agl=999; try{ agl=p.y-Math.max(0,groundH(p.x,p.z)); }catch(e){} return agl>(SHP.mode?260:320); }
+function shPlaneSet(on){ const c=sunLight.shadow.camera, sh=sunLight.shadow; SHP.mode=on?1:0;
+if(on){ const r=shPlaneR()*1.08+3, tex=2*r/(sh.mapSize.x||2048); SHP.R=r; c.left=c.bottom=-r; c.right=c.top=r; c.near=1800-r-4; c.far=1800+r+4; sh.bias=-Math.max(0.01,tex*0.6)/(c.far-c.near); if('normalBias' in sh) sh.normalBias=Math.max(0.015,tex*1.4); }
+else { SHP.R=75; c.left=c.bottom=-75; c.right=c.top=75; c.near=1200; c.far=2400; sh.bias=DEV.mobile?-0.0012:-0.0008; if('normalBias' in sh) sh.normalBias=DEV.mobile?0.08:0.05; }
+c.updateProjectionMatrix(); renderer.shadowMap.needsUpdate=true; }
+shadowFollow=HOOK.wrap('shadowFollow','performans/golgeler#_shFollow',function(_shFollow){ return function(){ if(!renderer.shadowMap.enabled){ SHU.upd=true; if(SHP.mode) shPlaneSet(false); return; }
+const want=shPlaneWanted(); if(want!==!!SHP.mode||(want&&SHP.grp!==planeGroup)) shPlaneSet(want);
+if(SHP.mode){ SHU.n++; SHU.upd=true; SHP.n++; const g=planeGroup; g.getWorldPosition(SHP.f); sunLight.target.position.copy(SHP.f); sunLight.position.copy(SHP.f).addScaledVector(SUN,1800); sunLight.target.updateMatrixWorld(); return; }
+SHU.upd=SETTINGS.shadowEvery===true||shNeed(); if(SHU.upd) _shFollow(); }; },shadowFollow);
+ 
+applyShadows=HOOK.wrap('applyShadows','performans/golgeler#_shpApply',function(_shpApply){ return function(){ _shpApply(); if(SHP.mode) shPlaneSet(true); }; },applyShadows);
 renderFrame=HOOK.wrap('renderFrame','performans/golgeler#_shRF',function(_shRF){ return function(dt){ if(renderer.shadowMap.enabled){ renderer.shadowMap.autoUpdate=false; if(SHU.upd){ renderer.shadowMap.needsUpdate=true; SHU.drawn++; } else SHU.skipped++; } _shRF(dt); }; },renderFrame);
  
 cullStep=HOOK.wrap('cullStep','performans/golgeler#_shCull',function(_shCull){ return function(dt){ _shCull(dt); SHU.t=(SHU.t||0)+(dt||0); if(SHU.t>5){ SHU.t=0; try{ if(renderer.shadowMap.enabled) shSmallCasters(); }catch(e){} } }; },cullStep);
@@ -14055,7 +14088,7 @@ const RD=[['setRes','seg:r','auto'],['setCap','seg:c','auto'],['setAA','seg:a','
 ['setTod','seg:t','day'],['setWx','seg:w','clear'],['setLife','chk',true],
 ['setSens','range',100,function(){ return Math.round((SETTINGS.sens||1)*100); }],['setInv','chk',false],['padDz','range',function(){ return rdPadDef('dz'); },function(){ return Math.round(padOpt().dz*100); }],['padSens','range',function(){ return rdPadDef('sens'); },function(){ return Math.round(padOpt().sens*100); }],['padInv','chk',false,function(){ return padOpt().invY; }],['setRumble','chk',true],
 ['setTouch','seg:t','auto'],['tchSize','range',function(){ return rdTchDef('size'); },function(){ return Math.round(touchOpt().size*100); }],['tchOp','range',function(){ return rdTchDef('op'); },function(){ return Math.round(touchOpt().op*100); }],['tchStick','range',function(){ return rdTchDef('stick'); },function(){ return Math.round(touchOpt().stick*100); }],['tchLeft','chk',false,function(){ return touchOpt().left; }],['tchFloat','chk',false,function(){ return !!(SETTINGS.tch||{}).float; }],
-['setVol','range',80,function(){ return Math.round(SETTINGS.volume*100); }],['setMusic','chk',true],['setUiSnd','chk',true],['setRadioTts','chk',true],
+['setVol','range',80,function(){ return Math.round(SETTINGS.volume*100); }],['setMusic','chk',true],['setMusMode','seg:m','ara'],['setUiSnd','chk',true],['setRadioTts','chk',true],
 ['setUiz','seg:z','1'],['setCb','seg:c','off'],['setHc','chk',false],['setRm','chk',false],['setRadioSub2','chk',true],
 ['setMini','chk',false],['setNotes','seg:n','30']];
 function rdVal(d){ return typeof d==='function'?d():d; }

@@ -33,7 +33,7 @@ window.addEventListener('pointerdown',function(e){ if(e.pointerType==='touch') T
     else if(INV[b.k]>0){ selectWeapon(b.k); TOUCH.arm=b.k; } });
   hold('tYawL',function(v){ TOUCH.yawL=v; TOUCH.yaw=(TOUCH.yawR?1:0)-(TOUCH.yawL?1:0); });
   hold('tYawR',function(v){ TOUCH.yawR=v; TOUCH.yaw=(TOUCH.yawR?1:0)-(TOUCH.yawL?1:0); });
-  tap('tFlare',function(){ dropFlares(); }); tap('tGear',function(){ toggleGear(); }); tap('tCam',function(){ toggleCam(); });
+  tap('tFlare',function(){ dropFlares(); }); tap('tGear',function(){ toggleGear(); }); tap('tGearB',function(){ toggleGear(); }); tap('tCam',function(){ toggleCam(); });
   tap('tPause',function(){ pauseGame(); }); tap('tMap',function(){ openMap(); }); tap('tAuto',function(){ toggleAutoTaxi(); }); tap('tSkip',function(){ skipTaxi(); });
   ['touch'].forEach(function(id){ $(id).addEventListener('contextmenu',function(e){ e.preventDefault(); }); });
 })();
@@ -54,8 +54,9 @@ function updateTouchUI(){
   const armLbl=TOUCH.arm==='gun'?(CUR.weapon==='TOP'?'TOP':'MÜHİMMAT'):(WEAPONS[TOUCH.arm].short+' · '+INV[TOUCH.arm]);
   if($('tFire').dataset.l!==armLbl){ $('tFire').dataset.l=armLbl; $('tFire').innerHTML='ATEŞ<small>'+armLbl+'</small>'; $('tFire').classList.toggle('wpn',TOUCH.arm!=='gun'); }
   $('tFlare').innerHTML='FLARE<br>'+flaresLeft; $('tFlare').classList.toggle('off',flaresLeft<=0);
-  const air=!S.onGround; $('tGear').classList.toggle('hidden',!air); $('tBrake').classList.toggle('hidden',air);
-  $('tGear').textContent=S.gear?'TAKIM ▲':'TAKIM ▼';
+  const air=!S.onGround; $('tBrake').classList.toggle('hidden',air);
+  /* V2.28: landing gear button next to FLARE, always visible, showing the gear's state (it was a "TAKIM" pill at the end of the top bar, only in the air) */
+  const gb=$('tGearB'), gk=(S.gear?'d':'u')+(air?'a':'g'); if(gb&&gb.dataset.k!==gk){ gb.dataset.k=gk; gb.innerHTML='<b>'+(S.gear?'▼':'▲')+'</b>TEKER<br>'+(S.gear?'AÇIK':'KAPALI'); gb.classList.toggle('down',S.gear); gb.classList.toggle('up',!S.gear); gb.classList.toggle('lock',!air&&S.gear); gb.setAttribute('aria-label','İniş takımı '+(S.gear?'açık — kaldır':'kapalı — indir')); }
   const sr=$('tStick').getBoundingClientRect(), rr=$('tRight').getBoundingClientRect(); TLAY.L=sr.right+10; TLAY.R=rr.left-10; TLAY.ok=TLAY.R>TLAY.L;
   const wpn=$('tWpn'); if(WPANEL){ wpn.style.left=WPANEL.x+'px'; wpn.style.top=(WPANEL.y-8)+'px'; wpn.style.width=WPANEL.w+'px'; wpn.style.height=(WPANEL.h+12)+'px'; wpn.style.display=''; } else wpn.style.display='none';
 }

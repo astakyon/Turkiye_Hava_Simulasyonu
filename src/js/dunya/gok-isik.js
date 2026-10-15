@@ -10,7 +10,7 @@ const sky = new THREE.Mesh(
       'void main(){ vec3 d=normalize(vP); float h=clamp(d.y,0.0,1.0); vec3 c=mix(hor,mid,smoothstep(0.0,0.2,h)); c=mix(c,top,smoothstep(0.16,0.9,h));'+
       'float s=max(dot(d,sun),0.0); c=mix(c,vec3(1.0,0.95,0.86),pow(1.0-h,6.0)*0.35);'+          /* bright haze band at the horizon */
       'c+=vec3(1.0,0.86,0.62)*(pow(s,6.0)*0.18*(1.0-h*0.6)) + vec3(1.0,0.96,0.85)*(pow(s,48.0)*0.45+pow(s,900.0)*2.2*sunK+pow(s,160.0)*0.5*(sunK-1.0));'+   /* sun glow + disc */
-      'if(d.y<0.0) c=hor; gl_FragColor=vec4(c,1.0); }'
+      'if(d.y<0.0) c=hor; c+=(fract(52.9829189*fract(dot(gl_FragCoord.xy,vec2(0.06711056,0.00583715))))-0.5)/255.0; gl_FragColor=vec4(c,1.0); }'   /* V2.28: dither — no colour bands in the sky gradient */
   })
 );
 sky.renderOrder=-1000; sky.frustumCulled=false; scene.add(sky);

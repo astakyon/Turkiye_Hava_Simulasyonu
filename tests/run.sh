@@ -94,3 +94,4 @@ node harness.js /tmp/sim.js settings2.test.js
 node harness.js /tmp/sim.js hook.test.js
 node harness.js /tmp/sim.js depo.test.js
 node harness.js /tmp/sim.js input.test.js
+node harness.js /tmp/sim.js v228.test.js

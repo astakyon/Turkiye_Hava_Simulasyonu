@@ -17,7 +17,7 @@ function applyVolume(){ if(master) master.gain.value=SETTINGS.volume; }
 const PERF={base:1,scale:1,acc:0,n:0,t:0,low:0,high:0,fps:60,told:false};
 /* automatic resolution: only when the player chose "Otomatik"; PC never drops below 85 % (it was 60 % and looked pixelated),
    phones below 70 %. Drops in small steps after 3 slow seconds, recovers after 5 smooth ones. */
-function perfMin(){ return DEV.mobile?0.7:0.85; }
+function perfMin(){ return DEV.mobile?0.8:0.85; }   /* V2.28: phones 70 % → 80 % (at 70 % a 2.8× screen was drawn at 1.2×: the picture looked pixelated) */
 function perfStep(dt){
   PERF.acc+=dt; PERF.n++;
   if(PERF.acc<1) return;

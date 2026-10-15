@@ -23,7 +23,7 @@ fxDefault=HOOK.wrap('fxDefault','performans/efekt-kalitesi#_q13Def',function(_q1
 function fxBloomScale(){ const c=gpuClass(); if(c==='igpu'||c==='mobile'||c==='soft') return 0.5; return (SETTINGS.quality>=3&&(c==='dgpu'||c==='apple'))?1:0.5; }   /* the pass itself starts at half of this */
 function fxAAChoice(){ const c=gpuClass(), set=SETTINGS.aa&&SETTINGS.aa!=='auto'?SETTINGS.aa:null;
   if(set) return (c==='igpu'&&set==='msaa8')?'msaa4':set;
-  if(DEV.mobile) return 'auto'; if(c==='igpu'||c==='soft') return 'fxaa'; return SETTINGS.quality>=3?'msaa8':'auto'; }
+  if(DEV.mobile) return (SETTINGS.quality>=2&&!DEV.safe)?'msaa4':'auto';   /* V2.28: phones at Yüksek/Ultra get 4× MSAA in the effect target instead of FXAA (sharper edges; cheap on phone GPUs) */ if(c==='igpu'||c==='soft') return 'fxaa'; return SETTINGS.quality>=3?'msaa8':'auto'; }
 fxBuild=function(){
   const gl=renderer.getContext(), w2=!!renderer.capabilities.isWebGL2, cls=gpuClass();
   const halfOK=w2?!!(gl.getExtension('EXT_color_buffer_float')||gl.getExtension('EXT_color_buffer_half_float')):!!(gl.getExtension('OES_texture_half_float')&&gl.getExtension('EXT_color_buffer_half_float'));
