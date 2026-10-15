@@ -267,19 +267,58 @@ function updateCue(dt){
 // weapons visible under the wings
 const misVisGeo=new THREE.CylinderGeometry(0.13,0.13,2.6,8), bombVisGeo=new THREE.CylinderGeometry(0.2,0.2,1.8,8); misVisGeo.rotateX(Math.PI/2); bombVisGeo.rotateX(Math.PI/2);
 const misVisMat=new THREE.MeshPhongMaterial({color:0xeeeeee});
+/* ------------------------------------------------------------------ weapon stations from the model's shape (V2.30)
+   Player report: bombs and missiles sat inside the aircraft and on the landing gear. Their places were a fixed formula: pairs at
+   16 %, 26 %, 36 % … of the half span, one fixed height per aircraft, one depth for all — on KAAN the first pair was 1.1 m from
+   the centre line, inside the fuselage, next to the main gear legs.
+   Now every aircraft is measured once: rays from below find the underside of the wing and fuselage (gear, flames, lights and
+   glass left out) along the span; a station needs a stretch of wing (at least a third of the weapon's length, as on a short pylon), hangs 12 cm under the lowest
+   surface over its whole length and keeps clear of every gear leg and wheel (gear down or up). Pairs are filled from the inside
+   out with room between them; the table is kept per aircraft, so a change of loadout costs nothing. The model library preview
+   uses the same stations. */
+const STN={cache:{}, rc:null, a:new THREE.Vector3(), b:new THREE.Vector3(), up:new THREE.Vector3(), inv:new THREE.Matrix4(), box:new THREE.Box3(), nx:18, nz:40};
+function stnIn(o,p){ while(o){ if(o===p) return true; o=o.parent; } return false; }
+function stnSkip(m){ const L=[]; ['stores','gear','strobe'].forEach(function(k){ if(m[k]) L.push(m[k]); }); (m.flames||[]).forEach(function(f){ if(f&&f.isObject3D) L.push(f); else if(f){ L.push(f.outer); L.push(f.inner); } }); (m.spinners||[]).forEach(function(s){ if(s&&s.obj) L.push(s.obj); }); return L.filter(Boolean); }
+function stnMeshes(m){ const skip=stnSkip(m), L=[]; m.group.traverse(function(o){ if(!o.isMesh||o.isInstancedMesh) return; for(let i=0;i<skip.length;i++) if(stnIn(o,skip[i])) return;
+  const mt=Array.isArray(o.material)?o.material[0]:o.material; if(!mt||(mt.transparent&&mt.opacity<0.7)||mt.blending===THREE.AdditiveBlending||mt.isSpriteMaterial||mt.isLineBasicMaterial) return; L.push(o); }); return L; }
+/* the station table of one aircraft: for x along the span, the underside height along z (group-local metres, unscaled) */
+function stnTable(m){ const g=m.group; g.updateMatrixWorld(true); STN.inv.copy(g.matrixWorld).invert();
+  const L=stnMeshes(m), bb=new THREE.Box3(); L.forEach(function(o){ STN.box.setFromObject(o).applyMatrix4(STN.inv); bb.union(STN.box); });
+  if(bb.isEmpty()) return null;
+  if(!STN.rc) STN.rc=new THREE.Raycaster(); const rc=STN.rc; STN.up.set(0,1,0).transformDirection(g.matrixWorld);
+  const T={tipX:bb.max.x, y0:bb.min.y, z0:bb.min.z, z1:bb.max.z, xs:[], gear:[]};
+  const under=function(x,z){ STN.a.set(x,bb.min.y-3,z); g.localToWorld(STN.a); rc.set(STN.a,STN.up); rc.far=1e4; const h=rc.intersectObjects(L,false); if(!h.length) return null; STN.b.copy(h[0].point); g.worldToLocal(STN.b); return STN.b.y; };
+  for(let ix=0;ix<STN.nx;ix++){ const x=bb.max.x*(0.06+0.86*ix/(STN.nx-1)), prof=[]; for(let iz=0;iz<STN.nz;iz++){ const z=bb.min.z+(bb.max.z-bb.min.z)*(iz+0.5)/STN.nz; prof.push(under(x,z)); } T.xs.push({x:x, prof:prof}); }
+  if(m.gear){ const vis=[]; m.gear.traverse(function(o){ if(o.isMesh){ STN.box.setFromObject(o).applyMatrix4(STN.inv); if(!STN.box.isEmpty()) T.gear.push(STN.box.clone()); } }); }
+  return T; }
+function stnZ(T,iz){ return T.z0+(T.z1-T.z0)*(iz+0.5)/STN.nz; }
+/* one station for a weapon of radius r and length len at table column c: the longest run of wing along z */
+function stnFit(T,c,r,len,gap){ const P=c.prof, dz=(T.z1-T.z0)/STN.nz; let best=null, s=-1;
+  for(let i=0;i<=P.length;i++){ const hit=i<P.length&&P[i]!=null; if(hit&&s<0) s=i; if(!hit&&s>=0){ if(!best||i-s>best[1]-best[0]) best=[s,i]; s=-1; } }
+  if(!best||(best[1]-best[0])*dz<Math.min(len*0.35,1.0)) return null;   /* a short pylon can carry a weapon longer than the chord */
+  const zc=(stnZ(T,best[0])+stnZ(T,best[1]-1))/2-len*0.08; let lo=1e9;
+  for(let i=0;i<P.length;i++){ if(P[i]==null) continue; const z=stnZ(T,i); if(Math.abs(z-zc)<=len/2+dz) lo=Math.min(lo,P[i]); }
+  if(lo>1e8) return null; return {x:c.x, y:lo-r-gap, z:zc}; }
+function stnClearOfGear(T,s,r,len){ const pad=0.12; for(let i=0;i<T.gear.length;i++){ const b=T.gear[i];
+    if(s.x+r+pad>b.min.x&&s.x-r-pad<b.max.x&&s.y+r+pad>b.min.y&&s.y-r-pad<b.max.y&&s.z+len/2+pad>b.min.z&&s.z-len/2-pad<b.max.z) return false; } return true; }
+/* positions for a list of weapon keys, alternating sides (left, right, …) like before */
+function storeLayout(m,id,list,key){ if(!m||!m.group) return []; key=key||id; let T=STN.cache[key]; if(T===undefined||(T&&T.grp!==m.group)){ try{ T=stnTable(m); }catch(e){ T=null; } if(T) T.grp=m.group; STN.cache[key]=T; }
+  const out=[]; const k=T?clamp(T.tipX/6,0.6,1.5):1;
+  if(!T){ list.forEach(function(w,i){ out.push({x:(i%2?1:-1)*1.2*(1+Math.floor(i/2)),y:PYLON_Y[id]||-0.4,z:0,k:k}); }); return out; }
+  let lastX=-1e9; const stations=[];
+  for(let i=0;i<list.length;i+=2){ const W=WEAPONS[list[i]], r=(W.kind==='bomb'?0.2:0.13)*k, len=(W.kind==='bomb'?1.8:2.6)*k, gap=0.12*k; let st=null;
+    for(let c=0;c<T.xs.length&&!st;c++){ const col=T.xs[c]; if(col.x<r+0.15||col.x<lastX+2*r+0.3) continue; const s=stnFit(T,col,r,len,gap); if(s&&stnClearOfGear(T,s,r,len)) st=s; }
+    if(!st){ /* out of wing: hang under the last station, one row lower */ const p=stations[stations.length-1]; st=p?{x:p.x,y:p.y-2*r-0.1,z:p.z}:{x:T.tipX*0.3,y:PYLON_Y[id]||-0.4,z:(T.z0+T.z1)/2}; }
+    lastX=st.x; stations.push(st); }
+  list.forEach(function(w,i){ const st=stations[Math.floor(i/2)], side=i%2?1:-1; out.push({x:side*st.x, y:st.y, z:st.z, k:k}); });
+  return out; }
 function refreshStoresVisual(){
   if(!model||!model.group) return;
   if(!model.stores){ model.stores=new THREE.Group(); model.group.add(model.stores); }
   const g=model.stores; while(g.children.length) g.remove(g.children[0]);
-  if(!model.tip) return;
-  const gs=model.group.scale.x||1, tipX=model.tip[0]/gs, k=clamp(tipX/6,0.6,1.5), zc=model.tip[2]/gs-1.2*k, y=PYLON_Y[activeId]||-0.4;
-  const list=[]; WORDER.forEach(function(w){ for(let i=0;i<INV[w];i++) list.push(w); });
-  list.forEach(function(w,i){
-    const side=i%2?1:-1, idx=Math.floor(i/2), W=WEAPONS[w];
-    const m=new THREE.Mesh(W.kind==='bomb'?bombVisGeo:misVisGeo,W.kind==='bomb'?bombMats[w]:misVisMat);
-    m.position.set(side*tipX*(0.16+0.1*idx),y,zc); m.scale.setScalar(k); g.add(m);
-  });
-}
+  const list=[]; WORDER.forEach(function(w){ for(let i=0;i<INV[w];i++) list.push(w); }); if(!list.length) return;
+  const P=storeLayout(model,activeId,list);
+  list.forEach(function(w,i){ const W=WEAPONS[w], p=P[i], m=new THREE.Mesh(W.kind==='bomb'?bombVisGeo:misVisGeo,W.kind==='bomb'?bombMats[w]:misVisMat); m.position.set(p.x,p.y,p.z); m.scale.setScalar(p.k); g.add(m); }); }
 
 
 /* weapon release sounds (Sound Library: missile, bomb) */

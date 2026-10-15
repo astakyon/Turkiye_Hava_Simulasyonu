@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.30 — 2026-10-15 · Mühimmat yerleşimi ve zemine gömülme
+- **Mühimmat artık gövdeye ve iniş takımına girmiyor:** bomba ve füzelerin yeri sabit bir formülle hesaplanıyordu. Kanat açıklığının %16, %26, %36'sı gibi sabit oranlar, uçak başına tek bir yükseklik ve hep aynı derinlik kullanılıyordu. KAAN'da ilk çift gövdenin içinde, ana iniş takımı bacaklarının yanında kalıyordu. Artık her uçak bir kez ölçülüyor:
+  - Kanat ve gövdenin alt yüzeyi aşağıdan ışınla taranıyor. İniş takımı, egzoz alevi, ışıklar ve kanopi bu taramaya katılmıyor.
+  - Her istasyon, silahın boyuna yetecek kadar kanat altında seçiliyor. Silah, üstündeki en alçak yüzeyin 12 cm altında asılı duruyor.
+  - İstasyonlar iniş takımının bacak ve tekerleklerinden uzak tutuluyor (takım açıkken de kapalıyken de).
+  - Çiftler içeriden dışarıya, aralarında boşluk bırakılarak diziliyor. Ölçüm uçak başına bir kez yapıldığı için yük değiştirmek bir şeye mal olmuyor.
+
+  Model kütüphanesindeki silah önizlemesi de aynı yerleri kullanıyor. Bütün silahlı uçaklar denetlendi: KAAN, Hürjet, Hürkuş, Kızılelma, ANKA-3, Aksungur, TB2, TB3, Akıncı.
+- **Çime gömülme ve gömük yollar giderildi:** fizik, yollar, ağaçlar ve binalar arazinin düzgün matematiksel formülünü kullanıyordu. Ekranda ise arazi, 100 m arayla dizilmiş noktalar arasındaki düz üçgenlerle çiziliyor. Tümsek yamaçlarda bu üçgenler formülün üstünde kalıyor (dağlarda bir yerde 35 m'ye kadar). Tekerlekler, ayaklar ve yol şeritleri bu yüzden görünen çimin içinde kalıyordu. Artık yükseklik doğrudan çizilen üçgenden okunuyor: uçak, araç, yaya, yol, ağaç ve yapılar görünen zeminin tam üstünde. 30 km'lik arazinin dışında (açık deniz) formül eskisi gibi kullanılıyor. Yan kazanç olarak yükseklik hesabı da artık daha ucuz.
+
 ## V2.29 — 2026-10-15 · Ana menü: Hızlı Oyun ve Kariyer
 - **BAŞLA kalktı:** ana menünün ilk sırasında artık **Hızlı Oyun**, **Kariyer** ve **Çok Oyunculu** var. Kariyer'e ulaşmak için ara bir menüden geçmek gerekmiyor.
 - **Hızlı Oyun:** BAŞLA'nın içindeki her şey Kariyer hariç buraya taşındı: Hemen Başla (en son aracınla tek tıkla), Serbest Uçuş / Sürüş, Hızlı Görev ve Üssü Gez. Kariyerden bağımsız: her şey açık, tecrübe puanı ya da rütbe ilerlemesi kariyere işlemiyor.

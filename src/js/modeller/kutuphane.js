@@ -144,11 +144,10 @@ function libStores(){
   if(!m.stores){ m.stores=new THREE.Group(); m.group.add(m.stores); } const g=m.stores; while(g.children.length) g.remove(g.children[0]);
   if(!LIB.tests.wpn) return;
   const id=LIB.item.id; m.group.updateMatrixWorld(true);
-  const bb=new THREE.Box3().setFromObject(m.group), inv=new THREE.Matrix4().copy(m.group.matrixWorld).invert(); bb.applyMatrix4(inv);
-  const tipX=bb.max.x, k=clamp(tipX/6,0.6,1.5), zc=bb.min.z+(bb.max.z-bb.min.z)*0.62-1.2*k, y=PYLON_Y[id]||-0.4, l=loadoutOf(id), list=[];
-  WORDER.forEach(function(w){ for(let i=0;i<(l[w]||0);i++) list.push(w); });
-  list.forEach(function(w,i){ const side=i%2?1:-1, idx=Math.floor(i/2), W=WEAPONS[w];
-    const s=new THREE.Mesh(W.kind==='bomb'?bombVisGeo:misVisGeo,stdOf(W.kind==='bomb'?bombMats[w]:misVisMat)); s.position.set(side*tipX*(0.16+0.1*idx),y,zc); s.scale.setScalar(k); g.add(s); });
+  const l=loadoutOf(id), list=[]; WORDER.forEach(function(w){ for(let i=0;i<(l[w]||0);i++) list.push(w); });
+  const P=storeLayout(m,id,list,'lib:'+id);   /* V2.30: the same stations as in flight (measured under the wing, clear of the gear) */
+  list.forEach(function(w,i){ const W=WEAPONS[w], p=P[i];
+    const s=new THREE.Mesh(W.kind==='bomb'?bombVisGeo:misVisGeo,stdOf(W.kind==='bomb'?bombMats[w]:misVisMat)); s.position.set(p.x,p.y,p.z); s.scale.setScalar(p.k); g.add(s); });
 }
 function libWire(on){
   if(!on){ LIB.wireMats.forEach(function(m){ m.wireframe=false; }); LIB.wireMats=[]; LIB.tests.wire=false; return; }

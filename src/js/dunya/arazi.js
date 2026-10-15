@@ -39,7 +39,19 @@ function inAnyPad(x,z,m){ return PADS.some(function(p){ const l=frLocal(p.fr,x,z
 function inPad(id,x,z,m){ const p=PADS.find(function(q){ return q.id===id; }); m=m||0; const l=frLocal(p.fr,x,z); return l[0]>p.x0-m&&l[0]<p.x1+m&&l[1]>p.z0-m&&l[1]<p.z1+m; }
 /* walkable ground height: terrain, raised by decks (quays, piers; decks may carry a rotated frame) */
 function groundH(x,z){ let h=terrainH(x,z); for(let i=0;i<DECKS.length;i++){ const d=DECKS[i], l=d.fr?frLocal(d.fr,x,z):null, lx=l?l[0]:x, lz=l?l[1]:z; if(lx>d.x0&&lx<d.x1&&lz>d.z0&&lz<d.z1){ const y=d.yf?d.yf(lx,lz):d.y; if(y>h) h=y; } } return h; }
-function terrainH(x,z){
+/* V2.30: the height everything stands on is the height that is drawn. Player report: aircraft and vehicles sank into the grass
+   on some slopes, and some roads were under the grass. Physics, roads, trees and buildings used the smooth noise formula
+   (terrainHA), but the ground is drawn as flat triangles between grid points 100 m apart; on a convex slope the triangles lie
+   above the formula by up to a few metres, so wheels and road strips were inside the drawn ground. Once the grid exists,
+   terrainH() returns the height of the drawn triangle itself (same diagonal as the mesh), so wheels, feet, roads and trees all
+   sit on the visible surface. Outside the 30 km grid (open sea) the formula is used as before. */
+var TERH_G=null;   /* {H, GS, CELL, H0} — set once the terrain grid is built */
+function terrainH(x,z){ const G=TERH_G; if(!G) return terrainHA(x,z);
+  const fx0=(x-G.H0)/G.CELL, fz0=(z-G.H0)/G.CELL; if(!(fx0>=0&&fz0>=0&&fx0<G.GS-1&&fz0<G.GS-1)) return terrainHA(x,z);
+  const i=fx0|0, j=fz0|0, fx=fx0-i, fz=fz0-j, H=G.H, GS=G.GS, k=j*GS+i, h00=H[k], h10=H[k+1], h01=H[k+GS];
+  if(fx+fz<=1) return h00+fx*(h10-h00)+fz*(h01-h00);                           /* triangle (i,j) (i,j+1) (i+1,j) */
+  const h11=H[k+GS+1]; return h11+(1-fx)*(h01-h11)+(1-fz)*(h10-h11); }          /* triangle (i,j+1) (i+1,j+1) (i+1,j) */
+function terrainHA(x,z){
   const n = fbm(x/11000+3.1, z/11000+7.7, 4);
   const land = smooth(0.40,0.58,n);
   const ridge = Math.max(0, 1 - Math.abs(2*fbm(x/4800+11.3, z/4800+2.9, 5)-1)*2.4);
@@ -60,11 +72,11 @@ function terrainH(x,z){
    tile has four versions (every 1st, 2nd, 5th, 10th grid point: 100/200/500/1000 m) and shows the one its distance asks for
    (dunya/arazi-kademeleri.js). All versions use the same grid points, normals and colours, so a coarse tile is the fine one with
    points left out. Where a fine tile meets a coarse one the small gap is hidden by a skirt (a strip hanging down from the
-   tile edge, in the edge colour). Heights for physics come from terrainH() as before, never from the drawn mesh. */
+   tile edge, in the edge colour). Since V2.30 terrainH() returns the height of the drawn (finest) triangles, see above. */
 const TER={N:6, SEG:50, STEPS:[1,2,5,10], tiles:[], mat:null, size:30000, cell:100, grid:301, tris:0};
 (function buildTerrain(){
   const SIZE=TER.size, GS=TER.grid, CELL=TER.cell, H0=-SIZE/2;
-  const H=new Float32Array(GS*GS); for(let j=0;j<GS;j++) for(let i=0;i<GS;i++) H[j*GS+i]=terrainH(H0+i*CELL,H0+j*CELL);
+  const H=new Float32Array(GS*GS); for(let j=0;j<GS;j++) for(let i=0;i<GS;i++) H[j*GS+i]=terrainHA(H0+i*CELL,H0+j*CELL);
   const NR=new Float32Array(GS*GS*3), hAt=function(i,j){ i=i<0?0:i>=GS?GS-1:i; j=j<0?0:j>=GS?GS-1:j; return H[j*GS+i]; };
   for(let j=0;j<GS;j++) for(let i=0;i<GS;i++){ const dx=(hAt(i+1,j)-hAt(i-1,j))/(2*CELL), dz=(hAt(i,j+1)-hAt(i,j-1))/(2*CELL), l=Math.hypot(dx,1,dz), k=(j*GS+i)*3; NR[k]=-dx/l; NR[k+1]=1/l; NR[k+2]=-dz/l; }
   const col = new Float32Array(GS*GS*3);
@@ -106,7 +118,7 @@ const TER={N:6, SEG:50, STEPS:[1,2,5,10], tiles:[], mat:null, size:30000, cell:1
     const geos=TER.STEPS.map(function(st){ return tileGeo(i0,j0,st); });
     const m=new THREE.Mesh(geos[0],TER.mat); m.userData.terrainTile=true; m.userData.noMerge=true; m.userData.noBake=true; m.matrixAutoUpdate=false;   /* identity, never moves */
     const bb=geos[0].boundingBox; TER.tiles.push({m:m, geos:geos, lv:0, box:bb.clone(), rng:geos[0].userData.rng}); scene.add(m); }
-  TER.H=H;
+  TER.H=H; TERH_G={H:H, GS:GS, CELL:CELL, H0:H0};   /* from here on terrainH() is the drawn surface */
 
   const wg = new THREE.PlaneGeometry(90000,90000); wg.rotateX(-Math.PI/2);
   const water = new THREE.Mesh(wg, new THREE.MeshPhongMaterial({color:0x2a7aa8, specular:0xffffff, shininess:90, transparent:true, opacity:0.84}));
