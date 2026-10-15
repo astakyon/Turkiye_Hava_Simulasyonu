@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.25 — 2026-10-15 · Kod düzeni
+- **Kod düzeni:** 124 modül konu klasörlerine taşındı: çekirdek, dünya, modeller, uçuş, savaş, görev, ekran, kontrol, ses, yürüyüş, ağ, performans ve veri. "98b", "98zf" gibi numaralı yama modülleri kalmadı; her dosyanın adı ne yaptığını söylüyor. Yükleme sırası tek bir listede (`src/js/SIRA.txt`) tutuluyor. Taşımadan sonra oyunun kodu bayt bayt aynıydı.
+- **Büyük modüller bölündü:** yapay zekâ ve çevrimiçi oyun (4 parça), model kütüphanesi (3 parça), ana menü (3 parça).
+- **Daha küçük dosya:** oyun dosyası 2 011 KB'tan 1 798 KB'a indi (−%10,6). Kod yorumları ve girintiler artık yalnız yayınlanan dosyadan çıkarılıyor (kaynak kodda duruyorlar); envanter verisindeki tekrar eden metinler tek listede toplandı (406 → 329 KB).
+- **Temizlik:** kullanılmayan 7 işlev silindi; her açılışta konsola düşen 9 "flatShading" uyarısı ve 35 Canvas uyarısı giderildi.
+
 ## V2.24 — 2026-10-15 · Kanca sistemi ve kare başına çöp
 - **Kanca kaydı:** modüllerin birbirini genişletme biçimi baştan düzenlendi. 284 "sarmalama"nın 279'u tek bir kanca kaydına taşındı. Artık bir modülde hata çıkarsa yalnız o modül atlanıyor, oyunun geri kalanı çalışmaya devam ediyor (eskiden aynı zincirdeki diğer modüller de duruyordu). Davranış değişmedi; bütün testler aynı.
 - **Performans testinde modül maliyeti:** test sonucunda "En pahalı modüller" satırı var: hangi modülün kare başına kaç ms harcadığı görünüyor.

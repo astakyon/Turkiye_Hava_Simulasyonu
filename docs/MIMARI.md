@@ -19,35 +19,39 @@ docs/               bu belgeler
 **Kural:** `index.html` doğrudan düzenlenmez. `src/` içinde değiştir → `python3 tools/build.py` → test → commit.
 CI (`pages.yml`) önce `tools/build.py --check`, sonra testleri çalıştırır; ikisi de geçerse yayınlar.
 
-## Modüller (yükleme sırası)
-| Aralık | İçerik |
-|---|---|
-| 01–05 | çekirdek (sürüm, yardımcılar), görüntüleyici, gökyüzü/ışık, arazi (`PADS` düzleştirilmiş üs alanları, `DECKS` rıhtım/iskele, `groundH`), havalimanı |
-| 06–08 | üs çevresi (çit, nizamiye, köy, orman, fener), **deniz üssü** (`NAVAL`), **kara üssü** (`LAND`: kışla, motorlu birlik, sürüş parkuru, atış poligonu), **Hilalkent** (`TOWN`), **yol trafiği** (`TRAFFIC`, örnekli arabalar), **Hilal Marina**, kumsal, gemi trafiği ve martılar (`MARINA`; döndürülmüş çerçeveli alan: `PADS[].fr`, `frWorld`); kırsal (`RURAL`), askeri tesisler (`MIL`), köprü ve Anadolukent (`SOUTH`), İHA merkezi (`UAV`), Kızıl Bölge (`KZB`), simge yapılar (`LMK`); ortak yapı araçları `bldg`, `shed`, `baseGate`, `fenceLine` (07) |
-| 09–15 | modelleme araçları (`MK`), araç modelleri (kodla), kayıt (`REG`, `AIRCRAFT`), **varlıklar** (GLB yükleme, `buildModel`), **gemi modelleri** (fırkateyn, korvet, TCG Anadolu, denizaltı, karakol botu, römorkör), **kara aracı modelleri** (Altay, Fırtına, Pars, MRAP, askerî kamyon) |
-| 20–23 | hangar bekleme alanı, hangar içleri, taksi, bakım hangarı |
-| 30–35 | uçuş durumu, halkalar, muharebe, yer hedefleri, görevler, tehditler |
-| 40–47 | ayarlar, iz, ses, fizik, kamera, HUD, **görsel efektler**, **gün saati** (`TOD`: güneş/ay, gökyüzü, sis, gece ışıkları `NIGHTMATS`; ortam sesleri `AMBS`) |
-| 50–54 | menü/giriş, ayarlar arayüzü, gamepad, dokunmatik, fare/klavye |
-| 60 | yapay zekâ ve çevrimiçi (P2P) |
-| 70 | üssü gezme (yaya + araç) |
-| 72 | **model kütüphanesi**: 3B önizleme stüdyosu, testler, boya/kamuflaj, içe/dışa aktarma |
-| 99 | başlatma ve ana döngü |
+## Modüller (konu klasörleri, V2.25)
+`src/js/` konu klasörlerine ayrılmıştır; birleştirme sırası `src/js/SIRA.txt` dosyasındadır (`tools/build.py` her `.js` dosyasının listede tam bir kez olduğunu denetler).
 
-Yeni özellik → uygun numarayla yeni dosya (ör. `36-weather.js`). Bütün dosyalar aynı kapsamda (tek IIFE) birleşir;
+| Klasör | İçerik |
+|---|---|
+| `cekirdek/` | açılış ve yükleme ekranı (`acilis`), kanca kaydı (`kanca`), sürüm ve yardımcılar (`temel`), görüntüleyici (`cizici`), ayarlar ve kayıt (`ayarlar`), Android kurulumu, ana döngü (`ana-dongu`, en sonda) |
+| `dunya/` | gökyüzü/ışık, arazi (`PADS`, `DECKS`, `groundH`, arazi parçaları `TER`) ve ayrıntı kademeleri, havalimanı, üs çevresi, deniz/kara/İHA üsleri, Hilalkent, marina, kırsal, hava savunma, güney ada, Kızıl Bölge, simge yapılar, hangarlar, taksi yolu, bakım hangarı, gün saati, hava durumu, canlı üs, kapalı alanlar |
+| `modeller/` | model kiti, KAAN ve diğer uçak modelleri, uçak kaydı (`AIRCRAFT`), varlıklar (GLB), gemi/kara aracı/araba/helikopter modelleri, model kayıt API'si, model kütüphanesi |
+| `ucus/` | uçuş durumu (`S`), halkalar, iniş alanları ve fizik, kamera, kanat buharı, konfor, gerçek performans, kokpit, akrobasi, iniş yardımı |
+| `savas/` | hedefler/mermiler/patlamalar, yer hedefleri, tehditler (SAM, füze, flare), hasar ve yakıt, füzeden kaçma, kanat adamı |
+| `gorev/` | görevler, görev panosu, dinamik görevler, uçuş okulu, yarışlar, görev editörü, kampanya, kara/deniz görevleri, görev ekranı |
+| `ekran/` | HUD, harita, giriş ve menü, ayar ekranı ve gözden geçirme, grafik ayarları, ana menü sürümleri, envanter, tekrar, sürüm notları |
+| `kontrol/` | kontrol şemaları, gamepad, dokunmatik (1 ve 2), fare/klavye, telefon (eğerek uçuş) |
+| `ses/` | ses motoru, ses sistemi ve kütüphanesi, müzik, telsiz |
+| `yuruyus/` | yaya ve araç kullanma, helikopterler ve helikopter operasyonları, bütün araçlar, tekneler, araç çağırma, her araca binme, çarpışmalar |
+| `ag/` | yapay zekâ uçakları ve P2P çevrimiçi oyun, hesap ve bulut kaydı, kariyer ve ilerleme, yönetici, lisanslar, giriş/oyuncu kartı, karma çok oyunculu, takım iletişimi |
+| `performans/` | uzaklığa göre ayıklama, efekt zinciri ve kalitesi, birleştirme/dondurma, model pişirme, gölgeler, efekt geçişleri, doku belleği, shader ısıtma, performans testi ve modül maliyeti, görüntü testi |
+| `veri/` | üretilen veriler: envanter (`tools/dt_import.py`), sürüm notları (`tools/relnotes.py`) — elle düzenlenmez |
+
+Yeni özellik → konusuna uygun klasörde yeni dosya; `SIRA.txt`'de kullandığı modüllerden sonraya yazın. Başka bir modülün işlevini genişletmek için `HOOK.wrap` kullanın (aşağıda). Bütün dosyalar aynı kapsamda (tek IIFE) birleşir;
 başka bir dosyanın `const` değişkenine **yükleme anında** erişme (sadece fonksiyon içinden, çalışma anında eriş) —
 aksi halde "before initialization" hatası olur.
 
 ## Durum makinesi
 `state`: `menu` · `play` · `paused` · `service` · `photo` · `walk` · `library`
 `menuMode` (menüdeyken): `title` · `hangar` · `loadout` · `start` · `missions`
-Ana döngü (`99-main.js`): giriş → `update` (uçuş) / `walkUpdate` (yaya) → yapay zekâ ve ağ → modeller → kamera → `renderFrame` → HUD.
+Ana döngü (`cekirdek/ana-dongu.js`): giriş → `update` (uçuş) / `walkUpdate` (yaya) → yapay zekâ ve ağ → modeller → kamera → `renderFrame` → HUD.
 
 ## Araç (uçak) ekleme
 Ayrıntılı rehber: [docs/MODEL-EKLEME.md](MODEL-EKLEME.md) — `defineAircraft('id',{...})` tek çağrıyla hangar, kütüphane, görev panosu, binme ve çarpışma listelerine ekler; Ayarlar → Arayüz → Araçlar → **Model ölçü denetimi** ölçüleri gerçek değerlerle karşılaştırır.
-1. `12-models.js` içine kodla model fonksiyonu yaz (`build…()`): `{group, flames, strobe, gear, spinners}` döndürür.
+1. `modeller/ucak-modelleri.js` içine kodla model fonksiyonu yaz (`build…()`): `{group, flames, strobe, gear, spinners}` döndürür.
    Eksenler: **−Z ileri, +Y yukarı, birim metre**, orijin yaklaşık ağırlık merkezi.
-2. `13-registry.js` içinde `AIRCRAFT` (uçuş değerleri) ve `REG` (grup, sınıf, üretici, silahlar) kaydı ekle.
+2. `modeller/ucak-kaydi.js` içinde `AIRCRAFT` (uçuş değerleri) ve `REG` (grup, sınıf, üretici, silahlar) kaydı ekle.
 3. Hangar, seçim ekranı, yapay zekâ ve çevrimiçi kendiliğinden yeni aracı kullanır.
 4. Hazır .glb modelin varsa ayrıca `assets/models.json`'a ekle (aşağıya bak) — kod modeli yedek olarak kalır.
 
@@ -58,10 +62,10 @@ aynı kayıt yapısı kullanılacak; fizik ve kamera modu gruba göre seçilecek
 Her araç önce kodla çizilir (indirme yok, her zaman çalışır). `assets/models.json` bir .glb listeliyorsa model arka planda
 yüklenir ve aracın **bütün kopyalarını** (oyuncu, hangar, yapay zekâ) "giydirir". Ayrıntı: [MODELLER.md](MODELLER.md).
 Kod yazmadan: ana menü → **Model Kütüphanesi** (içe aktarma, boya, test). Kütüphane açıkken oyun dünyası çizilmez; kendi küçük stüdyo sahnesi (`LIB.scene`) çizilir.
-Boya (`LIV`, 72-library.js) kod modelinde en geniş alanı kaplayan boyayı bulur ve aracın bütün kopyalarında onu değiştirir; kamuflaj gölgelendiriciye eklenen desenle çizilir.
+Boya (`LIV`, modeller/model-kutuphanesi.js) kod modelinde en geniş alanı kaplayan boyayı bulur ve aracın bütün kopyalarında onu değiştirir; kamuflaj gölgelendiriciye eklenen desenle çizilir.
 
 ## Görsel efektler (post-processing)
-`46-postfx.js` — three.js `EffectComposer`. Ayarlar → Grafik → **Görsel efektler**:
+`performans/efektler.js` — three.js `EffectComposer`. Ayarlar → Grafik → **Görsel efektler**:
 - **Kapalı:** doğrudan çizim (telefonda varsayılan).
 - **Düşük:** renk düzeltme + vinyet + yüksek hızda kenar bulanıklığı, kenar yumuşatma (WebGL2'de MSAA, yoksa FXAA).
 - **Yüksek:** + seçici ışık parlaması (bloom). Sahne yarı-kayan noktalı tamponda çizilir; yalnızca ışıklar, alevler,
@@ -69,13 +73,13 @@ Boya (`LIV`, 72-library.js) kod modelinde en geniş alanı kaplayan boyayı bulu
 Kitaplıklar ilk ihtiyaçta `vendor/`'dan, yoksa jsDelivr'den yüklenir; yüklenemezse oyun efektsiz devam eder.
 
 ## Kitaplıklar ve çevrimdışı
-`needLibs([...])` (14-assets.js) three.js eklentilerini istek üzerine yükler: önce `vendor/three-r128/`, olmazsa CDN.
+`needLibs([...])` (modeller/varliklar.js) three.js eklentilerini istek üzerine yükler: önce `vendor/three-r128/`, olmazsa CDN.
 `three.min.js` önce cdnjs'ten, yüklenemezse `vendor/`'dan gelir. `sw.js` (PWA) oyun dosyalarını ve kitaplıkları önbelleğe alır;
 önbellek adı sürümle değişir (`bump_version.py` günceller).
 
 ## Sürüm verme
-`python3 bump_version.py V1.xx "not"` → `src/js/01-core.js`, şablon, `VERSION`, `version.json`, `sw.js`, CHANGELOG
-güncellenir ve `index.html` yeniden derlenir. CHANGELOG başlığı `## Vx.xx — tarih · başlık` biçimindedir; `python3 tools/relnotes.py` son 8 sürümü `src/js/98w-relnotes-data.js` dosyasına yazar (oyundaki "Yenilikler" ve sürüm duyurusu buradan okur). `VERSION` değişip `main`'e gidince Releases kaydı otomatik açılır.
+`python3 bump_version.py V1.xx "not"` → `src/js/cekirdek/temel.js`, şablon, `VERSION`, `version.json`, `sw.js`, CHANGELOG
+güncellenir ve `index.html` yeniden derlenir. CHANGELOG başlığı `## Vx.xx — tarih · başlık` biçimindedir; `python3 tools/relnotes.py` son 8 sürümü `src/js/veri/surum-notlari-veri.js` dosyasına yazar (oyundaki "Yenilikler" ve sürüm duyurusu buradan okur). `VERSION` değişip `main`'e gidince Releases kaydı otomatik açılır.
 
 ## Performans (V2.09) ve teknik borç
 
@@ -105,7 +109,7 @@ Katmanlar:
 5. **Uyarlanır kalite** (98d): FPS düşünce çözünürlük ve kalite basamak basamak iner.
 6. **Menüde 10 FPS**: tam ekran menü sahneyi örterken.
 
-**Gerçek cihaz ölçümü (V2.12):** Ayarlar → Grafik → Performans testi (`98x-perftest.js`). Oyun sabit rotaları kendisi oynar: 6 sahne, özellik maliyetleri (gölge, efekt, yarı çözünürlük, ağaç, iki katmanlı derinlik, logaritmik derinlik), stres sahnesi, ilk efekt takılması, isteğe bağlı 5 dk ısınma. Kare süresi rAF aralığından, işlemci süresi kare fonksiyonunun içinden, GPU süresi `EXT_disjoint_timer_query_webgl2` varsa ölçülür. Sonuç ortalama/P90/P99 FPS, 20 FPS altı kare oranı ve darboğaz (ekran yenileme · işlemci · ekran kartı) olarak raporlanır. Rapor anonimdir; `perf_reports` tablosuna (supabase/perf_reports.sql) yalnız oyuncu "Gönder" deyince gider, cihazda son 5 rapor saklanır, Yönetim → Performans sekmesinde listelenir. Logaritmik derinlik çalışırken kapatılamadığı için ölçüm sırasında malzemelere `onBeforeCompile` ile `#undef USE_LOGDEPTHBUF` eklenip programlar yeniden derlenir.
+**Gerçek cihaz ölçümü (V2.12):** Ayarlar → Grafik → Performans testi (`performans/performans-testi.js`). Oyun sabit rotaları kendisi oynar: 6 sahne, özellik maliyetleri (gölge, efekt, yarı çözünürlük, ağaç, iki katmanlı derinlik, logaritmik derinlik), stres sahnesi, ilk efekt takılması, isteğe bağlı 5 dk ısınma. Kare süresi rAF aralığından, işlemci süresi kare fonksiyonunun içinden, GPU süresi `EXT_disjoint_timer_query_webgl2` varsa ölçülür. Sonuç ortalama/P90/P99 FPS, 20 FPS altı kare oranı ve darboğaz (ekran yenileme · işlemci · ekran kartı) olarak raporlanır. Rapor anonimdir; `perf_reports` tablosuna (supabase/perf_reports.sql) yalnız oyuncu "Gönder" deyince gider, cihazda son 5 rapor saklanır, Yönetim → Performans sekmesinde listelenir. Logaritmik derinlik çalışırken kapatılamadığı için ölçüm sırasında malzemelere `onBeforeCompile` ile `#undef USE_LOGDEPTHBUF` eklenip programlar yeniden derlenir.
 
 Yayın kapısı: `release.sh`, `tools/browser-check.js` FAIL verirse yayını durdurur. Denetlenenler: görüş alanındaki örnekli grubun ayıklanması, birleştirilmiş hücre ile asıllarının birlikte çizilmesi, sayfa hataları.
 

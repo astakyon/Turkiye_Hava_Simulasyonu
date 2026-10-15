@@ -28,7 +28,7 @@ Proje olmadan da oyun çalışır; bu durumda oyuncular **misafir** olarak oynar
    - **anon public** anahtarı (bu anahtar herkese açık olacak şekilde tasarlanmıştır; güvenliği veritabanı kuralları sağlar)
 2. İki yol var:
    - **Oyundan:** Ayarlar → Arayüz → *Gelişmiş* → **Bulut bağlantısı** satırına URL ve anahtarı yapıştır → **Bağlan**. Bu yalnız o cihazda geçerli olur.
-   - **Herkes için:** iki değeri bana gönder, `src/js/79-account-config.js` dosyasına yazayım.
+   - **Herkes için:** iki değeri bana gönder, `src/js/ag/hesap-ayari.js` dosyasına yazayım.
      - **service_role** anahtarını asla paylaşma.
 
 ## 4. Kendini yönetici yap

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Sürüm numarasını tek komutla günceller:  python3 bump_version.py V1.01 "Kısa not"
-src/js/01-core.js, src/index.html, VERSION, version.json, sw.js ve CHANGELOG.md dosyalarını günceller, sonra index.html'i yeniden derler."""
+src/js/cekirdek/temel.js, src/index.html, VERSION, version.json, sw.js ve CHANGELOG.md dosyalarını günceller, sonra index.html'i yeniden derler."""
 import re, sys, json, datetime, pathlib
 if len(sys.argv) < 2 or not re.fullmatch(r'V\d+\.\d{2}', sys.argv[1]):
     sys.exit('Kullanım: python3 bump_version.py V1.01 "Not"')
 v = sys.argv[1]; note = sys.argv[2] if len(sys.argv) > 2 else 'Güncelleme'
 d = datetime.date.today().isoformat(); p = pathlib.Path(__file__).parent
-core = p/'src'/'js'/'01-core.js'; tpl = p/'src'/'index.html'
+core = p/'src'/'js'/'cekirdek'/'temel.js'; tpl = p/'src'/'index.html'
 h = core.read_text(encoding='utf-8')
 h, n1 = re.subn(r"const GAME_VERSION='V[\d.]+', GAME_DATE='[\d-]+';", f"const GAME_VERSION='{v}', GAME_DATE='{d}';", h)
 core.write_text(h, encoding='utf-8')

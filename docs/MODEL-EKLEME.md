@@ -2,7 +2,7 @@
 
 Oyuna yeni bir uçak eklemek tek bir çağrıdır. Hangar, model kütüphanesi, görev panosu, yürürken binme, çarpışma kutuları ve envanter kartı bu listelerden okunduğu için başka bir yere dokunmak gerekmez.
 
-## 1. Kodla tanım (`src/js/` içinde yeni bir dosya, `99-main.js`'den önce)
+## 1. Kodla tanım (`src/js/modeller/` içinde yeni bir dosya; `src/js/SIRA.txt` listesine `modeller/model-kaydi-api.js`'den sonra ekleyin)
 
 ```js
 defineAircraft('hurjet2', {
