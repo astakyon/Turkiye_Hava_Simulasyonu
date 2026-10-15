@@ -243,7 +243,7 @@ function hoKey(e){
   if(isKey(e,'heli','hook')){ if(HELI.cur.ground) hoTroops(); else { const had=!!HELI.cur.sling; slingHook(); if(!had&&HELI.cur.sling&&HM.on) hmEvent('hooked'); } return true; }
   if(isKey(e,'heli','assist')){ hoAssistToggle(); return true; }
   return false; }
-window.addEventListener('keydown',function(e){ if(e.repeat||state!=='walk'||(typeof anyModalOpen==='function'&&anyModalOpen())) return; if(hoKey(e)){ e.stopImmediatePropagation(); } },true);
+INPUT.on('keydown',function(e){ if(e.repeat||state!=='walk'||(typeof anyModalOpen==='function'&&anyModalOpen())) return; if(hoKey(e)){ e.stopImmediatePropagation(); } },true,'yuruyus/helikopter-operasyonlari','helikopter');
 function hoPad(){ if(state!=='walk'||WALK.mode!=='heli'||!PADRAW) return; if(padEdge('heli','weapon')) hoFire(); if(padEdge('heli','nextWpn')) hoNextWpn(); if(padEdge('heli','assist')) hoAssistToggle();
   if(padEdge('heli','hook')){ const H=HELI.cur; if(H.ground) hoTroops(); else { const had=!!H.sling; slingHook(); if(!had&&H.sling&&HM.on) hmEvent('hooked'); } } }
 /* ---- per-frame */

@@ -57,7 +57,7 @@ const _m2Act=titleAct; titleAct=function(act){ if(state!=='menu') return;
   return _m2Act(act); };
 refreshTitle=HOOK.wrap('refreshTitle','ekran/ana-menu-2#_m2Refresh',function(_m2Refresh){ return function(){ if(!$('mc_missions')){ const s=document.createElement('span'); s.id='mc_missions'; s.hidden=true; document.body.appendChild(s); } _m2Refresh(); navRender(); }; },refreshTitle);
 /* Esc goes up one level in the menu */
-window.addEventListener('keydown',function(e){ if(state==='menu'&&menuMode==='title'&&e.code==='Escape'&&NAV.level!=='root'&&!(typeof anyModalOpen==='function'&&anyModalOpen())){ e.preventDefault(); e.stopImmediatePropagation(); navGo(NAV.level==='career'?'start':'root'); } },true);
+INPUT.on('keydown',function(e){ if(state==='menu'&&menuMode==='title'&&e.code==='Escape'&&NAV.level!=='root'&&!(typeof anyModalOpen==='function'&&anyModalOpen())){ e.preventDefault(); e.stopImmediatePropagation(); navGo(NAV.level==='career'?'start':'root'); } },true,'ekran/ana-menu-2','menü');
 /* header buttons + admin library row (built here so the page skeleton stays small) */
 (function(){ const ic=function(d){ return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">'+d+'</svg>'; };
   const pr=$('cProf'); if(pr&&pr.parentNode&&!$('cIbtns')&&document.createElement){ const d=document.createElement('div'); d.className='c-ibtns ui'; d.id='cIbtns';

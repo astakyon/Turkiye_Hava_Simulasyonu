@@ -60,7 +60,7 @@ function envPick(i){ ENVI.sel=i; ENVI.det=true; envRenderDet(); Array.prototype.
     if(b.id==='envBack'){ ENVI.det=false; const w=document.querySelector('#envUI .envw'); if(w) w.classList.remove('det'); return; }
     if(b.dataset.fly){ envClose(); selectedId=b.dataset.fly; if(typeof enterHangar==='function'&&state==='menu') enterHangar(); return; }
     if(b.dataset.lib){ envClose(); openLibrary(b.dataset.lib); } });
-  window.addEventListener('keydown',function(e){ if(e.code==='Escape'&&!$('envUI').classList.contains('hidden')){ e.preventDefault(); e.stopImmediatePropagation(); envClose(); } },true);
+  INPUT.on('keydown',function(e){ if(e.code==='Escape'&&!$('envUI').classList.contains('hidden')){ e.preventDefault(); e.stopImmediatePropagation(); envClose(); } },true,'ekran/envanter','envanter');
   /* title header: inventory button */
   const hb=$('cIbtns'); if(hb&&document.createElement){ const b=document.createElement('button'); b.type='button'; b.id='btnEnv'; b.title='Sistem envanteri'; b.setAttribute('aria-label','Sistem envanteri');
     b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5M8 7h7M8 11h7"/></svg>';

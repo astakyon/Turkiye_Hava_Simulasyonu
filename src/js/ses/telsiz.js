@@ -100,14 +100,14 @@ function radioQuick(i){
 }
 function radioRecv(msg){ radioSay({w:'oyuncu',t:String(msg.text||'').slice(0,80)},null,{force:true,name:String(msg.name||'Pilot').slice(0,16)}); }
 $('radioMenu').addEventListener('click',function(e){ const b=e.target.closest('button[data-q]'); if(b) radioQuick(+b.dataset.q); });
-window.addEventListener('keydown',function(e){
+INPUT.on('keydown',function(e){
   if(state!=='play'&&state!=='walk') return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
   if(isKey(e,'gen','radio')){ radioMenu(); e.preventDefault(); return; }
   if(RADIO.menu&&/^Digit[1-8]$/.test(e.code)){ radioQuick(+e.code.slice(5)-1); e.preventDefault(); e.stopImmediatePropagation(); return; }
   if(RADIO.menu&&e.code==='Escape'){ radioMenu(false); e.stopImmediatePropagation(); return; }
   if(isKey(e,'gen','ptt')&&!e.repeat) voicePTT(true);
-},true);
-window.addEventListener('keyup',function(e){ if(isKey(e,'gen','ptt')) voicePTT(false); },true);
+},true,'ses/telsiz','çok oyunculu');
+INPUT.on('keyup',function(e){ if(isKey(e,'gen','ptt')) voicePTT(false); },true,'ses/telsiz','çok oyunculu');
 
 /* ---- voice chat (multiplayer) */
 const VOICE={on:false, mic:null, micSrc:null, talk:false, calls:[], inc:{}, mixes:{}, els:[]};

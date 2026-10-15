@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.27 — 2026-10-15 · Girdi yöneticisi
+- **Tek girdi yöneticisi:** 23 modülün pencereye ayrı ayrı bağladığı klavye dinleyicileri tek bir girdi yöneticisinde toplandı. Tuşlar aynı sırayla ve aynı şekilde çalışıyor; bir modülde hata çıkarsa diğer tuşlar çalışmaya devam ediyor. Her kısayolun hangi modüle ve hangi bağlama (uçuş, yürüyüş, araç, menü, harita…) ait olduğu kayıtlı.
+- **Kısayol çakışması yok:** bütün şemalar tarandı; F2 (görev günlüğü), F3 (tekrar), F4 (işaret), F6 (duman), F7 (füzeden kaçış), F8 (kanat adamı) birbirine ya da başka tuşa çakışmıyor. Araç ve tekne kamerasının C tuşu genel kamerayla bilerek aynı. Yeni bir çakışmayı test kendiliğinden yakalıyor.
+- **Yardım ekranı:** kontroller yardımı artık helikopter ve deniz aracı dahil bütün şemaları, sonradan eklenen F tuşlarını ve sabit tuşları (1–5, menü okları) kendiliğinden listeliyor. Bütün kısayollar Ayarlar → Kontroller'de değiştirilebiliyor.
+- **Eski görev listesi silindi:** V1.76'da görev panosu gelince hiç çalışmayan ilk görev listesinin kodu kaldırıldı (görev ekranının görünüşü ve çalışması aynı).
+
 ## V2.26 — 2026-10-15 · Kayıt ve depolama düzeni
 - **Tek kayıt:** oyunun tarayıcıya yazdığı 28 ayrı kayıt (ayarlar, profiller, rekorlar, boyalar, yarış ve okul ilerlemesi…) artık tek, sürüm numaralı bir kayıtta duruyor. Güncellemeden sonraki ilk açılışta eski kayıtlar kendiliğinden taşınıyor, doğrulanıyor ve eskileri siliniyor; hiçbir ilerleme kaybolmuyor.
 - **Yedek:** her oturumda son sağlam kayıt yedekleniyor. Kayıt bozulursa oyun yedekten açılıyor ve bunu söylüyor; ikisi de bozuksa yeni kayıtla açılıyor (bozuk kayıt silinmeden ayrı saklanıyor).

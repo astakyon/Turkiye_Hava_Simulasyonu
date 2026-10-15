@@ -31,10 +31,10 @@ function wingMenu(open){ WCMD.menu=open==null?!WCMD.menu:open; let el=$('wingMen
   el.classList.toggle('hidden',!WCMD.menu); }
 if(CTRL_DEF.gen&&!CTRL_DEF.gen.acts.some(function(a){ return a[0]==='wing'; })) CTRL_DEF.gen.acts.push(['wing','Kanat adamına emir',['F8'],[]]);
 if(CTRL.kb.gen&&!CTRL.kb.gen.wing) CTRL.kb.gen.wing=['F8']; if(CTRL.pad&&CTRL.pad.gen&&!CTRL.pad.gen.wing) CTRL.pad.gen.wing=[];
-window.addEventListener('keydown',function(e){ if(state!=='play') return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+INPUT.on('keydown',function(e){ if(state!=='play') return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
   if(!e.repeat&&isKey(e,'gen','wing')){ e.preventDefault(); wingMenu(); return; }
   if(WCMD.menu&&/^Digit[1-4]$/.test(e.code)){ wingCmd(WCMD_L[+e.code.slice(5)-1][0]); e.preventDefault(); e.stopImmediatePropagation(); return; }
-  if(WCMD.menu&&e.code==='Escape'){ wingMenu(false); e.stopImmediatePropagation(); } },true);
+  if(WCMD.menu&&e.code==='Escape'){ wingMenu(false); e.stopImmediatePropagation(); } },true,'savas/kanat-adami','uçuş');
 /* touch: the radio menu also lists the wingman orders */
 radioMenu=HOOK.wrap('radioMenu','savas/kanat-adami#_wcRadio',function(_wcRadio){ return function(open){ _wcRadio(open); const el=$('radioMenu'); if(!el||!RADIO.menu||!wingActor()) return; el.insertAdjacentHTML('beforeend','<b class="wsub">KANAT ADAMI</b><div class="wrow">'+WCMD_L.map(function(c){ return '<button type="button" data-w="'+c[0]+'">'+c[1]+'</button>'; }).join('')+'</div>'); }; },radioMenu);
 (function(){ const el=$('radioMenu'); if(el) el.addEventListener('click',function(e){ const b=e.target.closest('button[data-w]'); if(b){ radioMenu(false); wingCmd(b.dataset.w); } }); })();

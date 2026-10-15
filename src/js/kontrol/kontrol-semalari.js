@@ -69,9 +69,9 @@ function ctrlConflicts(dev,s){ const seen={}, out={}; [s].concat(s==='gen'?[]:['
 /* ---- help modal: generated from the current bindings */
 function renderCtlHelp(){ const el=$('ctlHelp'); if(!el) return;
   const col=function(dev,title){ let h='<div><h3>'+title+'</h3>';
-    ['air','land','foot','gen'].forEach(function(s){ h+='<h4>'+CTRL_DEF[s].name+'</h4><ul class="keys">'; CTRL_DEF[s].acts.forEach(function(a){ const L=CTRL[dev][s][a[0]]; if(!L.length) return;
+    Object.keys(CTRL_DEF).forEach(function(s){ h+='<h4>'+CTRL_DEF[s].name+'</h4><ul class="keys">'; CTRL_DEF[s].acts.forEach(function(a){ const L=(CTRL[dev][s]&&CTRL[dev][s][a[0]])||[]; if(!L.length) return;   /* V2.27: every scheme, including actions modules add later (F4–F8) */
       h+='<li><span class="k">'+L.map(function(c){ return '<kbd>'+(dev==='kb'?keyName(c):padName(c))+'</kbd>'; }).join('')+'</span>'+a[1]+'</li>'; }); h+='</ul>'; });
-    if(dev==='kb') h+='<ul class="keys"><li><span class="k"><kbd>1</kbd>–<kbd>5</kbd></span>Silah seç</li><li><span class="k"><kbd>Fare</kbd></span>Sürükle: kamerayı döndür · tekerlek: yakınlaş</li></ul>';
+    if(dev==='kb') h+='<h4>Sabit tuşlar</h4><ul class="keys"><li><span class="k"><kbd>1</kbd>–<kbd>5</kbd></span>Silah seç (uçuşta) · başlangıç yeri (başlat ekranında) · tekrar hızı (tekrar izlerken)</li><li><span class="k"><kbd>↑</kbd><kbd>↓</kbd><kbd>Enter</kbd><kbd>Esc</kbd></span>Menülerde gezin, seç, geri</li><li><span class="k"><kbd>Fare</kbd></span>Sürükle: kamerayı döndür · tekerlek: yakınlaş</li></ul>';
     return h+'</div>'; };
   el.innerHTML=col('kb','Klavye ve fare')+col('pad','Kumanda (Xbox / PlayStation)')+'<p class="lnote" style="grid-column:1/-1">Tuşları <b>Ayarlar → Kontroller</b> bölümünden değiştirebilirsin.</p>'; }
 /* ---- settings UI (Settings → Controls): device tabs, scheme chips, rebinding by pressing a key / button */
@@ -95,8 +95,8 @@ function ctlCapture(a,i){ CUI.cap={a:a,i:i,dev:CUI.dev,t:performance.now()}; ctl
 function ctlAssign(code){ const c=CUI.cap; if(!c) return; const L=CTRL[c.dev][CUI.scheme][c.a]; if(code===null){ if(c.i<L.length) L.splice(c.i,1); } else { const j=L.indexOf(code); if(j>=0&&j!==c.i) L.splice(j,1); L[Math.min(c.i,L.length)]=code; }
   CUI.cap=null; ctrlSave(); ctlUI(); renderCtlHelp(); }
 /* key capture runs before every other key handler */
-window.addEventListener('keydown',function(e){ if(!CUI.cap||CUI.cap.dev!=='kb') return; e.preventDefault(); e.stopImmediatePropagation();
-  if(e.code==='Escape'){ CUI.cap=null; ctlUI(); return; } if(e.code==='Backspace'||e.code==='Delete'){ ctlAssign(null); return; } ctlAssign(e.code); },true);
+INPUT.on('keydown',function(e){ if(!CUI.cap||CUI.cap.dev!=='kb') return; e.preventDefault(); e.stopImmediatePropagation();
+  if(e.code==='Escape'){ CUI.cap=null; ctlUI(); return; } if(e.code==='Backspace'||e.code==='Delete'){ ctlAssign(null); return; } ctlAssign(e.code); },true,'kontrol/kontrol-semalari','tuş atama');
 /* gamepad capture: polled from the frame loop while the settings are open */
 function ctlPadCapture(){ if(!CUI.cap||CUI.cap.dev!=='pad') return; const g=getPad(); if(!g) return; if(performance.now()-CUI.cap.t<300) return;
   for(let i=0;i<g.buttons.length;i++) if(g.buttons[i]&&g.buttons[i].pressed){ ctlAssign('b'+i); return; }

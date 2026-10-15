@@ -100,11 +100,11 @@ function rpPhoto(){ const was=RP.play; RP.play=false; rpUI(); const h=RP.hud; RP
   $('rpVidClose').addEventListener('click',function(){ $('rpVidUI').classList.add('hidden'); });
   const add=function(anchorId,id,text,before){ const a=$(anchorId); if(!a||!a.parentNode||!document.createElement) return; const b=document.createElement('button'); b.className='btn'; b.id=id; b.type='button'; b.textContent=text; a.parentNode.insertBefore(b,before?a:a.nextSibling); b.addEventListener('click',rpOpen); return b; };
   add('btnPauseLog','btnPauseReplay','Tekrar izle',true); add('btnMHangar','btnMReplay','Tekrar izle',true);
-  window.addEventListener('keydown',function(e){ if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&e.target.id!=='rpT') return;
+  INPUT.on('keydown',function(e){ if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&e.target.id!=='rpT') return;
     if(RP.on){ if(anyModalOpen()) return; const c=e.code; let used=true;
       if(c==='Space'||c==='KeyK') rpToggle(); else if(c==='ArrowLeft') rpSeek(e.shiftKey?-1:-5); else if(c==='ArrowRight') rpSeek(e.shiftKey?1:5); else if(c==='Escape'||isKey(e,'gen','replay')) rpClose();
       else if(c==='Digit1') rpSetCam('chase'); else if(c==='Digit2') rpSetCam('cockpit'); else if(c==='Digit3') rpSetCam('cine'); else if(c==='Digit4') rpSetCam('orbit');
       else if(c==='Minus'||c==='NumpadSubtract'){ RP.speed=Math.max(0.25,RP.speed/2); rpUI(); } else if(c==='Equal'||c==='NumpadAdd'){ RP.speed=Math.min(4,RP.speed*2); rpUI(); }
       else used=false; if(used){ e.preventDefault(); e.stopImmediatePropagation(); } return; }
-    if(!e.repeat&&isKey(e,'gen','replay')&&(state==='play'||state==='paused'||state==='mend')){ e.preventDefault(); rpOpen(); } },true);
+    if(!e.repeat&&isKey(e,'gen','replay')&&(state==='play'||state==='paused'||state==='mend')){ e.preventDefault(); rpOpen(); } },true,'ekran/tekrar','tekrar');
   setInterval(function(){ const can=RP.buf.length>=20&&!(NET.on&&NET.started); ['btnPauseReplay','btnMReplay'].forEach(function(id){ const b=$(id); if(b) b.classList.toggle('hidden',!can||(id==='btnPauseReplay'&&WALK.from==='walk')); }); },500); })();

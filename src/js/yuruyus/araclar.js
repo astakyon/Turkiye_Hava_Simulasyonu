@@ -76,6 +76,6 @@ function towToggle(){ const c=WALK.car; if(!TOW.ac) return;
 function towStep(){ if(!TOW.on||!TOW.ac) return; const c=WALK.car; if(!c||c.K.id!=='tug'){ TOW.on=false; return; }
   towHitch(c,tH); const dx=tH.x-TOW.x, dz=tH.z-TOW.z; TOW.h=Math.atan2(-dx,-dz); TOW.x=tH.x+Math.sin(TOW.h)*TOW.L; TOW.z=tH.z+Math.cos(TOW.h)*TOW.L; towPlace(); }
 /* input: X / LB / left mouse button (pointer locked) */
-window.addEventListener('keydown',function(e){ if(state==='walk'&&WALK.mode==='car'&&isKey(e,'land','fire')){ vehFire(); } },true);
+INPUT.on('keydown',function(e){ if(state==='walk'&&WALK.mode==='car'&&isKey(e,'land','fire')){ vehFire(); } },true,'yuruyus/araclar','araç');
 window.addEventListener('mousedown',function(e){ if(state==='walk'&&WALK.mode==='car'&&e.button===0&&document.pointerLockElement===$('gl')) vehFire(); });
 setInterval(function(){ if(state==='walk'&&WALK.mode==='car'&&WALK.car&&WALK.car.K&&WALK.car.K.weapon&&WALK.car.K.weapon!=='tow'&&WALK.car.K.weapon!=='cannon'&&(act('land','fire')>0.5)) vehFire(); },110);

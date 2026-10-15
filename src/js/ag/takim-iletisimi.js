@@ -45,11 +45,11 @@ function pwRelease(){ if(PW.hold){ clearTimeout(PW.hold); PW.hold=null; pingPlac
 if(CTRL_DEF.gen&&!CTRL_DEF.gen.acts.some(function(a){ return a[0]==='ping'; })) CTRL_DEF.gen.acts.push(['ping','İşaret (dokun: hedef · basılı tut: çark)',['F4'],[]]);
 if(CTRL.kb.gen&&!CTRL.kb.gen.ping) CTRL.kb.gen.ping=['F4']; if(CTRL.pad&&CTRL.pad.gen&&!CTRL.pad.gen.ping) CTRL.pad.gen.ping=[];
 if(typeof GEN_GROUND!=='undefined'&&GEN_GROUND.indexOf('ping')<0) GEN_GROUND.push('ping');
-window.addEventListener('keydown',function(e){ if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+INPUT.on('keydown',function(e){ if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
   if(PW.open&&/^Digit[1-6]$/.test(e.code)){ PW.sel=+e.code.slice(5)-1; pwClose(true); e.preventDefault(); e.stopImmediatePropagation(); return; }
   if(PW.open&&e.code==='Escape'){ pwClose(false); e.preventDefault(); e.stopImmediatePropagation(); return; }
-  if(!e.repeat&&isKey(e,'gen','ping')){ e.preventDefault(); pwPress('kb'); } },true);
-window.addEventListener('keyup',function(e){ if(isKey(e,'gen','ping')) pwRelease(); },true);
+  if(!e.repeat&&isKey(e,'gen','ping')){ e.preventDefault(); pwPress('kb'); } },true,'ag/takim-iletisimi','uçuş, yürüyüş');
+INPUT.on('keyup',function(e){ if(isKey(e,'gen','ping')) pwRelease(); },true,'ag/takim-iletisimi','uçuş, yürüyüş');
 window.addEventListener('mousedown',function(e){ if(e.button===1&&(state==='play'||state==='walk')){ e.preventDefault(); pwPress('mouse'); } },true);
 window.addEventListener('mouseup',function(e){ if(e.button===1) pwRelease(); },true);
 window.addEventListener('mousemove',function(e){ if(!PW.open||PW.src!=='mouse') return; PW.mx+=e.movementX||0; PW.my+=e.movementY||0; pwPoint(PW.mx,PW.my); });

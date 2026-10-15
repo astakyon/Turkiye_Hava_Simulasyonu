@@ -80,7 +80,7 @@ toast=HOOK.wrap('toast','gorev/gorev-panosu#_bToast',function(_bToast){ return f
 const BLOG={open:false};
 function bLogRender(){ const el=$('mlog'); if(!el) return; el.innerHTML='<h3>GÖREV GÜNLÜĞÜ · '+(M&&MISSIONS[M.id]?MISSIONS[M.id].name:'')+'</h3>'+(MLOG.length?'<ul>'+MLOG.slice(-14).reverse().map(function(l){ return '<li><time>'+fmtT(l.t).slice(0,5)+'</time><span style="color:'+l.c+'">'+l.text.replace(/</g,'&lt;')+'</span></li>'; }).join('')+'</ul>':'<p>Henüz kayıt yok</p>')+'<small>F2 ile kapat</small>'; }
 function bLogToggle(on){ BLOG.open=on==null?!BLOG.open:on; const el=$('mlog'); if(!el) return; el.classList.toggle('hidden',!BLOG.open); if(BLOG.open) bLogRender(); }
-window.addEventListener('keydown',function(e){ if(e.repeat) return; if(isKey(e,'gen','log')&&(state==='play'||state==='paused')){ e.preventDefault(); bLogToggle(); } });
+INPUT.on('keydown',function(e){ if(e.repeat) return; if(isKey(e,'gen','log')&&(state==='play'||state==='paused')){ e.preventDefault(); bLogToggle(); } },false,'gorev/gorev-panosu','uçuş, yürüyüş');
 (function(){ const b=$('btnPauseLog'); if(b) b.addEventListener('click',function(){ bLogToggle(true); }); })();
 setupMission=HOOK.wrap('setupMission','gorev/gorev-panosu#_bSetup',function(_bSetup){ return function(){ MLOG.length=0; bLogToggle(false); B_STAT.shots=0; B_STAT.hp0=100; B_STAT.minHp=100; return _bSetup(); }; },setupMission);
 /* ---- end report */

@@ -83,5 +83,5 @@ function boatHUD(w,h,s){ const b=BOAT.cur, L=WALK.tvis?w/2:Math.round(16*s), top
   hx.font='700 '+Math.round(14*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#b8ecff';
   const tel=b.th<-0.05?'TORNISTAN':b.th<0.05?'STOP':b.th<0.35?'AHEAD AZ':b.th<0.7?'YARIM YOL':'TAM YOL'; hx.fillText('MAKİNE '+tel+' ('+Math.round(b.th*100)+'%)'+(b.K.gun?' · TOP: Boşluk':''),L,top+Math.round(52*s)); }
 /* E / exit key / touch button leave the boat; touch stick steers */
-window.addEventListener('keydown',function(e){ if(state!=='walk'||WALK.mode!=='boat') return; if(isKey(e,'land','exit')||isKey(e,'foot','use')){ boatExit(); e.stopImmediatePropagation(); return; }
-  if(isKey(e,'gen','camera')){ WALK.fp=!WALK.fp; WALK.pitch=0; e.stopImmediatePropagation(); return; } },true);
+INPUT.on('keydown',function(e){ if(state!=='walk'||WALK.mode!=='boat') return; if(isKey(e,'land','exit')||isKey(e,'foot','use')){ boatExit(); e.stopImmediatePropagation(); return; }
+  if(isKey(e,'gen','camera')){ WALK.fp=!WALK.fp; WALK.pitch=0; e.stopImmediatePropagation(); return; } },true,'yuruyus/tekneler','tekne');

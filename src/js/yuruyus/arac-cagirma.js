@@ -152,7 +152,7 @@ function callPickCancel(){ MAPV.pick=false; CALL.pickKind=null; CALL.pickPt=null
     if(t.dataset.w){ CALL.where=t.dataset.w; callHub(); return; }
     if(t.id==='callGo') callGo(); else if(t.id==='callClose') callClose(); });
   ui.addEventListener('mouseover',function(e){ const t=e.target.closest('.citem'); if(!t) return; const i=+t.dataset.i; if(i!==CALL.sel){ CALL.sel=i; ui.querySelectorAll('.citem').forEach(function(b,j){ b.classList.toggle('sel',j===i); }); callHub(); } });
-  window.addEventListener('keydown',function(e){
+  INPUT.on('keydown',function(e){
     if(callIsOpen()){ const n=CALL_TABS[CALL.tab].ids.length;
       if(/^Digit[1-9]$/.test(e.code)){ const i=+e.code.slice(5)-1; if(i<n){ CALL.sel=i; callRender(); } e.preventDefault(); e.stopImmediatePropagation(); return; }
       if(e.code==='Tab'||e.code==='KeyQ'||e.code==='KeyE'){ CALL.tab=(CALL.tab+(e.code==='KeyQ'?CALL_TABS.length-1:1))%CALL_TABS.length; CALL.sel=0; callRender(); e.preventDefault(); e.stopImmediatePropagation(); return; }
@@ -162,7 +162,7 @@ function callPickCancel(){ MAPV.pick=false; CALL.pickKind=null; CALL.pickPt=null
       if(e.code==='Escape'||isKey(e,'foot','call')){ callClose(); e.preventDefault(); e.stopImmediatePropagation(); return; }
       return; }
     if(state==='walk'&&WALK.mode==='foot'&&!e.repeat&&!(typeof anyModalOpen==='function'&&anyModalOpen())&&isKey(e,'foot','call')){ e.preventDefault(); e.stopImmediatePropagation(); callOpen(); }
-  },true);
+  },true,'yuruyus/arac-cagirma','yürüyüş');
   const tb=$('wCall'); if(tb) tb.addEventListener('pointerdown',function(e){ e.preventDefault(); callOpen(); });
 })();
 /* no walking while the menu is up */

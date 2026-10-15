@@ -135,7 +135,7 @@ drawHUD=HOOK.wrap('drawHUD','savas/hasar-yakit#_dmgHUD',function(_dmgHUD){ retur
   hx.font='600 '+Math.round(12*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#dfe9f1'; if(EJ.ph==='chute') hx.fillText(TOUCH.vis?'Sola/sağa yatır: dön · ileri: hızlan':'A/D dön · W hızlan · S yavaşla', HW/2, HH-26*s);
   hx.restore(); }; },drawHUD);
 /* input */
-window.addEventListener('keydown',function(e){ if(e.repeat||state!=='play') return; if(isKey(e,'air','eject')){ ejArm(); } });
+INPUT.on('keydown',function(e){ if(e.repeat||state!=='play') return; if(isKey(e,'air','eject')){ ejArm(); } },false,'savas/hasar-yakit','uçuş');
 (function(){ const b=$('tEject'); if(b) b.addEventListener('pointerdown',function(e){ e.preventDefault(); ejArm(); }); })();
 updateTouchUI=HOOK.wrap('updateTouchUI','savas/hasar-yakit#_dmgTouch',function(_dmgTouch){ return function(){ _dmgTouch(); const b=$('tEject'); if(!b) return; const show=state==='play'&&!S.crashed&&!EJ.on&&!S.onGround&&!AIRCRAFT[activeId].uav&&(S.hp<60||engineDead()||S.efire>0||S.fuel<0.1); b.classList.toggle('hidden',!show); }; },updateTouchUI);
 needsService=HOOK.wrap('needsService','savas/hasar-yakit#_dmgNeeds',function(_dmgNeeds){ return function(){ return _dmgNeeds()||(S.eng||0)>0||(S.leak||0)>0||(S.wingL||0)>0||(S.wingR||0)>0; }; },needsService);

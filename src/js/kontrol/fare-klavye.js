@@ -44,7 +44,7 @@ window.addEventListener('wheel',function(e){
   if(state==='paused') return;
   e.preventDefault(); zoomBy(Math.exp(clamp(e.deltaY,-120,120)*0.0012));
 },{passive:false});
-window.addEventListener('keydown',e=>{
+INPUT.on('keydown',e=>{
   if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Tab'].indexOf(e.code)>=0 && (state==='play'||state==='walk')) e.preventDefault();
   keys[e.code]=true;
   if(e.repeat) return;
@@ -110,8 +110,8 @@ window.addEventListener('keydown',e=>{
   if(e.code.indexOf('Digit')===0&&+e.code[5]>=1&&+e.code[5]<=5) pickWeaponByNumber(+e.code[5]);
   if(isKey(e,'air','flares')) dropFlares();
   if(isKey(e,'air','nextTarget')){ e.preventDefault(); cycleLock(); }
-});
-window.addEventListener('keyup',e=>{ keys[e.code]=false; });
+},false,'kontrol/fare-klavye','her yerde');
+INPUT.on('keyup',e=>{ keys[e.code]=false; },false,'kontrol/fare-klavye','her yerde');
 window.addEventListener('blur',()=>{ for(const k in keys) keys[k]=false; if(state==='play') pauseGame(); });
 document.addEventListener('visibilitychange',()=>{ if(document.hidden && state==='play') pauseGame(); });
 

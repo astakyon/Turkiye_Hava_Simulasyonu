@@ -2,6 +2,7 @@
 # işlevlerini genişletebilir (HOOK.wrap). Yeni modülü kullandığı modüllerden sonra, cekirdek/ana-dongu.js'den önce ekleyin.
 cekirdek/acilis.js
 cekirdek/kanca.js
+cekirdek/girdi.js
 cekirdek/temel.js
 cekirdek/depo.js
 cekirdek/cizici.js

@@ -119,7 +119,7 @@ function setStartPlace(p){ SETTINGS.startPlace=p.id==='base'?null:p.id; saveSett
   $('mapSel').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; if(b.id==='mapDeliver'){ callPickDone(false); return; } if(b.id==='mapDeliverGo'){ callPickDone(true); return; } if(b.id==='mapPickCancel'){ callPickCancel(); return; } if(!MAPV.sel) return; if(b.id==='mapTp') teleportTo(MAPV.sel); else if(b.id==='mapStart') setStartPlace(MAPV.sel); });
   $('mapClose').addEventListener('click',closeMap); $('mapZin').addEventListener('click',function(){ mapZoom(1.4); }); $('mapZout').addEventListener('click',function(){ mapZoom(1/1.4); });
   $('mapMe').addEventListener('click',function(){ const me=playerPos(); MAPV.cx=me[0]; MAPV.cz=me[1]; mapDraw(); });
-  window.addEventListener('keydown',function(e){ if(!MAPV.open) return; if(e.code==='Escape'||isKey(e,'gen','map')){ e.preventDefault(); e.stopImmediatePropagation(); closeMap(); } },true);
+  INPUT.on('keydown',function(e){ if(!MAPV.open) return; if(e.code==='Escape'||isKey(e,'gen','map')){ e.preventDefault(); e.stopImmediatePropagation(); closeMap(); } },true,'ekran/harita','harita');
   window.addEventListener('resize',function(){ if(MAPV.open){ mapResize(); mapDraw(); } });
 })();
 function mapZoom(f){ MAPV.scale=clamp(MAPV.scale*f,0.006,0.15); mapDraw(); }

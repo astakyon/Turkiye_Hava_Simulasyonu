@@ -113,7 +113,7 @@ function nbChatSend(text){ text=String(text||'').trim().slice(0,120); if(!text) 
   if(NET.host) netBroadcast(m); else netSend(NET.hconn,m); nbChatIn(m); }
 (function(){ const i=$('chatIn'); if(!i) return;
   i.addEventListener('keydown',function(e){ e.stopPropagation(); if(e.key==='Enter'){ nbChatSend(i.value); nbChatClose(); e.preventDefault(); } else if(e.key==='Escape'){ nbChatClose(); e.preventDefault(); } });
-  window.addEventListener('keydown',function(e){ if(NB.chatOpen&&e.target===i) return; if(!NET.on||e.repeat||NB.chatOpen) return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if(isKey(e,'gen','chat')){ e.preventDefault(); e.stopImmediatePropagation(); for(const k in keys) keys[k]=false; nbChatOpen(); } },true);
+  INPUT.on('keydown',function(e){ if(NB.chatOpen&&e.target===i) return; if(!NET.on||e.repeat||NB.chatOpen) return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if(isKey(e,'gen','chat')){ e.preventDefault(); e.stopImmediatePropagation(); for(const k in keys) keys[k]=false; nbChatOpen(); } },true,'ag/karma-cok-oyunculu','çok oyunculu');
   const tb=$('tChat'); if(tb) tb.addEventListener('pointerdown',function(e){ e.preventDefault(); nbChatOpen(); }); })();
 setInterval(function(){ if(NB.chat.length&&!NB.chatOpen) nbChatRender(); },2000);
 /* ---- messages */

@@ -56,7 +56,7 @@ function smokeStep(dt){ if(!ACRO.smoke&&!SMK.pts) return; if(!SMK.pts) smokeBuil
 function smokeToggle(){ ACRO.smoke=!ACRO.smoke; toast(ACRO.smoke?'Duman açık (F6)':'Duman kapalı','#ffd27a'); }
 if(CTRL_DEF.gen&&!CTRL_DEF.gen.acts.some(function(a){ return a[0]==='smoke'; })) CTRL_DEF.gen.acts.push(['smoke','Akrobasi dumanı aç / kapat',['F6'],[]]);
 if(CTRL.kb.gen&&!CTRL.kb.gen.smoke) CTRL.kb.gen.smoke=['F6']; if(CTRL.pad&&CTRL.pad.gen&&!CTRL.pad.gen.smoke) CTRL.pad.gen.smoke=[];
-window.addEventListener('keydown',function(e){ if(e.repeat||state!=='play') return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if(isKey(e,'gen','smoke')){ e.preventDefault(); smokeToggle(); } });
+INPUT.on('keydown',function(e){ if(e.repeat||state!=='play') return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if(isKey(e,'gen','smoke')){ e.preventDefault(); smokeToggle(); } },false,'ucus/akrobasi','uçuş');
 /* ---- HUD */
 function acroHUD(){ if(state!=='play') return; const s=clamp(Math.min(HW,HH)/760,0.7,1.5); hx.save(); hx.textAlign='center'; hx.textBaseline='middle'; hx.shadowColor='rgba(0,0,0,.8)'; hx.shadowBlur=6;
   if(ACRO.flashT>0&&ACRO.flash){ const a=Math.min(1,ACRO.flashT); hx.globalAlpha=a; hx.font='800 '+Math.round(30*s)+'px "Chakra Petch",system-ui,sans-serif'; hx.fillStyle='#ffd27a'; hx.fillText(ACRO.flash.n.toLocaleUpperCase('tr-TR'),HW/2,HH*0.3);

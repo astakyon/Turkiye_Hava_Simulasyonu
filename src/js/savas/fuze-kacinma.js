@@ -47,7 +47,7 @@ pollPad=HOOK.wrap('pollPad','savas/fuze-kacinma#_evPoll',function(_evPoll){ retu
 update=HOOK.wrap('update','savas/fuze-kacinma#_evUpd',function(_evUpd){ return function(dt){ _evUpd(dt); if(EV.auto>0) EV.auto-=dt; if(EV.flareT>0) EV.flareT-=dt; }; },update);
 if(CTRL_DEF.gen&&!CTRL_DEF.gen.acts.some(function(a){ return a[0]==='evade'; })) CTRL_DEF.gen.acts.push(['evade','Füzeden kaçış yardımı',['F7'],[]]);
 if(CTRL.kb.gen&&!CTRL.kb.gen.evade) CTRL.kb.gen.evade=['F7']; if(CTRL.pad&&CTRL.pad.gen&&!CTRL.pad.gen.evade) CTRL.pad.gen.evade=[];
-window.addEventListener('keydown',function(e){ if(e.repeat||state!=='play') return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if(isKey(e,'gen','evade')){ e.preventDefault(); evAutoGo(); } });
+INPUT.on('keydown',function(e){ if(e.repeat||state!=='play') return; if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if(isKey(e,'gen','evade')){ e.preventDefault(); evAutoGo(); } },false,'savas/fuze-kacinma','uçuş');
 (function(){ const bar=document.querySelector?document.querySelector('#touch .ttop'):null; if(!bar||!document.createElement||typeof bar.appendChild!=='function') return; const b=document.createElement('button'); b.type='button'; b.id='tEvade'; b.className='tevade hidden'; b.textContent='KAÇ!'; bar.appendChild(b);
   b.addEventListener('pointerdown',function(e){ e.preventDefault(); evAutoGo(); }); })();
 updateTouchUI=HOOK.wrap('updateTouchUI','savas/fuze-kacinma#_evTouch',function(_evTouch){ return function(){ _evTouch(); const b=$('tEvade'); if(b&&b.classList) b.classList.toggle('hidden',!(TOUCH.vis&&evIncoming().length)); }; },updateTouchUI);

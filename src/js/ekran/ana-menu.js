@@ -37,7 +37,7 @@ let lastIn=DEV.mobile?'touch':'kb';
 function titleHints(){ const h=$('cHint'); if(!h) return; const v='<span class="v">'+GAME_VERSION+'</span>';
   h.innerHTML=(lastIn==='pad'?'<span><kbd>✛</kbd>Seç</span><span><kbd>A</kbd>Aç</span><span><kbd>B</kbd>Geri</span>':lastIn==='touch'?'<span>Bir bölüme dokun, sonra sağdaki düğmeyle başlat</span>':'<span><kbd>↑</kbd><kbd>↓</kbd>Seç</span><span><kbd>Enter</kbd>Aç</span><span><kbd>Esc</kbd>Geri</span><span><kbd>M</kbd>Harita (oyunda)</span>')+v; }
 function setLastIn(k){ if(lastIn===k) return; lastIn=k; if(menuMode==='title') titleHints(); }
-window.addEventListener('keydown',function(){ setLastIn('kb'); },true);
+INPUT.on('keydown',function(){ setLastIn('kb'); },true,'ekran/ana-menu','her yerde');
 window.addEventListener('pointerdown',function(e){ setLastIn(e.pointerType==='touch'?'touch':'kb'); },true);
 function refreshTitle(){
   const st=uiStyle(), a=AIRCRAFT[selectedId], r=regOf(selectedId);
@@ -76,22 +76,10 @@ $('cProf').addEventListener('click',function(){ syncSettingsUI(); openModal('set
 window.addEventListener('online',function(){ if(menuMode==='title') refreshTitle(); }); window.addEventListener('offline',function(){ if(menuMode==='title') refreshTitle(); });
 /* missions screen */
 function openMissions(){ state='menu'; menuMode='missions'; showScreen('missionsUI'); misSel=Math.max(0,MORDER.indexOf(missionId)); renderMissions(); }
-function renderMissions(){
-  const r=rec(selectedId);
-  $('misList').innerHTML=MORDER.map(function(id,i){ const M0=MISSIONS[id], best=(id==='rings'||id==='free')?r.best:(r.mt||{})[id];
-    const right=best!=null?'<small class="rec">REKOR '+fmtT(best)+'</small>':'<small>'+(M0.limit?Math.round(M0.limit/60)+' DK':(id==='rings'?'13 HALKA':(id==='dogfight'?'3 DALGA':'SÜRESİZ')))+'</small>';
-    return '<li><button type="button" class="mitem'+(i===misSel?' kf':'')+'" data-i="'+i+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+M0.name.toUpperCase()+right+'</button></li>'; }).join('');
-  const id=MORDER[misSel], M0=MISSIONS[id], c=aiCfg();
-  $('misK').textContent='GÖREV '+String(misSel+1).padStart(2,'0')+(M0.limit?' · SÜRE '+Math.round(M0.limit/60)+' DK':'');
-  $('misName').textContent=M0.name; $('misDesc').textContent=M0.desc;
-  const ch=[];
-  if(id==='dogfight') ch.push('<span><b>3</b> dalga</span>','<span><b>2–4</b> düşman uçağı</span>');
-  else if(c.enemies) ch.push('<span><b>'+c.enemies+'</b> düşman uçağı</span>');
-  ch.push('<span>Kanat adamı: '+(c.wing?'açık':'kapalı')+'</span>','<span>Zorluk: '+SKILL[c.skill].name+'</span>');
-  $('misChips').innerHTML=ch.join('');
-  $('btnMisAc').textContent='Uçak: '+AIRCRAFT[selectedId].short;
-}
-function misGo(){ selectMission(MORDER[misSel]); preFlight('missions'); }
+/* V2.27: the first mission list (V1.x) was replaced outright by the mission board (gorev/gorev-panosu, V1.76) and the
+   new mission screen (gorev/gorev-ekrani-2, V2.03); its list and detail code never ran and was removed. */
+function renderMissions(){}   /* set by gorev/gorev-panosu */
+function misGo(){}            /* set by gorev/gorev-panosu */
 $('misList').addEventListener('click',function(e){ const b=e.target.closest('button'); if(!b) return; const i=+b.dataset.i; if(i===misSel) misGo(); else { misSel=i; renderMissions(); } });
 $('btnMisGo').addEventListener('click',function(){ misGo(); });
 $('btnMisAc').addEventListener('click',enterHangar);
