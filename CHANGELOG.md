@@ -1,6 +1,22 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.31 — 2026-10-15 · Test ve yayın hattı
+- **Testler 13 dakikadan 2 dakikaya indi:**
+  - **Yavaşlığın sebebi:** testlerin çalıştığı ortamda (Node'un vm bağlamı) oyunun en sık kullandığı adlar (Math, THREE, Float32Array…) her seferinde yavaş bir ara katmandan aranıyordu. Arazi gürültüsü hesabı bu yüzden tarayıcıdakinden 15 kat yavaştı.
+  - **Ne değişti:** bu adlar artık oyunun kendi kapsamına bir kez bağlanıyor. Bir test 8 saniyeden 1,7 saniyeye indi.
+  - **Yeni çalıştırıcı:** `node tests/paralel.js`, 93 testi bütün çekirdeklerde çalıştırıyor ve en yavaş testleri yazıyor.
+  - Toplam süre: 13 dakika → 2 dakika 15 saniye.
+- **Bütçe kapısı:** yayından önceki tarayıcı denetimi artık şunları ölçüyor:
+  - her sahnenin çizim ve üçgen sayısı (uçuş, şehir, orman);
+  - doku belleği;
+  - stres testi: 4 düşman uçağı, kanat adamı, SAM, füze ve patlamalarla 12 saniyelik bir çatışma (JS belleği 40 MB'tan fazla büyümemeli).
+
+  Bir sürüm bu tavanları aşarsa yayın kendiliğinden duruyor. Tavanlar `tools/browser-check.js` içinde, bilerek yükseltildiklerinde değişiklik commit'te görünüyor.
+- **Yayın betiği depoda:** `tools/release.sh` bütün adımları belgeli sırayla yapıyor: sürüm numarası, notlar, derleme, tarayıcı denetimi, testler, commit. Betikte kişisel bilgi yok. Otomatik GitHub yayını da artık paralel testleri kullanıyor.
+- **three.js karar raporu:** `docs/KARAR-THREEJS.md`, r128'den güncel sürüme geçişin getirdiklerini (BatchedMesh, asenkron shader derleme, WebGPU) ve maliyetini (paketleyici, ışık ve renk ayarının baştan yapılması) anlatıyor. Önerim, geçişi model serisinden sonraya bırakmak; karar senin.
+- **Ertelenen:** her ekranın önceki sürümle görsel karşılaştırması bu sürüme sığmadı. Önceki sürümün ekran görüntülerinin saklanacağı bir yer gerekiyor; Ekran sadeleştirme sürümünde (V2.33) yapılacak.
+
 ## V2.30 — 2026-10-15 · Mühimmat yerleşimi ve zemine gömülme
 - **Mühimmat artık gövdeye ve iniş takımına girmiyor:** bomba ve füzelerin yeri sabit bir formülle hesaplanıyordu. Kanat açıklığının %16, %26, %36'sı gibi sabit oranlar, uçak başına tek bir yükseklik ve hep aynı derinlik kullanılıyordu. KAAN'da ilk çift gövdenin içinde, ana iniş takımı bacaklarının yanında kalıyordu. Artık her uçak bir kez ölçülüyor:
   - Kanat ve gövdenin alt yüzeyi aşağıdan ışınla taranıyor. İniş takımı, egzoz alevi, ışıklar ve kanopi bu taramaya katılmıyor.

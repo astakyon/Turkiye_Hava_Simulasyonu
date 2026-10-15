@@ -27,7 +27,7 @@ Tek dosyalık (`index.html`) oyun; kurulum yok. Ana ekrana eklenebilir (PWA) ve 
 Kaynak kod `src/` altında parçalara bölünmüştür; `index.html` bunlardan üretilir:
 ```
 python3 tools/build.py      # src/ → index.html
-sh tests/run.sh             # testler
+node tests/paralel.js       # testler (bütün çekirdekler; tek tek: sh tests/run.sh)
 ```
 Mimari, modüller ve yeni araç ekleme: [docs/MIMARI.md](docs/MIMARI.md) · 3B model (.glb) ekleme: [docs/MODELLER.md](docs/MODELLER.md)
 

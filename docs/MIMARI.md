@@ -81,6 +81,16 @@ Kitaplıklar ilk ihtiyaçta `vendor/`'dan, yoksa jsDelivr'den yüklenir; yüklen
 `python3 bump_version.py V1.xx "not"` → `src/js/cekirdek/temel.js`, şablon, `VERSION`, `version.json`, `sw.js`, CHANGELOG
 güncellenir ve `index.html` yeniden derlenir. CHANGELOG başlığı `## Vx.xx — tarih · başlık` biçimindedir; `python3 tools/relnotes.py` son 8 sürümü `src/js/veri/surum-notlari-veri.js` dosyasına yazar (oyundaki "Yenilikler" ve sürüm duyurusu buradan okur). `VERSION` değişip `main`'e gidince Releases kaydı otomatik açılır.
 
+**Yayın hattı (V2.31):** `tools/release.sh Vx.yy "başlık" notlar.md "commit mesajı"` bütün adımları sırayla yapar: sürüm numarası ve CHANGELOG, oyun içi notlar, derleme, tarayıcı denetimi, testler, commit ve push. Denetim ya da testlerden biri geçmezse commit atılmaz. Yazar ve commit eki dışarıdan ortam değişkeniyle verilir (`RELEASE_AUTHOR_NAME`, `RELEASE_AUTHOR_EMAIL`, `RELEASE_TRAILER`); betikte kişisel bilgi yok.
+- **Testler:** `node tests/paralel.js` bütün testleri bütün çekirdeklerde çalıştırır, en yavaş beş testi yazar. `sh tests/run.sh` tek tek çalıştırmanın basit yolu olarak duruyor. Test ortamı (harness) oyunun sık kullandığı yerleşik adları (Math, Float32Array, THREE…) oyunun kendi kapsamına bağlıyor. Node'un vm bağlamında her global arama yavaş bir ara katmandan geçiyordu; arazi gürültüsü yüzünden dünya kurulumu 15 kat yavaştı. Sonuç: 2 çekirdekte 13 dk → 2 dk 15 sn (tek çekirdekte 3 dk 45 sn).
+- **Bütçe kapısı** (`tools/browser-check.js`, `BUDGET`):
+  - her görünüm için çizim ve üçgen tavanı (V2.30 değerlerinin yaklaşık %25 üstü);
+  - doku belleği tavanı;
+  - kalabalık savaş stres testi: 4 düşman, kanat adamı, SAM, füze ve patlamalarla 12 sn; JS yığını en çok 40 MB büyüyebilir.
+
+  İçerik eklenip bütçe bilerek yükseltilecekse değer bu dosyada değiştirilir, değişiklik commit'te görünür.
+- **three.js sürümü:** karar raporu `docs/KARAR-THREEJS.md`.
+
 ## Performans (V2.09) ve teknik borç
 
 Hedef: her telefon, tablet ve bilgisayarda akıcı oyun. Telefonlarda darboğaz çoğunlukla **çizim çağrısı** sayısıdır (yaygın kılavuz: mobilde kare başına ~100–300). Ölçüm `node tools/browser-check.js` ile yapılır (`Q=0` Düşük kademe). V2.09 değerleri:

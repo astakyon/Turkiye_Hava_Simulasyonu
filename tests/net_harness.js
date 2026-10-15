@@ -88,7 +88,11 @@ ctx.window=Object.assign(ctx,{addEventListener:win.addEventListener,removeEventL
 ctx.self=ctx;ctx.globalThis=ctx;
 vm.createContext(ctx);
 // strip animation loop auto-start if needed
-let src=SRC; const k=src.lastIndexOf('})();');src=src.slice(0,k)+';globalThis.__X={eval:(c)=>eval(c)};\n'+src.slice(k);
+/* V2.31: names the game uses all the time, bound once inside its own scope. In a vm context every global lookup goes through
+   the context's interceptor; Math.imul / Math.floor in the terrain noise alone made world building 15× slower than in a browser. */
+const LOCALS="const Math=globalThis.Math, Object=globalThis.Object, Array=globalThis.Array, JSON=globalThis.JSON, Number=globalThis.Number, String=globalThis.String, isFinite=globalThis.isFinite, Float32Array=globalThis.Float32Array, Uint8Array=globalThis.Uint8Array, Uint16Array=globalThis.Uint16Array, Uint32Array=globalThis.Uint32Array, Int32Array=globalThis.Int32Array, Map=globalThis.Map, Set=globalThis.Set, THREE=globalThis.THREE, performance=globalThis.performance;";
+function addLocals(s){ const h="(function(){\n'use strict';"; const i=s.indexOf(h); return (i>=0&&i<4)?s.slice(0,i)+h+'\n'+LOCALS+s.slice(i+h.length):s; }
+let src=SRC; src=addLocals(src); const k=src.lastIndexOf('})();');src=src.slice(0,k)+';globalThis.__X={eval:(c)=>eval(c)};\n'+src.slice(k);
 vm.runInContext(src,ctx,{filename:'sim.js'});
 ctx.listeners=listeners;ctx.els=els;ctx.store=store;
 return ctx;
