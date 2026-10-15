@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.23 — 2026-10-15 · Bütün ayarların gözden geçirmesi
+- **Tekrar eden ayarlar kaldırıldı:** "Telsiz altyazıları" artık yalnız Erişilebilirlik'te, "Kumanda titreşimi" yalnız Kontroller → Gamepad'de. İki ayrı "Çubuk hassasiyeti" satırı "Kumanda çubuk hassasiyeti" ve "Dokunmatik çubuk hassasiyeti" oldu.
+- **Her satırın açıklaması var:** yalnız yüzde gösteren satırlar (duyarlılık, ölü bölge, düğme boyutu, saydamlık, ses seviyesi…) artık neyi değiştirdiklerini de yazıyor.
+- **Varsayılana dön (↺):** bir ayar varsayılandan farklıysa adının yanında küçük ↺ düğmesi çıkıyor; basınca yalnız o ayar varsayılana dönüyor (47 satırda).
+- **Arama her yerde:** ayar araması bütün sekmelerde, Kontroller'in Klavye/Gamepad/Dokunmatik panellerinde ve Grafik'in açılır gruplarında buluyor; eşleşen grup kendiliğinden açılıyor.
+
 ## V2.22 — 2026-10-15 · Grafik ayarları 2.0
 - **Daha sade grafik sekmesi:** temel ayarlar 7 satır: Grafik kalitesi, Gölgeler, Görsel efektler, Çözünürlük, FPS sınırı, Performans testi, Tam ekran. Geri kalanı iki açılır grupta: "Ayrıntılı ayarlar" ve "Grafik sorun giderme" (derinlik, iki katmanlı derinlik, güvenli mod, görüntü testi, tanılama).
 - **Otomatik hazır ayar:** Grafik kalitesi satırında Otomatik seçeneği var: cihazına göre kademe seçer ve FPS düşerse ayarları kendiliğinden hafifletir. Aynı işi yapan "Cihaza göre ayarla" ve "Performans modu" satırları kaldırıldı. Hazır ayarın üstüne kendi seçimini yaparsan "Özel" yazıyor; bir hazır ayara dokununca sıfırlanıyor.

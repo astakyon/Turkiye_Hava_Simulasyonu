@@ -90,3 +90,4 @@ node harness.js /tmp/sim.js texmem.test.js
 node harness.js /tmp/sim.js boot.test.js
 node harness.js /tmp/sim.js terlod.test.js
 node harness.js /tmp/sim.js gfx2.test.js
+node harness.js /tmp/sim.js settings2.test.js

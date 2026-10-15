@@ -251,7 +251,7 @@
       <div id="ctlUI">
         <div class="seg ctabs" role="tablist"><button type="button" data-dev="kb">Klavye / Fare</button><button type="button" data-dev="pad">Gamepad</button><button type="button" data-dev="touch">Dokunmatik</button></div>
         <div id="ctlP_kb">
-          <div class="srow"><div class="sl"><b>Fare / dokunma duyarlılığı</b><small><output id="setSensV"></output></small></div><input type="range" id="setSens" min="30" max="250"></div>
+          <div class="srow"><div class="sl"><b>Fare / dokunma duyarlılığı</b><small>Fareyle ya da ekranı sürükleyerek bakışın ve kumandanın hızı · <output id="setSensV"></output></small></div><input type="range" id="setSens" min="30" max="250"></div>
           <div class="srow"><div class="sl"><b>Yukarı-aşağıyı ters çevir</b><small>Uçakta burun kontrolü</small></div><label class="tgl"><input type="checkbox" id="setInv"><i></i></label></div>
           <p class="cnote">Şema seç, sonra değiştirmek istediğin tuşa tıkla ve yeni tuşa bas. <b>Esc</b> vazgeçer, <b>Geri sil</b> tuşu kaldırır. Kırmızı satırlar aynı tuşu kullanan eylemlerdir.</p>
           <div class="seg wrap cschemes" id="ctlSch_kb"></div>
@@ -260,10 +260,10 @@
         </div>
         <div id="ctlP_pad" class="hidden">
           <p class="cnote" id="padState"></p>
-          <div class="srow"><div class="sl"><b>Ölü bölge</b><small><output id="padDzV"></output></small></div><input type="range" id="padDz" min="3" max="35"></div>
-          <div class="srow"><div class="sl"><b>Çubuk hassasiyeti</b><small><output id="padSensV"></output></small></div><input type="range" id="padSens" min="50" max="200"></div>
+          <div class="srow"><div class="sl"><b>Ölü bölge</b><small>Çubuğun ortasında tepki vermeyen alan; uçak kendi kendine dönüyorsa artır · <output id="padDzV"></output></small></div><input type="range" id="padDz" min="3" max="35"></div>
+          <div class="srow"><div class="sl"><b>Kumanda çubuk hassasiyeti</b><small>Kumanda çubuğunun uçağa ne kadar güçlü yansıdığı · <output id="padSensV"></output></small></div><input type="range" id="padSens" min="50" max="200"></div>
           <div class="srow"><div class="sl"><b>Dikey eksenleri ters çevir</b><small>Sol ve sağ çubuk ↑↓</small></div><label class="tgl"><input type="checkbox" id="padInv"><i></i></label></div>
-          <div class="srow"><div class="sl"><b>Kumanda titreşimi</b></div><label class="tgl"><input type="checkbox" id="setRumble"><i></i></label></div>
+          <div class="srow"><div class="sl"><b>Kumanda titreşimi</b><small>Çarpma, atış ve yere temasta kumanda titrer</small></div><label class="tgl"><input type="checkbox" id="setRumble"><i></i></label></div>
           <p class="cnote">Değiştirmek için bir atamaya tıkla, sonra kumandada tuşa bas ya da çubuğu it.</p>
           <div class="seg wrap cschemes" id="ctlSch_pad"></div>
           <div class="clist" id="ctlList_pad"></div>
@@ -271,9 +271,9 @@
         </div>
         <div id="ctlP_touch" class="hidden">
           <div class="srow"><div class="sl"><b>Dokunmatik kontroller</b><small>Otomatik: dokunmatik ekranda açılır</small></div><div class="seg" id="setTouch"><button type="button" data-t="auto">Otomatik</button><button type="button" data-t="on">Açık</button><button type="button" data-t="off">Kapalı</button></div></div>
-          <div class="srow"><div class="sl"><b>Düğme boyutu</b><small><output id="tchSizeV"></output></small></div><input type="range" id="tchSize" min="70" max="140"></div>
-          <div class="srow"><div class="sl"><b>Saydamlık</b><small><output id="tchOpV"></output></small></div><input type="range" id="tchOp" min="30" max="100"></div>
-          <div class="srow"><div class="sl"><b>Çubuk hassasiyeti</b><small><output id="tchStickV"></output></small></div><input type="range" id="tchStick" min="50" max="200"></div>
+          <div class="srow"><div class="sl"><b>Düğme boyutu</b><small>Ekrandaki düğmelerin ve çubuğun büyüklüğü · <output id="tchSizeV"></output></small></div><input type="range" id="tchSize" min="70" max="140"></div>
+          <div class="srow"><div class="sl"><b>Saydamlık</b><small>Dokunmatik düğmelerin ne kadar belirgin görüneceği · <output id="tchOpV"></output></small></div><input type="range" id="tchOp" min="30" max="100"></div>
+          <div class="srow"><div class="sl"><b>Dokunmatik çubuk hassasiyeti</b><small>Ekrandaki çubuğun uçağa ne kadar güçlü yansıdığı · <output id="tchStickV"></output></small></div><input type="range" id="tchStick" min="50" max="200"></div>
           <div class="srow"><div class="sl"><b>Solak düzeni</b><small>Çubuk sağda, düğmeler solda</small></div><label class="tgl"><input type="checkbox" id="tchLeft"><i></i></label></div>
           <div class="srow"><div class="sl"><b>Hazır düzen</b><small>Klasik · Sol el (çubuk sağda) · Eğerek uç (telefonu eğerek yönlendir, çubuk gizli)</small></div><div class="seg" id="tchPreset"><button type="button" data-p="klasik">Klasik</button><button type="button" data-p="solel">Sol el</button><button type="button" data-p="egim">Eğerek uç</button></div></div>
           <div class="srow"><div class="sl"><b>Serbest çubuk</b><small>Sol tarafta nereye dokunursan çubuk orada açılır</small></div><label class="tgl"><input type="checkbox" id="tchFloat"><i></i></label></div>
@@ -283,7 +283,7 @@
       </div>
     </section>
     <section data-tab="s" class="hidden">
-      <div class="srow"><div class="sl"><b>Ses seviyesi</b><small><output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
+      <div class="srow"><div class="sl"><b>Ses seviyesi</b><small>Bütün seslerin ana düzeyi; kanalları aşağıdaki karışımdan ayrı ayarla · <output id="setVolV"></output></small></div><input type="range" id="setVol" min="0" max="100"></div>
       <div class="srow"><div class="sl"><b>Müzik</b><small>Oyunun kendi bestesi: ana menü teması, sakin uçuş, çatışma, zafer ve yenilgi; duruma göre değişir</small></div><label class="tgl"><input type="checkbox" id="setMusic"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Arayüz sesleri</b><small>Düğme, sekme ve bildirim sesleri</small></div><label class="tgl"><input type="checkbox" id="setUiSnd"><i></i></label></div>
       <div class="srow"><div class="sl"><b>Telsiz konuşmaları</b><small>Kule, kanat adamı ve AWACS çağrıları tarayıcının Türkçe sesiyle okunur (cihazına göre ses değişir)</small></div><label class="tgl"><input type="checkbox" id="setRadioTts"><i></i></label></div>

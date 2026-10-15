@@ -1098,3 +1098,9 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
 #settings .seg.gd button[data-v="-1"]{ opacity:.85; }
 #settings .gdlive{ margin:8px 0 0; padding:8px 12px; border-radius:8px; background:rgba(120,190,255,.08); border:1px solid rgba(120,190,255,.25); color:#cfe6ff; font-size:12px; }
 #settings .gdlive b{ color:#fff; }
+/* all settings reviewed (V2.23) */
+#settings .srow.dup{ display:none!important; }
+#settings .sreset{ margin-left:8px; padding:0 7px; height:20px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:#cfd6e0; font-size:12px; line-height:18px; cursor:pointer; vertical-align:middle; }
+#settings .sreset:hover,#settings .sreset:focus-visible{ background:rgba(227,10,23,.25); border-color:#ff6b6b; color:#fff; }
+#settings .sreset.hidden{ display:none; }
+#settings.searching #ctlUI>div[id^="ctlP_"]{ display:block!important; } #settings.searching #ctlUI .ctabs{ display:none; }
