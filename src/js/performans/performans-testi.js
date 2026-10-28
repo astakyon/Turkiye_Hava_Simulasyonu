@@ -109,7 +109,7 @@ function ptBuild(opts){ const k=opts.k||1, L=[], m=function(s){ return s*k; };
   if(opts.warm) for(let i=0;i<10;i++) L.push({id:'isi'+i, name:'Isınma testi '+(i+1)+'/10', warm:i, enter:i===0?function(){ ptFly('ucus'); }:null, keepPath:i>0, settle:i===0?m(1):0, dur:m(30)});
   return L; }
 function ptNewSeg(s){ return {id:s.id, name:s.name, ft:[], cpu:[], gpu:[], calls:[], tris:[], alloc:0, gcN:0, dur:0, noGpu:!!s.noGpu}; }
-function ptStart(opts){ if(PT.run) return; opts=opts||{}; if(NET.on){ toast('Performans testi çok oyunculu maçta çalışmaz','#ffc24a'); return; }
+function ptStart(opts){ if(PT.run) return; opts=opts||{}; try{ if(typeof TXS!=='undefined'&&TXS.run) txsRun(); }catch(e){}   /* V2.34: finish the texture job before measuring (it showed up as hitches) */ if(NET.on){ toast('Performans testi çok oyunculu maçta çalışmaz','#ffc24a'); return; }
   closeModals(); ptGpuInit();
   PT.saved={set:['autoPerf','fpsCap','ai','split'].map(function(k){ return [k,Object.prototype.hasOwnProperty.call(SETTINGS,k),SETTINGS[k]==null?SETTINGS[k]:JSON.parse(JSON.stringify(SETTINGS[k]))]; }), camMode:camMode, flares:flaresLeft, perfScale:PERF.scale, lvl:PERF2.lvl, sel:selectedId, mis:missionId};
   SETTINGS.autoPerf=false; SETTINGS.fpsCap=0; PERF2.lvl=0; try{ applyQuality(); }catch(e){}

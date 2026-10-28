@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.34 — 2026-10-28 · Uçuş başındaki takılmalar
+- **Uçuşun ilk saniyelerindeki takılmalar giderildi:** V2.33 raporunda uçuşun ilk 60 karesinin her biri 50–67 ms sürdü. Sonrası çoğunlukla düzgün 60 FPS'ti. Sebep, açılıştan sonra arka planda çalışan doku işiydi. Bu iş aynı dokuları paylaştırıyor ve büyük dokuları yarıya küçültüyor; tek bir küçültme 300 ms'ye kadar sürebiliyor ve uçarken her karede bir doku küçültülüyordu. Artık bu iş uçarken, sürerken ve yürürken bekliyor. Yalnızca menüde, duraklatma ekranında ve haritada çalışıyor, orada da her 4 karede bir. Performans testi başlamadan önce bu iş tamamlanıyor, böylece ölçüme karışmıyor.
+- **V2.33'ün etkisi (aynı rapordan):**
+  - Dokunmatik kontrollerin kare başına maliyeti en pahalı işler listesinden düştü.
+  - Yüksek uçuş, ilk saniyeler dışında 60 FPS'e yakın.
+  - Alçak şehir uçuşu ve kalabalık savaş hâlâ P90 30 FPS (kare başına 18 ms işlemci). Sıradaki performans işi bunlar.
+- Yol haritası bir sürüm kaydı: Özellik envanteri V2.35, model serisi V2.39 ile başlıyor.
+
 ## V2.33 — 2026-10-28 · Uçuşta işlemci yükü
 - **Telefon raporu (V2.31, Samsung Xclipse 920, Ultra):** geçen rapora göre iyileşmeler:
   - Açılış 12,3 saniyeden 7,4 saniyeye indi.

@@ -44,7 +44,12 @@ function txsWatch(){ for(let i=TXS.links.length-1;i>=0;i--){ const l=TXS.links[i
   for(let i=TXS.shrunk.length-1;i>=0;i--){ const s=TXS.shrunk[i]; if(s.t.version!==s.v){ if(s.t.image!==s.full&&s.t.image.width<s.full.width){ /* the game redrew the original canvas: show it at full size */ s.t.image=s.full; s.t.needsUpdate=true; } s.t.userData.txsOwn=true; TXS.shrunk.splice(i,1); TXS.reverted=(TXS.reverted||0)+1; } } }
 function txsRun(){ try{ txsShare(); }catch(e){ console.warn('doku paylaşımı',e); } try{ txsShrink(); }catch(e){ console.warn('doku küçültme',e); } TXS.done=true; TXS.run=false; }
 /* background: share (fingerprints a few per frame), then halve one big texture per frame; menus 6 ms, in play 2 ms */
-function txsBgStep(){ if(!TXS.run) return; const menu=state==='menu'||state==='paused'||state==='map', budget=menu?6:2;
+/* V2.34: only in menus. Phone report (V2.33): the first 60 frames of flight took 50–67 ms each and the job's longest call was
+   299 ms — halving a 1024+ texture (a high-quality redraw plus a new upload to the GPU) cannot be cut into small slices, and it
+   ran once per frame while flying. The job now waits while the player flies, drives or walks and carries on in menus, the
+   pause screen and the map (where a slow frame is not felt); halving is spaced to every 4th menu frame. */
+function txsBgStep(){ if(!TXS.run) return; const menu=state==='menu'||state==='paused'||state==='map'||state==='library'; if(!menu&&SETTINGS.texBgPlay!==true) return; const budget=menu?6:2;
+  if(TXS.phase==='shrink'&&(TXS.k=(TXS.k||0)+1)%4) return;
   try{ if(TXS.phase!=='shrink'){ if(txsShareStep(budget)) TXS.phase='shrink'; return; }
     if(!TXS.sq){ const lim=txsLimit(), seen=new Set(TXS.shrunk.map(function(x){ return x.t; })); TXS.sq=[]; if(lim<1e9) txsCollect().forEach(function(L,t){ const im=t.image; if(!seen.has(t)&&im&&Math.max(im.width||0,im.height||0)>=lim) TXS.sq.push(t); }); }
     const t=TXS.sq.pop(); if(t){ if(TXS.shrunk.every(function(x){ return x.t!==t; })) txsHalve(t); return; }
