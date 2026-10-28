@@ -245,7 +245,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.35 | Alçak uçuşta işlemci yükü (telefon raporu) | ✅ |
 | V2.36 | Özellik envanteri | ✅ |
 | V2.37 | Ekran ve akış sadeleştirme | ✅ |
-| V2.38 | Yükleme ekranı 3.0 (oyuncu kararı) | |
+| V2.38 | Yükleme ekranı 3.0 (oyuncu kararı) | ✅ |
 | V2.39 | Oynanış ve metin tutarlılığı | |
 | V2.40 | Belgeler ve sürüm geçmişi | |
 
