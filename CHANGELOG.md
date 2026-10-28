@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.32 — 2026-10-28 · Telefonda görüntü testi paneli
+- **Görüntü sorunu testi telefonda tam görünüyor:** yatay telefonda panel ekranın altından taşıyordu. Başlık kesiliyor, "Hepsini aç" ve "Kapat" düğmeleri çerçevenin dışında kalıyordu.
+  - Satırlar artık sıkışmıyor.
+  - Alçak ekranlarda panel en üstten başlıyor ve daha geniş açılıyor.
+  - Katman düğmeleri üç sütunda, daha kompakt.
+  - Cihaz bilgisi iki satıra kısaltıldı.
+  - "Hepsini aç" ve "Kapat" her zaman altta görünüyor.
+
+  Yatay telefonda panel artık ekranın yarısından biraz fazlasını kaplıyor.
+- **Not:** cihazının performansını ölçen test bu panel değil. Ayarlar → Grafik'in en üstündeki **Performans testi → Başlat** düğmesi.
+- Yol haritası bir sürüm kaydı: Özellik envanteri V2.33, model serisi V2.37 ile başlıyor.
+
 ## V2.31 — 2026-10-15 · Test ve yayın hattı
 - **Testler 13 dakikadan 2 dakikaya indi:**
   - **Yavaşlığın sebebi:** testlerin çalıştığı ortamda (Node'un vm bağlamı) oyunun en sık kullandığı adlar (Math, THREE, Float32Array…) her seferinde yavaş bir ara katmandan aranıyordu. Arazi gürültüsü hesabı bu yüzden tarayıcıdakinden 15 kat yavaştı.

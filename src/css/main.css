@@ -908,11 +908,20 @@ html.is-admin .mlist .mitem[data-act="library"]{ display:flex!important; }
 @media (max-width:760px){ .lndui{ top:auto; bottom:42%; transform:none; width:170px; } }
 
 /* ---- V1.97 picture problem test */
-.gtpanel{ position:fixed; left:max(12px,env(safe-area-inset-left)); top:max(70px,env(safe-area-inset-top)); z-index:70; width:min(330px,calc(100vw - 24px)); max-height:80vh; overflow:auto; padding:12px; border-radius:12px; background:rgba(8,12,20,.94); border:1px solid rgba(255,210,122,.5); color:#fff; font-size:12px; display:flex; flex-direction:column; gap:8px; }
+.gtpanel{ position:fixed; left:max(12px,env(safe-area-inset-left)); top:max(70px,env(safe-area-inset-top)); z-index:70; width:min(330px,calc(100vw - 24px)); max-height:calc(100vh - max(70px,env(safe-area-inset-top)) - 10px); max-height:calc(100dvh - max(70px,env(safe-area-inset-top)) - 10px); overflow:auto; overscroll-behavior:contain; padding:12px; border-radius:12px; background:rgba(8,12,20,.94); border:1px solid rgba(255,210,122,.5); color:#fff; font-size:12px; display:flex; flex-direction:column; gap:8px; }
 .gtpanel.hidden{ display:none; } .gtpanel b{ color:#ffd27a; letter-spacing:.08em; } .gtpanel small{ color:var(--dim); }
 .gtpanel .gtl{ display:grid; grid-template-columns:1fr 1fr; gap:6px; } .gtpanel .gtl button{ padding:9px 6px; border-radius:8px; border:1px solid rgba(125,255,176,.4); background:rgba(125,255,176,.08); color:#fff; font-weight:700; font-size:12px; cursor:pointer; text-align:left; }
 .gtpanel .gtl button[aria-pressed="false"]{ border-color:rgba(255,106,90,.6); background:rgba(255,106,90,.15); color:#ffb0a6; }
 .gtpanel .gti{ margin:0; font-size:10.5px; color:var(--dim); word-break:break-word; } .gtpanel .gtr{ display:flex; gap:8px; justify-content:flex-end; }
+/* V2.32: phones in landscape (player report: the panel ran off the bottom, its buttons outside the frame). Rows never shrink
+   (they were squeezed by the column flex and overflowed), the panel starts higher and wider with three compact columns, the
+   device line is shortened, and Hepsini aç / Kapat stay pinned at the bottom while the list scrolls. */
+.gtpanel > *{ flex-shrink:0; }
+.gtpanel .gtr{ position:sticky; bottom:-12px; margin:0 -12px -12px; padding:8px 12px 12px; background:rgba(8,12,20,.97); border-top:1px solid rgba(255,255,255,.08); }
+@media (max-height:520px){
+  .gtpanel{ top:max(8px,env(safe-area-inset-top)); width:min(480px,calc(100vw - 24px)); max-height:calc(100vh - max(8px,env(safe-area-inset-top)) - 8px); max-height:calc(100dvh - max(8px,env(safe-area-inset-top)) - 8px); padding:10px 12px 12px; gap:6px; }
+  .gtpanel .gtl{ grid-template-columns:repeat(3,1fr); gap:5px; } .gtpanel .gtl button{ padding:7px 6px; font-size:11.5px; }
+  .gtpanel .gti{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-size:10px; } }
 
 /* ---- V1.98 campaign */
 .campwrap{ max-width:1040px; margin:0 auto; padding:clamp(58px,10vh,78px) 16px 28px; display:flex; flex-direction:column; gap:14px; zoom:var(--uiz,1); }
