@@ -4,22 +4,19 @@
 
 **Durum:** ✅ iyi · 🔧 iyileştirilmeli · 🔀 birleştirilmeli · 🗑 kaldırılmalı · 🧪 denenmeli (gerçek cihazda doğrulanmalı)
 
-**Özet:** 61 özellik · ✅ iyi 51 · 🔧 iyileştirilmeli 5 · 🧪 denenmeli 3 · 🔀 birleştirilmeli 2 · testi olmayan: 0
+**Özet:** 61 özellik · ✅ iyi 54 · 🔧 iyileştirilmeli 4 · 🧪 denenmeli 3 · testi olmayan: 0
 
 ## Karar listesi
 
 Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu gibi kalır.
 
 1. **Silahlar ve yük ekranı** (🔧 iyileştirilmeli) — Mühimmat hâlâ yer tutucu (Füze-1, GP-82…). KARAR (29 Ekim): gerçek Türk mühimmatı model serisiyle birlikte, her uçağın modeliyle aynı sürümde.
-2. **Görev editörü** (🔧 iyileştirilmeli) — 29 Ekim denemesi (telefon boyutu, dokunarak): hedef ve düşman yerleştirme, Dene çalışıyor. Ama editör zor bulunuyor (Görevler → Özel → en alttaki "＋ Yeni görev oluştur") ve Dene / Kaydet düğmeleri sağ panelin altında, kaydırmadan görünmüyor. V2.37'de düzeltilecek.
-3. **Çevrimiçi oda** (🧪 denenmeli) — 29 Ekim denemesi: aynı bilgisayarda iki ayrı oyun sayfası (telefon boyutu) oda kurdu, katıldı, maç başladı, konumlar eşleşti (fark < 5 m), yazılı sohbet iki yönde çalıştı, hata yok. Bağlantı katmanı burada taklit edildi (PeerJS sunucusuna bu ortamdan erişilemiyor); internet üzerinden iki gerçek cihaz hâlâ denenmeli.
-4. **Karma çok oyunculu ve üs ele geçirme** (🧪 denenmeli) — Oda ve sohbet katmanı 29 Ekim'de iki sayfayla doğrulandı; karma mod ve üs ele geçirme iki gerçek cihazla denenmeli.
-5. **Sesli ve yazılı sohbet** (🧪 denenmeli) — Yazılı sohbet 29 Ekim'de doğrulandı. Sesli sohbet mikrofon ve gerçek bağlantı istiyor; yalnız iki gerçek cihazla denenebilir.
-6. **Görüntü sorunu testi** (🔀 birleştirilmeli) — KARAR (29 Ekim): Performans testi ve Grafik tanılama ile tek "Sorun giderme" ekranında birleşecek (V2.37).
-7. **Grafik tanılama** (🔀 birleştirilmeli) — KARAR (29 Ekim): "Sorun giderme" ekranına katılacak (V2.37).
-8. **Yükleme ekranı** (🔧 iyileştirilmeli) — KARAR (29 Ekim): dördü de yapılacak: ipucu kartları, oyun dilinde aşama adları, ikinci açılışın hızlanması, hafif yükleme sesi (V2.38).
-9. **Uygulama olarak yükleme** (🔧 iyileştirilmeli) — KARAR (29 Ekim): Play Store yayını model serisinden sonra (docs/ANDROID.md).
-10. **Uçak, helikopter, araç ve gemi modelleri** (🔧 iyileştirilmeli) — Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. KARAR: model serisi V2.41'den itibaren, her model onaya sunulur.
+2. **Çevrimiçi oda** (🧪 denenmeli) — 29 Ekim denemesi: aynı bilgisayarda iki ayrı oyun sayfası (telefon boyutu) oda kurdu, katıldı, maç başladı, konumlar eşleşti (fark < 5 m), yazılı sohbet iki yönde çalıştı, hata yok. Bağlantı katmanı burada taklit edildi (PeerJS sunucusuna bu ortamdan erişilemiyor); internet üzerinden iki gerçek cihaz hâlâ denenmeli.
+3. **Karma çok oyunculu ve üs ele geçirme** (🧪 denenmeli) — Oda ve sohbet katmanı 29 Ekim'de iki sayfayla doğrulandı; karma mod ve üs ele geçirme iki gerçek cihazla denenmeli.
+4. **Sesli ve yazılı sohbet** (🧪 denenmeli) — Yazılı sohbet 29 Ekim'de doğrulandı. Sesli sohbet mikrofon ve gerçek bağlantı istiyor; yalnız iki gerçek cihazla denenebilir.
+5. **Yükleme ekranı** (🔧 iyileştirilmeli) — KARAR (29 Ekim): dördü de yapılacak: ipucu kartları, oyun dilinde aşama adları, ikinci açılışın hızlanması, hafif yükleme sesi (V2.38).
+6. **Uygulama olarak yükleme** (🔧 iyileştirilmeli) — KARAR (29 Ekim): Play Store yayını model serisinden sonra (docs/ANDROID.md).
+7. **Uçak, helikopter, araç ve gemi modelleri** (🔧 iyileştirilmeli) — Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. KARAR: model serisi V2.41'den itibaren, her model onaya sunulur.
 
 ## Uçuş
 
@@ -75,7 +72,7 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 | **Dinamik görevler** | Her seferinde farklı, çok aşamalı görevler ve görev ortası olaylar; günlük ve haftalık görevler. | Görev panosu | — | V1.77 | dynamic, progress | ✅ iyi |
 | **Harekât: Kızıl Elma** | Sekiz bölümlük hikâyeli harekât; bölümler sırayla açılır, final madalya verir. | Kariyer → Harekât | — | V1.98 | campaign | ✅ iyi |
 | **Yarışlar** | Kapılı yarışlar, süre, hayalet ve sıralama tablosu. | Görev panosu → Yarışlar | — | V1.80 | races | ✅ iyi |
-| **Görev editörü** | Kendi görevini kur: aşamalar, tetikleyiciler, dene, kaydet ve paylaş. | Görev panosu → Editör | — | V1.81 | editor | 🔧 iyileştirilmeli |
+| **Görev editörü** | Kendi görevini kur: aşamalar, tetikleyiciler, dene, kaydet ve paylaş. | Görevler → ＋ Görev editörü | — | V1.81 | editor, v237 | ✅ iyi |
 | **Kara ve deniz görevleri** | Tank, araç ve gemi ile görevler. | Görev panosu | — | V1.99 | groundsea | ✅ iyi |
 
 ## Kariyer ve ilerleme
@@ -123,9 +120,9 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 |---|---|---|---|---|---|---|
 | **Grafik ayarları** | Otomatik / hazır ayarlar, ayrıntılı ayarlar, maliyet etiketleri, canlı fark, arama, varsayılana dön. | Ayarlar → Grafik | — | V1.57 | gfx2, settings2, quality, settings | ✅ iyi |
 | **Akıllı performans** | Otomatik çözünürlük, kalite basamakları, eşit aralıklı 30 FPS, ısınmaya karşı sabit kalite. | Ayarlar → Grafik → Otomatik | — | V1.94 | perf, perf2, quality | ✅ iyi |
-| **Performans testi** | 2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor. | Ayarlar → Grafik → Performans testi | — | V2.12 | perftest, v234 | ✅ iyi |
-| **Görüntü sorunu testi** | Katmanları tek tek kapatıp görüntü hatasının kaynağını bulma. | Ayarlar → Grafik → Grafik sorun giderme | — | V1.97 | gfxtest | 🔀 birleştirilmeli |
-| **Grafik tanılama** | Cihaz bilgisi, derinlik, efekt durumu gibi tanılama satırları. | Ayarlar → Grafik | — | V1.59 | gfxtest | 🔀 birleştirilmeli |
+| **Performans testi** | 2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor. | Ayarlar → Grafik → Sorun giderme → Performans testi | — | V2.12 | perftest, v234 | ✅ iyi |
+| **Görüntü sorunu testi** | Katmanları tek tek kapatıp görüntü hatasının kaynağını bulma. | Ayarlar → Grafik → Sorun giderme → Görüntü testi | — | V1.97 | gfxtest, v237 | ✅ iyi |
+| **Grafik tanılama** | Cihaz bilgisi, derinlik, efekt durumu gibi tanılama satırları. | Ayarlar → Grafik → Sorun giderme → Tanılama | — | V1.59 | gfxtest, v237 | ✅ iyi |
 | **Yükleme ekranı** | Dönen 3B ay yıldız, uçak biçimli ilerleme çubuğu, aşamalı açılış. | Açılışta | — | V2.20 | boot | 🔧 iyileştirilmeli |
 
 ## Hesap ve kayıt

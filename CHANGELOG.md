@@ -1,6 +1,21 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.37 — 2026-10-28 · Ekran ve akış sadeleştirme
+- **Tek Sorun giderme ekranı (senin kararın):** Ayarlar → Grafik'in ilk satırı artık **Sorun giderme**. İçinde üç sekme var:
+  - **Performans testi:** oyun yavaşsa.
+  - **Görüntü testi:** görüntü bozuksa.
+  - **Tanılama:** cihaz ve çizim bilgileri, açıkken canlı yenileniyor.
+
+  Daha önce bunlar üç ayrı yerdeydi.
+- **Görev editörü kolay bulunuyor:** Görevler ekranının sağ üstünde **＋ Görev editörü** düğmesi var. Editördeki **Dene**, **Kaydet** ve **Yeni** düğmeleri yan panelin altında sabit duruyor; yatay telefonda artık kaydırmadan görünüyor.
+- **Kapatma her yerde aynı:** tam ekranların sol üstünde **← Geri**, açılır pencerelerin sağ üstünde **✕** var. Yalnızca altta "Kapat" düğmesi olan 6 pencereye ✕ eklendi: Rekorlar, Kontroller, Fotoğraf, Video, Bakım ve Duraklat (duraklatmadaki ✕ oyuna döner).
+- **Bütün ekranlar 4 boyutta denetlendi:** 23 ekran telefon yatay, telefon dikey, tablet ve bilgisayar boyutunda otomatik olarak açılıp tarandı. Bulunan sorunlar düzeltildi:
+  - Yatay telefonda Yenilikler ve Rekorlar pencereleri ekrandan taşıyordu; artık ekrana sığıyor.
+  - Dikey telefonda Görevler ekranı sağa taşıyordu, başlık editör düğmesinin üstüne biniyordu.
+  - Dikey telefonda Hangar'daki grup sekmeleri "Ana menü" düğmesinin üstüne biniyordu.
+- **Deneme sonuçları envantere işlendi:** görev editörü (dokunarak yerleştirme ve Dene çalışıyor) ve çok oyunculu oda (iki sayfa arasında bağlantı, konum eşleşmesi ve sohbet çalışıyor; internet üzerinden gerçek cihazla deneme hâlâ gerekli).
+
 ## V2.36 — 2026-10-28 · Özellik envanteri ve Rehber
 - **Özellik envanteri:** oyundaki 61 özelliğin her biri için tek bir kart var. Her kartta özelliğin ne yaptığı, nereden açıldığı, tuşu, hangi sürümde geldiği, hangi testlerin onu denetlediği ve durumu yazıyor. Liste `docs/OZELLIKLER.md` dosyasında.
   - **Durum dağılımı:** 51 iyi, 4 iyileştirilmeli, 4 denenmeli, 2 birleştirilmeli. Kaldırılması gereken özellik bulunmadı.
