@@ -242,7 +242,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.32 | Telefonda görüntü testi paneli (oyuncu bildirimi) | ✅ |
 | V2.33 | Uçuşta işlemci yükü (telefon raporu) | ✅ |
 | V2.34 | Uçuş başındaki takılmalar (telefon raporu) | ✅ |
-| V2.35 | Alçak uçuşta işlemci yükü (telefon raporu) | |
+| V2.35 | Alçak uçuşta işlemci yükü (telefon raporu) | ✅ |
 | V2.36 | Özellik envanteri | |
 | V2.37 | Ekran ve akış sadeleştirme | |
 | V2.38 | Oynanış ve metin tutarlılığı | |
