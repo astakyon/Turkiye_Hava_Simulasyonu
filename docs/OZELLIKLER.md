@@ -4,17 +4,17 @@
 
 **Durum:** ✅ iyi · 🔧 iyileştirilmeli · 🔀 birleştirilmeli · 🗑 kaldırılmalı · 🧪 denenmeli (gerçek cihazda doğrulanmalı)
 
-**Özet:** 61 özellik · ✅ iyi 51 · 🔧 iyileştirilmeli 4 · 🧪 denenmeli 4 · 🔀 birleştirilmeli 2 · testi olmayan: 0
+**Özet:** 61 özellik · ✅ iyi 51 · 🔧 iyileştirilmeli 5 · 🧪 denenmeli 3 · 🔀 birleştirilmeli 2 · testi olmayan: 0
 
 ## Karar listesi
 
 Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu gibi kalır.
 
 1. **Silahlar ve yük ekranı** (🔧 iyileştirilmeli) — Mühimmat hâlâ yer tutucu (Füze-1, GP-82…). KARAR (29 Ekim): gerçek Türk mühimmatı model serisiyle birlikte, her uçağın modeliyle aynı sürümde.
-2. **Görev editörü** (🧪 denenmeli) — Telefonda kullanımı hiç denenmedi; dokunmatikte zor olabilir.
-3. **Çevrimiçi oda** (🧪 denenmeli) — Testler başsız benzetimde geçiyor; gerçek iki cihazla en son ne zaman denendiği bilinmiyor.
-4. **Karma çok oyunculu ve üs ele geçirme** (🧪 denenmeli) — Gerçek cihazlarla denenmeli.
-5. **Sesli ve yazılı sohbet** (🧪 denenmeli) — Telefonda mikrofon izni ve ses kalitesi denenmeli.
+2. **Görev editörü** (🔧 iyileştirilmeli) — 29 Ekim denemesi (telefon boyutu, dokunarak): hedef ve düşman yerleştirme, Dene çalışıyor. Ama editör zor bulunuyor (Görevler → Özel → en alttaki "＋ Yeni görev oluştur") ve Dene / Kaydet düğmeleri sağ panelin altında, kaydırmadan görünmüyor. V2.37'de düzeltilecek.
+3. **Çevrimiçi oda** (🧪 denenmeli) — 29 Ekim denemesi: aynı bilgisayarda iki ayrı oyun sayfası (telefon boyutu) oda kurdu, katıldı, maç başladı, konumlar eşleşti (fark < 5 m), yazılı sohbet iki yönde çalıştı, hata yok. Bağlantı katmanı burada taklit edildi (PeerJS sunucusuna bu ortamdan erişilemiyor); internet üzerinden iki gerçek cihaz hâlâ denenmeli.
+4. **Karma çok oyunculu ve üs ele geçirme** (🧪 denenmeli) — Oda ve sohbet katmanı 29 Ekim'de iki sayfayla doğrulandı; karma mod ve üs ele geçirme iki gerçek cihazla denenmeli.
+5. **Sesli ve yazılı sohbet** (🧪 denenmeli) — Yazılı sohbet 29 Ekim'de doğrulandı. Sesli sohbet mikrofon ve gerçek bağlantı istiyor; yalnız iki gerçek cihazla denenebilir.
 6. **Görüntü sorunu testi** (🔀 birleştirilmeli) — KARAR (29 Ekim): Performans testi ve Grafik tanılama ile tek "Sorun giderme" ekranında birleşecek (V2.37).
 7. **Grafik tanılama** (🔀 birleştirilmeli) — KARAR (29 Ekim): "Sorun giderme" ekranına katılacak (V2.37).
 8. **Yükleme ekranı** (🔧 iyileştirilmeli) — KARAR (29 Ekim): dördü de yapılacak: ipucu kartları, oyun dilinde aşama adları, ikinci açılışın hızlanması, hafif yükleme sesi (V2.38).
@@ -75,7 +75,7 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 | **Dinamik görevler** | Her seferinde farklı, çok aşamalı görevler ve görev ortası olaylar; günlük ve haftalık görevler. | Görev panosu | — | V1.77 | dynamic, progress | ✅ iyi |
 | **Harekât: Kızıl Elma** | Sekiz bölümlük hikâyeli harekât; bölümler sırayla açılır, final madalya verir. | Kariyer → Harekât | — | V1.98 | campaign | ✅ iyi |
 | **Yarışlar** | Kapılı yarışlar, süre, hayalet ve sıralama tablosu. | Görev panosu → Yarışlar | — | V1.80 | races | ✅ iyi |
-| **Görev editörü** | Kendi görevini kur: aşamalar, tetikleyiciler, dene, kaydet ve paylaş. | Görev panosu → Editör | — | V1.81 | editor | 🧪 denenmeli |
+| **Görev editörü** | Kendi görevini kur: aşamalar, tetikleyiciler, dene, kaydet ve paylaş. | Görev panosu → Editör | — | V1.81 | editor | 🔧 iyileştirilmeli |
 | **Kara ve deniz görevleri** | Tank, araç ve gemi ile görevler. | Görev panosu | — | V1.99 | groundsea | ✅ iyi |
 
 ## Kariyer ve ilerleme
