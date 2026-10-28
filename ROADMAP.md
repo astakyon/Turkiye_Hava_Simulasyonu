@@ -240,7 +240,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.30 | Mühimmat yerleşimi ve zemine gömülme (oyuncu isteği) | ✅ |
 | V2.31 | Test ve yayın hattı | ✅ |
 | V2.32 | Telefonda görüntü testi paneli (oyuncu bildirimi) | ✅ |
-| V2.33 | Uçuşta işlemci yükü (telefon raporu) | |
+| V2.33 | Uçuşta işlemci yükü (telefon raporu) | ✅ |
 | V2.34 | Özellik envanteri | |
 | V2.35 | Ekran ve akış sadeleştirme | |
 | V2.36 | Oynanış ve metin tutarlılığı | |
