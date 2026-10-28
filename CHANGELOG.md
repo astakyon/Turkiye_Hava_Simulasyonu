@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.33 — 2026-10-28 · Uçuşta işlemci yükü
+- **Telefon raporu (V2.31, Samsung Xclipse 920, Ultra):** geçen rapora göre iyileşmeler:
+  - Açılış 12,3 saniyeden 7,4 saniyeye indi.
+  - Doku belleği 63 MB.
+  - Şehir, İHA üssü, deniz üssü ve orman sahneleri 60 FPS.
+  - Uçuştaki uzun takılmalar 11'den 0'a indi.
+
+  Ama uçuşta P90 hâlâ 30 FPS. Kareler arada bir 33 ms'ye kayıyor. Sebep ekran kartı değil işlemci: uçuşta kare başına 16 ms, alçak uçuşta 19 ms harcanıyor; 60 FPS için sınır 16,7 ms.
+- **Uçak gölgesi artık işlemciyi yormuyor:** V2.28'den beri yüksekte uçağın gölgesi her karede çiziliyor (titremeyi gidermek için). Ancak grafik motoru her gölge çiziminde sahnedeki 4 000 nesnenin hepsini tek tek kontrol ediyordu. Artık bu çizim sırasında yalnız uçak dolaşılıyor, diğer nesneler o an için devre dışı bırakılıp hemen geri açılıyor. Gölge aynı görünüyor.
+- **Dokunmatik kontroller daha hafif:** gaz çubuğu, FLARE sayısı, taksi düğmeleri ve silah paneli her karede yeniden yazılıyordu. Ayrıca çubuk ve düğmelerin konumu her karede okunuyordu; bu her seferinde tarayıcıya ekran yerleşimini baştan hesaplatıyordu. Artık yalnız değişen değer yazılıyor, konumlar saniyede iki kez (ve ekran döndüğünde) ölçülüyor.
+- Telefonda performans testini bir kez daha çalıştırırsan uçuştaki kazancı görürüz.
+- Yol haritası bir sürüm kaydı: Özellik envanteri V2.34, model serisi V2.38 ile başlıyor.
+
 ## V2.32 — 2026-10-28 · Telefonda görüntü testi paneli
 - **Görüntü sorunu testi telefonda tam görünüyor:** yatay telefonda panel ekranın altından taşıyordu. Başlık kesiliyor, "Hepsini aç" ve "Kapat" düğmeleri çerçevenin dışında kalıyordu.
   - Satırlar artık sıkışmıyor.

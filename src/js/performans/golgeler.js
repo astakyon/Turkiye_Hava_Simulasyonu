@@ -50,6 +50,17 @@ shadowFollow=HOOK.wrap('shadowFollow','performans/golgeler#_shFollow',function(_
   const want=shPlaneWanted(); if(want!==!!SHP.mode||(want&&SHP.grp!==planeGroup)) shPlaneSet(want);
   if(SHP.mode){ SHU.n++; SHU.upd=true; SHP.n++; const g=planeGroup; g.getWorldPosition(SHP.f); sunLight.target.position.copy(SHP.f); sunLight.position.copy(SHP.f).addScaledVector(SUN,1800); sunLight.target.updateMatrixWorld(); return; }
   SHU.upd=SETTINGS.shadowEvery===true||shNeed(); if(SHU.upd) _shFollow(); }; },shadowFollow);
+/* V2.33: in aircraft mode the shadow pass looks at the aircraft only. Phone report (V2.31, Xclipse 920): flight at 700 m ran at
+   16 ms of CPU per frame (P90 30 FPS, CPU-bound) — three.js r128 walks the whole scene for every shadow pass (4 000 objects,
+   2 000 at the top level: a visibility, layer and frustum test each), and since V2.28 that pass runs in every frame up high.
+   During the pass the other top-level objects are switched off for a moment (≈2 000 flag writes instead of 4 000 tests and
+   matrix checks) and switched back right after; nothing else draws in between. */
+const SHP_HID=[];
+(function(){ const sm=renderer.shadowMap, orig=sm.render; if(typeof orig!=='function') return;
+  sm.render=function(lights,scn,cam){ let g=null; try{ g=planeGroup; }catch(e){}
+    if(!SHP.mode||SETTINGS.shadowPlaneOnly===false||!g||g.parent!==scn) return orig.call(this,lights,scn,cam);
+    const C=scn.children; SHP_HID.length=0; for(let i=0;i<C.length;i++){ const o=C[i]; if(o!==g&&o.visible&&!o.isLight){ o.visible=false; SHP_HID.push(o); } }
+    try{ return orig.call(this,lights,scn,cam); } finally { for(let i=0;i<SHP_HID.length;i++) SHP_HID[i].visible=true; SHP.only=SHP_HID.length; SHP_HID.length=0; } }; })();
 /* the map size changes with the quality level: re-fit the aircraft box to it */
 applyShadows=HOOK.wrap('applyShadows','performans/golgeler#_shpApply',function(_shpApply){ return function(){ _shpApply(); if(SHP.mode) shPlaneSet(true); }; },applyShadows);
 renderFrame=HOOK.wrap('renderFrame','performans/golgeler#_shRF',function(_shRF){ return function(dt){ if(renderer.shadowMap.enabled){ renderer.shadowMap.autoUpdate=false; if(SHU.upd){ renderer.shadowMap.needsUpdate=true; SHU.drawn++; } else SHU.skipped++; } _shRF(dt); }; },renderFrame);

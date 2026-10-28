@@ -37,27 +37,30 @@ window.addEventListener('pointerdown',function(e){ if(e.pointerType==='touch') T
   tap('tPause',function(){ pauseGame(); }); tap('tMap',function(){ openMap(); }); tap('tAuto',function(){ toggleAutoTaxi(); }); tap('tSkip',function(){ skipTaxi(); });
   ['touch'].forEach(function(id){ $(id).addEventListener('contextmenu',function(e){ e.preventDefault(); }); });
 })();
+const TUI={lay:0};   /* last values written to the touch controls (V2.33) */
 function updateTouchUI(){
   const vis=touchWanted() && state==='play' && !S.crashed;
   if(vis!==TOUCH.vis){ TOUCH.vis=vis; document.body.classList.toggle('touch-on',vis); $('touch').classList.toggle('hidden',!vis); }
   $('rotate').classList.toggle('hidden',!(touchWanted() && state==='play' && window.innerHeight>window.innerWidth));
-  if(!vis){ WPANEL=null; if(TOUCH.pitch||TOUCH.roll||TOUCH.yaw||TOUCH.fire||TOUCH.ab||TOUCH.brake){ TOUCH.pitch=TOUCH.roll=TOUCH.yaw=TOUCH.sx=TOUCH.sy=0; TOUCH.yawL=TOUCH.yawR=TOUCH.fire=TOUCH.ab=TOUCH.brake=false; } return; }
-  $('tKnob').style.transform='translate('+(TOUCH.sx*60)+'%,'+(TOUCH.sy*60)+'%)';
-  const th=S.ab?1:S.throttle; $('tThrFill').style.height=Math.round(th*100)+'%'; $('tThr').classList.toggle('ab',!!S.ab);
-  $('tThrLbl').innerHTML='GAZ<br>'+Math.round(S.throttle*100)+'%';
+  if(!vis){ TUI.lay=0; TUI.kn=TUI.th=TUI.tp=TUI.tk=TUI.fl=TUI.air=TUI.wk=TUI.ab=undefined; WPANEL=null; if(TOUCH.pitch||TOUCH.roll||TOUCH.yaw||TOUCH.fire||TOUCH.ab||TOUCH.brake){ TOUCH.pitch=TOUCH.roll=TOUCH.yaw=TOUCH.sx=TOUCH.sy=0; TOUCH.yawL=TOUCH.yawR=TOUCH.fire=TOUCH.ab=TOUCH.brake=false; } return; }
+  /* V2.33: only what changed is written (every write here made the browser redo style and layout of the controls in every frame) */
+  const kn='translate('+(TOUCH.sx*60).toFixed(1)+'%,'+(TOUCH.sy*60).toFixed(1)+'%)'; if(TUI.kn!==kn){ TUI.kn=kn; $('tKnob').style.transform=kn; }
+  const th=S.ab?1:S.throttle, thp=Math.round(th*100), tp=Math.round(S.throttle*100); if(TUI.th!==thp){ TUI.th=thp; $('tThrFill').style.height=thp+'%'; } if(TUI.ab!==!!S.ab){ TUI.ab=!!S.ab; $('tThr').classList.toggle('ab',TUI.ab); }
+  if(TUI.tp!==tp){ TUI.tp=tp; $('tThrLbl').innerHTML='GAZ<br>'+tp+'%'; }
   const taxiing=S.onGround&&S.taxi&&!S.clearance;
-  $('tAuto').classList.toggle('hidden',!taxiing); $('tSkip').classList.toggle('hidden',!taxiing);
-  $('tAuto').textContent=S.auto?'OTO TAKSİ: AÇIK':'OTO TAKSİ';
-  $('tThr').classList.toggle('noab',!CUR.hasAB); if(!CUR.hasAB) TOUCH.ab=false;
+  const tk=(taxiing?1:0)+(S.auto?2:0)+(CUR.hasAB?4:0); if(TUI.tk!==tk){ TUI.tk=tk; $('tAuto').classList.toggle('hidden',!taxiing); $('tSkip').classList.toggle('hidden',!taxiing);
+    $('tAuto').textContent=S.auto?'OTO TAKSİ: AÇIK':'OTO TAKSİ'; $('tThr').classList.toggle('noab',!CUR.hasAB); } if(!CUR.hasAB) TOUCH.ab=false;
   if(TOUCH.arm!=='gun'&&!(INV[TOUCH.arm]>0)) TOUCH.arm=(INV[selW]>0&&TOUCH.arm!==selW)?selW:'gun';
   else if(TOUCH.arm!=='gun'&&TOUCH.arm!==selW&&INV[selW]>0) TOUCH.arm=selW;
   const armLbl=TOUCH.arm==='gun'?(CUR.weapon==='TOP'?'TOP':'MÜHİMMAT'):(WEAPONS[TOUCH.arm].short+' · '+INV[TOUCH.arm]);
   if($('tFire').dataset.l!==armLbl){ $('tFire').dataset.l=armLbl; $('tFire').innerHTML='ATEŞ<small>'+armLbl+'</small>'; $('tFire').classList.toggle('wpn',TOUCH.arm!=='gun'); }
-  $('tFlare').innerHTML='FLARE<br>'+flaresLeft; $('tFlare').classList.toggle('off',flaresLeft<=0);
-  const air=!S.onGround; $('tBrake').classList.toggle('hidden',air);
+  if(TUI.fl!==flaresLeft){ TUI.fl=flaresLeft; $('tFlare').innerHTML='FLARE<br>'+flaresLeft; $('tFlare').classList.toggle('off',flaresLeft<=0); }
+  const air=!S.onGround; if(TUI.air!==air){ TUI.air=air; $('tBrake').classList.toggle('hidden',air); }
   /* V2.28: landing gear button next to FLARE, always visible, showing the gear's state (it was a "TAKIM" pill at the end of the top bar, only in the air) */
   const gb=$('tGearB'), gk=(S.gear?'d':'u')+(air?'a':'g'); if(gb&&gb.dataset.k!==gk){ gb.dataset.k=gk; gb.innerHTML='<b>'+(S.gear?'▼':'▲')+'</b>TEKER<br>'+(S.gear?'AÇIK':'KAPALI'); gb.classList.toggle('down',S.gear); gb.classList.toggle('up',!S.gear); gb.classList.toggle('lock',!air&&S.gear); gb.setAttribute('aria-label','İniş takımı '+(S.gear?'açık — kaldır':'kapalı — indir')); }
-  const sr=$('tStick').getBoundingClientRect(), rr=$('tRight').getBoundingClientRect(); TLAY.L=sr.right+10; TLAY.R=rr.left-10; TLAY.ok=TLAY.R>TLAY.L;
-  const wpn=$('tWpn'); if(WPANEL){ wpn.style.left=WPANEL.x+'px'; wpn.style.top=(WPANEL.y-8)+'px'; wpn.style.width=WPANEL.w+'px'; wpn.style.height=(WPANEL.h+12)+'px'; wpn.style.display=''; } else wpn.style.display='none';
+  /* reading element positions forces a layout: measured twice a second (and at once after a resize), not in every frame */
+  if(--TUI.lay<=0||TUI.w!==window.innerWidth||TUI.h!==window.innerHeight){ TUI.lay=30; TUI.w=window.innerWidth; TUI.h=window.innerHeight;
+    const sr=$('tStick').getBoundingClientRect(), rr=$('tRight').getBoundingClientRect(); TLAY.L=sr.right+10; TLAY.R=rr.left-10; TLAY.ok=TLAY.R>TLAY.L; }
+  const wk=WPANEL?(WPANEL.x+','+WPANEL.y+','+WPANEL.w+','+WPANEL.h):'-'; if(TUI.wk!==wk){ TUI.wk=wk; const wpn=$('tWpn'); if(WPANEL){ wpn.style.left=WPANEL.x+'px'; wpn.style.top=(WPANEL.y-8)+'px'; wpn.style.width=WPANEL.w+'px'; wpn.style.height=(WPANEL.h+12)+'px'; wpn.style.display=''; } else wpn.style.display='none'; }
 }
 
