@@ -1,6 +1,19 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.36 — 2026-10-28 · Özellik envanteri ve Rehber
+- **Özellik envanteri:** oyundaki 61 özelliğin her biri için tek bir kart var. Her kartta özelliğin ne yaptığı, nereden açıldığı, tuşu, hangi sürümde geldiği, hangi testlerin onu denetlediği ve durumu yazıyor. Liste `docs/OZELLIKLER.md` dosyasında.
+  - **Durum dağılımı:** 51 iyi, 4 iyileştirilmeli, 4 denenmeli, 2 birleştirilmeli. Kaldırılması gereken özellik bulunmadı.
+  - **Test kapsamı:** testi olmayan özellik kalmadı.
+- **Karar listesi (10 madde):** listenin başında senin kararını bekleyen maddeler var:
+  - mühimmatın gerçek Türk envanteriyle değiştirilmesi;
+  - Görüntü sorunu testi, Grafik tanılama ve Performans testinin tek bir "Sorun giderme" ekranında birleşmesi;
+  - çok oyunculu, sesli sohbet ve görev editörünün gerçek cihazlarda denenmesi;
+  - yükleme ekranı önerileri;
+  - Play Store yayını;
+  - model serisi.
+- **Oyunda Rehber (yeni):** ana menüde **Rehber** düğmesi var. Bütün özellikler kategorilere ayrılmış, aranabilir bir ekranda: ne yapar, nereden açılır, hangi tuş. Rehber envanterle aynı listeden üretiliyor, böylece ikisi her zaman aynı kalıyor. Yönetici araçları rehberde görünmüyor.
+
 ## V2.35 — 2026-10-28 · Alçak uçuşta işlemci yükü
 - **Raporun iyi haberi (V2.33, doku işi bitmişken):**
   - Yüksek uçuş artık tam 60 FPS: P90 59,9, takılma 0.

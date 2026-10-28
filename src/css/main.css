@@ -1095,3 +1095,15 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
 #settings .sreset:hover,#settings .sreset:focus-visible{ background:rgba(227,10,23,.25); border-color:#ff6b6b; color:#fff; }
 #settings .sreset.hidden{ display:none; }
 #settings.searching #ctlUI>div[id^="ctlP_"]{ display:block!important; } #settings.searching #ctlUI .ctabs{ display:none; }
+
+/* V2.36 guide */
+.rehcard .inp{ margin:0 0 8px; width:100%; }
+.rhk{ display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:4px; -webkit-overflow-scrolling:touch; }
+.rhk button{ flex:0 0 auto; padding:6px 10px; border-radius:16px; border:1px solid rgba(184,236,255,.3); background:rgba(255,255,255,.04); color:#fff; font:600 12px "Chakra Petch",system-ui,sans-serif; cursor:pointer; }
+.rhk button[aria-pressed="true"]{ background:rgba(184,236,255,.5); color:#06121f; }
+.rehbody h3{ margin:12px 0 6px; font-size:15px; color:#ffd166; }
+.rhc{ padding:8px 10px; margin:0 0 6px; border-radius:10px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
+.rhc b{ font-size:14px; } .rhc p{ margin:3px 0 4px; font-size:13px; line-height:1.4; }
+.rhc small{ display:flex; flex-wrap:wrap; gap:4px 12px; color:var(--muted,#8fa3bf); font-size:11.5px; } .rhn{ color:var(--muted,#8fa3bf); }
+.rehcard > *{ flex-shrink:0; } .rehcard .rehbody{ flex:1 1 auto; min-height:0; }
+@media (max-height:520px){ .rehcard h2{ margin-bottom:6px; font-size:22px; } .rehcard .inp{ padding:6px 10px; margin-bottom:6px; } .rhk button{ padding:4px 9px; } .rhc{ padding:6px 9px; } }

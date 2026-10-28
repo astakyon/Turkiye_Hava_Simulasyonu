@@ -121,6 +121,8 @@ modeller/model-kaydi-api.js
 performans/optimizasyon-2.js
 ekran/surum-notlari.js
 veri/surum-notlari-veri.js
+veri/rehber-veri.js
+ekran/rehber.js
 performans/performans-testi.js
 performans/efekt-kalitesi.js
 performans/model-pisirme.js
