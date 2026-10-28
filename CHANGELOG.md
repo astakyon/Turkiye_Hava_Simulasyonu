@@ -1,6 +1,18 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.38 — 2026-10-28 · Yükleme ekranı 3.0
+- **İpucu kartları:** yükleme çubuğunun altında 3,5 saniyede bir değişen kartlar var. 26 kart üç türde:
+  - oyun ipuçları (taksiyi atlama, flare, Hızlı Savaş, Rehber, araç çağırma…);
+  - kontrol hatırlatmaları;
+  - uçak tanıtımları (KAAN, Kızılelma, Akıncı, TB2, Hürjet, ANKA-3, Aksungur).
+
+  Her açılış rastgele bir karttan başlıyor.
+- **Oyun dilinde aşama adları:** "Havalimanı kuruluyor" gibi teknik adların yerini "Pistler hazırlanıyor", "Filo limana yanaşıyor", "Motorlar ısınıyor", "Gökyüzü boyanıyor", "Kule ile bağlantı kuruluyor" gibi adlar aldı (21 aşama).
+- **Hafif yükleme sesi:** yükleme sırasında ekrana ilk dokunuşta ya da ilk tuşta hafif bir rüzgâr ve uzaktan devri yükselen bir jet motoru sesi başlıyor. Menü açılınca kısılarak kayboluyor. Kayıtlı ses seviyen 0 ise çalmıyor. (Tarayıcılar ilk dokunuştan önce ses çalmaya izin vermiyor.)
+- **Menü daha erken açılıyor:** her şey hazır olduktan sonra menü için 6 akıcı kare ya da en çok 2,5 saniye bekleniyordu. Artık 4 kare ya da en çok 1,2 saniye. Telefon raporunda bu bekleme 1,2 saniyeydi.
+- **İkinci açılış:** Chrome derlenmiş shader'ları kendisi saklar. Bu yüzden ikinci açılışta ilk karenin (telefonda 1,6 saniye) kısalması bekleniyor. Bir sonraki telefon raporunda ölçeceğiz.
+
 ## V2.37 — 2026-10-28 · Ekran ve akış sadeleştirme
 - **Tek Sorun giderme ekranı (senin kararın):** Ayarlar → Grafik'in ilk satırı artık **Sorun giderme**. İçinde üç sekme var:
   - **Performans testi:** oyun yavaşsa.

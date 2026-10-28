@@ -1120,3 +1120,8 @@ canvas.fpsgraph{ position:static; inset:auto; display:inline-block; vertical-ali
   #missionsUI.mis2:not(.hidden){ grid-template-columns:minmax(0,1fr); } #missionsUI.mis2 .misdet{ width:auto; max-width:100%; min-width:0; } #missionsUI .shdr{ display:none; }
   #hangarUI .grptabs{ top:calc(max(12px,env(safe-area-inset-top)) + 46px); } #hangarUI .clsrow{ top:calc(max(12px,env(safe-area-inset-top)) + 96px); right:max(14px,env(safe-area-inset-right)); overflow-x:auto; }
   #hangarUI .clsrow .seg{ flex-wrap:nowrap; } }
+
+/* V2.38 loading tips */
+#boot .boottip{ margin:18px auto 0; max-width:min(420px,88vw); min-height:3.2em; font-size:13px; line-height:1.45; color:#c7cfda; opacity:0; transform:translateY(4px); transition:opacity .45s, transform .45s; }
+#boot .boottip.in{ opacity:1; transform:none; } #boot .boottip b{ display:block; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#ff8a8a; margin-bottom:2px; }
+@media (max-height:420px){ #boot .bootay{ width:84px; height:84px; margin-bottom:8px; } #boot small{ margin-bottom:12px; } #boot .boottip{ margin-top:10px; font-size:12px; } }

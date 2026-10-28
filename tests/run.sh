@@ -100,3 +100,4 @@ node harness.js /tmp/sim.js v230.test.js
 node harness.js /tmp/sim.js v234.test.js
 node harness.js /tmp/sim.js v236.test.js
 node harness.js /tmp/sim.js v237.test.js
+node harness.js /tmp/sim.js v238.test.js

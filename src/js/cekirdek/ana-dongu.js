@@ -1,12 +1,13 @@
 /* ------------------------------------------------------------------ loop */
 bootMark('modüller');
 loadStore(); $('verTag').textContent=GAME_VERSION; invertY=SETTINGS.invert;
-const BOOT_STEPS=[['Havalimanı kuruluyor',buildAirport,6],['Deniz üssü kuruluyor',buildNaval,9],['Kara üssü kuruluyor',buildLand,6],['Kasaba kuruluyor',buildTown,5],['Marina kuruluyor',buildMarina,9],
-  ['Güney kıyısı kuruluyor',buildSouth,4],['İHA üssü kuruluyor',buildUAV,2],['Hedefler kuruluyor',function(){ buildEnemy(); buildLandmarks(); },2],['Çevre kuruluyor',buildSurroundings,6],
-  ['Köyler ve askerî alanlar',function(){ buildRural(); buildMilitary(); },2],['Trafik ve helikopterler',function(){ buildTraffic(); buildHelis(); todBuild(); },3],
-  ['Kontroller hazırlanıyor',function(){ ctlBindUI(); applyTouchOpt(); renderCtlHelp(); },1],['Hangar kuruluyor',buildHangar,5],['Apron ve servis',function(){ buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); },3],
-  ['Uçak hazırlanıyor',function(){ setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); },3],['Menü hazırlanıyor',function(){ buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); },3],
-  ['Modeller ve hesap',function(){ modelsInit(); BOOT.acc=accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); }); },1]];
+/* V2.38: stage names in the game's own words (the perf report keeps them as they are) */
+const BOOT_STEPS=[['Pistler hazırlanıyor',buildAirport,6],['Filo limana yanaşıyor',buildNaval,9],['Bozkurtlar mevziye giriyor',buildLand,6],['Hilalkent uyanıyor',buildTown,5],['Tekneler iskeleye bağlanıyor',buildMarina,9],
+  ['Güney kıyısı keşfediliyor',buildSouth,4],['İHA\'lar kontrolden geçiyor',buildUAV,2],['Hedefler işaretleniyor',function(){ buildEnemy(); buildLandmarks(); },2],['Üs çevresi devriyede',buildSurroundings,6],
+  ['Köyler ve mevziler yerleşiyor',function(){ buildRural(); buildMilitary(); },2],['Trafik akıyor, rotorlar dönüyor',function(){ buildTraffic(); buildHelis(); todBuild(); },3],
+  ['Kumandalar ayarlanıyor',function(){ ctlBindUI(); applyTouchOpt(); renderCtlHelp(); },1],['Hangar kapıları açılıyor',buildHangar,5],['Yer ekibi aprona çıkıyor',function(){ buildTaxiway(); buildService(); buildBaseDefense(); chunkInstances(); },3],
+  ['Motorlar ısınıyor',function(){ setAircraft(selectedId); resetFlight('runway'); updateRingVisuals(); },3],['Brifing odası hazırlanıyor',function(){ buildPicker(); buildMissionUI(); enterTitle(); applyQuality(); syncSettingsUI(); },3],
+  ['Pilot kartı kontrol ediliyor',function(){ modelsInit(); BOOT.acc=accInit().then(function(){ if(ACC.cfg&&!ACC.user&&!SETTINGS.accPrompted&&state==='menu') setTimeout(function(){ if(state==='menu'&&!anyModalOpen()) loginOpen(); },1200); }); },1]];
 try{ if('serviceWorker' in navigator && location.protocol==='https:' && /github\.io$/.test(location.hostname)) navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
 let lastT=performance.now();
 function frame(now){
@@ -28,10 +29,10 @@ function frame(now){
 }
 /* finishing under the loading screen (V2.20); the same jobs also have their own timers, which then find them done.
    V2.26: texture sharing left this list — on a phone it took 7.3 s here; it now runs in the background (doku-bellegi). */
-const BOOT_POST=[['Nesneler birleştiriliyor',function(){ if(SETTINGS.merge!==false) mrgRun(); },4],
-  ['Modeller birleştiriliyor',function(){ if(SETTINGS.bake!==false&&!BK.started){ BK.started=true; bkScan(); } },3],
-  ['Grafikler hazırlanıyor',function(){ if(!WARM.started){ WARM.started=true; warmStart(); } warmStep(BOOT.hold?40:1e9); return !WARM.done&&SETTINGS.warm!==false; },5],
-  ['Hesap kontrol ediliyor',function(){ return BOOT.acc; },1]];
+const BOOT_POST=[['Şehirler toparlanıyor',function(){ if(SETTINGS.merge!==false) mrgRun(); },4],
+  ['Uçaklar cilalanıyor',function(){ if(SETTINGS.bake!==false&&!BK.started){ BK.started=true; bkScan(); } },3],
+  ['Gökyüzü boyanıyor',function(){ if(!WARM.started){ WARM.started=true; warmStart(); } warmStep(BOOT.hold?40:1e9); return !WARM.done&&SETTINGS.warm!==false; },5],
+  ['Kule ile bağlantı kuruluyor',function(){ return BOOT.acc; },1]];
 bootRun(BOOT_STEPS,function(){ bootMark('dünya hazır'); lastT=performance.now();
   requestAnimationFrame(function(t){ const a=performance.now(); frame(t); BOOT.first=Math.round(performance.now()-a); bootMark('ilk kare'); });   /* the first frame compiles the visible shaders */
   bootPost(BOOT_POST,function(){ bootMark('hazırlık bitti'); bootShow('Hazır');

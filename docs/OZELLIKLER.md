@@ -4,7 +4,7 @@
 
 **Durum:** ✅ iyi · 🔧 iyileştirilmeli · 🔀 birleştirilmeli · 🗑 kaldırılmalı · 🧪 denenmeli (gerçek cihazda doğrulanmalı)
 
-**Özet:** 61 özellik · ✅ iyi 54 · 🔧 iyileştirilmeli 4 · 🧪 denenmeli 3 · testi olmayan: 0
+**Özet:** 61 özellik · ✅ iyi 55 · 🔧 iyileştirilmeli 3 · 🧪 denenmeli 3 · testi olmayan: 0
 
 ## Karar listesi
 
@@ -14,9 +14,8 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 2. **Çevrimiçi oda** (🧪 denenmeli) — 29 Ekim denemesi: aynı bilgisayarda iki ayrı oyun sayfası (telefon boyutu) oda kurdu, katıldı, maç başladı, konumlar eşleşti (fark < 5 m), yazılı sohbet iki yönde çalıştı, hata yok. Bağlantı katmanı burada taklit edildi (PeerJS sunucusuna bu ortamdan erişilemiyor); internet üzerinden iki gerçek cihaz hâlâ denenmeli.
 3. **Karma çok oyunculu ve üs ele geçirme** (🧪 denenmeli) — Oda ve sohbet katmanı 29 Ekim'de iki sayfayla doğrulandı; karma mod ve üs ele geçirme iki gerçek cihazla denenmeli.
 4. **Sesli ve yazılı sohbet** (🧪 denenmeli) — Yazılı sohbet 29 Ekim'de doğrulandı. Sesli sohbet mikrofon ve gerçek bağlantı istiyor; yalnız iki gerçek cihazla denenebilir.
-5. **Yükleme ekranı** (🔧 iyileştirilmeli) — KARAR (29 Ekim): dördü de yapılacak: ipucu kartları, oyun dilinde aşama adları, ikinci açılışın hızlanması, hafif yükleme sesi (V2.38).
-6. **Uygulama olarak yükleme** (🔧 iyileştirilmeli) — KARAR (29 Ekim): Play Store yayını model serisinden sonra (docs/ANDROID.md).
-7. **Uçak, helikopter, araç ve gemi modelleri** (🔧 iyileştirilmeli) — Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. KARAR: model serisi V2.41'den itibaren, her model onaya sunulur.
+5. **Uygulama olarak yükleme** (🔧 iyileştirilmeli) — KARAR (29 Ekim): Play Store yayını model serisinden sonra (docs/ANDROID.md).
+6. **Uçak, helikopter, araç ve gemi modelleri** (🔧 iyileştirilmeli) — Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. KARAR: model serisi V2.41'den itibaren, her model onaya sunulur.
 
 ## Uçuş
 
@@ -123,7 +122,7 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 | **Performans testi** | 2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor. | Ayarlar → Grafik → Sorun giderme → Performans testi | — | V2.12 | perftest, v234 | ✅ iyi |
 | **Görüntü sorunu testi** | Katmanları tek tek kapatıp görüntü hatasının kaynağını bulma. | Ayarlar → Grafik → Sorun giderme → Görüntü testi | — | V1.97 | gfxtest, v237 | ✅ iyi |
 | **Grafik tanılama** | Cihaz bilgisi, derinlik, efekt durumu gibi tanılama satırları. | Ayarlar → Grafik → Sorun giderme → Tanılama | — | V1.59 | gfxtest, v237 | ✅ iyi |
-| **Yükleme ekranı** | Dönen 3B ay yıldız, uçak biçimli ilerleme çubuğu, aşamalı açılış. | Açılışta | — | V2.20 | boot | 🔧 iyileştirilmeli |
+| **Yükleme ekranı** | Dönen 3B ay yıldız, uçak biçimli ilerleme çubuğu, ipucu kartları, oyun dilinde aşama adları, hafif yükleme sesi. | Açılışta | — | V2.20 | boot, v238 | ✅ iyi |
 
 ## Hesap ve kayıt
 
