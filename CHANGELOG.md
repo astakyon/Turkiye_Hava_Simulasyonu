@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.35 — 2026-10-28 · Alçak uçuşta işlemci yükü
+- **Raporun iyi haberi (V2.33, doku işi bitmişken):**
+  - Yüksek uçuş artık tam 60 FPS: P90 59,9, takılma 0.
+  - Bütün testte tek bir uzun takılma yok.
+  - Şehir, İHA üssü, deniz üssü ve orman sahneleri 60 FPS.
+  - Açılış 7,5 saniye.
+- **Alçak uçuş ve kalabalık savaş için:** bu iki sahne hâlâ P90'da 30 FPS'te kalıyordu; işlemci kare başına 16–17 ms harcıyordu. Alçakta gölge haritası her karede çiziliyor ve her çizimde sahnedeki 4 000 nesnenin hepsi tek tek kontrol ediliyordu. Gölge kutusu ise yalnızca 150 m. Artık her nesnenin kapladığı alan bir kez ölçülüyor. Gölge çizimi sırasında, güneşten bakınca kutunun 20 m'den daha dışında kalan nesneler o an için atlanıyor. Şehirde yaklaşık 2 000 ana nesnenin 600'ü artık gölge çizimine hiç girmiyor. Gölgeler aynı görünüyor; ekran görüntüleriyle karşılaştırıldı.
+- Yol haritası bir sürüm kaydı: Özellik envanteri V2.36, model serisi V2.40 ile başlıyor.
+
 ## V2.34 — 2026-10-28 · Uçuş başındaki takılmalar
 - **Uçuşun ilk saniyelerindeki takılmalar giderildi:** V2.33 raporunda uçuşun ilk 60 karesinin her biri 50–67 ms sürdü. Sonrası çoğunlukla düzgün 60 FPS'ti. Sebep, açılıştan sonra arka planda çalışan doku işiydi. Bu iş aynı dokuları paylaştırıyor ve büyük dokuları yarıya küçültüyor; tek bir küçültme 300 ms'ye kadar sürebiliyor ve uçarken her karede bir doku küçültülüyordu. Artık bu iş uçarken, sürerken ve yürürken bekliyor. Yalnızca menüde, duraklatma ekranında ve haritada çalışıyor, orada da her 4 karede bir. Performans testi başlamadan önce bu iş tamamlanıyor, böylece ölçüme karışmıyor.
 - **V2.33'ün etkisi (aynı rapordan):**

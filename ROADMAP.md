@@ -242,10 +242,11 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.32 | Telefonda görüntü testi paneli (oyuncu bildirimi) | ✅ |
 | V2.33 | Uçuşta işlemci yükü (telefon raporu) | ✅ |
 | V2.34 | Uçuş başındaki takılmalar (telefon raporu) | ✅ |
-| V2.35 | Özellik envanteri | |
-| V2.36 | Ekran ve akış sadeleştirme | |
-| V2.37 | Oynanış ve metin tutarlılığı | |
-| V2.38 | Belgeler ve sürüm geçmişi | |
+| V2.35 | Alçak uçuşta işlemci yükü (telefon raporu) | |
+| V2.36 | Özellik envanteri | |
+| V2.37 | Ekran ve akış sadeleştirme | |
+| V2.38 | Oynanış ve metin tutarlılığı | |
+| V2.39 | Belgeler ve sürüm geçmişi | |
 
 ### Faz 16 — Model yenileme serisi (her model onaya sunulur; düzen yol haritasından sonra)
 
@@ -253,15 +254,15 @@ Her model Defence Turk sayfasındaki fotoğraflara bakılarak ve gerçek ölçü
 
 | Sürüm | Model | Durum |
 |---|---|---|
-| V2.39 | TUSAŞ KAAN | |
-| V2.40 | Bayraktar TB2 | |
-| V2.41 | Bayraktar TB3 | |
-| V2.42 | Bayraktar Akıncı | |
-| V2.43 | Baykar Kızılelma | |
-| V2.44 | TUSAŞ ANKA ve ANKA-3 | |
-| V2.45 | TUSAŞ Aksungur | |
-| V2.46 | TUSAŞ Hürjet ve Hürkuş | |
-| V2.47 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
+| V2.40 | TUSAŞ KAAN | |
+| V2.41 | Bayraktar TB2 | |
+| V2.42 | Bayraktar TB3 | |
+| V2.43 | Bayraktar Akıncı | |
+| V2.44 | Baykar Kızılelma | |
+| V2.45 | TUSAŞ ANKA ve ANKA-3 | |
+| V2.46 | TUSAŞ Aksungur | |
+| V2.47 | TUSAŞ Hürjet ve Hürkuş | |
+| V2.48 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
 
 ## Sonraki öneriler (sırası sonra belirlenecek)
 

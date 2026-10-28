@@ -58,9 +58,24 @@ shadowFollow=HOOK.wrap('shadowFollow','performans/golgeler#_shFollow',function(_
 const SHP_HID=[];
 (function(){ const sm=renderer.shadowMap, orig=sm.render; if(typeof orig!=='function') return;
   sm.render=function(lights,scn,cam){ let g=null; try{ g=planeGroup; }catch(e){}
-    if(!SHP.mode||SETTINGS.shadowPlaneOnly===false||!g||g.parent!==scn) return orig.call(this,lights,scn,cam);
+    if(!SHP.mode||SETTINGS.shadowPlaneOnly===false||!g||g.parent!==scn){ if(SETTINGS.shadowBoxCull===false||scn!==scene) return orig.call(this,lights,scn,cam); return shBoxPass(orig,this,lights,scn,cam); }
     const C=scn.children; SHP_HID.length=0; for(let i=0;i<C.length;i++){ const o=C[i]; if(o!==g&&o.visible&&!o.isLight){ o.visible=false; SHP_HID.push(o); } }
     try{ return orig.call(this,lights,scn,cam); } finally { for(let i=0;i<SHP_HID.length;i++) SHP_HID[i].visible=true; SHP.only=SHP_HID.length; SHP_HID.length=0; } }; })();
+/* V2.35: the same idea for the normal 150 m shadow box (on foot, driving, flying low). Phone report (V2.33): low flight over the
+   city stayed at P90 30 FPS, CPU-bound (17 ms per frame) — the map is redrawn every frame there and every pass walked all
+   4 000 objects. Each top-level object gets a bounding sphere once (40 per frame, refreshed every ~20 s, moved along with the
+   object); during the pass, objects whose sphere lies outside the shadow box (seen from the sun, with a 20 m margin) are
+   switched off for that moment. Instanced forests, the terrain, sea and sky are never switched off. */
+const SHB={i:0, f:0, hid:[], n:0, box:new THREE.Box3(), sph:new THREE.Sphere(), v:new THREE.Vector3()};
+function shBoxSphere(o){ let d=o.userData._shs; if(d&&SHB.f-d.at<1200) return d; if(SHB.left<=0) return d||null; SHB.left--;
+  if(o.isInstancedMesh||o.isSprite||o.isPoints||o.frustumCulled===false||o.userData.terrainTile){ d={skip:true, at:SHB.f}; o.userData._shs=d; return d; }
+  try{ SHB.box.setFromObject(o); if(SHB.box.isEmpty()){ d={skip:true, at:SHB.f}; } else { SHB.box.getBoundingSphere(SHB.sph); d={c:SHB.sph.center.clone(), r:SHB.sph.radius, p:o.position.clone(), at:SHB.f, skip:SHB.sph.radius>3000}; } }catch(e){ d={skip:true, at:SHB.f}; }
+  o.userData._shs=d; return d; }
+function shBoxPass(orig,self,lights,scn,cam){ SHB.f++; SHB.left=40; const C=scn.children, c=sunLight.shadow.camera, half=(c.right-c.left)/2+20, T=sunLight.target.position, H=SHB.hid; H.length=0;
+  const tr=T.dot(shR), tu=T.dot(shU);
+  for(let i=0;i<C.length;i++){ const o=C[i]; if(!o.visible||o.isLight) continue; const d=shBoxSphere(o); if(!d||d.skip) continue;
+    const v=SHB.v.copy(d.c).add(o.position).sub(d.p), m=half+d.r; if(Math.abs(v.dot(shR)-tr)>m||Math.abs(v.dot(shU)-tu)>m){ o.visible=false; H.push(o); } }
+  try{ return orig.call(self,lights,scn,cam); } finally { for(let i=0;i<H.length;i++) H[i].visible=true; SHB.n=H.length; H.length=0; } }
 /* the map size changes with the quality level: re-fit the aircraft box to it */
 applyShadows=HOOK.wrap('applyShadows','performans/golgeler#_shpApply',function(_shpApply){ return function(){ _shpApply(); if(SHP.mode) shPlaneSet(true); }; },applyShadows);
 renderFrame=HOOK.wrap('renderFrame','performans/golgeler#_shRF',function(_shRF){ return function(dt){ if(renderer.shadowMap.enabled){ renderer.shadowMap.autoUpdate=false; if(SHU.upd){ renderer.shadowMap.needsUpdate=true; SHU.drawn++; } else SHU.skipped++; } _shRF(dt); }; },renderFrame);
