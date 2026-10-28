@@ -241,7 +241,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.31 | Test ve yayın hattı | ✅ |
 | V2.32 | Telefonda görüntü testi paneli (oyuncu bildirimi) | ✅ |
 | V2.33 | Uçuşta işlemci yükü (telefon raporu) | ✅ |
-| V2.34 | Uçuş başındaki takılmalar (telefon raporu) | |
+| V2.34 | Uçuş başındaki takılmalar (telefon raporu) | ✅ |
 | V2.35 | Özellik envanteri | |
 | V2.36 | Ekran ve akış sadeleştirme | |
 | V2.37 | Oynanış ve metin tutarlılığı | |

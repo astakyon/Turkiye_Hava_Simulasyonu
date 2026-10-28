@@ -1,6 +1,6 @@
 # Ay Yıldız: Hedef Kızıl Elma — Düzen yol haritası V2.12 → V2.38
 
-Son güncelleme: 14 Ekim 2026 (ilk gerçek cihaz ölçümüyle sıra güncellendi) · Yayındaki sürüm: V2.33
+Son güncelleme: 14 Ekim 2026 (ilk gerçek cihaz ölçümüyle sıra güncellendi) · Yayındaki sürüm: V2.34
 
 Model yenileme serisi bu yol haritası bitene kadar bekliyor. Sıra: **önce ölçüm**, sonra **optimizasyon**, sonra **grafik ayarları**, sonra **teknik borç**, en son **genel gözden geçirme**.
 
