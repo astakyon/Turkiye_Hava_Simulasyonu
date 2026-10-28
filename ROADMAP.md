@@ -239,7 +239,7 @@ Ayrıntılar, bugünkü ölçümler, hedef bütçeler ve başarı ölçütleri: 
 | V2.29 | Ana menü: Hızlı oyun ve Kariyer (oyuncu isteği) | ✅ |
 | V2.30 | Mühimmat yerleşimi ve zemine gömülme (oyuncu isteği) | ✅ |
 | V2.31 | Test ve yayın hattı | ✅ |
-| V2.32 | Telefonda görüntü testi paneli (oyuncu bildirimi) | |
+| V2.32 | Telefonda görüntü testi paneli (oyuncu bildirimi) | ✅ |
 | V2.33 | Özellik envanteri | |
 | V2.34 | Ekran ve akış sadeleştirme | |
 | V2.35 | Oynanış ve metin tutarlılığı | |
