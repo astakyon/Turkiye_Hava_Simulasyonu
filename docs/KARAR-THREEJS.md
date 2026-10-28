@@ -29,7 +29,7 @@
 **Tahmini iş:** 2–3 sürüm. Önce yalnızca derleme ve paketleme; sonra ışık ve renk ayarı (ekran görüntüleriyle karşılaştırarak); en son BatchedMesh ve asenkron derlemeyi kullanmaya başlamak.
 
 ## Seçenekler
-- **A — Şimdilik r128'de kal (önerim).** Oyun bugün telefonda 60 FPS yakalıyor. Takılmaların kaynağı henüz ölçülüyor. Model serisi (V2.40+) r128 ile yapılabilir. Geçişi model serisinden sonraya, ayrı bir "Motor yenileme" dönemine bırakırız.
+- **A — Şimdilik r128'de kal (önerim).** Oyun bugün telefonda 60 FPS yakalıyor. Takılmaların kaynağı henüz ölçülüyor. Model serisi (V2.41+) r128 ile yapılabilir. Geçişi model serisinden sonraya, ayrı bir "Motor yenileme" dönemine bırakırız.
 - **B — Model serisinden önce geç.** Yeni modeller baştan BatchedMesh'e uygun yapılır. Ama model serisi 2–3 sürüm gecikir ve ışık ve renk ayarı modellerle aynı anda değişir (karşılaştırması zor).
 - **C — Doğrudan WebGPU'ya hazırlan.** En büyük kazanç, en büyük risk. Tarayıcı desteği ve three.js'in WebGPU oluşturucusu olgunlaştıkça yeniden değerlendirilir.
 

@@ -10,16 +10,16 @@
 
 Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu gibi kalır.
 
-1. **Silahlar ve yük ekranı** (🔧 iyileştirilmeli) — Mühimmat hâlâ yer tutucu (Füze-1, GP-82…). Gerçek Türk mühimmatıyla değiştirilmeli (model serisiyle birlikte).
+1. **Silahlar ve yük ekranı** (🔧 iyileştirilmeli) — Mühimmat hâlâ yer tutucu (Füze-1, GP-82…). KARAR (29 Ekim): gerçek Türk mühimmatı model serisiyle birlikte, her uçağın modeliyle aynı sürümde.
 2. **Görev editörü** (🧪 denenmeli) — Telefonda kullanımı hiç denenmedi; dokunmatikte zor olabilir.
 3. **Çevrimiçi oda** (🧪 denenmeli) — Testler başsız benzetimde geçiyor; gerçek iki cihazla en son ne zaman denendiği bilinmiyor.
 4. **Karma çok oyunculu ve üs ele geçirme** (🧪 denenmeli) — Gerçek cihazlarla denenmeli.
 5. **Sesli ve yazılı sohbet** (🧪 denenmeli) — Telefonda mikrofon izni ve ses kalitesi denenmeli.
-6. **Görüntü sorunu testi** (🔀 birleştirilmeli) — Performans testi ve Grafik tanılama ile tek bir "Sorun giderme" ekranında toplanabilir (üçü ayrı yerlerde, oyuncu karıştırdı).
-7. **Grafik tanılama** (🔀 birleştirilmeli) — Görüntü sorunu testi ile birleştirilebilir.
-8. **Yükleme ekranı** (🔧 iyileştirilmeli) — Önerilenler bekliyor: ipucu kartları, oyun dilinde aşama adları, ikinci açılışın hızlanması.
-9. **Uygulama olarak yükleme** (🔧 iyileştirilmeli) — Play Store'a yükleme adımı yapılmadı (docs/ANDROID.md).
-10. **Uçak, helikopter, araç ve gemi modelleri** (🔧 iyileştirilmeli) — Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. Model serisi V2.40'tan itibaren.
+6. **Görüntü sorunu testi** (🔀 birleştirilmeli) — KARAR (29 Ekim): Performans testi ve Grafik tanılama ile tek "Sorun giderme" ekranında birleşecek (V2.37).
+7. **Grafik tanılama** (🔀 birleştirilmeli) — KARAR (29 Ekim): "Sorun giderme" ekranına katılacak (V2.37).
+8. **Yükleme ekranı** (🔧 iyileştirilmeli) — KARAR (29 Ekim): dördü de yapılacak: ipucu kartları, oyun dilinde aşama adları, ikinci açılışın hızlanması, hafif yükleme sesi (V2.38).
+9. **Uygulama olarak yükleme** (🔧 iyileştirilmeli) — KARAR (29 Ekim): Play Store yayını model serisinden sonra (docs/ANDROID.md).
+10. **Uçak, helikopter, araç ve gemi modelleri** (🔧 iyileştirilmeli) — Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. KARAR: model serisi V2.41'den itibaren, her model onaya sunulur.
 
 ## Uçuş
 

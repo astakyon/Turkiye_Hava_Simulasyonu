@@ -23,7 +23,7 @@ F = [
  ('Uçuş','Bakım hangarı','Yerde bakım hangarına girince silah yükleme ve onarım.','Üste bakım hangarı','—','V1.00',T('service'),'iyi',''),
  ('Uçuş','İHA uçuş bilgisayarı','İHA\'larda irtifa ve rota tutan uçuş bilgisayarı.','İHA ile uçarken','—','V1.96',T('uav','assist'),'iyi',''),
  # ---- Silah ve savaş
- ('Silah ve savaş','Silahlar ve yük ekranı','Top, 2 bomba ve 3 füze tipi; uçağa göre yük, hazır yük grupları.','Hangar → Yük · Bakım hangarı','Space top · X silah · N sıradaki · 1–5','V1.02',T('setup','features','v230'),'iyileştirilmeli','Mühimmat hâlâ yer tutucu (Füze-1, GP-82…). Gerçek Türk mühimmatıyla değiştirilmeli (model serisiyle birlikte).'),
+ ('Silah ve savaş','Silahlar ve yük ekranı','Top, 2 bomba ve 3 füze tipi; uçağa göre yük, hazır yük grupları.','Hangar → Yük · Bakım hangarı','Space top · X silah · N sıradaki · 1–5','V1.02',T('setup','features','v230'),'iyileştirilmeli','Mühimmat hâlâ yer tutucu (Füze-1, GP-82…). KARAR (29 Ekim): gerçek Türk mühimmatı model serisiyle birlikte, her uçağın modeliyle aynı sürümde.'),
  ('Silah ve savaş','Hedef kilidi','Füzeler için hedef kilidi, kilit uyarısı açılıp kapatılabilir.','Uçuşta','K kilit · Tab hedef değiştir','V1.02',T('features'),'iyi',''),
  ('Silah ve savaş','Düşman uçakları ve kanat adamı','Kırmızı Kuvvet savaş uçakları, yapay zekâ kanat adamı (Kılıç 2) ve ona emir verme.','Görev ekranı → düşman / kanat adamı','F8 kanat adamı emirleri','V1.10',T('ai','wing','enemy'),'iyi',''),
  ('Silah ve savaş','Hava savunma ve füzeden kaçış','SAM bataryaları, füze uyarısı, gerçekçi füze modeli, flare ve kaçış yardımı.','Görev ekranı → SAM','Z flare · F7 kaçış','V1.51',T('evade','enemy'),'iyi',''),
@@ -71,13 +71,13 @@ F = [
  ('Grafik ve performans','Grafik ayarları','Otomatik / hazır ayarlar, ayrıntılı ayarlar, maliyet etiketleri, canlı fark, arama, varsayılana dön.','Ayarlar → Grafik','—','V1.57',T('gfx2','settings2','quality','settings'),'iyi',''),
  ('Grafik ve performans','Akıllı performans','Otomatik çözünürlük, kalite basamakları, eşit aralıklı 30 FPS, ısınmaya karşı sabit kalite.','Ayarlar → Grafik → Otomatik','—','V1.94',T('perf','perf2','quality'),'iyi',''),
  ('Grafik ve performans','Performans testi','2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor.','Ayarlar → Grafik → Performans testi','—','V2.12',T('perftest','v234'),'iyi',''),
- ('Grafik ve performans','Görüntü sorunu testi','Katmanları tek tek kapatıp görüntü hatasının kaynağını bulma.','Ayarlar → Grafik → Grafik sorun giderme','—','V1.97',T('gfxtest'),'birleştirilmeli','Performans testi ve Grafik tanılama ile tek bir "Sorun giderme" ekranında toplanabilir (üçü ayrı yerlerde, oyuncu karıştırdı).'),
- ('Grafik ve performans','Grafik tanılama','Cihaz bilgisi, derinlik, efekt durumu gibi tanılama satırları.','Ayarlar → Grafik','—','V1.59',T('gfxtest'),'birleştirilmeli','Görüntü sorunu testi ile birleştirilebilir.'),
- ('Grafik ve performans','Yükleme ekranı','Dönen 3B ay yıldız, uçak biçimli ilerleme çubuğu, aşamalı açılış.','Açılışta','—','V2.20',T('boot'),'iyileştirilmeli','Önerilenler bekliyor: ipucu kartları, oyun dilinde aşama adları, ikinci açılışın hızlanması.'),
+ ('Grafik ve performans','Görüntü sorunu testi','Katmanları tek tek kapatıp görüntü hatasının kaynağını bulma.','Ayarlar → Grafik → Grafik sorun giderme','—','V1.97',T('gfxtest'),'birleştirilmeli','KARAR (29 Ekim): Performans testi ve Grafik tanılama ile tek "Sorun giderme" ekranında birleşecek (V2.37).'),
+ ('Grafik ve performans','Grafik tanılama','Cihaz bilgisi, derinlik, efekt durumu gibi tanılama satırları.','Ayarlar → Grafik','—','V1.59',T('gfxtest'),'birleştirilmeli','KARAR (29 Ekim): "Sorun giderme" ekranına katılacak (V2.37).'),
+ ('Grafik ve performans','Yükleme ekranı','Dönen 3B ay yıldız, uçak biçimli ilerleme çubuğu, aşamalı açılış.','Açılışta','—','V2.20',T('boot'),'iyileştirilmeli','KARAR (29 Ekim): dördü de yapılacak: ipucu kartları, oyun dilinde aşama adları, ikinci açılışın hızlanması, hafif yükleme sesi (V2.38).'),
  # ---- Hesap
  ('Hesap ve kayıt','Hesap ve profil','Misafir ya da bulut hesabı, oyuncu kartı, birden çok profil, bulut eşitleme.','Ana menü → sağ üstteki profil','—','V1.66',T('account','pcard'),'iyi',''),
  ('Hesap ve kayıt','Kayıt ve yedek','Bütün ilerleme tek kayıtta, her oturum yedekleniyor; grafik ayarları cihaza özel.','Kendiliğinden','—','V2.26',T('depo'),'iyi',''),
- ('Hesap ve kayıt','Uygulama olarak yükleme','Ana ekrana ekleme, kısayollar, Android (Play Store) hazırlığı.','Ana menü → Uygulamayı yükle','—','V2.01',T('install'),'iyileştirilmeli','Play Store\'a yükleme adımı yapılmadı (docs/ANDROID.md).'),
+ ('Hesap ve kayıt','Uygulama olarak yükleme','Ana ekrana ekleme, kısayollar, Android (Play Store) hazırlığı.','Ana menü → Uygulamayı yükle','—','V2.01',T('install'),'iyileştirilmeli','KARAR (29 Ekim): Play Store yayını model serisinden sonra (docs/ANDROID.md).'),
  ('Hesap ve kayıt','Duyurular ve sürüm notları','Yönetici duyuruları, güncellemeden sonra yenilikler şeridi, Yenilikler ekranı.','Ana menü → Yenilikler','—','V1.66',T('notes'),'iyi',''),
  # ---- Yönetici
  ('Yönetici araçları','Yönetim paneli','Duyuru yayını, görev yayını, kütüphanelere giriş (yalnız yönetici).','Ana menü → kalkan düğmesi','—','V1.68',T('account'),'iyi',''),
@@ -85,7 +85,7 @@ F = [
  ('Yönetici araçları','Ses kütüphanesi','Her sesi dinleme, kendi ses dosyasıyla değiştirme, kanal karışımı.','Yönetim paneli → Kütüphaneler','—','V1.60',T('sound'),'iyi',''),
  ('Yönetici araçları','Sistem envanteri','Gerçek Türk sistemlerinin verileri (Defence Turk kaynaklı, atıflı).','Hangar → Gerçek veriler','—','V1.86',T('envanter'),'iyi',''),
  # ---- Modeller
- ('Modeller','Uçak, helikopter, araç ve gemi modelleri','Kodla üretilmiş stilize modeller; parça birleştirme ile az çizim.','Her yerde','—','V1.37',T('modelreg','bake'),'iyileştirilmeli','Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. Model serisi V2.40\'tan itibaren.'),
+ ('Modeller','Uçak, helikopter, araç ve gemi modelleri','Kodla üretilmiş stilize modeller; parça birleştirme ile az çizim.','Her yerde','—','V1.37',T('modelreg','bake'),'iyileştirilmeli','Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. KARAR: model serisi V2.41\'den itibaren, her model onaya sunulur.'),
 ]
 KEYS = ['kat','ad','ne','nereden','tus','surum','testler','durum','not']
 items = [dict(zip(KEYS, f)) for f in F]
