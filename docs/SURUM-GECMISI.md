@@ -2,7 +2,7 @@
 
 Bütün sürümler dönemlere ayrılmış hâlde. Her sürümün ayrıntısı [CHANGELOG.md](../CHANGELOG.md) dosyasında; bu sayfa `python3 tools/surumler.py` ile üretilir.
 
-**126 sürüm** · V1.00 → V2.45 · ilk sürüm 2026-10-10, son sürüm 2026-10-29
+**127 sürüm** · V1.00 → V2.46 · ilk sürüm 2026-10-10, son sürüm 2026-10-29
 
 ## Dönemler
 
@@ -22,12 +22,13 @@ Bütün sürümler dönemlere ayrılmış hâlde. Her sürümün ayrıntısı [C
 | **Düzen: ölçüm ve optimizasyon** | V2.12–V2.27 | 16 | Gerçek cihazda performans testi; parça birleştirme, Gölge 2.0, doku belleği, açılış hızı ve yükleme ekranı 2.0, arazi ayrıntı kademeleri, Grafik ayarları 2.0, ayarların gözden geçirmesi, kanca sistemi, kod düzeni, tek kayıt ve yedek, girdi yöneticisi. |
 | **Oyuncu istekleri ve telefonda 60 FPS** | V2.28–V2.35 | 8 | Gölge titremesi, MSAA, müzik ara ara, TEKER düğmesi; Hızlı Oyun ve Kariyer menüsü, Hızlı Savaş; mühimmat yerleşimi ve zemine gömülme; testler 13 → 2 dakika ve bütçe kapısı; telefon raporlarıyla uçuşta 60 FPS. |
 | **Envanter, sadeleştirme, belgeler** | V2.36–V2.40 | 5 | Özellik envanteri ve oyunda Rehber, tek Sorun giderme ekranı, 23 ekranın 4 boyutta denetimi, Yükleme ekranı 3.0, TP dengesi ve terim sözlüğü, belgelerin birleştirilmesi. |
-| **Model yenileme serisi** | V2.41–V2.45 | 5 | Uçak, helikopter, kara ve deniz araçlarının gerçek ölçülerle yeniden yapılması; her uçağın gerçek Türk mühimmatı. |
+| **Model yenileme serisi** | V2.41–V2.46 | 6 | Uçak, helikopter, kara ve deniz araçlarının gerçek ölçülerle yeniden yapılması; her uçağın gerçek Türk mühimmatı. |
 
-## Model yenileme serisi (V2.41–V2.45)
+## Model yenileme serisi (V2.41–V2.46)
 
 Uçak, helikopter, kara ve deniz araçlarının gerçek ölçülerle yeniden yapılması; her uçağın gerçek Türk mühimmatı.
 
+- **V2.46** · 2026-10-29 · TUSAŞ ANKA ve ANKA-3
 - **V2.45** · 2026-10-29 · Bayraktar Kızılelma ve iç silah yuvası
 - **V2.44** · 2026-10-29 · Bayraktar Akıncı ve gerçek mühimmatı
 - **V2.43** · 2026-10-29 · Bayraktar TB3 ve katlanır kanatlar

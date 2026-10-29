@@ -10,7 +10,7 @@ const AIRCRAFT={
     vr:78,landV:150,sinkMax:8,gearV:150,brake:8,rollFric:1.1,airV:210,fireInt:0.05,bulletV:850,blife:1.5,weapon:'TOP',snd:SND_JET},
   anka3:{name:'TUSAŞ ANKA-3',short:'ANKA-3',kind:'Muharip İHA · uçan kanat',len:'~9 m',span:'~13 m',uav:true,hasAB:false,
     desc:'Kuyruksuz, ok başı biçimli uçan kanat; jet motorlu, gizlilik odaklı muharip İHA. Hızlı ve kararlı, dönüşlerde biraz ağır.',
-    build:buildAnka3,gearOff:1.5,belly:0.8,cam:[3.0,12],eye:[0,0.1,-5.0],muzzle:[0,-0.2,-3.5],
+    build:function(){ return buildAnka3V2(); }, buildOld:buildAnka3,gearOff:1.5,belly:0.8,cam:[3.0,12],eye:[0,0.1,-5.0],muzzle:[0,-0.2,-3.5],
     idle:0.3,thrust:7.0,abT:0,kD:0.000165,stall:[50,76],authV:100,gLim:8,pitchMax:0.95,roll:2.4,yaw:0.3,stallNose:0.8,minV:55,vTop:215,
     vr:65,landV:110,sinkMax:6,gearV:120,brake:6,rollFric:1.0,airV:175,fireInt:0.12,bulletV:600,blife:2,weapon:'MÜHİMMAT',snd:SND_JET},
   hurjet:{name:'TUSAŞ Hürjet',short:'HÜRJET',kind:'Jet eğitim / hafif muharebe',len:'13,6 m',span:'9,5 m',uav:false,hasAB:true,
@@ -23,9 +23,9 @@ const AIRCRAFT={
     build:buildHurkus,gearOff:1.6,belly:0.8,cam:[3.4,14],eye:[0,0.95,-1.0],muzzle:[0.8,-0.2,-2.0],
     idle:0.2,thrust:5.0,abT:0,kD:0.000213,stall:[38,56],authV:70,gLim:7,pitchMax:1.1,roll:2.8,yaw:0.4,stallNose:0.8,minV:45,vTop:160,
     vr:48,landV:90,sinkMax:5,gearV:100,brake:6,rollFric:0.8,airV:100,fireInt:0.08,bulletV:700,blife:1.8,weapon:'TOP',snd:SND_PROP},
-  anka:{name:'TUSAŞ ANKA',short:'ANKA',kind:'Keşif / gözetleme İHA',len:'8,6 m',span:'17,3 m',uav:true,hasAB:false,
+  anka:{name:'TUSAŞ ANKA',short:'ANKA',kind:'Keşif / gözetleme İHA',len:'8,6 m',span:'17,5 m',uav:true,hasAB:false,
     desc:'Pervaneli, V kuyruklu orta irtifa, uzun havada kalış (MALE) İHA\'sı. Çok yavaş, sabırlı ve çok kararlı.',
-    build:buildAnka,gearOff:1.45,belly:0.7,cam:[2.2,9.5],eye:[0,-0.3,-4.5],muzzle:[0,-0.5,-2.5],
+    build:function(){ return buildAnkaV2(); }, buildOld:buildAnka,gearOff:1.45,belly:0.7,cam:[2.2,9.5],eye:[0,-0.3,-4.5],muzzle:[0,-0.5,-2.5],
     idle:0.1,thrust:2.4,abT:0,kD:0.0006,stall:[21,33],authV:42,gLim:3,pitchMax:0.6,roll:1.2,yaw:0.25,stallNose:0.5,minV:25,vTop:63,
     vr:29,landV:44,sinkMax:3.5,gearV:50,brake:3,rollFric:0.35,airV:50,fireInt:0.4,bulletV:300,blife:3,weapon:'MÜHİMMAT',snd:SND_PROP},
   aksungur:{name:'TUSAŞ Aksungur',short:'AKSUNGUR',kind:'Uzun havada kalış İHA · çift motor',len:'~12 m',span:'~24 m',uav:true,hasAB:false,
@@ -58,7 +58,7 @@ const AC_ORDER=['kaan','anka3','hurjet','hurkus','anka','aksungur','kizilelma','
 /* system registry: groups (hava / deniz / kara), classes and makers; new vehicles only need an AIRCRAFT entry + a REG line */
 const GROUPS=[{id:'hava',name:'Hilal Kanatlar',sub:'Hava sistemleri',on:true},{id:'deniz',name:'Mavi Kanatlar',sub:'Deniz · yakında',on:false},{id:'kara',name:'Bozkurtlar',sub:'Kara · yakında',on:false}];
 const CLASSES={savas:'Savaş uçağı',iha:'İHA / SİHA',egitim:'Eğitim / hafif taarruz'};
-const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ'},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},
+const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ',wpn:['gp','bnk','m3']},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},
   anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ'},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},
   tb3:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},akinci:{grp:'hava',cls:'iha',maker:'Baykar'}};
 let pickGrp='hava', pickCls='all';

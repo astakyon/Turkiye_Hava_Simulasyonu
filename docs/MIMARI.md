@@ -160,6 +160,7 @@ Açık teknik borç:
 - **Bayraktar TB3** (V2.43): `buildTB3` = `buildTB2(o)` seçenekleriyle (`k` boyut iç grupta, böylece mühimmat gerçek boyda kalır; `fold` kanat kökünden katlanma, `stnX` istasyonları orta kanatla sınırlar). `tbFold(m,f)` kanatları katlar; hangarda "Kanatları katla" düğmesi (`FOLD`, `foldSet`), uçuş her zaman açık kanatla başlar.
 - **Bayraktar Akıncı** (`modeller/akinci`, V2.44): `buildAkinciV2`, oyuncunun fotoğraflarına göre (tek dikey kuyruk, alçak yatay kuyruklar, kıvrık kanatçıklar, kanat altındaki motor gövdeleri, arka gövde altında kamera); eski model `buildOld`.
 - **Bayraktar Kızılelma** (`modeller/kizilelma`, V2.45): `buildKizilelmaV2`, oyuncunun fotoğraflarına göre; KAAN gibi iç silah yuvası (`bay`, `MUN_BAY.kizilelma`), eski model `buildOld`.
+- **TUSAŞ ANKA ve ANKA-3** (`modeller/anka`, V2.46): `buildAnkaV2` (V kuyruk, itici pervane), `buildAnka3V2` (kuyruksuz uçan kanat: kalınlığı ortada artan tek parça gövde-kanat, kemerli hava girişi, W arka kenar, arkada nozul, iç silah yuvası `MUN_BAY.anka3`); eski modeller `buildOld`.
 - **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
 
 ## Android (planlı)

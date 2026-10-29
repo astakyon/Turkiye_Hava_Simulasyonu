@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.46 — 2026-10-29 · TUSAŞ ANKA ve ANKA-3
+- TUSAŞ ANKA yeni modeliyle: boy 8,6 m, kanat açıklığı 17,5 m, yükseklik 3,25 m (Defence Turk). Burnun üstünde uydu anteni çıkıntısı, altında kamera topu; uzun düz kanat; V kuyruk; üç kanatlı itici pervane. Açık gri boya.
+- TUSAŞ ANKA-3 yeni modeliyle (oyuncunun fotoğraflarına göre): kuyruksuz uçan kanat; ortası kalın, kenarlara incelen tek parça gövde-kanat; burnun arkasında kemerli hava girişi; W biçimli arka kenar; arkada motor nozulu; kanat uçlarında küçük dik çıkıntılar; uzun iniş takımı. Koyu mavimsi gri boya.
+- ANKA-3'e iç silah yuvası: TEBER-82 ve SOM-J gövdede taşınır, her atışta kapaklar açılır. Dış kanat istasyonlarında MAM-L.
+- ANKA eskisi gibi silahsız keşif uçağı.
+
 ## V2.45 — 2026-10-29 · Bayraktar Kızılelma ve iç silah yuvası
 - Bayraktar Kızılelma yeni modeliyle (oyuncunun fotoğraflarına göre): uzun keskin kenarlı burun ve ölçüm çubuğu, köşeli üst gövde, burun yanlarında kanardlar, geriye açılı ana kanat, dışa yatık iki büyük dikey kuyruk, keskin kenarın altında iki yan hava girişi, tek motor ve yuvarlak çıkış ağzı.
 - Ölçüler: boy 14,5 m, yükseklik 3,5 m, kanat açıklığı yaklaşık 10 m. Koyu gri boya, BAYRAKTAR KIZILELMA yazısı, kuyruklarda beyaz çizgiler ve bayrak.
