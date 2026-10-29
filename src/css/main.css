@@ -540,6 +540,7 @@ input[type=range]{ width:100%; accent-color:var(--red); }
 .hperf .bar i.c{ top:auto; height:2px; bottom:0; background:var(--amber); } .hperf b{ color:#fff; font-size:11px; min-width:58px; text-align:right; } .hperf .cmpl{ grid-column:1/-1; color:var(--amber); margin-top:2px; }
 .hcmp{ margin-top:8px; padding:6px 12px; font-size:12px; } .hcmp[aria-pressed="true"]{ border-color:var(--amber); color:var(--amber); }
 @media (max-height:560px){ .hperf{ display:none; } .hcmp{ display:none; } }
+.hfold{ margin:8px 8px 0 0; padding:6px 12px; font-size:12px; } .hfold[aria-pressed="true"]{ border-color:var(--amber); color:var(--amber); }   /* V2.43: shown on phones too */
 /* loadout: presets, pylon diagram, weight */
 .lpre{ display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 10px; } .lpre button{ padding:6px 11px; border-radius:16px; border:1px solid var(--edge); background:rgba(255,255,255,.05); color:var(--ink); font-size:12px; font-weight:700; }
 .lpre button:hover{ border-color:var(--red); }

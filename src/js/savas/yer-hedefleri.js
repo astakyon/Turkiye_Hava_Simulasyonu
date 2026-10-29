@@ -314,7 +314,7 @@ function storeLayout(m,id,list,key){ if(!m||!m.group) return []; key=key||id; le
   if(!T){ list.forEach(function(w,i){ out.push({x:(i%2?1:-1)*1.2*(1+Math.floor(i/2)),y:PYLON_Y[id]||-0.4,z:0,k:k}); }); return out; }
   let lastX=-1e9; const stations=[];
   for(let i=0;i<list.length;i+=2){ const W=WEAPONS[list[i]], mu=munOf(id,list[i]), r=mu?mu.dia/2:(W.kind==='bomb'?0.2:0.13)*k, len=mu?mu.len:(W.kind==='bomb'?1.8:2.6)*k, gap=mu?0.17:0.12*k; let st=null;
-    for(let c=0;c<T.xs.length&&!st;c++){ const col=T.xs[c]; if(col.x<r+0.15||col.x<lastX+2*r+0.3||col.x<(m.bay?2.9:(m.stnMinX||0))) continue;   /* with a weapons bay the fuselage underside stays clear */ const s=stnFit(T,col,r,len,gap); if(s&&stnClearOfGear(T,s,r,len)) st=s; }
+    for(let c=0;c<T.xs.length&&!st;c++){ const col=T.xs[c]; if(col.x<r+0.15||col.x<lastX+2*r+(mu&&mu.dia<0.25?0.12:0.3)||col.x<(m.bay?2.9:(m.stnMinX||0))||(m.stnMaxX&&col.x>m.stnMaxX)) continue;   /* with a weapons bay the fuselage underside stays clear */ const s=stnFit(T,col,r,len,gap); if(s&&stnClearOfGear(T,s,r,len)) st=s; }
     if(!st){ /* out of wing: hang under the last station, one row lower */ const p=stations[stations.length-1]; st=p?{x:p.x,y:p.y-2*r-0.1,z:p.z}:{x:T.tipX*0.3,y:PYLON_Y[id]||-0.4,z:(T.z0+T.z1)/2}; }
     lastX=st.x; stations.push(st); }
   list.forEach(function(w,i){ const st=stations[Math.floor(i/2)], side=i%2?1:-1; out.push({x:side*st.x, y:st.y, z:st.z, k:munOf(id,w)?1:k}); });

@@ -10,7 +10,7 @@
 
 Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu gibi kalır.
 
-1. **Silahlar ve yük ekranı** (🔧 iyileştirilmeli) — KAAN (V2.41) ve TB2 (V2.42) gerçek mühimmatla; diğer uçaklar model serisinde sırayla geçecek, o zamana kadar yer tutucu (Füze-1, GP-82…)
+1. **Silahlar ve yük ekranı** (🔧 iyileştirilmeli) — KAAN (V2.41), TB2 (V2.42) ve TB3 (V2.43) gerçek mühimmatla; diğer uçaklar model serisinde sırayla geçecek, o zamana kadar yer tutucu (Füze-1, GP-82…)
 2. **Çevrimiçi oda** (🧪 denenmeli) — 29 Ekim denemesi: aynı bilgisayarda iki ayrı oyun sayfası (telefon boyutu) oda kurdu, katıldı, maç başladı, konumlar eşleşti (fark < 5 m), yazılı sohbet iki yönde çalıştı, hata yok. Bağlantı katmanı burada taklit edildi (PeerJS sunucusuna bu ortamdan erişilemiyor); internet üzerinden iki gerçek cihaz hâlâ denenmeli.
 3. **Karma çok oyunculu ve üs ele geçirme** (🧪 denenmeli) — Oda ve sohbet katmanı 29 Ekim'de iki sayfayla doğrulandı; karma mod ve üs ele geçirme iki gerçek cihazla denenmeli.
 4. **Sesli ve yazılı sohbet** (🧪 denenmeli) — Yazılı sohbet 29 Ekim'de doğrulandı. Sesli sohbet mikrofon ve gerçek bağlantı istiyor; yalnız iki gerçek cihazla denenebilir.
@@ -37,7 +37,7 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 | Özellik | Ne yapar | Nereden | Tuş | Sürüm | Test | Durum |
 |---|---|---|---|---|---|---|
 | **Silahlar ve yük ekranı** | Top, 2 bomba ve 3 füze tipi; uçağa göre yük, hazır yük grupları. | Hangar → Yük · Bakım hangarı | Space top · X silah · N sıradaki · 1–5 | V1.02 | setup, features, v230 | 🔧 iyileştirilmeli |
-| **Gerçek Türk mühimmatı** | Model serisinden geçen uçaklar gerçek mühimmat taşır: KAAN'da GÖKDOĞAN, BOZDOĞAN, SOM-J (iç silah yuvasında, kapaklar atışta açılır), HGK-82 ve NEB-84 (kanat altında). TB2'de MAM-L, MAM-C ve MAM-T (V2.42). Veriler Defence Turk Sistem Envanteri'nden. | Hangar → Yük · Model Kütüphanesi → Mühimmat | X silah · 1–5 silah seç | V2.41 | v241, v242, setup | ✅ iyi |
+| **Gerçek Türk mühimmatı** | Model serisinden geçen uçaklar gerçek mühimmat taşır: KAAN'da GÖKDOĞAN, BOZDOĞAN, SOM-J (iç silah yuvasında, kapaklar atışta açılır), HGK-82 ve NEB-84 (kanat altında). TB2 (V2.42) ve TB3'te (V2.43) MAM-L, MAM-C ve MAM-T. Veriler Defence Turk Sistem Envanteri'nden. | Hangar → Yük · Model Kütüphanesi → Mühimmat | X silah · 1–5 silah seç | V2.41 | v241, v242, v243, setup | ✅ iyi |
 | **Hedef kilidi** | Füzeler için hedef kilidi, kilit uyarısı açılıp kapatılabilir. | Uçuşta | K kilit · Tab hedef değiştir | V1.02 | features | ✅ iyi |
 | **Düşman uçakları ve kanat adamı** | Kırmızı Kuvvet savaş uçakları, yapay zekâ kanat adamı (Kılıç 2) ve ona emir verme. | Görev ekranı → düşman / kanat adamı | F8 kanat adamı emirleri | V1.10 | ai, wing, enemy | ✅ iyi |
 | **Hava savunma ve füzeden kaçış** | SAM bataryaları, füze uyarısı, gerçekçi füze modeli, flare ve kaçış yardımı. | Görev ekranı → SAM | Z flare · F7 kaçış | V1.51 | evade, enemy | ✅ iyi |

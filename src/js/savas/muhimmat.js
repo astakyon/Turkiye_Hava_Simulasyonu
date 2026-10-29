@@ -33,7 +33,7 @@ const MUNI={
     gercek:'boy 1,4 m · çap 230 mm · 94 kg · parçacık etkili · ANS+KKS+lazer güdüm · İHA\'dan menzil 30+ km',kg:94,len:1.4,dia:0.23,
     oyun:{name:'MAM-T süzülen güdümlü mühimmat',short:'MAM-T',tip:'Sadece yer · 10 km · uzun menzilli süzülme',range:10000,speed:260,turn:0.9,dmg:2.0,armorDmg:1.5,r:18,air:false,ground:true}}
 };
-const AC_MUNI={kaan:{gp:'hgk82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, tb2:{gp:'maml',bnk:'mamc',m3:'mamt'}};
+const AC_MUNI={kaan:{gp:'hgk82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, tb2:{gp:'maml',bnk:'mamc',m3:'mamt'}, tb3:{gp:'maml',bnk:'mamc',m3:'mamt'}};
 const MUN_BAY={kaan:['m1','m2','m3']};
 const MUN_SRC='Defence Turk · Sistem Envanteri (açık kaynak bilgiler); oyundaki menzil ve hızlar adaya göre ölçeklenmiştir.';
 let MUN_BASE=null;

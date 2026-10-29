@@ -187,3 +187,17 @@ function refreshStartPlace(){ const el=$('startPlace'); if(!el) return; if(!el.d
   el.value=SETTINGS.startPlace||'base'; }
 $('startPlace').addEventListener('change',function(e){ const p=placeById(e.target.value); if(p){ SETTINGS.startPlace=p.id==='base'?null:p.id; saveSettings(); } });
 refreshStartPlace();
+
+/* ---------- V2.43: fold / unfold the wings in the hangar (aircraft with folding wings: TB3). Flight always starts unfolded. */
+const FOLD={f:0, t:0, raf:0, m:null};
+function foldSync(){ if(FOLD.m!==model){ FOLD.m=model; FOLD.f=FOLD.t=0; if(model) tbFold(model,0); } }
+function foldCan(){ return !!(model&&model.folds&&model.folds.length)&&!HSEL&&state==='menu'; }
+function foldShow(){ const b=$('btnFold'); if(!b) return; foldSync(); const can=foldCan();
+  b.classList.toggle('hidden',!can); b.textContent=FOLD.t?'⤢ Kanatları aç':'⤡ Kanatları katla'; b.setAttribute('aria-pressed',String(!!FOLD.t)); }
+function foldStep(ts){ FOLD.raf=0; const now=ts||((typeof performance!=='undefined')?performance.now():Date.now()), dt=FOLD.last?Math.min(0.25,(now-FOLD.last)/1000):0.016; FOLD.last=now;
+  const d=FOLD.t-FOLD.f, k=dt/1.4; FOLD.f=Math.abs(d)<=k?FOLD.t:FOLD.f+Math.sign(d)*k; tbFold(model,FOLD.f);   /* about 1,4 s, whatever the frame rate */
+  if(FOLD.f!==FOLD.t&&typeof requestAnimationFrame==='function') FOLD.raf=requestAnimationFrame(foldStep); else FOLD.last=0; }
+function foldSet(on){ foldSync(); FOLD.t=on?1:0; if(typeof requestAnimationFrame!=='function'){ FOLD.f=FOLD.t; tbFold(model,FOLD.f); } else if(!FOLD.raf){ FOLD.last=0; foldStep(); } foldShow(); }
+$('btnFold').addEventListener('click',function(){ foldSet(!FOLD.t); });
+refreshHangarUI=HOOK.wrap('refreshHangarUI','oyun-akisi#fold',function(next){ return function(a,b){ const r=next(a,b); foldShow(); return r; }; },refreshHangarUI);
+startGame=HOOK.wrap('startGame','oyun-akisi#fold',function(next){ return function(a,b){ foldSync(); FOLD.t=FOLD.f=0; if(model) tbFold(model,0); return next(a,b); }; },startGame);

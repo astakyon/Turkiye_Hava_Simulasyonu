@@ -157,6 +157,7 @@ Açık teknik borç:
   - Mühimmat modelleri gerçek boyutta, tek geometri ve köşe renkleriyle yapılır (`munGeo`).
   - İç silah yuvası: `MUN_BAY[id]`'deki roller yuvada taşınır, atışta kapaklar açılır (`BAY`, `munBayStep`); model `bay` alanını verir.
 - **Bayraktar TB2 modeli** (`modeller/tb2`, V2.42): ayrı yapıcı `buildTB2`; eski ortak TB2/TB3 modeli `buildOld` olarak kütüphane karşılaştırmasında. `stnMinX` kanat istasyonlarını bomların dışına alır; `REG.tb2.wpn` silah rollerini sınırlar (hava-hava yok), `defaultLoadout` ve `applyLoadout` buna uyar.
+- **Bayraktar TB3** (V2.43): `buildTB3` = `buildTB2(o)` seçenekleriyle (`k` boyut iç grupta, böylece mühimmat gerçek boyda kalır; `fold` kanat kökünden katlanma, `stnX` istasyonları orta kanatla sınırlar). `tbFold(m,f)` kanatları katlar; hangarda "Kanatları katla" düğmesi (`FOLD`, `foldSet`), uçuş her zaman açık kanatla başlar.
 - **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
 
 ## Android (planlı)

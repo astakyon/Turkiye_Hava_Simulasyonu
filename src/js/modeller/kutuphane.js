@@ -85,7 +85,7 @@ function libClear(){
 }
 function libSelect(key){
   const it=libItems().find(function(i){ return i.key===key; }); if(!it) return;
-  libWire(false); libClear(); if(!LIB.item||LIB.item.key!==key) LIB.tests.old=false; LIB.item=it; LIB.cat=it.cat; LIB.heli=null; LIB.tests.wpn=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
+  libWire(false); libClear(); if(!LIB.item||LIB.item.key!==key) LIB.tests.old=false; LIB.item=it; LIB.cat=it.cat; LIB.heli=null; LIB.tests.wpn=false; LIB.tests.fold=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
   let obj;
   if(it.kind==='ac'){ const def=AIRCRAFT[it.id], old=LIB.tests.old&&def.buildOld; let m; if(old){ m=def.buildOld(); upgradeModel(m.group); m.acId=it.id; } else m=buildModel(it.id); LIB.inst=m; obj=m.group; obj.position.set(0,AIRFIELD_Y*0+AIRCRAFT[it.id].gearOff,0); m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); }); }
   else { obj=it.build(); obj.traverse(function(o){ if(o.isMesh&&o.material&&o.material.isMeshPhongMaterial) o.material=stdOf(o.material); }); }
@@ -135,14 +135,14 @@ function libRefreshPanel(){
 function libTab(t){ LIB.tab=t; Array.prototype.forEach.call($('libTabs').children,function(b){ b.setAttribute('aria-selected',String(b.dataset.t===t)); });
   Array.prototype.forEach.call(document.querySelectorAll('#libUI .lpanel section'),function(s){ s.hidden=s.dataset.t!==t; }); }
 /* ---- test tab */
-const LIB_TESTS=[['old','Eski modelle karşılaştır'],['gear','İniş takımı'],['ab','Motor / art yakıcı'],['wpn','Silahlar'],['spin','Pervane'],['lights','Seyir ışıkları'],['surf','Kumanda yüzeyleri'],['wire','Tel kafes']];
+const LIB_TESTS=[['old','Eski modelle karşılaştır'],['gear','İniş takımı'],['ab','Motor / art yakıcı'],['wpn','Silahlar'],['spin','Pervane'],['lights','Seyir ışıkları'],['surf','Kumanda yüzeyleri'],['fold','Kanatları katla'],['wire','Tel kafes']];
 function libRefreshTests(){
   const it=LIB.item, m=LIB.inst, ac=it.kind==='ac';
-  const can={old:ac&&!!AIRCRAFT[it.id].buildOld, gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), wire:true};
+  const can={old:ac&&!!AIRCRAFT[it.id].buildOld, gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), fold:ac&&!!(m.folds&&m.folds.length), wire:true};
   $('libTests').innerHTML=LIB_TESTS.map(function(t){ return '<button type="button" data-x="'+t[0]+'" aria-pressed="'+(!!LIB.tests[t[0]]&&can[t[0]])+'"'+(can[t[0]]?'':' disabled')+'>'+t[1]+'</button>'; }).join('');
   $('libTestNote').textContent=ac?(can.surf?'Kumanda yüzeyleri modeldeki işaretli parçalarla oynar.':'Kumanda yüzeyi testi için içe aktarılmış modelde parçaları işaretle (Model sekmesi).'):'Yer araçları ve ekipman için yalnızca tel kafes görünümü.';
 }
-function libToggle(k){ LIB.tests[k]=!LIB.tests[k]; if(k==='old'){ libSelectKeep(); return; } if(k==='wire') libWire(LIB.tests.wire); if(k==='wpn') libStores(); if(k==='gear') libApplyTests(); libRefreshTests(); if(k==='gear'||k==='wpn') libFrame(); }
+function libToggle(k){ LIB.tests[k]=!LIB.tests[k]; if(k==='old'){ libSelectKeep(); return; } if(k==='wire') libWire(LIB.tests.wire); if(k==='wpn') libStores(); if(k==='gear') libApplyTests(); if(k==='fold') tbFold(LIB.inst,LIB.tests.fold?1:0); libRefreshTests(); if(k==='gear'||k==='wpn') libFrame(); }
 function libApplyTests(){ const m=LIB.inst; if(!m) return; if(m.gear) m.gear.visible=!!LIB.tests.gear; }
 function libStores(){
   const m=LIB.inst; if(!m) return;

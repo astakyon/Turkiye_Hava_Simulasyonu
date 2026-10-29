@@ -45,7 +45,7 @@ const AIRCRAFT={
     vr:28,landV:42,sinkMax:3.5,gearV:50,brake:3,rollFric:0.35,airV:48,fireInt:0.4,bulletV:300,blife:3,weapon:'MAM',snd:SND_PROP},
   tb3:{name:'Bayraktar TB3',short:'TB3',kind:'Silahlı İHA · gemi uyumlu',len:'8,35 m',span:'14 m',uav:true,hasAB:false,
     desc:'TB2\'nin büyütülmüş, katlanır kanatlı, gemiden kalkışa uygun versiyonu. Biraz daha hızlı ve güçlü.',
-    build:function(){ return buildBayraktar(1.22,3,true); },gearOff:1.22,belly:0.6,cam:[2.1,9],eye:[0,-0.25,-4.2],muzzle:[0,-0.5,-2.8],
+    build:function(){ return buildTB3(); }, buildOld:function(){ return buildBayraktar(1.22,3,true); },gearOff:1.22,belly:0.6,cam:[2.1,9],eye:[0,-0.25,-4.2],muzzle:[0,-0.5,-2.8],
     idle:0.12,thrust:3.0,abT:0,kD:0.000465,stall:[23,36],authV:45,gLim:3.5,pitchMax:0.65,roll:1.3,yaw:0.28,stallNose:0.5,minV:28,vTop:83,
     vr:32,landV:50,sinkMax:3.5,gearV:60,brake:3.5,rollFric:0.35,airV:55,fireInt:0.35,bulletV:350,blife:3,weapon:'MAM',snd:SND_PROP},
   akinci:{name:'Bayraktar Akıncı',short:'AKINCI',kind:'Taarruz İHA · çift turboprop',len:'12,2 m',span:'20 m',uav:true,hasAB:false,
@@ -60,7 +60,7 @@ const GROUPS=[{id:'hava',name:'Hilal Kanatlar',sub:'Hava sistemleri',on:true},{i
 const CLASSES={savas:'Savaş uçağı',iha:'İHA / SİHA',egitim:'Eğitim / hafif taarruz'};
 const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ'},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},
   anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ'},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},
-  tb3:{grp:'hava',cls:'iha',maker:'Baykar'},akinci:{grp:'hava',cls:'iha',maker:'Baykar'}};
+  tb3:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},akinci:{grp:'hava',cls:'iha',maker:'Baykar'}};
 let pickGrp='hava', pickCls='all';
 function regOf(id){ return REG[id]||{grp:'hava',cls:'iha',maker:''}; }
 function pickList(){ return AC_ORDER.filter(function(id){ const r=regOf(id); return r.grp===pickGrp&&(pickCls==='all'||r.cls===pickCls); }); }

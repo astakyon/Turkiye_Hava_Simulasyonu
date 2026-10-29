@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.43 — 2026-10-29 · Bayraktar TB3 ve katlanır kanatlar
+- Bayraktar TB3 yeni modeliyle: boy 8,35 m, kanat açıklığı 14 m, yükseklik 2,6 m (gerçek ölçüler).
+- Katlanır kanatlar: dış kanatlar kökten, kuyruk bomlarının hemen dışından katlanıp gövdenin üstüne yatıyor; kanatçıklar ve uç ışıkları da birlikte gidiyor.
+- Hangarda yeni "Kanatları katla / aç" düğmesi; uçuş her zaman açık kanatla başlar. Model Kütüphanesi'nde de "Kanatları katla" testi var.
+- Oyuncunun gönderdiği fotoğraflara göre: dolgun burun (uydu anteni içinde), motor kaportası çıkıntısı, kuyruk bomlarının altından inen ana iniş takımı, gövde altında kamera topu, üç kanatlı pervane, gemiye iniş kancası.
+- TB3 gerçek mühimmatla: MAM-L, MAM-C, MAM-T; altı istasyon katlanmayan orta kanatta. Hava-hava füzesi yok.
+- Bomlarda BAYRAKTAR TB3 yazısı.
+
 ## V2.42 — 2026-10-29 · Bayraktar TB2 ve gerçek mühimmatı
 - Bayraktar TB2 yeni modeliyle: düz kanat (eskisi geriye açılıydı), kanattan çıkan iki kuyruk bomu, tepede birleşen ters V kuyruk, burun altında kamera topu, arkada iki kanatlı itici pervane.
 - Gerçek ölçüler: boy 6,5 m, kanat açıklığı 12 m. Açık gri boya, kanat üstünde BAYRAKTAR, bomlarda BAYRAKTAR TB2 yazısı ve kırmızı çizgiler.
