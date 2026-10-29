@@ -1,6 +1,6 @@
 # Yol haritası — Ay Yıldız: Hedef Kızıl Elma
 
-Tek yol haritası (V2.40'ta birleştirildi). Yayındaki sürüm: V2.45 · son güncelleme: 29 Ekim 2026
+Tek yol haritası (V2.40'ta birleştirildi). Yayındaki sürüm: V2.46 · son güncelleme: 29 Ekim 2026
 
 Bu belge şunları bir arada tutar: şu anki durum, sıradaki sürümler, kurallar, bütün dönemlerin özeti ve düzen döneminin (V2.12–V2.40) her sürümünün hedefi ile sonucu. Eski planların tam metni [docs/arsiv](docs/arsiv/) klasöründe duruyor. Her sürümün ayrıntısı [CHANGELOG.md](CHANGELOG.md) dosyasında, dönemlere ayrılmış özeti [docs/SURUM-GECMISI.md](docs/SURUM-GECMISI.md) dosyasında.
 
@@ -21,7 +21,7 @@ Bu belge şunları bir arada tutar: şu anki durum, sıradaki sürümler, kurall
 | V2.43 | Model: Bayraktar TB3 | ✅ |
 | V2.44 | Model: Bayraktar Akıncı | ✅ |
 | V2.45 | Model: Baykar Kızılelma | ✅ |
-| V2.46 | Model: TUSAŞ ANKA ve ANKA-3 | |
+| V2.46 | Model: TUSAŞ ANKA ve ANKA-3 | ✅ |
 | V2.47 | Model: TUSAŞ Aksungur | |
 | V2.48 | Model: TUSAŞ Hürjet ve Hürkuş | |
 | V2.49 | Model: helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
