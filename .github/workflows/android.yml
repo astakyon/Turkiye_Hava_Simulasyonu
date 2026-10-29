@@ -1,0 +1,74 @@
+name: Android paketi (Play Store)
+# V2.52: Google Play için imzalı .aab (yüklenecek paket) ve telefonda denemek için .apk üretir — Bubblewrap ile TWA.
+# Çalıştırma: GitHub → Actions → "Android paketi (Play Store)" → Run workflow. Sonuç: işin altında "Artifacts" → android-paket.
+# İmza anahtarı GitHub Secrets'ta durur (docs/PLAY-STORE.md, adım 2):
+#   ANDROID_KEYSTORE_B64      android.keystore dosyasının base64 hâli
+#   ANDROID_KEYSTORE_PASSWORD anahtar deposu şifresi
+#   ANDROID_KEY_PASSWORD      anahtar şifresi (çoğu zaman aynı)
+# Secrets yoksa geçici bir DENEME anahtarı üretilir: .apk telefonda denenebilir ama Play'e YÜKLENMEZ.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  aab:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - uses: android-actions/setup-android@v3
+      - name: Bubblewrap kur
+        run: |
+          npm i -g @bubblewrap/cli@1
+          mkdir -p ~/.bubblewrap
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$ANDROID_HOME" > ~/.bubblewrap/config.json
+      - name: Sürüm ve imza anahtarı
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          mkdir -p twa && cd twa
+          V=$(tr -d ' \r\nV' < ../VERSION)                     # V2.52 → 2.52
+          CODE=$(echo "$V" | awk -F. '{ printf "%d", $1*100+$2 }')   # 2.52 → 252
+          jq --arg v "$V" --argjson c "$CODE" '.appVersionName=$v | .appVersionCode=$c' ../twa-manifest.json > twa-manifest.json
+          if [ -n "$KS_B64" ]; then
+            echo "$KS_B64" | base64 -d > android.keystore
+            echo "KIND=play" >> "$GITHUB_ENV"
+            echo "BUBBLEWRAP_KEYSTORE_PASSWORD=$KS_PASS" >> "$GITHUB_ENV"
+            echo "BUBBLEWRAP_KEY_PASSWORD=${KEY_PASS:-$KS_PASS}" >> "$GITHUB_ENV"
+          else
+            echo "::warning::İmza anahtarı (Secrets) yok — DENEME anahtarı üretiliyor; bu paket Play'e yüklenemez."
+            keytool -genkeypair -keystore android.keystore -alias ayyildiz -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass deneme123 -keypass deneme123 -dname "CN=Ay Yildiz Deneme"
+            echo "KIND=deneme" >> "$GITHUB_ENV"
+            echo "BUBBLEWRAP_KEYSTORE_PASSWORD=deneme123" >> "$GITHUB_ENV"
+            echo "BUBBLEWRAP_KEY_PASSWORD=deneme123" >> "$GITHUB_ENV"
+          fi
+          echo "Sürüm $V (kod $CODE)"
+      - name: Android projesini üret ve derle
+        working-directory: twa
+        run: |
+          yes | bubblewrap update --skipVersionUpgrade
+          yes | bubblewrap build --skipPwaValidation
+          ls -la
+      - name: Digital Asset Links dosyası
+        working-directory: twa
+        run: |
+          SHA=$(keytool -list -v -keystore android.keystore -alias ayyildiz -storepass "$BUBBLEWRAP_KEYSTORE_PASSWORD" | awk '/SHA256:/{print $2; exit}')
+          PKG=$(jq -r .packageId twa-manifest.json)
+          printf '[{"relation":["delegate_permission/common.handle_all_urls"],"target":{"namespace":"android_app","package_name":"%s","sha256_cert_fingerprints":["%s"]}}]\n' "$PKG" "$SHA" > assetlinks-yukleme-anahtari.json
+          cat assetlinks-yukleme-anahtari.json
+          rm -f android.keystore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-paket-${{ env.KIND }}
+          path: |
+            twa/app-release-bundle.aab
+            twa/app-release-signed.apk
+            twa/assetlinks-yukleme-anahtari.json
+            twa/twa-manifest.json
+          if-no-files-found: error
