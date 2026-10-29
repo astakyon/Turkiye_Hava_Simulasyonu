@@ -29,6 +29,7 @@ modeller/tb2.js
 modeller/akinci.js
 modeller/kizilelma.js
 modeller/anka.js
+modeller/aksungur.js
 modeller/ucak-kaydi.js
 modeller/varliklar.js
 modeller/gemiler.js

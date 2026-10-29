@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.47 — 2026-10-29 · TUSAŞ Aksungur
+- TUSAŞ Aksungur yeni modeliyle: boy 11,6 m, kanat açıklığı 24 m, yükseklik 3,1 m (Defence Turk).
+- Kısa ve tombul gövde: burnun üstünde uydu anteni çıkıntısı, altında kamera topu. Çok uzun, düz ve yüksek kanat.
+- Kanadın altına sarkan iki motor gövdesi ve önde üç kanatlı pervaneler; ana tekerlekler motor gövdelerinden iner.
+- Motor gövdelerinden uzanan iki kuyruk bomu, H kuyruk (iki dikey kuyruk ve aradaki yatay kuyruk).
+- Aksungur gerçek mühimmatla: TEBER-82, MAM-C, MAM-T; altı kanat altı istasyon motorların dışında.
+- Yol haritası: ANKA-3 model serisinden sonra yeniden ele alınacak (V2.50).
+
 ## V2.46 — 2026-10-29 · TUSAŞ ANKA ve ANKA-3
 - TUSAŞ ANKA yeni modeliyle: boy 8,6 m, kanat açıklığı 17,5 m, yükseklik 3,25 m (Defence Turk). Burnun üstünde uydu anteni çıkıntısı, altında kamera topu; uzun düz kanat; V kuyruk; üç kanatlı itici pervane. Açık gri boya.
 - TUSAŞ ANKA-3 yeni modeliyle (oyuncunun fotoğraflarına göre): kuyruksuz uçan kanat; ortası kalın, kenarlara incelen tek parça gövde-kanat; burnun arkasında kemerli hava girişi; W biçimli arka kenar; arkada motor nozulu; kanat uçlarında küçük dik çıkıntılar; uzun iniş takımı. Koyu mavimsi gri boya.

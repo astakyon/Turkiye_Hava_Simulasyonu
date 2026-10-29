@@ -28,9 +28,9 @@ const AIRCRAFT={
     build:function(){ return buildAnkaV2(); }, buildOld:buildAnka,gearOff:1.45,belly:0.7,cam:[2.2,9.5],eye:[0,-0.3,-4.5],muzzle:[0,-0.5,-2.5],
     idle:0.1,thrust:2.4,abT:0,kD:0.0006,stall:[21,33],authV:42,gLim:3,pitchMax:0.6,roll:1.2,yaw:0.25,stallNose:0.5,minV:25,vTop:63,
     vr:29,landV:44,sinkMax:3.5,gearV:50,brake:3,rollFric:0.35,airV:50,fireInt:0.4,bulletV:300,blife:3,weapon:'MÜHİMMAT',snd:SND_PROP},
-  aksungur:{name:'TUSAŞ Aksungur',short:'AKSUNGUR',kind:'Uzun havada kalış İHA · çift motor',len:'~12 m',span:'~24 m',uav:true,hasAB:false,
+  aksungur:{name:'TUSAŞ Aksungur',short:'AKSUNGUR',kind:'Uzun havada kalış İHA · çift motor',len:'11,6 m',span:'24 m',uav:true,hasAB:false,
     desc:'Çift bomlu, iki pervaneli, çok geniş kanatlı orta irtifa uzun havada kalış İHA\'sı. Ağır, yavaş ve dengeli.',
-    build:buildAksungur,gearOff:1.7,belly:0.85,cam:[2.8,12.5],eye:[0,-0.6,-6.0],muzzle:[0,-0.6,-3.5],
+    build:function(){ return buildAksungurV2(); }, buildOld:buildAksungur,gearOff:1.7,belly:0.85,cam:[2.8,12.5],eye:[0,-0.6,-6.0],muzzle:[0,-0.6,-3.5],
     idle:0.15,thrust:3.2,abT:0,kD:0.000587,stall:[24,36],authV:50,gLim:3,pitchMax:0.55,roll:1.1,yaw:0.22,stallNose:0.5,minV:28,vTop:75,
     vr:34,landV:52,sinkMax:3.5,gearV:58,brake:3.5,rollFric:0.35,airV:55,fireInt:0.4,bulletV:320,blife:3,weapon:'MÜHİMMAT',snd:SND_PROP},
   kizilelma:{name:'Baykar Kızılelma',short:'KIZILELMA',kind:'Muharip İHA · jet',len:'14,5 m',span:'10 m',uav:true,hasAB:false,
@@ -59,7 +59,7 @@ const AC_ORDER=['kaan','anka3','hurjet','hurkus','anka','aksungur','kizilelma','
 const GROUPS=[{id:'hava',name:'Hilal Kanatlar',sub:'Hava sistemleri',on:true},{id:'deniz',name:'Mavi Kanatlar',sub:'Deniz · yakında',on:false},{id:'kara',name:'Bozkurtlar',sub:'Kara · yakında',on:false}];
 const CLASSES={savas:'Savaş uçağı',iha:'İHA / SİHA',egitim:'Eğitim / hafif taarruz'};
 const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ',wpn:['gp','bnk','m3']},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},
-  anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ'},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},
+  anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ',wpn:['gp','bnk','m3']},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},
   tb3:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},akinci:{grp:'hava',cls:'iha',maker:'Baykar'}};
 let pickGrp='hava', pickCls='all';
 function regOf(id){ return REG[id]||{grp:'hava',cls:'iha',maker:''}; }

@@ -161,6 +161,7 @@ Açık teknik borç:
 - **Bayraktar Akıncı** (`modeller/akinci`, V2.44): `buildAkinciV2`, oyuncunun fotoğraflarına göre (tek dikey kuyruk, alçak yatay kuyruklar, kıvrık kanatçıklar, kanat altındaki motor gövdeleri, arka gövde altında kamera); eski model `buildOld`.
 - **Bayraktar Kızılelma** (`modeller/kizilelma`, V2.45): `buildKizilelmaV2`, oyuncunun fotoğraflarına göre; KAAN gibi iç silah yuvası (`bay`, `MUN_BAY.kizilelma`), eski model `buildOld`.
 - **TUSAŞ ANKA ve ANKA-3** (`modeller/anka`, V2.46): `buildAnkaV2` (V kuyruk, itici pervane), `buildAnka3V2` (kuyruksuz uçan kanat: kalınlığı ortada artan tek parça gövde-kanat, kemerli hava girişi, W arka kenar, arkada nozul, iç silah yuvası `MUN_BAY.anka3`); eski modeller `buildOld`.
+- **TUSAŞ Aksungur** (`modeller/aksungur`, V2.47): `buildAksungurV2` — motor gövdelerinden çıkan kuyruk bomları, H kuyruk, 6 kanat altı istasyon (`stnMinX` motorların dışı); eski model `buildOld`.
 - **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
 
 ## Android (planlı)
