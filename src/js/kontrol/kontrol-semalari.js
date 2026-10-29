@@ -14,13 +14,13 @@ const CTRL_DEF={
     ['ab','Art yakıcı',['ShiftLeft','ShiftRight'],['b5']], ['brake','Fren / hava freni',['KeyB'],['b4']],
     ['gun','Top / mühimmat ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['nextWpn','Sıradaki silah',['KeyN'],['b8']],
     ['lock','Hedef kilidi aç / kapat',['KeyK'],[]], ['nextTarget','Hedef kilidini değiştir',['Tab'],[]], ['flares','Flare bırak',['KeyZ'],['b10']],
-    ['gear','İniş takımı',['KeyG'],['b1']], ['autoTaxi','Otomatik taksi',['KeyT'],[]], ['skipTaxi','Taksiyi atla',['KeyL'],['b3']], ['eject','Fırlatma koltuğu (iki kez bas)',['KeyJ'],[]]]},
+    ['gear','İniş takımı',['KeyG'],['b1']], ['autoTaxi','Otomatik taksi',['KeyT'],[]], ['skipTaxi','Piste geç',['KeyL'],['b3']], ['eject','Fırlatma koltuğu (iki kez bas)',['KeyJ'],[]]]},
   heli:{name:'Helikopter', acts:[
     ['cycF','İleri (cyclic)',['KeyW','ArrowUp'],['a1-']], ['cycB','Geri (cyclic)',['KeyS','ArrowDown'],['a1+']],
     ['cycL','Sola kay (cyclic)',['KeyA','ArrowLeft'],['a0-']], ['cycR','Sağa kay (cyclic)',['KeyD','ArrowRight'],['a0+']],
     ['collUp','Yüksel (collective)',['KeyR','ShiftLeft'],['b7','a3-']], ['collDn','Alçal (collective)',['KeyF','ControlLeft'],['b6','a3+']],
     ['yawL','Sola dön (pedal)',['KeyQ'],['a2-','b14']], ['yawR','Sağa dön (pedal)',['KeyE'],['a2+','b15']],
-    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['flares','Flare bırak',['KeyZ'],['b10']], ['nextWpn','Silah değiştir (CİRİT / UMTAS)',['Tab'],['b3']], ['hook','Yük kancası / asker bindir-indir',['KeyB'],['b4']], ['assist','Askı yardımı (hover assist) aç/kapat',['KeyJ'],['b5']], ['exit','İn',['KeyG'],['b1']]]},
+    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['flares','Flare bırak',['KeyZ'],['b10']], ['nextWpn','Silah değiştir (CİRİT / UMTAS)',['Tab'],['b3']], ['hook','Yük kancası / asker bindir-indir',['KeyB'],['b4']], ['assist','Askı yardımı (hover assist) aç/kapat',['KeyJ'],['b5']], ['exit','Helikopterden in',['KeyG','Enter'],['b1']]]},
   land:{name:'Kara aracı', acts:[
     ['gas','Gaz',['KeyW','ArrowUp'],['b7','a1-']], ['brake','Fren / geri',['KeyS','ArrowDown'],['b6','a1+']],
     ['left','Sola dön',['KeyA','ArrowLeft'],['a0-']], ['right','Sağa dön',['KeyD','ArrowRight'],['a0+']],
@@ -28,7 +28,7 @@ const CTRL_DEF={
   sea:{name:'Deniz aracı', acts:[
     ['thrUp','Hız artır',['KeyW','ArrowUp'],['b7','a1-']], ['thrDown','Hız azalt / geri',['KeyS','ArrowDown'],['b6','a1+']],
     ['rudL','Dümen sola',['KeyA','ArrowLeft'],['a0-']], ['rudR','Dümen sağa',['KeyD','ArrowRight'],['a0+']],
-    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['cam','Kamera',['KeyC'],['b2']]]},
+    ['gun','Top ateşi',['Space'],['b0']], ['weapon','Seçili silahı kullan',['KeyX'],['b11']], ['cam','Kamera',['KeyC'],['b2']], ['exit','Tekneden in',['KeyE','KeyF','Enter'],['b1']]]},   /* V2.39: listed like the other vehicles (it always worked through the land keys) */
   foot:{name:'Yaya', acts:[
     ['fwd','İleri',['KeyW','ArrowUp'],['a1-']], ['back','Geri',['KeyS','ArrowDown'],['a1+']], ['left','Sola',['KeyA','ArrowLeft'],['a0-']], ['right','Sağa',['KeyD','ArrowRight'],['a0+']],
     ['run','Koş (basılı tut)',['ShiftLeft','ShiftRight'],['b10']], ['runToggle','Sürekli koş aç / kapat',['CapsLock'],[]], ['jump','Zıpla',['Space'],['b0']], ['use','Araca / uçağa bin',['KeyE','KeyF','Enter'],['b2']], ['call','Araç çağır',['KeyG'],['b3']],

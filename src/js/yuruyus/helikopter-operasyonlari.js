@@ -220,7 +220,7 @@ function hmEnd(win,why){
   if(typeof musSting==='function') try{ musSting(win?'victory':'defeat'); }catch(e){}
   if(typeof radioSay==='function') radioSay({w:'kule',t:win?'Görev tamamlandı. Tebrikler {cs}, üsse dönebilirsin.':'Görev başarısız: '+why+'.'},null,{force:true});
   const el=$('hmEnd'); if(el){ $('hmEndT').textContent=win?'GÖREV TAMAMLANDI':'GÖREV BAŞARISIZ'; $('hmEndT').className=win?'ok':'bad';
-    $('hmEndS').innerHTML='<b>'+M.n+'</b><span>'+(win?'Süre: '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+(best&&t>=best?' · rekor '+Math.floor(best/60)+':'+String(best%60).padStart(2,'0'):' · yeni rekor!')+(HM.kills?' · '+HM.kills+' hedef':'')+' · +'+xp+' XP':why)+'</span>';
+    $('hmEndS').innerHTML='<b>'+M.n+'</b><span>'+(win?'Süre: '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+(best&&t>=best?' · rekor '+Math.floor(best/60)+':'+String(best%60).padStart(2,'0'):' · yeni rekor!')+(HM.kills?' · '+HM.kills+' hedef':'')+' · +'+xp+' TP':why)+'</span>';
     setTimeout(function(){ if(HM.ended&&HM.on){ try{ document.exitPointerLock&&document.exitPointerLock(); }catch(e){} el.classList.remove('hidden'); } },win?1800:2600); }
 }
 function hmQuit(){ $('hmEnd').classList.add('hidden'); hmClean(); HM.on=false; }
@@ -232,7 +232,7 @@ function hmQuit(){ $('hmEnd').classList.add('hidden'); hmClean(); HM.on=false; }
 function hmList(){ const el=$('hMis'); if(!el) return; if(!HSEL){ el.innerHTML=''; el.classList.add('hidden'); return; } el.classList.remove('hidden');
   let R={}; try{ R=JSON.parse(stGet('ayy-hrec')||'{}'); }catch(e){}
   el.innerHTML='<p class="hmh">HELİKOPTER GÖREVLERİ</p>'+HMIS.filter(function(m){ return m.heli===HSEL; }).map(function(m){ const r=R[m.id];
-    return '<button type="button" class="hmb" data-hm="'+m.id+'"><b>'+m.n+'</b><small>'+m.d+'</small><i>'+(r?'Rekor '+Math.floor(r/60)+':'+String(r%60).padStart(2,'0'):'Süre '+Math.round(m.lim/60)+' dk')+' · '+m.xp+' XP</i></button>'; }).join(''); }
+    return '<button type="button" class="hmb" data-hm="'+m.id+'"><b>'+m.n+'</b><small>'+m.d+'</small><i>'+(r?'Rekor '+Math.floor(r/60)+':'+String(r%60).padStart(2,'0'):'Süre '+Math.round(m.lim/60)+' dk')+' · '+m.xp+' TP</i></button>'; }).join(''); }
 (function(){ const el=$('hMis'); if(el) el.addEventListener('click',function(e){ const b=e.target.closest('[data-hm]'); if(b) hmStart(b.dataset.hm); }); })();
 refreshHangarUI=HOOK.wrap('refreshHangarUI','yuruyus/helikopter-operasyonlari#_hoRefresh',function(_hoRefresh){ return function(){ _hoRefresh(); hmList(); }; },refreshHangarUI);
 /* ---- input */

@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.39 — 2026-10-29 · Oynanış ve metin tutarlılığı
+- **Görev ödülleri dengelendi:** görevlerin dakika başına verdiği TP 15 ile 43 arasında rastgele dağılıyordu ve zorlukla ilgisi yoktu. Artık her ödül görevin süresi ve zorluğuyla orantılı (Kolay 25, Orta 32, Zor 40 TP/dk; %20 aşağı ya da %25 yukarı esneyebiliyor).
+  - Ödülü artanlar: İHA keşfi 220 → 300, TCG Anadolu ile çıkarma 320 → 380, Konvoy savunması 300 → 310, Deniz devriyesi.
+  - Ödülü azalanlar: Konvoy Avı 300 → 280, Poligon Atışı 220 → 190.
+  - Uçuş okulu dersleri, yarışlar ve harekât kendi ödüllerini koruyor.
+- **Görev ekranında artık "XP" değil "TP" yazıyor**, kariyerle aynı. Uçuş okulundaki belgelerin adları "Pilot sertifikası" ve "Helikopter sertifikası" oldu; "lisans" kelimesi kalktı. Klavyedeki "Taksiyi atla" eylemi dokunmatik düğmeyle aynı adı aldı: "Piste geç".
+- **Mantık hataları:** silah taşımayan bir uçakla (ANKA) taarruz ya da hava-hava görevi başlatılamıyor; ekran hangi uçakları seçebileceğini söylüyor. Ders ve sınavlardaki hız, irtifa ve rota noktaları kullandıkları uçağın sınırları içinde kalıyor; bunu test her yayında denetliyor.
+- **Kontroller her araçta aynı mantıkta:** tekneden inmek (E / F / Enter) artık kontroller listesinde de görünüyor. Helikopterden G'nin yanında Enter ile de inilebiliyor. Kısayol çakışması yok.
+- **Terim sözlüğü ve yazım denetimi (yeni):** oyunda görünen 3 839 metin otomatik taranıyor. Sözlük `docs/TERIMLER.md` dosyasında: TP, görev, kanat adamı, puan, belge / ehliyet / sertifika, Piste geç, art yakıcı, flare… Sık yapılan yazım hataları da aranıyor ("herşey", "yanlız", "malesef"…). Aykırı metin sayısı şu an 0. Yeni bir aykırılık çıkarsa yayın kendiliğinden duruyor.
+
 ## V2.38 — 2026-10-28 · Yükleme ekranı 3.0
 - **İpucu kartları:** yükleme çubuğunun altında 3,5 saniyede bir değişen kartlar var. 26 kart üç türde:
   - oyun ipuçları (taksiyi atlama, flare, Hızlı Savaş, Rehber, araç çağırma…);

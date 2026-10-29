@@ -29,8 +29,8 @@ srv.listen(0,'127.0.0.1',async function(){ const port=srv.address().port; let fa
     for(const v of views){ await p.evaluate(function(c){ return window.__E(c); },v[1]); await p.waitForTimeout(2500); const r=JSON.parse(await p.evaluate(function(c){ return window.__E(c); },check));
       console.log(v[0]+': '+r.calls+' çizim, '+Math.round(r.tris/1000)+'k üçgen'); r.bad.forEach(function(x){ fails.push(v[0]+': '+x); });
       const B=BUDGET[v[0]]; if(B){ if(r.calls>B[0]) fails.push(v[0]+': bütçe aşıldı, '+r.calls+' çizim > '+B[0]); if(r.tris>B[1]*1000) fails.push(v[0]+': bütçe aşıldı, '+Math.round(r.tris/1000)+'k üçgen > '+B[1]+'k'); } }
-    /* texture memory */
-    const tex=await p.evaluate(function(c){ return window.__E(c); },"(function(){ try{ return typeof ptTexMem==='function'?ptTexMem().mb:null; }catch(e){ return null; } })()");
+    /* texture memory, once the background texture job is done (since V2.34 it waits while flying; menus finish it) */
+    const tex=await p.evaluate(function(c){ return window.__E(c); },"(function(){ try{ if(typeof TXS!=='undefined'&&TXS.run) txsRun(); return typeof ptTexMem==='function'?ptTexMem().mb:null; }catch(e){ return null; } })()");
     if(tex!=null){ console.log('doku belleği: '+tex+' MB'); if(tex>BUDGET.texMB) fails.push('bütçe aşıldı, doku belleği '+tex+' MB > '+BUDGET.texMB+' MB'); }
     /* stress: a crowded battle */
     const heap=function(){ return p.evaluate(function(){ return performance.memory?performance.memory.usedJSHeapSize/1048576:0; }); };

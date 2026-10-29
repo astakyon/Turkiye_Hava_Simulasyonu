@@ -124,6 +124,7 @@ veri/surum-notlari-veri.js
 veri/rehber-veri.js
 ekran/rehber.js
 ekran/sorun-giderme.js
+gorev/tp-dengesi.js
 performans/performans-testi.js
 performans/efekt-kalitesi.js
 performans/model-pisirme.js

@@ -18,7 +18,7 @@ function navRender(){
   if(NAV.level==='root') h='<p class="mg">OYNA</p>'+navBtn('start','Hızlı Oyun','Hemen uç, gez, botlara karşı savaş','bolt')+navBtn('careerMenu','Kariyer',rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP','star','car')+navBtn('net','Çok Oyunculu','4 kişi · sesli sohbet','net');
   else if(NAV.level==='start') h='<p class="mg">HIZLI OYUN <small>· puan kazandırmaz, her şey açık</small></p>'+navBtn('q_free','Serbest Uçuş','Süresiz, düşmansız','plane')+navBtn('q_walk','Üssü Gez','Yürü, sür, helikoptere bin','walk')+navBtn('q_hangar','Hangar','Bütün uçaklar ve boyalar','hangar')+
     '<p class="mg">KARİYER</p>'+navBtn('careerMenu','Kariyer',rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP','star','car')+navBtn('back','Geri','','back','bk');
-  else h='<p class="mg">KARİYER <small>· '+rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP</small></p>'+navBtn('c_missions','Görevler',navMisSub(),'target')+navBtn('c_school','Eğitim',(typeof schDone==='function'?schDone():0)+' / 8 ders · lisans','school')+
+  else h='<p class="mg">KARİYER <small>· '+rankName(r)+' · '+(p.xp||0).toLocaleString('tr-TR')+' TP</small></p>'+navBtn('c_missions','Görevler',navMisSub(),'target')+navBtn('c_school','Eğitim',(typeof schDone==='function'?schDone():0)+' / 8 ders · belge','school')+
     navBtn('c_walk','Serbest Gezi','Kariyer modunda gez · TP kazandırır','walk')+navBtn('c_hangar','Hangar','TP kazandıkça uçak, araç, boya açılır','hangar')+navBtn('back','Geri','','back','bk');
   el.innerHTML=h; tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }
 function navMisSub(){ const L=boardAll().filter(function(e){ return e.kind!=='school'&&e.kind!=='cnew'; }), open=L.filter(function(e){ return !misLocked(e); }).length; return open+' / '+L.length+' görev açık'; }
@@ -43,7 +43,7 @@ const NAV_D={
   q_hangar:['HIZLI OYUN','Hangar','Bütün uçakları, helikopterleri ve boyaları dene. Kilit yok.',[],'Hangara git'],
   careerMenu:['KARİYER','Kariyer','Er’den Orgeneral’e: görev yap, eğitim al, tecrübe puanı kazan. Rütbe yükseldikçe yeni görevler, uçaklar, araçlar ve boyalar açılır.',[],'Kariyere gir'],
   c_missions:['KARİYER','Görevler','Rütbene göre açılan görevler: uçak, helikopter, dinamik görevler ve yarışlar. Kilitli görevlerin yanında gereken rütbe yazar.',[],'Görev panosu'],
-  c_school:['KARİYER','Eğitim','Uçuş okulu: kalkış, iniş, rüzgârlı iniş, helikopter, askı yükü, silah, gemiye iniş. Lisans ve madalya kazandırır.',[],'Eğitime git'],
+  c_school:['KARİYER','Eğitim','Uçuş okulu: kalkış, iniş, rüzgârlı iniş, helikopter, askı yükü, silah, gemiye iniş. Sertifika ve madalya kazandırır.',[],'Eğitime git'],
   c_walk:['KARİYER','Serbest Gezi','Adayı kariyer modunda gez: uçuş, iniş, gemi inişi ve keşif tecrübe puanı kazandırır.',[],'▶ Gezmeye başla'],
   c_hangar:['KARİYER','Hangar','Kariyer hangarı: rütbene göre açılmış uçaklar ve boyalar. Kilitli olanların yanında gereken rütbe yazar.',[],'Hangara git'],
   back:['MENÜ','Geri','Bir önceki menüye dön.',[],'Geri']};

@@ -47,7 +47,7 @@ const LESSONS=[
   {id:'gemi',n:'Gemiye iniş',veh:'heli',ac:'t625',lic:'heli',xp:220,d:'Rıhtımdaki fırkateynin, ardından açıkta seyreden devriye korvetinin helikopter güvertesine in.',spot:[-1720,-3360,Math.PI/2],
    steps:[{t:'Rıhtımdaki fırkateynin helikopter güvertesine in',ok:function(H){ const d=H.ground&&deckAt(H.x,H.z,H.y+0.6); return !!d&&!d.mover; }},{t:'Kalk',ok:function(H){ return !H.ground; }},
      {t:'Açıktaki devriye korvetinin hareketli güvertesine in',ok:function(H){ const d=H.ground&&deckAt(H.x,H.z,H.y+0.6); return !!d&&!!d.mover&&!d.mover.K; }}]}];
-const LIC={pilot:{n:'Pilot lisansı',ids:['kalkis','tur','inis','ruzgar']},heli:{n:'Helikopter lisansı',ids:['hover','sapan','gemi']},silah:{n:'Silah sertifikası',ids:['silah']}};
+const LIC={pilot:{n:'Pilot sertifikası',ids:['kalkis','tur','inis','ruzgar']},heli:{n:'Helikopter sertifikası',ids:['hover','sapan','gemi']},silah:{n:'Silah sertifikası',ids:['silah']}};
 function schState(){ try{ return JSON.parse(stGet('ayy-school')||'{}'); }catch(e){ return {}; } }
 function schDone(){ const s=schState(); return LESSONS.filter(function(L){ return s[L.id]; }).length; }
 function schLicOk(k){ const s=schState(); return LIC[k].ids.every(function(id){ return s[id]; }); }

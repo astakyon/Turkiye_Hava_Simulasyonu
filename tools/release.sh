@@ -22,6 +22,7 @@ open('CHANGELOG.md','w').write(c)
 P
 python3 tools/relnotes.py
 python3 tools/ozellikler.py >/dev/null
+python3 tools/metinler.py >/dev/null
 python3 tools/build.py >/dev/null
 BC=$(timeout 900 node tools/browser-check.js 2>&1 | grep -v agent-proxy | tail -9); echo "$BC"
 if echo "$BC" | grep -q "FAIL"; then echo "TARAYICI DENETİMİ BAŞARISIZ — yayın durduruldu"; exit 1; fi
