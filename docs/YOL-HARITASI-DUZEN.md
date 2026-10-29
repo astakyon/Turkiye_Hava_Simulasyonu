@@ -185,6 +185,8 @@ Amaç: şimdiye kadar yapılan 90'dan fazla sürümün derli toplu, tutarlı ve 
 ## Sonrası
 
 - **V2.41+ Model yenileme serisi:** KAAN, TB2, TB3, Akıncı, Kızılelma, ANKA ve ANKA-3, Aksungur, Hürjet ve Hürkuş, helikopterler, kara araçları, gemiler. Ölçü denetiminde sapan modeller (ANKA-3 +%37, Kızılelma +%18, Hürjet +%17) öncelikli. Her model onayına sunulur. V2.15'teki parça birleştirme sayesinde yeni modeller baştan az çizimle yapılır.
+- **V2.50 Hızlı ikinci açılış** (oyuncu kararı, 29 Ekim): oyun kodu ayrı bir dosyaya (`oyun.js`) alınır, böylece Chrome derlenmiş kodu saklar ve sonraki açılışlarda yeniden derlemez. claude.ai sayfası ve GitHub Pages iki dosyayla çalışır; tek dosyalık sürüm indirme ve çevrimdışı kullanım için ayrıca üretilir. Ölçüt: telefonda ikinci açılışın betik süresi (rapor `boot.js`) en az yarıya iner.
+- **V2.51 Play Store yayını** (oyuncu kararı): model serisinden sonra.
 - **Tanıtım sayfası ve arama görünürlüğü (isteğe bağlı):** oyunu herkese açık yayınlamak istersen hızlı açılan bir tanıtım sayfası, anahtar kelimeli başlık ve açıklama, sosyal medya önizlemesi (Open Graph), oyun için yapılandırılmış veri (VideoGame şeması), sıkıştırılmış görseller, ekran görüntüleri ve kısa tanıtım. Seocu yazısındaki öneriler buraya giriyor.
 - Önceki öneriler listesi (sezon etkinlikleri, liderlik tabloları, filo sistemi, gerçekçi uçuş modu, video paylaşma, gece görevleri, tıklanabilir kokpit) model serisinden sonra sıralanır.
 

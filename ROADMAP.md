@@ -265,6 +265,13 @@ Her model Defence Turk sayfasındaki fotoğraflara bakılarak ve gerçek ölçü
 | V2.48 | TUSAŞ Hürjet ve Hürkuş | |
 | V2.49 | Helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | |
 
+### Faz 17 — Yayın öncesi (oyuncu kararları, 29 Ekim)
+
+| Sürüm | Başlık | Durum |
+|---|---|---|
+| V2.50 | Hızlı ikinci açılış: oyun kodu ayrı dosyada (tarayıcının kod önbelleği), tek dosyalık sürüm indirme için korunur | |
+| V2.51 | Play Store yayını (Android) | |
+
 ## Sonraki öneriler (sırası sonra belirlenecek)
 
 - Sezonluk etkinlikler (29 Ekim, 30 Ağustos)
