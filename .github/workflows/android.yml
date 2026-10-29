@@ -61,6 +61,7 @@ jobs:
       - name: Android projesini üret ve derle
         working-directory: twa
         run: |
+          unset ANDROID_SDK_ROOT; export ANDROID_HOME=$HOME/android-sdk   # Gradle tek SDK yolu ister
           note(){ t=$( { grep -A10 'What went wrong' "$1" | head -n 14; grep -m6 -i 'caused by\|error:' "$1"; tail -n 6 "$1"; } | sed 's/\x1b\[[0-9;]*m//g' | tr -d '\r' | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g'); echo "::error title=$2::$t"; }
           yes 2>/dev/null | bubblewrap update --skipVersionUpgrade 2>&1 | tee update.log; [ "${PIPESTATUS[1]}" = 0 ] || { note update.log "bubblewrap update"; exit 1; }
           yes 2>/dev/null | bubblewrap build --skipPwaValidation 2>&1 | tee build.log; [ "${PIPESTATUS[1]}" = 0 ] || { note build.log "bubblewrap build"; exit 1; }
