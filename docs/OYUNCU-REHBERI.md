@@ -50,6 +50,11 @@ Bu rehber `python3 tools/ozellikler.py` ile oyundaki **Rehber** ekranıyla aynı
 - **Hava savunma ve füzeden kaçış:** SAM bataryaları, füze uyarısı, gerçekçi füze modeli, flare ve kaçış yardımı. *Nereden:* Görev ekranı → SAM. *Tuş:* Z flare · F7 kaçış.
 - **Gece görüş ve termal kamera:** NVG ve FLIR görünümleri. *Nereden:* Uçuşta. *Tuş:* ` (Backquote).
 
+## Modeller
+
+- **Ayrıntılı helikopter, kara aracı ve gemi modelleri:** T129 ATAK (CİRİT ve L-UMTAS ile), T625 GÖKBEY, Altay, T-155 Fırtına, Pars III 8×8, Kirpi, Korkut, Hisar-A, Ada sınıfı korvet, İstif fırkateyni, TCG Anadolu ve Tuzla sınıfı hücumbot yenilendi (V2.49): eğik zırh plakaları, yol tekerlekleri ve palet bantları, nişangâhlar, uzaktan kumandalı silah istasyonları, gemilerde küpeşte, 76 mm top, can salları. Kütüphanede eski modelle karşılaştırılabilir. *Nereden:* Model Kütüphanesi · Kara üssü · Deniz üssü.
+- **Uçak, helikopter, araç ve gemi modelleri:** Kodla üretilmiş stilize modeller; parça birleştirme ile az çizim. *Nereden:* Her yerde.
+
 ## Kara ve deniz araçları
 
 - **Yürüyüş:** Birinci şahıs yürüme, koşma, zıplama, araçlara ve uçaklara binme. *Nereden:* Hızlı Oyun → Üssü Gez. *Tuş:* WASD · Shift · Space · E bin.
@@ -120,8 +125,4 @@ Bu rehber `python3 tools/ozellikler.py` ile oyundaki **Rehber** ekranıyla aynı
 - **Kayıt ve yedek:** Bütün ilerleme tek kayıtta, her oturum yedekleniyor; grafik ayarları cihaza özel. *Nereden:* Kendiliğinden.
 - **Uygulama olarak yükleme:** Ana ekrana ekleme, kısayollar, Android (Play Store) hazırlığı. *Nereden:* Ana menü → Uygulamayı yükle.
 - **Duyurular ve sürüm notları:** Yönetici duyuruları, güncellemeden sonra yenilikler şeridi, Yenilikler ekranı. *Nereden:* Ana menü → Yenilikler.
-
-## Modeller
-
-- **Uçak, helikopter, araç ve gemi modelleri:** Kodla üretilmiş stilize modeller; parça birleştirme ile az çizim. *Nereden:* Her yerde.
 

@@ -18,23 +18,23 @@ function libItems(){
    ['eq:stand','Bakım merdiveni','Bakım',function(){ return prStand(); }],['eq:bench','İş tezgâhı','Atölye',function(){ return prWorkbench(); }],['eq:chest','Takım dolabı','Atölye',function(){ return prToolChest(); }]]
     .forEach(function(v){ add('hava',v[0],'eq',v[1],v[2],v[3]); });
   head('heli','Helikopterler','Gezintide binilebilir');
-  [['t129','Taarruz · TUSAŞ'],['t625','Genel maksat · TUSAŞ']].forEach(function(h){ add('heli','heli:'+h[0],'heli',HELI_DEF[h[0]].name,h[1],function(){ const m=heliModel(h[0]); LIB.heli=m; return m.g; }); });
+  [['t129','Taarruz · TUSAŞ'],['t625','Genel maksat · TUSAŞ']].forEach(function(h){ add('heli','heli:'+h[0],'heli',HELI_DEF[h[0]].name,h[1],function(){ const m=heliModel(h[0]); LIB.heli=m; return m.g; },{buildOld:function(){ const m=heliModelV1(h[0]); LIB.heli=m; return m.g; }}); });
   head('deniz','Savaş gemileri','Hilal Deniz Üssü');
-  add('deniz','sh:istif','ship','İstif sınıfı fırkateyn','F-515 · Fırkateyn',G(function(){ return buildFrigate('istif','F-515'); }));
-  add('deniz','sh:ada','ship','Ada sınıfı korvet','F-511 · Korvet',G(function(){ return buildFrigate('ada','F-511'); }));
-  add('deniz','sh:anadolu','ship','TCG Anadolu','L-400 · Amfibi hücum gemisi',G(buildAnadolu));
+  add('deniz','sh:istif','ship','İstif sınıfı fırkateyn','F-515 · Fırkateyn',G(function(){ return buildFrigate('istif','F-515'); }),{buildOld:G(function(){ return buildFrigateV1('istif','F-515'); })});
+  add('deniz','sh:ada','ship','Ada sınıfı korvet','F-511 · Korvet',G(function(){ return buildFrigate('ada','F-511'); }),{buildOld:G(function(){ return buildFrigateV1('ada','F-511'); })});
+  add('deniz','sh:anadolu','ship','TCG Anadolu','L-400 · Amfibi hücum gemisi',G(buildAnadolu),{buildOld:G(buildAnadoluV1)});
   add('deniz','sh:sub','ship','Denizaltı','Reis sınıfı',G(buildSub));
-  add('deniz','sh:patrol','ship','Hücumbot','Karakol',G(function(){ return buildPatrol('P-1200'); }));
+  add('deniz','sh:patrol','ship','Hücumbot','Karakol',G(function(){ return buildPatrol('P-1200'); }),{buildOld:G(function(){ return buildPatrolV1('P-1200'); })});
   add('deniz','sh:tug','ship','Römorkör','Liman hizmeti',G(buildTug));
   head('deniz','Sivil gemiler','Marina ve açık deniz');
   add('deniz','sh:ferry','ship','Feribot','Yolcu',G(buildFerry)); add('deniz','sh:cargo','ship','Konteyner gemisi','Yük',G(function(){ return buildCargo('#1d5aa8'); }));
   add('deniz','sh:tanker','ship','Tanker','Yük',G(buildTanker)); add('deniz','sh:fishing','ship','Balıkçı teknesi','Balıkçılık',G(function(){ return buildFishing('#2f6aa5'); }));
   add('deniz','sh:sail','ship','Yelkenli','Gezi',G(function(){ return buildSailboat(true); }));
   head('kara','Zırhlı araçlar','Bozkurtlar');
-  add('kara','ld:altay','land','Altay','Ana muharebe tankı',G(buildAltay)); add('kara','ld:firtina','land','Fırtına','Kundağı motorlu obüs',G(buildFirtina));
-  add('kara','ld:pars','land','Pars','Zırhlı muharebe aracı',G(buildPars)); add('kara','ld:kirpi','land','Kirpi','Mayına dayanıklı araç',G(buildKirpi));
+  add('kara','ld:altay','land','Altay','Ana muharebe tankı',G(buildAltay),{buildOld:G(buildAltayV1)}); add('kara','ld:firtina','land','Fırtına','Kundağı motorlu obüs',G(buildFirtina),{buildOld:G(buildFirtinaV1)});
+  add('kara','ld:pars','land','Pars','Zırhlı muharebe aracı',G(buildPars),{buildOld:G(buildParsV1)}); add('kara','ld:kirpi','land','Kirpi','Mayına dayanıklı araç',G(buildKirpi),{buildOld:G(buildKirpiV1)});
   head('kara','Hava savunma ve destek','Bozkurtlar');
-  add('kara','ld:hisar','land','Hisar','Hava savunma füzesi',G(buildHisar)); add('kara','ld:korkut','land','Korkut','Uçaksavar topu',G(buildKorkut));
+  add('kara','ld:hisar','land','Hisar','Hava savunma füzesi',G(buildHisar),{buildOld:G(buildHisarV1)}); add('kara','ld:korkut','land','Korkut','Uçaksavar topu',G(buildKorkut),{buildOld:G(buildKorkutV1)});
   add('kara','ld:radar','land','Radar aracı','Erken ihbar',G(buildRadarTruck)); add('kara','ld:truck','land','Askerî kamyon','Lojistik',G(buildArmyTruck));
   add('kara','car:mil','car','Bozkurtlar 4×4','Gezintide sürülebilir',function(){ return carModel('mil').g; });
   add('kara','veh:pickup','veh','Arazi kamyoneti','Devriye',function(){ return vehCar('pickup'); });
@@ -88,7 +88,7 @@ function libSelect(key){
   libWire(false); libClear(); if(!LIB.item||LIB.item.key!==key) LIB.tests.old=false; LIB.item=it; LIB.cat=it.cat; LIB.heli=null; LIB.tests.wpn=false; LIB.tests.fold=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
   let obj;
   if(it.kind==='ac'){ const def=AIRCRAFT[it.id], old=LIB.tests.old&&def.buildOld; let m; if(old){ m=def.buildOld(); upgradeModel(m.group); m.acId=it.id; } else m=buildModel(it.id); LIB.inst=m; obj=m.group; obj.position.set(0,AIRFIELD_Y*0+AIRCRAFT[it.id].gearOff,0); m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); }); }
-  else { obj=it.build(); obj.traverse(function(o){ if(o.isMesh&&o.material&&o.material.isMeshPhongMaterial) o.material=stdOf(o.material); }); }
+  else { obj=(LIB.tests.old&&it.buildOld?it.buildOld:it.build)(); obj.traverse(function(o){ if(o.isMesh&&o.material&&o.material.isMeshPhongMaterial) o.material=stdOf(o.material); }); }
   LIB.obj=obj; LIB.holder.add(obj);
   libFrame(); libRenderList(); libRefreshPanel();
   if(LIB.guides) libGuides(true);
@@ -138,7 +138,7 @@ function libTab(t){ LIB.tab=t; Array.prototype.forEach.call($('libTabs').childre
 const LIB_TESTS=[['old','Eski modelle karşılaştır'],['gear','İniş takımı'],['ab','Motor / art yakıcı'],['wpn','Silahlar'],['spin','Pervane'],['lights','Seyir ışıkları'],['surf','Kumanda yüzeyleri'],['fold','Kanatları katla'],['wire','Tel kafes']];
 function libRefreshTests(){
   const it=LIB.item, m=LIB.inst, ac=it.kind==='ac';
-  const can={old:ac&&!!AIRCRAFT[it.id].buildOld, gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), fold:ac&&!!(m.folds&&m.folds.length), wire:true};
+  const can={old:ac?!!AIRCRAFT[it.id].buildOld:!!it.buildOld, gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), fold:ac&&!!(m.folds&&m.folds.length), wire:true};
   $('libTests').innerHTML=LIB_TESTS.map(function(t){ return '<button type="button" data-x="'+t[0]+'" aria-pressed="'+(!!LIB.tests[t[0]]&&can[t[0]])+'"'+(can[t[0]]?'':' disabled')+'>'+t[1]+'</button>'; }).join('');
   $('libTestNote').textContent=ac?(can.surf?'Kumanda yüzeyleri modeldeki işaretli parçalarla oynar.':'Kumanda yüzeyi testi için içe aktarılmış modelde parçaları işaretle (Model sekmesi).'):'Yer araçları ve ekipman için yalnızca tel kafes görünümü.';
 }

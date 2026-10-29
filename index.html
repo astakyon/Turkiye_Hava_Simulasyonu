@@ -3,7 +3,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="game-version" content="V2.48">
+<meta name="game-version" content="V2.49">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Ay Yıldız: Hedef Kızıl Elma</title>
 <meta name="theme-color" content="#a10d1c">
@@ -1868,7 +1868,7 @@ return out; };
  
 (function(){ if(typeof window==='undefined'||!window.addEventListener) return; ['keydown','keyup'].forEach(function(t){ [true,false].forEach(function(cap){ const key=t+(cap?':c':':b');
 INPUT.h[key]=INPUT.h[key]||[]; INPUT.real[key]=function(e){ INPUT.dispatch(key,e); }; window.addEventListener(t,INPUT.real[key],cap); }); }); })();
-const GAME_VERSION='V2.48', GAME_DATE='2026-10-29';
+const GAME_VERSION='V2.49', GAME_DATE='2026-10-29';
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
 const D2R = Math.PI/180, R2D = 180/Math.PI;
@@ -5123,7 +5123,7 @@ const b=sPart(g,MK.cyl(0.13*s,0.2*s,5*s,10),M.supD,0,y+1.0*s,z-4.2*s); b.rotatio
 function shipCIWS(g,M,x,y,z){ sPart(g,MK.cyl(0.9,0.9,0.6,14),M.supD,x,y+0.3,z).rotation.x=Math.PI/2; const d=new THREE.Mesh(new THREE.SphereGeometry(0.8,14,10),M.white); d.position.set(x,y+1.6,z); d.scale.set(1,1.4,1); g.add(d); }
 function shipRadar(g,M,x,y,z){ const r=new THREE.Group(); r.position.set(x,y,z); sPart(r,new THREE.BoxGeometry(3.6,0.9,0.3),M.dark,0,0.45,0); sPart(r,new THREE.CylinderGeometry(0.12,0.12,0.6,6),M.dark,0,-0.3,0); g.add(r); return r; }
  
-function buildFrigate(kind,num){
+function buildFrigateV1(kind,num){
 const M=shipMats(), ada=kind==='ada', L=ada?99.5:113, B=ada?14.4:14.4;
 const hull=shipHull({L:L,B:B,T:ada?3.9:4.2,Fb:7.4,Fs:4.8,rake:7,sw:0.78,num:num,numH:3.2,numY:4.5,numAt:0.14,L2:L,seed:num.length});
 const g=new THREE.Group(); g.add(hull); const F=hull.userData.F, Z=function(t){ return -L/2+t*L; }, T=function(z){ return (z+L/2)/L; }, yAt=function(z){ return F(T(z)); };
@@ -5157,7 +5157,7 @@ sPart(g,new THREE.CylinderGeometry(0.06,0.06,4,6),M.white,0,F(1)+2,L/2-0.6); shi
 return {group:g, radar:radar, L:L, deck:{z:(hz1+L/2)/2, z0:hz1, y:hy, r:7.5}, B:B};
 }
  
-function buildAnadolu(){
+function buildAnadoluV1(){
 const M=shipMats(), L=231, B=32, Fd=21;
 const deckF=function(t){ return Fd+(t<0.12?6*Math.pow(1-t/0.12,1.7):0); };
 const hull=shipHull({L:L,B:B,T:6.9,Fb:Fd,Fs:Fd,Fmax:Fd+6,deckF:deckF,rake:4,sw:0.95,ww:0.78,bowFine:0.22,
@@ -5200,7 +5200,7 @@ sPart(g,new THREE.CylinderGeometry(0.1,0.1,3,6),M.dark,0,R+4.4,-L/2+19); sPart(g
 return {group:g, L:L};
 }
  
-function buildPatrol(num){
+function buildPatrolV1(num){
 const M=shipMats(), L=56;
 const hull=shipHull({L:L,B:8.9,T:2.4,Fb:4.4,Fs:3,rake:3,sw:0.86,num:num,numH:1.8,numY:2.6,numAt:0.13,seed:5});
 const g=new THREE.Group(); g.add(hull); const F=hull.userData.F;
@@ -5276,6 +5276,69 @@ return {group:g, L:L};
 }
 function beamIn(g,mat,a,b,r){ const d=new THREE.Vector3(b[0]-a[0],b[1]-a[1],b[2]-a[2]), L=d.length(), m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,L,4),mat);
 m.position.set((a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2); m.quaternion.setFromUnitVectors(UP,d.normalize()); g.add(m); return m; }
+ 
+function shipHalfW(o,t){ const f=o.bowFine||0.4; return (o.B/2)*(t<f?Math.pow(Math.sin(Math.PI/2*t/f),0.75):1)*(1-(1-(o.sw==null?0.8:o.sw))*smooth(0.72,1,t))*(o.deckW?o.deckW(t):1); }
+ 
+function shipRails(g,o,F,t0,t1,step,mat){ const n=Math.max(2,Math.round((t1-t0)*o.L/(step||2.6)/1.6)), h=1.0, pts=[];
+for(let i=0;i<=n;i++){ const t=t0+(t1-t0)*i/n; pts.push([shipHalfW(o,t)-0.15,F(t),-o.L/2+t*o.L]); }
+[-1,1].forEach(function(s){ for(let i=0;i<=n;i++){ const p=pts[i]; sPart(g,new THREE.BoxGeometry(0.05,h,0.05),mat,s*p[0],p[1]+h/2,p[2]);
+if(i<n){ const q=pts[i+1], dx=s*(q[0]-p[0]), dy=q[1]-p[1], dz=q[2]-p[2], len=Math.sqrt(dx*dx+dy*dy+dz*dz);
+[h].forEach(function(y){ const r=sPart(g,new THREE.BoxGeometry(0.04,0.04,len),mat,s*(p[0]+q[0])/2,(p[1]+q[1])/2+y,(p[2]+q[2])/2); r.rotation.y=Math.atan2(dx,dz); r.rotation.x=-Math.atan2(dy,Math.sqrt(dx*dx+dz*dz)); }); } } }); }
+function shipRafts(g,M,x,y,z,n){ for(let i=0;i<n;i++){ const c=sPart(g,MK.cyl(0.38,0.38,1.3,10),M.white,x,y,z+i*1.5); c.rotation.y=Math.PI/2; } }
+function shipAnchor(g,M,x,y,z){ sPart(g,new THREE.BoxGeometry(0.15,0.9,0.7),M.black,x,y,z); sPart(g,new THREE.CylinderGeometry(0.35,0.35,0.1,10),M.black,x+Math.sign(x)*0.06,y+0.45,z).rotation.z=Math.PI/2; }
+function shipWhip(g,M,x,y,z,h){ sPart(g,new THREE.CylinderGeometry(0.03,0.05,h,5),M.white,x,y+h/2,z); }
+ 
+function shipGun76(g,M,z,y,s){ s=s||1; const t=new THREE.Mesh(new THREE.SphereGeometry(1.6*s,18,12,0,Math.PI*2,0,Math.PI/2),M.sup); t.scale.set(1,0.85,1.35); t.position.set(0,y,z); g.add(t);
+sPart(g,new THREE.CylinderGeometry(1.7*s,1.8*s,0.35*s,18),M.supD,0,y-0.1,z);
+sPart(g,MK.cyl(0.11*s,0.1*s,4.4*s,10),M.supD,0,y+0.75*s,z-3.6*s); sPart(g,MK.cyl(0.17*s,0.17*s,0.5*s,10),M.dark,0,y+0.75*s,z-5.7*s); }
+ 
+function shipStamp(g,M,x,y,z){ sPart(g,new THREE.CylinderGeometry(0.3,0.34,0.3,12),M.supD,x,y+0.15,z); sPart(g,new THREE.BoxGeometry(0.5,0.45,0.6),M.sup,x,y+0.52,z);
+sPart(g,new THREE.BoxGeometry(0.16,0.16,0.04),M.glass,x+0.14,y+0.56,z-0.31); sPart(g,MK.cyl(0.035,0.04,1.3,8),M.dark,x-0.1,y+0.55,z-0.95); }
+ 
+function buildFrigate(kind,num){
+const sh=buildFrigateV1(kind,num), M=shipMats(), g=sh.group, ada=kind==='ada', L=sh.L, o={L:L,B:sh.B,sw:0.78}, F=g.children[0].userData.F;
+const T=function(z){ return (z+L/2)/L; }, yAt=function(z){ return F(T(z)); };
+ 
+const gz=-L/2+23; g.children.slice().forEach(function(c){ if(c!==g.children[0]&&Math.abs(c.position.z-gz)<0.01&&c.position.y<yAt(gz)+0.5) g.remove(c); });
+g.children.slice().forEach(function(c){ if(Math.abs(c.position.z-(gz-4.2))<0.6&&c.position.y<yAt(gz)+2) g.remove(c); });
+shipGun76(g,M,gz,yAt(gz)-0.05,ada?1:1.25);
+shipRails(g,o,F,0.04,0.3,2.6,M.white); shipRails(g,o,F,0.78,0.995,2.6,M.white);
+[-1,1].forEach(function(s){ shipAnchor(g,M,s*(shipHalfW(o,0.06)+0.05),F(0.06)-1.4,-L/2+0.06*L);
+shipRafts(g,M,s*5.9,yAt(0)+0.1,ada?-6:-9,3);
+for(let k=0;k<2;k++){ const tt=sPart(g,MK.cyl(0.3,0.3,2.6,10),M.supD,s*4.6,4.7+k*0.65,(ada?8:12)+5.2); tt.rotation.y=s*0.35; }    
+});
+shipWhip(g,M,4.8,10.3,-2,6); shipWhip(g,M,-4.8,10.3,-2,6); shipWhip(g,M,0,10.7,L/2-30,5);
+return sh;
+}
+ 
+function buildAnadolu(){
+const sh=buildAnadoluV1(), M=shipMats(), g=sh.group, L=sh.L, Fd=sh.deckY, zT=function(t){ return -L/2+t*L; };
+const o={L:L,B:32,sw:0.95,bowFine:0.22,deckW:function(t){ return t<0.12?0.55+0.45*smooth(0,0.12,t):1; }}, F=function(){ return Fd; };
+ 
+[[-4,zT(0.3),13,15],[11,zT(0.7),12,14]].forEach(function(e){ const r=new THREE.Mesh(new THREE.PlaneGeometry(e[2],e[3]),SHIPM.liftM||(SHIPM.liftM=new THREE.MeshLambertMaterial({color:0x40464c,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2})));
+r.rotation.x=-Math.PI/2; r.position.set(e[0],Fd+0.03,e[1]); g.add(r);
+[[0,e[3]/2],[0,-e[3]/2]].forEach(function(q){ sPart(g,new THREE.BoxGeometry(e[2],0.02,0.25),M.markY,e[0],Fd+0.05,e[1]+q[1]); }); });
+ 
+[-1,1].forEach(function(s){ const n=sPart(g,new THREE.BoxGeometry(1.6,0.05,L*0.74),M.dark,s*(16+0.6),Fd-0.35,zT(0.6)); n.rotation.z=s*0.35; });
+shipRails(g,o,function(t){ return t<0.12?Fd+6*Math.pow(1-t/0.12,1.7):Fd; },0.01,0.12,2.6,M.white);
+ 
+{ const cx=13.5, cz=zT(0.66); sPart(g,new THREE.CylinderGeometry(0.5,0.6,3,10),M.yel,cx,Fd+1.5,cz); const j=sPart(g,new THREE.BoxGeometry(0.5,0.5,12),M.yel,cx-1.5,Fd+4.2,cz+3); j.rotation.x=0.35; j.rotation.y=-0.4; }
+[-1,1].forEach(function(s){ shipRafts(g,M,s*15.6,Fd-4.5,zT(0.4),5); shipAnchor(g,M,s*(shipHalfW(o,0.05)+0.05),Fd-3,zT(0.05)); });
+shipWhip(g,M,10.5,Fd+20,zT(0.43),7);
+return sh;
+}
+ 
+function buildPatrol(num){
+const sh=buildPatrolV1(num), M=shipMats(), g=sh.group, L=sh.L, o={L:L,B:8.9,sw:0.86}, F=g.children[0].userData.F;
+shipRails(g,o,F,0.05,0.3,2.0,M.white); shipRails(g,o,F,0.62,0.99,2.0,M.white);
+[-1,1].forEach(function(s){ shipStamp(g,M,s*3.3,8.2,-8.5); shipRafts(g,M,s*3.6,F(0.55),2,2); shipAnchor(g,M,s*(shipHalfW(o,0.07)+0.04),F(0.07)-1.0,-L/2+0.07*L); });
+sPart(g,new THREE.BoxGeometry(7.2,0.15,2.6),M.sup,0,8.1,-8.5);    
+ 
+{ const zb=L/2-5, yb=F(0.9)+0.5; const b=new THREE.Mesh(new THREE.SphereGeometry(1,14,8),M.orange); b.scale.set(0.8,0.38,2.6); b.position.set(-1.4,yb,zb); g.add(b);
+sPart(g,new THREE.BoxGeometry(1.6,0.35,3.6),M.dark,-1.4,yb+0.2,zb); const d=sPart(g,new THREE.BoxGeometry(0.2,3,0.2),M.supD,1.2,yb+1.3,zb); d.rotation.z=0.3; sPart(g,new THREE.BoxGeometry(2.6,0.15,0.15),M.supD,-0.1,yb+2.7,zb); }
+shipWhip(g,M,2.4,8.2,-4,4); shipWhip(g,M,-2.4,8.2,-4,4);
+return sh;
+}
 const LANDM={};
 function landMats(){
 if(LANDM.olive) return LANDM;
@@ -5300,7 +5363,7 @@ lPart(g,new THREE.BoxGeometry(tw,0.18,len),M.track,x,y0+0.09,0); lPart(g,new THR
 for(let i=0;i<n;i++){ const z=-len/2+r+0.15+i*(len-2*r-0.3)/(n-1); wheelAt(g,M,x,y0+r,z,r*0.92,tw*0.8); } });
 }
  
-function buildAltay(){
+function buildAltayV1(){
 const M=landMats(), g=new THREE.Group();
 trackSet(g,M,1.55,7.0,7,0.36,0.66,0);
 lPart(g,hullBox(3.3,1.15,7.3,0.97,0.9,0.2),M.camo,0,0.55,0);
@@ -5318,7 +5381,7 @@ lPart(g,new THREE.BoxGeometry(0.25,0.1,0.08),M.lamp,-1.2,1.35,-3.62); lPart(g,ne
 return {group:g, turret:t, len:10.3};
 }
  
-function buildFirtina(){
+function buildFirtinaV1(){
 const M=landMats(), g=new THREE.Group();
 trackSet(g,M,1.45,6.6,6,0.36,0.6,0);
 lPart(g,hullBox(3.0,1.2,6.9,0.97,0.7,0.1),M.camo,0,0.55,0); lPart(g,new THREE.BoxGeometry(3.5,0.08,6.6),M.camo,0,1.32,0);
@@ -5329,7 +5392,7 @@ lPart(t,new THREE.BoxGeometry(0.5,0.35,0.5),M.dark,-1.0,1.6,-0.8);
 return {group:g, turret:t, len:11.7};
 }
  
-function buildPars(){
+function buildParsV1(){
 const M=landMats(), g=new THREE.Group();
 [-2.9,-1.65,0.9,2.15].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.18,0.6,z,0.6,0.42); }); });
 lPart(g,hullBox(2.7,1.25,7.6,0.88,1.1,0.25),M.camo,0,0.75,0);
@@ -5340,7 +5403,7 @@ lPart(r,new THREE.BoxGeometry(0.35,0.3,0.35),M.dark,-0.4,0.55,-0.2);
 return {group:g, turret:r, len:7.9};
 }
  
-function buildKirpi(){
+function buildKirpiV1(){
 const M=landMats(), g=new THREE.Group();
 [-1.95,1.85].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.08,0.58,z,0.58,0.4); }); });
 lPart(g,hullBox(2.2,0.9,6.4,0.9,0.4,0),M.sand,0,0.65,0);
@@ -5364,7 +5427,7 @@ lPart(g,new THREE.BoxGeometry(2.5,0.75,5.6),M.canvas,0,1.95,1.2);
 return {group:g, len:8.6};
 }
  
-function buildHisar(){
+function buildHisarV1(){
 const M=landMats(), g=new THREE.Group();
 [-3.2,1.2,2.6].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.1,0.55,z,0.55,0.4); }); });
 lPart(g,new THREE.BoxGeometry(2.1,0.4,9),M.dark,0,0.75,0); lPart(g,hullBox(2.5,1.7,2.4,0.95,0.2,0),M.camo,0,0.95,-3.4); lPart(g,new THREE.BoxGeometry(2.1,0.6,0.06),M.glass,0,2.2,-4.6);
@@ -5374,7 +5437,7 @@ for(let i=0;i<3;i++) for(let j=0;j<2;j++) lPart(el,new THREE.CylinderGeometry(0.
 el.rotation.x=0.55; return {group:g, turret:t, elev:el, len:9};
 }
  
-function buildKorkut(){
+function buildKorkutV1(){
 const M=landMats(), g=new THREE.Group();
 trackSet(g,M,1.3,6.2,6,0.33,0.55,0); lPart(g,hullBox(2.8,1.2,6.6,0.94,0.7,0.1),M.camo,0,0.5,0);
 const t=new THREE.Group(); t.position.set(0,1.75,0.6); g.add(t); lPart(t,hullBox(2.2,1.0,2.6,0.85,0.3,0.1),M.camo,0,0,0);
@@ -5388,6 +5451,214 @@ const M=landMats(), g=new THREE.Group();
 lPart(g,new THREE.BoxGeometry(2.1,0.4,8),M.dark,0,0.75,0); lPart(g,hullBox(2.5,1.7,2.3,0.95,0.2,0),M.camo,0,0.95,-2.8); lPart(g,new THREE.BoxGeometry(2.5,2.2,4.6),M.camo,0,1.0,1.4);
 const t=new THREE.Group(); t.position.set(0,3.3,1.4); g.add(t); lPart(t,new THREE.CylinderGeometry(0.15,0.2,1.4,8),M.olive,0,0.7,0);
 const a=lPart(t,new THREE.BoxGeometry(3.6,1.8,0.25),M.dark,0,2.0,0); a.rotation.x=-0.25; return {group:g, turret:t, len:8};
+}
+function landMats2(){
+const M=landMats(); if(M.trk) return M;
+const L=function(c,o){ return new THREE.MeshLambertMaterial(Object.assign({color:c},o||{})); };
+M.camo.map.wrapS=M.camo.map.wrapT=THREE.RepeatWrapping; M.camo.map.needsUpdate=true;
+const sandT=apTex(128,128,function(x,W,H){ x.fillStyle='#b9a77e'; x.fillRect(0,0,W,H); const q=mulberry32(7);
+[['#a8956b',22],['#c7b78f',18]].forEach(function(c){ x.fillStyle=c[0]; for(let i=0;i<c[1];i++){ x.beginPath(); x.ellipse(q()*W,q()*H,6+q()*14,4+q()*9,q()*3,0,6.3); x.fill(); } }); });
+sandT.wrapS=sandT.wrapT=THREE.RepeatWrapping;
+const trkT=apTex(16,64,function(x,W,H){ x.fillStyle='#2a2c2e'; x.fillRect(0,0,W,H); x.fillStyle='#17181a'; for(let i=0;i<8;i++) x.fillRect(0,i*8,W,3); x.fillStyle='#45484b'; x.fillRect(6,0,4,H); });
+trkT.wrapS=trkT.wrapT=THREE.RepeatWrapping;
+Object.assign(M,{trk:L(0xffffff,{map:trkT}), sand2:L(0xffffff,{map:sandT}), rim:L(0x6a7050), rimS:L(0xa8977a), gun:L(0x535a3c), black:L(0x15171a),
+lens:new THREE.MeshLambertMaterial({color:0x2a4a5a, emissive:0x0b1a22}), red:L(0xb3241b), white:L(0xe8e8e2)});
+return M;
+}
+ 
+function fHull(rings,mat,uvk){
+const P=[], U=[], k=uvk||0.22; let cx=0,cy=0,cz=0,n=0;
+rings.forEach(function(r){ r.p.forEach(function(q){ cx+=q[0]; cy+=q[1]; cz+=r.z; n++; }); }); cx/=n; cy/=n; cz/=n;
+const tri=function(a,b,c){ const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];
+const nx=uy*vz-uz*vy, ny=uz*vx-ux*vz, nz=ux*vy-uy*vx; if(nx*nx+ny*ny+nz*nz<1e-10) return;
+if(nx*((a[0]+b[0]+c[0])/3-cx)+ny*((a[1]+b[1]+c[1])/3-cy)+nz*((a[2]+b[2]+c[2])/3-cz)<0){ const t=b; b=c; c=t; }
+[a,b,c].forEach(function(p){ P.push(p[0],p[1],p[2]); U.push((p[0]+p[2])*k,(p[1]+p[2]*0.37)*k); }); };
+const R=rings.map(function(r){ return r.p.map(function(q){ return [q[0],q[1],r.z]; }); }), m=R[0].length;
+for(let i=0;i<R.length-1;i++) for(let j=0;j<m;j++){ const a=R[i][j], b=R[i][(j+1)%m], c=R[i+1][j], d=R[i+1][(j+1)%m]; tri(a,b,c); tri(b,d,c); }
+[R[0],R[R.length-1]].forEach(function(ring){ const c=[0,0,0]; ring.forEach(function(p){ c[0]+=p[0]/m; c[1]+=p[1]/m; c[2]+=p[2]/m; }); for(let j=0;j<m;j++) tri(c,ring[j],ring[(j+1)%m]); });
+const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.Float32BufferAttribute(P,3)); g.setAttribute('uv',new THREE.Float32BufferAttribute(U,2)); g.computeVertexNormals();
+return new THREE.Mesh(g,mat);
+}
+ 
+function lSec(z,yb,yg,yt,wl,wg){ return {z:z,p:[[wl,yb],[wl,yg],[wg,yg+0.03],[wg,yt],[-wg,yt],[-wg,yg+0.03],[-wl,yg],[-wl,yb]]}; }
+ 
+function tSec(z,w,y0,ys,yt,kt,kb){ return {z:z,p:[[w*(kb||0.94),y0],[w,ys],[w*(kt||0.9),yt],[-w*(kt||0.9),yt],[-w,ys],[-w*(kb||0.94),y0]]}; }
+function lCyl(g,mat,x,y,z,r0,r1,len,seg){ return lPart(g,MK.cyl(r0,r1,len,Math.min(seg||8,8)),mat,x,y,z); }
+function lBox(g,mat,x,y,z,w,h,d){ return lPart(g,new THREE.BoxGeometry(w,h,d),mat,x,y,z); }
+ 
+function rWheel(g,M,x,y,z,r,w,rim){ const s=Math.sign(x)||1;
+lPart(g,new THREE.CylinderGeometry(r,r,w,10),M.wheel,x,y,z).rotation.z=Math.PI/2;
+if(r<0.15) return;
+lPart(g,new THREE.CircleGeometry(r*0.68,8),rim||M.rim,x+s*(w/2+0.005),y,z).rotation.y=s*Math.PI/2;
+lPart(g,new THREE.CircleGeometry(r*0.22,6),M.dark,x+s*(w/2+0.012),y,z).rotation.y=s*Math.PI/2; }
+ 
+function trkBox(g,M,x,y,z,w,h,len){ const geo=new THREE.BoxGeometry(w,h,len), uv=geo.attributes.uv; for(let i=0;i<uv.count;i++) uv.setY(i,uv.getY(i)*len*1.6); const m=lPart(g,geo,M.trk,x,y,z); return m; }
+ 
+function trackRun(g,M,xo,z0,z1,n,r,tw,o){ o=o||{};
+const len=z1-z0, zc=(z0+z1)/2, yi=r*1.55;
+[-1,1].forEach(function(s){ const x=s*xo;
+trkBox(g,M,x,0.05,zc,tw,0.1,len-2*r*0.3);
+trkBox(g,M,x,2*r+0.28,zc,tw,0.08,len-0.2);
+[[z0,yi,r*0.8],[z1,yi,r*0.85]].forEach(function(e,k){ const c=lPart(g,new THREE.CylinderGeometry(e[2]+0.06,e[2]+0.06,tw,6,1,true,k?-Math.PI/2:Math.PI/2,Math.PI),M.trk,x,e[1],e[0]); c.rotation.z=Math.PI/2;
+rWheel(g,M,x,e[1],e[0],e[2],tw*0.7,o.rim);  });
+ 
+[[z0,-1],[z1,1]].forEach(function(e){ const a=new THREE.Vector3(0,0.05,e[0]-e[1]*(r*0.3)), b=new THREE.Vector3(0,yi-r*0.8-0.03,e[0]), d=b.clone().sub(a);
+const m=trkBox(g,M,x,(a.y+b.y)/2,(a.z+b.z)/2,tw,0.08,d.length()); m.rotation.x=Math.atan2(-d.y,d.z); });
+for(let i=0;i<n;i++){ const z=z0+r*1.4+i*(len-r*2.8)/(n-1); rWheel(g,M,x,r+0.06,z,r,tw*0.78,o.rim); }
+for(let i=0;i<(o.ret||3);i++){ const z=z0+len*(0.22+i*0.56/((o.ret||3)-1)); rWheel(g,M,x,2*r+0.14,z,0.1,tw*0.4,o.rim); }
+});
+}
+function smokeLaunchers(g,M,x,y,z,n,dir){ for(let i=0;i<n;i++){ const c=lCyl(g,M.dark,x,y+0.02*i,z+i*0.16,0.055,0.055,0.32,5); c.rotation.x=-0.7; c.rotation.y=dir*0.5; } }
+function antenna(g,M,x,y,z,h){ lCyl(g,M.dark,x,y+0.05,z,0.06,0.06,0.1,8).rotation.x=Math.PI/2; lPart(g,new THREE.CylinderGeometry(0.012,0.02,h,5),M.black,x,y+h/2,z); }
+function lHatch(g,M,x,y,z,r){ lPart(g,new THREE.CylinderGeometry(r,r*1.04,0.08,14),M.olive,x,y+0.04,z); lPart(g,new THREE.CylinderGeometry(r*0.2,r*0.2,0.04,8),M.dark,x,y+0.1,z+r*0.5); }
+ 
+function lSight(g,M,x,y,z,w,h,d){ lBox(g,M.dark,x,y+h/2,z,w,h,d); lBox(g,M.lens,x,y+h*0.55,z-d/2-0.005,w*0.7,h*0.45,0.02); }
+function lLights(g,M,x,y,z){ [-1,1].forEach(function(s){ lBox(g,M.dark,s*x,y,z+0.03,0.3,0.16,0.12); lBox(g,M.lamp,s*x,y,z-0.035,0.24,0.1,0.02); }); }
+ 
+function skirts(g,M,mat,x,z0,z1,y0,y1,n){ const d=(z1-z0)/n; [-1,1].forEach(function(s){ for(let i=0;i<n;i++) lBox(g,mat,s*x,(y0+y1)/2,z0+d*(i+0.5),0.08,y1-y0,d-0.04);
+lBox(g,M.dark,s*(x+0.01),y0+0.05,(z0+z1)/2,0.09,0.06,z1-z0); }); }
+ 
+function buildAltay(){
+const M=landMats2(), g=new THREE.Group();
+trackRun(g,M,1.55,-3.45,3.45,7,0.36,0.62,{ret:3});
+g.add(fHull([lSec(-3.78,0.82,0.95,1.04,1.18,1.94),lSec(-3.15,0.42,0.95,1.3,1.18,1.94),lSec(-2.3,0.4,0.95,1.62,1.2,1.94),lSec(3.35,0.42,0.95,1.62,1.2,1.94),lSec(3.66,0.62,0.95,1.56,1.2,1.94)],M.camo));
+skirts(g,M,M.camo,1.98,-3.2,2.6,0.48,1.0,6);
+lLights(g,M,1.45,1.12,-3.62); lBox(g,M.dark,0,0.62,-3.5,0.5,0.2,0.2);
+[-0.35,0.35].forEach(function(x){ lBox(g,M.lens,x,1.66,-2.05,0.2,0.08,0.1); });    
+for(let i=0;i<5;i++) lBox(g,M.dark,0,1.63,1.8+i*0.32,2.6,0.03,0.12);    
+[-1,1].forEach(function(s){ lBox(g,M.dark,s*0.9,1.25,3.67,0.6,0.35,0.04); lBox(g,M.dark,s*1.6,0.75,3.65,0.18,0.18,0.18); });    
+ 
+const t=new THREE.Group(); t.position.set(0,1.62,0.3); g.add(t);
+t.add(fHull([tSec(-2.35,0.5,0.02,0.32,0.6,0.9),tSec(-1.55,1.42,0,0.36,0.78,0.92),tSec(0.6,1.62,0,0.4,0.84,0.92),tSec(2.2,1.56,0.02,0.4,0.82,0.92),tSec(3.35,1.18,0.12,0.4,0.74,0.9)],M.camo));
+lBox(t,M.camo,0,0.42,-2.3,0.95,0.6,0.55);    
+const gun=new THREE.Group(); gun.position.set(0,0.42,-2.55); t.add(gun);
+lCyl(gun,M.gun,0,0,-0.6,0.2,0.18,1.2,12); lCyl(gun,M.gun,0,0,-2.8,0.12,0.12,3.4,12); lCyl(gun,M.gun,0,0,-2.2,0.19,0.19,0.8,12);    
+[-1.6,-3.4,-4.4].forEach(function(z){ lCyl(gun,M.dark,0,0,z,0.135,0.135,0.06,12); });
+lCyl(gun,M.gun,0,0,-5.0,0.12,0.1,1.2,12); lCyl(gun,M.dark,0,0,-5.6,0.11,0.11,0.06,12); lBox(gun,M.dark,0,0.14,-5.45,0.08,0.08,0.12);    
+lCyl(t,M.dark,0.55,0.42,-2.65,0.04,0.04,0.6,8);    
+lPart(t,new THREE.CylinderGeometry(0.2,0.22,0.3,12),M.olive,-0.85,0.95,-0.8); lSight(t,M,-0.85,1.1,-0.8,0.46,0.34,0.4);    
+lSight(t,M,0.95,0.84,-1.55,0.46,0.36,0.5);    
+lHatch(t,M,-0.6,0.84,0.4,0.38); lHatch(t,M,0.6,0.84,0.1,0.34);
+ 
+const rw=new THREE.Group(); rw.position.set(0.35,0.84,1.05); t.add(rw); lPart(rw,new THREE.CylinderGeometry(0.22,0.25,0.12,10),M.dark,0,0.06,0); lBox(rw,M.olive,0,0.3,0,0.42,0.32,0.5); lBox(rw,M.lens,0.12,0.34,-0.26,0.12,0.12,0.02); lCyl(rw,M.dark,-0.08,0.32,-0.75,0.03,0.035,1.0,8);
+[-1,1].forEach(function(s){ smokeLaunchers(t,M,s*1.42,0.58,-1.1,4,s); });
+antenna(t,M,-1.05,0.8,2.7,2.4); antenna(t,M,1.05,0.8,2.7,2.0);
+lBox(t,M.dark,0,0.45,3.5,2.3,0.5,0.3); for(let i=0;i<4;i++) lBox(t,M.olive,-0.9+i*0.6,0.45,3.66,0.03,0.48,0.04);    
+[-1,1].forEach(function(s){ lBox(t,M.dark,s*1.55,0.55,1.8,0.06,0.3,1.6); });    
+return {group:g, turret:t, len:10.3};
+}
+ 
+function buildFirtina(){
+const M=landMats2(), g=new THREE.Group();
+trackRun(g,M,1.45,-3.25,3.3,6,0.36,0.58,{ret:3});
+g.add(fHull([lSec(-3.58,0.78,0.92,1.05,1.08,1.82),lSec(-2.9,0.4,0.92,1.5,1.1,1.82),lSec(3.4,0.42,0.92,1.5,1.1,1.82)],M.camo));
+skirts(g,M,M.camo,1.86,-3.0,2.9,0.5,0.98,5); lLights(g,M,1.3,1.1,-3.5);
+lBox(g,M.lens,-0.85,1.55,-2.6,0.3,0.1,0.12);
+ 
+[-1,1].forEach(function(s){ const a=lBox(g,M.dark,s*0.25,1.65,-3.1,0.08,0.6,0.08); a.rotation.z=s*0.3; }); lBox(g,M.dark,0,1.95,-3.1,0.5,0.12,0.2);
+lBox(g,M.dark,0,1.0,3.42,1.2,0.7,0.06);    
+const t=new THREE.Group(); t.position.set(0,1.5,0.85); g.add(t);
+t.add(fHull([tSec(-2.3,1.2,0.02,0.6,0.95,0.86),tSec(-1.7,1.5,0,0.7,1.42,0.92),tSec(2.3,1.55,0,0.7,1.48,0.92),tSec(2.55,1.5,0.1,0.7,1.4,0.9)],M.camo));
+lBox(t,M.camo,0,0.7,-2.3,0.9,0.75,0.5);
+const gun=new THREE.Group(); gun.position.set(0,0.72,-2.55); t.add(gun);
+lCyl(gun,M.gun,0,0,-0.5,0.26,0.24,1.0,12); lCyl(gun,M.gun,0,0,-4.2,0.13,0.12,6.6,12); lCyl(gun,M.gun,0,0,-3.2,0.19,0.19,0.9,12);    
+lBox(gun,M.gun,0,0,-7.75,0.4,0.3,0.55); [-1,1].forEach(function(s){ for(let i=0;i<3;i++) lBox(gun,M.black,s*0.2,0,-7.6-i*0.15,0.02,0.18,0.08); });    
+lHatch(t,M,-0.8,1.46,0.2,0.36); lHatch(t,M,0.7,1.46,0.6,0.32);
+{ const mg=new THREE.Group(); mg.position.set(-0.8,1.55,0.2); t.add(mg); lBox(mg,M.dark,0,0.12,0,0.12,0.22,0.12); lCyl(mg,M.dark,0,0.25,-0.5,0.03,0.035,0.95,8); }
+lSight(t,M,0.95,1.46,-1.2,0.4,0.35,0.4);
+[-1,1].forEach(function(s){ lBox(t,M.dark,s*1.56,0.75,0.3,0.04,0.9,0.8); smokeLaunchers(t,M,s*1.4,1.15,-1.6,3,s); });
+antenna(t,M,-1.2,1.46,2.2,2.2); antenna(t,M,1.2,1.46,2.2,1.8);
+lBox(t,M.dark,0,0.9,2.57,1.6,0.7,0.05);    
+return {group:g, turret:t, len:11.7};
+}
+ 
+function buildPars(){
+const M=landMats2(), g=new THREE.Group();
+[-2.75,-1.45,0.85,2.15].forEach(function(z){ [-1,1].forEach(function(s){ rWheel(g,M,s*1.2,0.6,z,0.6,0.42); lBox(g,M.dark,s*0.75,0.62,z,0.5,0.14,0.18); }); });
+const S=function(z,yb,yt,k){ k=k||1; return {z:z,p:[[0.55*k,yb],[1.25*k,yb+(yt-yb)*0.24],[1.36*k,yb+(yt-yb)*0.64],[1.16*k,yt],[-1.16*k,yt],[-1.36*k,yb+(yt-yb)*0.64],[-1.25*k,yb+(yt-yb)*0.24],[-0.55*k,yb]]}; };
+g.add(fHull([S(-3.95,0.95,1.45,0.94),S(-3.35,0.5,1.95),S(-2.55,0.46,2.2),S(3.6,0.5,2.2),S(3.85,0.62,2.12,0.98)],M.camo));
+[-1,1].forEach(function(s){ [-2.1,1.5].forEach(function(z){ lBox(g,M.dark,s*1.3,1.25,z,0.1,0.06,2.0); }); });    
+lBox(g,M.glass,-0.55,1.85,-3.6,0.6,0.32,0.04).rotation.x=-0.7; lBox(g,M.glass,0.25,1.85,-3.6,0.6,0.32,0.04).rotation.x=-0.7;    
+lLights(g,M,1.0,1.25,-3.95); lBox(g,M.dark,0,0.9,-3.97,1.8,0.12,0.06);
+[-1,1].forEach(function(s){ lBox(g,M.dark,s*1.37,1.4,0.0,0.04,0.9,0.75); lBox(g,M.dark,s*1.0,2.1,-3.1,0.06,0.25,0.06); });    
+lBox(g,M.dark,0,1.35,3.87,1.7,1.25,0.05);    
+lHatch(g,M,-0.6,2.2,2.3,0.32); lHatch(g,M,0.6,2.2,2.3,0.32);
+ 
+const r=new THREE.Group(); r.position.set(0,2.2,0.0); g.add(r);
+lPart(r,new THREE.CylinderGeometry(0.9,0.95,0.14,16),M.dark,0,0.07,0);
+r.add(fHull([tSec(-0.95,0.5,0.12,0.3,0.55,0.75),tSec(-0.45,0.95,0.12,0.35,0.72,0.88),tSec(0.9,0.95,0.12,0.35,0.72,0.88),tSec(1.2,0.8,0.14,0.32,0.66,0.85)],M.camo));
+lBox(r,M.camo,0,0.38,-1.0,0.5,0.34,0.3); lCyl(r,M.gun,0,0.38,-1.85,0.06,0.05,1.7,10); lCyl(r,M.gun,0,0.38,-1.5,0.09,0.09,0.4,10); lCyl(r,M.dark,0,0.38,-2.7,0.065,0.065,0.12,10);
+lSight(r,M,0.55,0.72,-0.2,0.34,0.3,0.34); lSight(r,M,-0.55,0.72,0.3,0.3,0.36,0.3);
+[-1,1].forEach(function(s){ smokeLaunchers(r,M,s*0.95,0.45,-0.4,3,s); });
+antenna(g,M,-1.0,2.2,3.3,2.2); antenna(g,M,1.0,2.2,3.3,2.0);
+return {group:g, turret:r, len:7.9};
+}
+ 
+function buildKirpi(){
+const M=landMats2(), g=new THREE.Group();
+[-1.95,1.85].forEach(function(z){ [-1,1].forEach(function(s){ rWheel(g,M,s*1.08,0.58,z,0.58,0.42,M.rimS); }); });
+lBox(g,M.dark,0,0.62,0,1.0,0.25,5.6);    
+const S=function(z,yb,yt,w){ const a=yb+(yt-yb)*0.22, b=yb+(yt-yb)*0.34; return {z:z,p:[[0.5*w,yb],[1.05*w,a],[1.25*w,b],[1.2*w,yt],[-1.2*w,yt],[-1.25*w,b],[-1.05*w,a],[-0.5*w,yb]]}; };
+ 
+g.add(fHull([S(-1.0,0.7,2.25,1),S(-0.6,0.62,2.85,1),S(3.0,0.62,2.85,1),S(3.2,0.75,2.75,0.98)],M.sand2));
+ 
+g.add(fHull([S(-3.25,0.85,1.5,0.86),S(-2.8,0.72,1.75,0.92),S(-1.0,0.7,2.25,1)],M.sand2));
+lBox(g,M.dark,0,1.1,-3.27,1.6,0.5,0.05); for(let i=0;i<5;i++) lBox(g,M.black,0,0.95+i*0.09,-3.29,1.4,0.03,0.02);    
+lBox(g,M.dark,0,0.75,-3.35,2.3,0.22,0.15);    
+lLights(g,M,0.85,1.45,-3.0);
+ 
+[-1,1].forEach(function(s){ const w=lBox(g,M.glass,s*0.55,2.5,-0.82,1.0,0.65,0.05); w.rotation.x=-0.45;
+for(let k=0;k<3;k++) lBox(g,M.glass,s*1.21,2.35,-0.1+k*1.15,0.05,0.42,0.55);
+lBox(g,M.dark,s*1.3,2.45,-0.95,0.12,0.25,0.06); lBox(g,M.dark,s*1.24,1.6,0.25,0.04,1.0,0.9);    
+lBox(g,M.dark,s*1.2,0.95,-0.4,0.25,0.06,0.5); });    
+lBox(g,M.dark,0,1.7,3.22,1.3,1.6,0.05);    
+{ const sp=new THREE.Group(); sp.position.set(0.45,1.85,3.42); sp.rotation.y=-Math.PI/2; g.add(sp); rWheel(sp,M,0.01,0,0,0.5,0.3,M.rimS); }    
+ 
+const rw=new THREE.Group(); rw.position.set(0,2.85,0.6); g.add(rw);
+lPart(rw,new THREE.CylinderGeometry(0.45,0.5,0.14,14),M.dark,0,0.07,0); lBox(rw,M.sand2,0,0.35,0,0.5,0.38,0.6); lBox(rw,M.lens,0.15,0.38,-0.31,0.14,0.14,0.02);
+lCyl(rw,M.dark,-0.1,0.38,-0.85,0.035,0.04,1.1,8);
+antenna(g,M,-1.0,2.85,2.8,2.0);
+return {group:g, len:6.6};
+}
+ 
+function buildKorkut(){
+const M=landMats2(), g=new THREE.Group();
+trackRun(g,M,1.3,-3.0,3.0,6,0.33,0.52,{ret:2});
+g.add(fHull([lSec(-3.35,0.72,0.85,0.95,1.0,1.62),lSec(-2.6,0.38,0.85,1.5,1.0,1.62),lSec(3.2,0.4,0.85,1.5,1.0,1.62)],M.camo));
+lLights(g,M,1.1,1.0,-3.3); lBox(g,M.lens,-0.7,1.53,-2.4,0.3,0.1,0.1);
+for(let i=0;i<4;i++) lBox(g,M.dark,0.5,1.51,-1.8+i*0.25,0.9,0.03,0.12);    
+lBox(g,M.dark,0,0.95,3.22,1.2,0.8,0.05);
+const t=new THREE.Group(); t.position.set(0,1.5,0.6); g.add(t);
+lPart(t,new THREE.CylinderGeometry(0.95,1.0,0.12,16),M.dark,0,0.06,0);
+t.add(fHull([tSec(-1.35,0.75,0.1,0.45,0.85,0.85),tSec(-0.8,1.05,0.1,0.5,1.0,0.9),tSec(1.2,1.05,0.1,0.5,1.0,0.9),tSec(1.5,0.9,0.12,0.45,0.92,0.88)],M.camo));
+[-1,1].forEach(function(s){ const pod=new THREE.Group(); pod.position.set(s*1.3,0.6,-0.3); t.add(pod);
+lBox(pod,M.camo,0,0,0,0.42,0.55,1.5); lCyl(pod,M.gun,0,0,-1.3,0.09,0.09,1.1,10); lCyl(pod,M.gun,0,0,-2.6,0.06,0.055,1.6,10); lCyl(pod,M.dark,0,0,-3.5,0.075,0.075,0.25,10); });
+lSight(t,M,0.0,1.0,-0.8,0.4,0.36,0.4);
+ 
+lBox(t,M.dark,-0.55,1.15,-0.6,0.5,0.4,0.15).rotation.x=-0.15;
+lPart(t,new THREE.CylinderGeometry(0.08,0.1,0.6,8),M.olive,0,1.3,0.95);
+const rd=new THREE.Group(); rd.position.set(0,1.62,0.95); t.add(rd); const ant=lBox(rd,M.dark,0,0.1,0,1.3,0.55,0.1); ant.rotation.x=-0.2; lBox(rd,M.olive,0,-0.2,0.05,0.2,0.15,0.2);
+antenna(t,M,-0.85,1.0,1.3,1.8);
+return {group:g, turret:t, radar:rd, len:6.6};
+}
+ 
+function buildHisar(){
+const M=landMats2(), g=new THREE.Group();
+trackRun(g,M,1.3,-3.0,3.0,6,0.33,0.52,{ret:2});
+g.add(fHull([lSec(-3.35,0.72,0.85,0.95,1.0,1.62),lSec(-2.6,0.38,0.85,1.5,1.0,1.62),lSec(3.2,0.4,0.85,1.5,1.0,1.62)],M.camo));
+lLights(g,M,1.1,1.0,-3.3); lBox(g,M.lens,-0.7,1.53,-2.4,0.3,0.1,0.1);
+{ const cab=fHull([tSec(-2.4,0.95,0,0.4,0.75,0.9),tSec(-0.5,0.95,0,0.4,0.75,0.9)],M.camo); cab.position.set(0,1.5,0); g.add(cab); }    
+lBox(g,M.glass,0,2.05,-2.55,1.4,0.3,0.04).rotation.x=-0.5;
+const t=new THREE.Group(); t.position.set(0,1.5,1.45); g.add(t);
+lPart(t,new THREE.CylinderGeometry(0.8,0.85,0.25,16),M.olive,0,0.12,0); lBox(t,M.camo,0,0.55,0,0.7,0.7,0.8);
+lSight(t,M,0,0.9,-0.1,0.3,0.36,0.34);    
+const el=new THREE.Group(); el.position.set(0,0.65,0); t.add(el);
+[-1,1].forEach(function(s){ lBox(el,M.olive,s*0.5,0,0,0.12,0.2,0.4);
+for(let j=0;j<2;j++){ const c=lCyl(el,M.camo,s*0.98,-0.2+j*0.45,0.2,0.2,0.2,3.2,12); lCyl(el,M.white,s*0.98,-0.2+j*0.45,-1.41,0.18,0.18,0.03,12); lCyl(el,M.dark,s*0.98,-0.2+j*0.45,1.81,0.21,0.21,0.04,12); } });
+lBox(el,M.dark,0,0.03,0.2,1.95,0.12,0.5);
+el.rotation.x=0.55;
+antenna(g,M,-1.0,1.5,2.9,2.2);
+return {group:g, turret:t, elev:el, len:6.6};
 }
 const CAR_KINDS=[
 {id:'suv',   n:'Ay Yıldız SUV',          paint:0xeef1f4, top:50, acc:9.5, grip:9,  slope:1.0, sign:null},
@@ -5568,7 +5839,7 @@ const hub=new THREE.Mesh(new THREE.CylinderGeometry(hubR,hubR*1.2,0.35,12),M.met
 const cap=new THREE.Mesh(new THREE.SphereGeometry(hubR*0.8,12,8,0,Math.PI*2,0,Math.PI/2),M.dark); cap.position.y=0.17; g.add(cap);
 return g;
 }
-function heliModel(id){
+function heliModelV1(id){
 const D=HELI_DEF[id], M=heliMats(), P=heliPaint(D.paint), g=new THREE.Group(), body=new THREE.Group(); g.add(body);
 if(id==='t129'){
  
@@ -5626,6 +5897,50 @@ const tdisc=new THREE.Mesh(new THREE.CircleGeometry(D.tr,24),dm); tdisc.rotation
 return {g:g, body:body, rotor:rotor, trot:trot, disc:disc, tdisc:tdisc, def:D, id:id};
 }
 function heliBuild(id){ const m=heliModel(id); const b=bakeGroup(m.body); m.g.remove(m.body); m.g.add(b); m.body=b; return m; }
+function heliTxt(t,c){ const k='t'+t; return HLM[k]||(HLM[k]=new THREE.MeshBasicMaterial({transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,side:THREE.DoubleSide,
+map:apTex(512,96,function(x,W,H){ x.clearRect(0,0,W,H); x.fillStyle=c||'#1d2125'; x.font='800 60px Arial, sans-serif'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(t,W/2,H/2+3); })})); }
+function heliSide(p,mat,x,y,z,w,h){ [-1,1].forEach(function(s){ const d=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat); d.position.set(s*x,y,z); d.rotation.y=s>0?Math.PI/2:-Math.PI/2; p.add(d); }); }
+ 
+function heliCirit(p,M,x,y,z){ hCylZ(p,M.dark,x,y,z,0.22,0.22,1.45,12); hCylZ(p,M.metal,x,y,z-0.74,0.22,0.2,0.04,12);
+[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(q){ const n=new THREE.Mesh(new THREE.SphereGeometry(0.055,8,6),M.white); n.position.set(x+q[0]*0.09,y+q[1]*0.09,z-0.75); n.scale.z=1.8; p.add(n); }); }
+ 
+function heliUmtas(p,M,x,y,z){ hBox(p,M.dark,x,y+0.17,z,0.2,0.1,1.3);
+[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(q){ const mx=x+q[0]*0.13, my=y-0.02+q[1]*0.13;
+hCylZ(p,M.white,mx,my,z,0.08,0.08,1.6,10); const d=new THREE.Mesh(new THREE.SphereGeometry(0.08,10,8,0,Math.PI*2,0,Math.PI/2),M.glassD||M.dark); d.rotation.x=-Math.PI/2; d.position.set(mx,my,z-0.8); p.add(d);
+for(let f=0;f<4;f++){ const fin=hBox(p,M.white,mx,my,z+0.62,0.01,0.2,0.22); fin.rotation.z=f*Math.PI/4+Math.PI/4; } }); }
+function heliModel(id){
+const m=heliModelV1(id), M=heliMats(), D=m.def, body=m.body, P=heliPaint(D.paint);
+if(id==='t129'){
+ 
+body.children.slice().forEach(function(c){ const ax=Math.abs(c.position.x); if(ax>1.0&&ax<2.3&&c.position.y>0.8&&c.position.y<1.3) body.remove(c); });
+[-1,1].forEach(function(s){ hBox(body,M.dark,s*1.15,1.28,0.05,0.12,0.22,0.7); heliCirit(body,M,s*1.15,0.94,0.05);
+hBox(body,M.dark,s*2.0,1.28,0.05,0.12,0.22,0.7); heliUmtas(body,M,s*2.0,0.95,0.05);
+ 
+const ia=new THREE.Mesh(new THREE.CircleGeometry(0.22,14),M.dark); ia.position.set(s*0.62,2.35,-0.76); ia.rotation.y=Math.PI; body.add(ia);
+ 
+hBox(body,M.dark,s*0.36,2.1,-2.55,0.03,0.5,0.05).rotation.z=-s*0.35; });
+hBox(body,M.dark,0,2.75,-2.55,0.04,0.04,1.2).rotation.x=0.25;    
+hBox(body,M.dark,0,2.63,-3.6,0.04,0.35,0.05).rotation.x=0.5; hBox(body,M.dark,0,0.7,-3.6,0.04,0.35,0.05).rotation.x=-0.5;    
+hBox(body,M.dark,0,2.95,1.25,0.32,0.35,0.32); hCylZ(body,M.dark,0,3.0,1.0,0.1,0.1,0.06,10);    
+[-1,1].forEach(function(s){ hBox(body,M.dark,s*0.3,1.0,-5.1,0.1,0.1,0.1); hBox(body,M.dark,s*0.14,1.95,6.9,0.03,0.25,0.25); });    
+hBox(body,M.dark,0,0.62,-2.5,0.02,0.02,1.2); hBox(body,M.dark,0,0.52,0.5,0.02,0.25,0.02);    
+heliSide(body,FLAG_MAT,0.08,2.6,6.55,0.5,0.33);
+heliSide(body,heliTxt('ATAK','#1d2125'),0.5,1.55,2.4,1.1,0.2);
+} else {
+[-1,1].forEach(function(s){
+hBox(body,M.dark,s*0.93,1.6,-2.45,0.04,0.95,0.05).rotation.z=s*0.25;    
+hBox(body,M.dark,s*1.005,1.45,0.2,0.02,0.04,2.3); hBox(body,M.metal,s*1.0,2.0,0.4,0.03,0.05,2.6);    
+hBox(body,M.dark,s*1.12,0.62,-1.6,0.35,0.05,0.5);    
+const ia=new THREE.Mesh(new THREE.PlaneGeometry(0.5,0.3),M.dark); ia.position.set(s*0.64,2.55,-0.4); ia.rotation.y=s>0?Math.PI/2+0.3:-Math.PI/2-0.3; body.add(ia);    
+for(let k=0;k<4;k++) hBox(body,M.metal,s*0.66,2.44+k*0.07,-0.38,0.02,0.02,0.45);
+hBox(body,M.dark,s*0.5,0.95,-3.3,0.04,0.04,0.6); });
+hBox(body,M.dark,0,2.6,-3.0,0.04,0.35,0.05).rotation.x=0.4; hBox(body,M.dark,0,0.5,-3.0,0.04,0.35,0.05).rotation.x=-0.4;    
+hBox(body,M.dark,0,0.48,1.0,0.02,0.3,0.02); hBox(body,M.dark,0,3.0,2.2,0.02,0.3,0.02);
+heliSide(body,FLAG_MAT,0.09,2.75,8.1,0.5,0.33);
+heliSide(body,heliTxt('GÖKBEY','#1d2125'),0.42,1.95,5.0,1.5,0.26);
+}
+return m;
+}
  
 const HANGAR={cx:-278, z:900, step:36};
 const TAXI_PT=new THREE.Vector3(0,AIRFIELD_Y+6,HANGAR.z-20);
@@ -10348,23 +10663,23 @@ head('hava','Ekipman','Hangar');
 ['eq:stand','Bakım merdiveni','Bakım',function(){ return prStand(); }],['eq:bench','İş tezgâhı','Atölye',function(){ return prWorkbench(); }],['eq:chest','Takım dolabı','Atölye',function(){ return prToolChest(); }]]
 .forEach(function(v){ add('hava',v[0],'eq',v[1],v[2],v[3]); });
 head('heli','Helikopterler','Gezintide binilebilir');
-[['t129','Taarruz · TUSAŞ'],['t625','Genel maksat · TUSAŞ']].forEach(function(h){ add('heli','heli:'+h[0],'heli',HELI_DEF[h[0]].name,h[1],function(){ const m=heliModel(h[0]); LIB.heli=m; return m.g; }); });
+[['t129','Taarruz · TUSAŞ'],['t625','Genel maksat · TUSAŞ']].forEach(function(h){ add('heli','heli:'+h[0],'heli',HELI_DEF[h[0]].name,h[1],function(){ const m=heliModel(h[0]); LIB.heli=m; return m.g; },{buildOld:function(){ const m=heliModelV1(h[0]); LIB.heli=m; return m.g; }}); });
 head('deniz','Savaş gemileri','Hilal Deniz Üssü');
-add('deniz','sh:istif','ship','İstif sınıfı fırkateyn','F-515 · Fırkateyn',G(function(){ return buildFrigate('istif','F-515'); }));
-add('deniz','sh:ada','ship','Ada sınıfı korvet','F-511 · Korvet',G(function(){ return buildFrigate('ada','F-511'); }));
-add('deniz','sh:anadolu','ship','TCG Anadolu','L-400 · Amfibi hücum gemisi',G(buildAnadolu));
+add('deniz','sh:istif','ship','İstif sınıfı fırkateyn','F-515 · Fırkateyn',G(function(){ return buildFrigate('istif','F-515'); }),{buildOld:G(function(){ return buildFrigateV1('istif','F-515'); })});
+add('deniz','sh:ada','ship','Ada sınıfı korvet','F-511 · Korvet',G(function(){ return buildFrigate('ada','F-511'); }),{buildOld:G(function(){ return buildFrigateV1('ada','F-511'); })});
+add('deniz','sh:anadolu','ship','TCG Anadolu','L-400 · Amfibi hücum gemisi',G(buildAnadolu),{buildOld:G(buildAnadoluV1)});
 add('deniz','sh:sub','ship','Denizaltı','Reis sınıfı',G(buildSub));
-add('deniz','sh:patrol','ship','Hücumbot','Karakol',G(function(){ return buildPatrol('P-1200'); }));
+add('deniz','sh:patrol','ship','Hücumbot','Karakol',G(function(){ return buildPatrol('P-1200'); }),{buildOld:G(function(){ return buildPatrolV1('P-1200'); })});
 add('deniz','sh:tug','ship','Römorkör','Liman hizmeti',G(buildTug));
 head('deniz','Sivil gemiler','Marina ve açık deniz');
 add('deniz','sh:ferry','ship','Feribot','Yolcu',G(buildFerry)); add('deniz','sh:cargo','ship','Konteyner gemisi','Yük',G(function(){ return buildCargo('#1d5aa8'); }));
 add('deniz','sh:tanker','ship','Tanker','Yük',G(buildTanker)); add('deniz','sh:fishing','ship','Balıkçı teknesi','Balıkçılık',G(function(){ return buildFishing('#2f6aa5'); }));
 add('deniz','sh:sail','ship','Yelkenli','Gezi',G(function(){ return buildSailboat(true); }));
 head('kara','Zırhlı araçlar','Bozkurtlar');
-add('kara','ld:altay','land','Altay','Ana muharebe tankı',G(buildAltay)); add('kara','ld:firtina','land','Fırtına','Kundağı motorlu obüs',G(buildFirtina));
-add('kara','ld:pars','land','Pars','Zırhlı muharebe aracı',G(buildPars)); add('kara','ld:kirpi','land','Kirpi','Mayına dayanıklı araç',G(buildKirpi));
+add('kara','ld:altay','land','Altay','Ana muharebe tankı',G(buildAltay),{buildOld:G(buildAltayV1)}); add('kara','ld:firtina','land','Fırtına','Kundağı motorlu obüs',G(buildFirtina),{buildOld:G(buildFirtinaV1)});
+add('kara','ld:pars','land','Pars','Zırhlı muharebe aracı',G(buildPars),{buildOld:G(buildParsV1)}); add('kara','ld:kirpi','land','Kirpi','Mayına dayanıklı araç',G(buildKirpi),{buildOld:G(buildKirpiV1)});
 head('kara','Hava savunma ve destek','Bozkurtlar');
-add('kara','ld:hisar','land','Hisar','Hava savunma füzesi',G(buildHisar)); add('kara','ld:korkut','land','Korkut','Uçaksavar topu',G(buildKorkut));
+add('kara','ld:hisar','land','Hisar','Hava savunma füzesi',G(buildHisar),{buildOld:G(buildHisarV1)}); add('kara','ld:korkut','land','Korkut','Uçaksavar topu',G(buildKorkut),{buildOld:G(buildKorkutV1)});
 add('kara','ld:radar','land','Radar aracı','Erken ihbar',G(buildRadarTruck)); add('kara','ld:truck','land','Askerî kamyon','Lojistik',G(buildArmyTruck));
 add('kara','car:mil','car','Bozkurtlar 4×4','Gezintide sürülebilir',function(){ return carModel('mil').g; });
 add('kara','veh:pickup','veh','Arazi kamyoneti','Devriye',function(){ return vehCar('pickup'); });
@@ -10418,7 +10733,7 @@ const it=libItems().find(function(i){ return i.key===key; }); if(!it) return;
 libWire(false); libClear(); if(!LIB.item||LIB.item.key!==key) LIB.tests.old=false; LIB.item=it; LIB.cat=it.cat; LIB.heli=null; LIB.tests.wpn=false; LIB.tests.fold=false; LIB.tests.ab=false; LIB.tests.gear=true; LIB.tests.surf=false;
 let obj;
 if(it.kind==='ac'){ const def=AIRCRAFT[it.id], old=LIB.tests.old&&def.buildOld; let m; if(old){ m=def.buildOld(); upgradeModel(m.group); m.acId=it.id; } else m=buildModel(it.id); LIB.inst=m; obj=m.group; obj.position.set(0,AIRFIELD_Y*0+AIRCRAFT[it.id].gearOff,0); m.flames.forEach(function(f){ f.outer.scale.set(1,1,0.05); f.inner.scale.set(1,1,0.05); }); }
-else { obj=it.build(); obj.traverse(function(o){ if(o.isMesh&&o.material&&o.material.isMeshPhongMaterial) o.material=stdOf(o.material); }); }
+else { obj=(LIB.tests.old&&it.buildOld?it.buildOld:it.build)(); obj.traverse(function(o){ if(o.isMesh&&o.material&&o.material.isMeshPhongMaterial) o.material=stdOf(o.material); }); }
 LIB.obj=obj; LIB.holder.add(obj);
 libFrame(); libRenderList(); libRefreshPanel();
 if(LIB.guides) libGuides(true);
@@ -10468,7 +10783,7 @@ Array.prototype.forEach.call(document.querySelectorAll('#libUI .lpanel section')
 const LIB_TESTS=[['old','Eski modelle karşılaştır'],['gear','İniş takımı'],['ab','Motor / art yakıcı'],['wpn','Silahlar'],['spin','Pervane'],['lights','Seyir ışıkları'],['surf','Kumanda yüzeyleri'],['fold','Kanatları katla'],['wire','Tel kafes']];
 function libRefreshTests(){
 const it=LIB.item, m=LIB.inst, ac=it.kind==='ac';
-const can={old:ac&&!!AIRCRAFT[it.id].buildOld, gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), fold:ac&&!!(m.folds&&m.folds.length), wire:true};
+const can={old:ac?!!AIRCRAFT[it.id].buildOld:!!it.buildOld, gear:ac&&!!m.gear, ab:ac&&m.flames.length>0, wpn:ac&&SLOTS[it.id]>0, spin:ac&&m.spinners&&m.spinners.length>0, lights:ac&&!!m.strobe, surf:ac&&!!(m.surfaces&&m.surfaces.length), fold:ac&&!!(m.folds&&m.folds.length), wire:true};
 $('libTests').innerHTML=LIB_TESTS.map(function(t){ return '<button type="button" data-x="'+t[0]+'" aria-pressed="'+(!!LIB.tests[t[0]]&&can[t[0]])+'"'+(can[t[0]]?'':' disabled')+'>'+t[1]+'</button>'; }).join('');
 $('libTestNote').textContent=ac?(can.surf?'Kumanda yüzeyleri modeldeki işaretli parçalarla oynar.':'Kumanda yüzeyi testi için içe aktarılmış modelde parçaları işaretle (Model sekmesi).'):'Yer araçları ve ekipman için yalnızca tel kafes görünümü.';
 }
@@ -14429,9 +14744,9 @@ navRender=HOOK.wrap('navRender','ekran/surum-notlari#_rnNav',function(_rnNav){ r
 const k=h.indexOf('data-act="net"'); if(k<0) return; const j=h.indexOf('</button>',k)+9; el.innerHTML=h.slice(0,j)+navBtn('notes','Yenilikler',GAME_VERSION+' sürüm notları','news')+h.slice(j); tFocus=Math.min(tFocus,Math.max(0,titleItems().length-1)); titleFocus(tFocus); }; },navRender);
 titleAct=HOOK.wrap('titleAct','ekran/surum-notlari#_rnAct',function(_rnAct){ return function(act){ if(act==='notes'&&state==='menu') return relOpen(); return _rnAct(act); }; },titleAct);
  
-const RELNOTES=[{"v": "V2.48", "d": "2026-10-29", "t": "Hürjet ve Hürkuş yeni modelleri", "md": "- TUSAŞ Hürjet yeni modeliyle: boy 13,6 m, kanat açıklığı 9,5 m, tek F404 motoru (Defence Turk).\n- Hürjet: uzun tandem kanopi, gövde yanlarında D biçimli hava girişleri, kanat kökü uzantısı (LERX), kanat uçlarında füze rayları, alçak tam hareketli yatay kuyruk, tek ok açılı dikey kuyruk ve beyaz-kırmızı eğitim boyası.\n- TUSAŞ Hürkuş yeni modeliyle: boy 11,2 m, kanat açıklığı 10 m, 1600 shp turboprop ve beş kanatlı pervane (Defence Turk).\n- Hürkuş: kırmızı motor kaportası ve egzozlar, tandem kanopi, alçak ve sivrilen kanat, klasik kuyruk.\n- Hürjet gerçek mühimmatla: TEBER-82, HGK-82, BOZDOĞAN, GÖKDOĞAN.\n- Hürkuş gerçek mühimmatla: MAM-L, MAM-C, LUMTAS.\n- Eski modeller kütüphanede karşılaştırma için duruyor."}, {"v": "V2.47", "d": "2026-10-29", "t": "TUSAŞ Aksungur", "md": "- TUSAŞ Aksungur yeni modeliyle: boy 11,6 m, kanat açıklığı 24 m, yükseklik 3,1 m (Defence Turk).\n- Kısa ve tombul gövde: burnun üstünde uydu anteni çıkıntısı, altında kamera topu. Çok uzun, düz ve yüksek kanat.\n- Kanadın altına sarkan iki motor gövdesi ve önde üç kanatlı pervaneler; ana tekerlekler motor gövdelerinden iner.\n- Motor gövdelerinden uzanan iki kuyruk bomu, H kuyruk (iki dikey kuyruk ve aradaki yatay kuyruk).\n- Aksungur gerçek mühimmatla: TEBER-82, MAM-C, MAM-T; altı kanat altı istasyon motorların dışında.\n- Yol haritası: ANKA-3 model serisinden sonra yeniden ele alınacak (V2.50)."}, {"v": "V2.46", "d": "2026-10-29", "t": "TUSAŞ ANKA ve ANKA-3", "md": "- TUSAŞ ANKA yeni modeliyle: boy 8,6 m, kanat açıklığı 17,5 m, yükseklik 3,25 m (Defence Turk). Burnun üstünde uydu anteni çıkıntısı, altında kamera topu; uzun düz kanat; V kuyruk; üç kanatlı itici pervane. Açık gri boya.\n- TUSAŞ ANKA-3 yeni modeliyle (oyuncunun fotoğraflarına göre): kuyruksuz uçan kanat; ortası kalın, kenarlara incelen tek parça gövde-kanat; burnun arkasında kemerli hava girişi; W biçimli arka kenar; arkada motor nozulu; kanat uçlarında küçük dik çıkıntılar; uzun iniş takımı. Koyu mavimsi gri boya.\n- ANKA-3'e iç silah yuvası: TEBER-82 ve SOM-J gövdede taşınır, her atışta kapaklar açılır. Dış kanat istasyonlarında MAM-L.\n- ANKA eskisi gibi silahsız keşif uçağı."}, {"v": "V2.45", "d": "2026-10-29", "t": "Bayraktar Kızılelma ve iç silah yuvası", "md": "- Bayraktar Kızılelma yeni modeliyle (oyuncunun fotoğraflarına göre): uzun keskin kenarlı burun ve ölçüm çubuğu, köşeli üst gövde, burun yanlarında kanardlar, geriye açılı ana kanat, dışa yatık iki büyük dikey kuyruk, keskin kenarın altında iki yan hava girişi, tek motor ve yuvarlak çıkış ağzı.\n- Ölçüler: boy 14,5 m, yükseklik 3,5 m, kanat açıklığı yaklaşık 10 m. Koyu gri boya, BAYRAKTAR KIZILELMA yazısı, kuyruklarda beyaz çizgiler ve bayrak.\n- İç silah yuvası: füzeler gövdede taşınır, her atışta yuva kapakları açılır.\n- Kızılelma gerçek mühimmatla: BOZDOĞAN, GÖKDOĞAN, SOM-J (iç yuvada), TEBER-82 ve NEB-84 (kanat altında)."}, {"v": "V2.44", "d": "2026-10-29", "t": "Bayraktar Akıncı ve gerçek mühimmatı", "md": "- Bayraktar Akıncı yeni modeliyle (oyuncunun fotoğraflarına göre): tek dikey kuyruk, alçak yatay kuyruklar ve altta küçük yüzgeç; yukarı kıvrılan büyük kanatçıklar; kanadın altına sarkan motor gövdeleri ve öndeki beş kanatlı pervaneler.\n- Gerçek ölçüler: boy 12,2 m, kanat açıklığı 20 m, yükseklik 4,1 m. Kamera topu gövdenin arka altında, gövdede BAYRAKTAR AKINCI yazısı.\n- Akıncı gerçek mühimmatla: TEBER-82 (lazer güdümlü bomba), NEB-84 (sığınak delici), L-UMTAS (tanksavar füzesi), GÖKDOĞAN (hava-hava), SOM-A (seyir füzesi). Her kanatta motorun dışında dört istasyon.\n- TB3: kanat katlanma yeri gemi fotoğrafındaki bileziğe taşındı (bomdan yaklaşık 1,3 m dışarıda); menteşede açık gri bilezik, mühimmat yeri genişledi."}, {"v": "V2.43", "d": "2026-10-29", "t": "Bayraktar TB3 ve katlanır kanatlar", "md": "- Bayraktar TB3 yeni modeliyle: boy 8,35 m, kanat açıklığı 14 m, yükseklik 2,6 m (gerçek ölçüler).\n- Katlanır kanatlar: dış kanatlar kökten, kuyruk bomlarının hemen dışından katlanıp gövdenin üstüne yatıyor; kanatçıklar ve uç ışıkları da birlikte gidiyor.\n- Hangarda yeni \"Kanatları katla / aç\" düğmesi; uçuş her zaman açık kanatla başlar. Model Kütüphanesi'nde de \"Kanatları katla\" testi var.\n- Oyuncunun gönderdiği fotoğraflara göre: dolgun burun (uydu anteni içinde), motor kaportası çıkıntısı, kuyruk bomlarının altından inen ana iniş takımı, gövde altında kamera topu, üç kanatlı pervane, gemiye iniş kancası.\n- TB3 gerçek mühimmatla: MAM-L, MAM-C, MAM-T; altı istasyon katlanmayan orta kanatta. Hava-hava füzesi yok.\n- Bomlarda BAYRAKTAR TB3 yazısı."}, {"v": "V2.42", "d": "2026-10-29", "t": "Bayraktar TB2 ve gerçek mühimmatı", "md": "- Bayraktar TB2 yeni modeliyle: düz kanat (eskisi geriye açılıydı), kanattan çıkan iki kuyruk bomu, tepede birleşen ters V kuyruk, burun altında kamera topu, arkada iki kanatlı itici pervane.\n- Gerçek ölçüler: boy 6,5 m, kanat açıklığı 12 m. Açık gri boya, kanat üstünde BAYRAKTAR, bomlarda BAYRAKTAR TB2 yazısı ve kırmızı çizgiler.\n- TB2 gerçek Roketsan mühimmatıyla: MAM-L (lazer güdümlü), MAM-C (tanksavar), MAM-T (süzülen güdümlü). Veriler Defence Turk Sistem Envanteri'nden.\n- Dört silah istasyonu kanat altında, kuyruk bomlarının dışında.\n- TB2 artık hava-hava füzesi taşımıyor; eski kayıtlı yükteki füzeler kendiliğinden çıkarılır.\n- Model Kütüphanesi'nde \"Eski modelle karşılaştır\" ile önceki TB2'ye bakılabilir."}, {"v": "V2.41", "d": "2026-10-29", "t": "KAAN ve gerçek mühimmatı", "md": "- KAAN gerçek Türk mühimmatıyla: GÖKDOĞAN (görüş ötesi), BOZDOĞAN (görüş içi), SOM-J (seyir füzesi), HGK-82 (güdüm kitli bomba), NEB-84 (nüfuz edici bomba).\n- Mühimmat modelleri gerçek boyutta; veriler Defence Turk Sistem Envanteri'nden, menzil ve hızlar adaya göre ölçeklendi.\n- KAAN'a iç silah yuvası geldi: füzeler gövdede taşınır, her atışta yuva kapakları açılıp kapanır. Bombalar kanat altında.\n- Füzeler ve bombalar artık uçaktaki yerinden çıkıyor; füzenin parıltısı kuyrukta.\n- Model Kütüphanesi'nde yeni Mühimmat bölümü: her mühimmatın ölçüleri, ağırlığı ve gerçek verileri.\n- Hangar yük ekranı, HUD ve kokpit gerçek mühimmat adlarını gösteriyor; toplam yük gerçek ağırlıklarla hesaplanıyor.\n- Diğer uçaklar model serisinde sırayla gerçek mühimmata geçecek."}];
+const RELNOTES=[{"v": "V2.49", "d": "2026-10-29", "t": "Helikopter, kara aracı ve gemi modelleri", "md": "- Helikopterler yenilendi: T129 ATAK kanatlarında gerçek mühimmat (içte Roketsan CİRİT lançerleri, dışta dörderli L-UMTAS), motor hava girişleri, tel kesiciler, kanopi çerçevesi, kızılötesi karıştırıcı, kuyrukta bayrak.\n- T625 GÖKBEY: ön cam çerçevesi, sürgülü kabin kapısı rayları, basamaklar, motor hava girişleri, GÖKBEY yazısı ve bayrak.\n- Kara araçları baştan modellendi: eğik zırh plakalı gövdeler, yol tekerlekleri, avare ve tahrik tekerleri, palet bantları, yan zırh panelleri.\n- Altay: kama kuleli, ısı kılıflı 120 mm top, komutan ve nişancı nişangâhları, uzaktan kumandalı silah istasyonu, sis el bombası atarları, kule arkası sepeti.\n- T-155 Fırtına: büyük kule, namlu ağzı freni ve duman tahliyecisiyle 155 mm/52 top, seyir kilidi. Pars III 8×8: V gövde, 30 mm kule. Kirpi: V gövde, yüksek kabin, kalın camlar, çatı silah istasyonu, yedek teker.\n- Korkut: ikiz 35 mm top, arama radarı ve atış kontrol radarı. Hisar-A: paletli şasi, dört füze lançeri ve elektro-optik algılayıcı.\n- Gemiler: Ada korveti ve İstif fırkateyninde yuvarlak kalkanlı 76 mm top, küpeşteler, torpido kovanları, can salları, çapalar. TCG Anadolu: iki uçak asansörü, güverte kenarı emniyet ağları, vinç. Tuzla hücumbotu: iki STAMP silah istasyonu, kıçta bot ve vinci.\n- Model Kütüphanesi: helikopter, kara ve deniz modellerinde de \"Eski modelle karşılaştır\" çalışıyor."}, {"v": "V2.48", "d": "2026-10-29", "t": "Hürjet ve Hürkuş yeni modelleri", "md": "- TUSAŞ Hürjet yeni modeliyle: boy 13,6 m, kanat açıklığı 9,5 m, tek F404 motoru (Defence Turk).\n- Hürjet: uzun tandem kanopi, gövde yanlarında D biçimli hava girişleri, kanat kökü uzantısı (LERX), kanat uçlarında füze rayları, alçak tam hareketli yatay kuyruk, tek ok açılı dikey kuyruk ve beyaz-kırmızı eğitim boyası.\n- TUSAŞ Hürkuş yeni modeliyle: boy 11,2 m, kanat açıklığı 10 m, 1600 shp turboprop ve beş kanatlı pervane (Defence Turk).\n- Hürkuş: kırmızı motor kaportası ve egzozlar, tandem kanopi, alçak ve sivrilen kanat, klasik kuyruk.\n- Hürjet gerçek mühimmatla: TEBER-82, HGK-82, BOZDOĞAN, GÖKDOĞAN.\n- Hürkuş gerçek mühimmatla: MAM-L, MAM-C, LUMTAS.\n- Eski modeller kütüphanede karşılaştırma için duruyor."}, {"v": "V2.47", "d": "2026-10-29", "t": "TUSAŞ Aksungur", "md": "- TUSAŞ Aksungur yeni modeliyle: boy 11,6 m, kanat açıklığı 24 m, yükseklik 3,1 m (Defence Turk).\n- Kısa ve tombul gövde: burnun üstünde uydu anteni çıkıntısı, altında kamera topu. Çok uzun, düz ve yüksek kanat.\n- Kanadın altına sarkan iki motor gövdesi ve önde üç kanatlı pervaneler; ana tekerlekler motor gövdelerinden iner.\n- Motor gövdelerinden uzanan iki kuyruk bomu, H kuyruk (iki dikey kuyruk ve aradaki yatay kuyruk).\n- Aksungur gerçek mühimmatla: TEBER-82, MAM-C, MAM-T; altı kanat altı istasyon motorların dışında.\n- Yol haritası: ANKA-3 model serisinden sonra yeniden ele alınacak (V2.50)."}, {"v": "V2.46", "d": "2026-10-29", "t": "TUSAŞ ANKA ve ANKA-3", "md": "- TUSAŞ ANKA yeni modeliyle: boy 8,6 m, kanat açıklığı 17,5 m, yükseklik 3,25 m (Defence Turk). Burnun üstünde uydu anteni çıkıntısı, altında kamera topu; uzun düz kanat; V kuyruk; üç kanatlı itici pervane. Açık gri boya.\n- TUSAŞ ANKA-3 yeni modeliyle (oyuncunun fotoğraflarına göre): kuyruksuz uçan kanat; ortası kalın, kenarlara incelen tek parça gövde-kanat; burnun arkasında kemerli hava girişi; W biçimli arka kenar; arkada motor nozulu; kanat uçlarında küçük dik çıkıntılar; uzun iniş takımı. Koyu mavimsi gri boya.\n- ANKA-3'e iç silah yuvası: TEBER-82 ve SOM-J gövdede taşınır, her atışta kapaklar açılır. Dış kanat istasyonlarında MAM-L.\n- ANKA eskisi gibi silahsız keşif uçağı."}, {"v": "V2.45", "d": "2026-10-29", "t": "Bayraktar Kızılelma ve iç silah yuvası", "md": "- Bayraktar Kızılelma yeni modeliyle (oyuncunun fotoğraflarına göre): uzun keskin kenarlı burun ve ölçüm çubuğu, köşeli üst gövde, burun yanlarında kanardlar, geriye açılı ana kanat, dışa yatık iki büyük dikey kuyruk, keskin kenarın altında iki yan hava girişi, tek motor ve yuvarlak çıkış ağzı.\n- Ölçüler: boy 14,5 m, yükseklik 3,5 m, kanat açıklığı yaklaşık 10 m. Koyu gri boya, BAYRAKTAR KIZILELMA yazısı, kuyruklarda beyaz çizgiler ve bayrak.\n- İç silah yuvası: füzeler gövdede taşınır, her atışta yuva kapakları açılır.\n- Kızılelma gerçek mühimmatla: BOZDOĞAN, GÖKDOĞAN, SOM-J (iç yuvada), TEBER-82 ve NEB-84 (kanat altında)."}, {"v": "V2.44", "d": "2026-10-29", "t": "Bayraktar Akıncı ve gerçek mühimmatı", "md": "- Bayraktar Akıncı yeni modeliyle (oyuncunun fotoğraflarına göre): tek dikey kuyruk, alçak yatay kuyruklar ve altta küçük yüzgeç; yukarı kıvrılan büyük kanatçıklar; kanadın altına sarkan motor gövdeleri ve öndeki beş kanatlı pervaneler.\n- Gerçek ölçüler: boy 12,2 m, kanat açıklığı 20 m, yükseklik 4,1 m. Kamera topu gövdenin arka altında, gövdede BAYRAKTAR AKINCI yazısı.\n- Akıncı gerçek mühimmatla: TEBER-82 (lazer güdümlü bomba), NEB-84 (sığınak delici), L-UMTAS (tanksavar füzesi), GÖKDOĞAN (hava-hava), SOM-A (seyir füzesi). Her kanatta motorun dışında dört istasyon.\n- TB3: kanat katlanma yeri gemi fotoğrafındaki bileziğe taşındı (bomdan yaklaşık 1,3 m dışarıda); menteşede açık gri bilezik, mühimmat yeri genişledi."}, {"v": "V2.43", "d": "2026-10-29", "t": "Bayraktar TB3 ve katlanır kanatlar", "md": "- Bayraktar TB3 yeni modeliyle: boy 8,35 m, kanat açıklığı 14 m, yükseklik 2,6 m (gerçek ölçüler).\n- Katlanır kanatlar: dış kanatlar kökten, kuyruk bomlarının hemen dışından katlanıp gövdenin üstüne yatıyor; kanatçıklar ve uç ışıkları da birlikte gidiyor.\n- Hangarda yeni \"Kanatları katla / aç\" düğmesi; uçuş her zaman açık kanatla başlar. Model Kütüphanesi'nde de \"Kanatları katla\" testi var.\n- Oyuncunun gönderdiği fotoğraflara göre: dolgun burun (uydu anteni içinde), motor kaportası çıkıntısı, kuyruk bomlarının altından inen ana iniş takımı, gövde altında kamera topu, üç kanatlı pervane, gemiye iniş kancası.\n- TB3 gerçek mühimmatla: MAM-L, MAM-C, MAM-T; altı istasyon katlanmayan orta kanatta. Hava-hava füzesi yok.\n- Bomlarda BAYRAKTAR TB3 yazısı."}, {"v": "V2.42", "d": "2026-10-29", "t": "Bayraktar TB2 ve gerçek mühimmatı", "md": "- Bayraktar TB2 yeni modeliyle: düz kanat (eskisi geriye açılıydı), kanattan çıkan iki kuyruk bomu, tepede birleşen ters V kuyruk, burun altında kamera topu, arkada iki kanatlı itici pervane.\n- Gerçek ölçüler: boy 6,5 m, kanat açıklığı 12 m. Açık gri boya, kanat üstünde BAYRAKTAR, bomlarda BAYRAKTAR TB2 yazısı ve kırmızı çizgiler.\n- TB2 gerçek Roketsan mühimmatıyla: MAM-L (lazer güdümlü), MAM-C (tanksavar), MAM-T (süzülen güdümlü). Veriler Defence Turk Sistem Envanteri'nden.\n- Dört silah istasyonu kanat altında, kuyruk bomlarının dışında.\n- TB2 artık hava-hava füzesi taşımıyor; eski kayıtlı yükteki füzeler kendiliğinden çıkarılır.\n- Model Kütüphanesi'nde \"Eski modelle karşılaştır\" ile önceki TB2'ye bakılabilir."}];
  
-const REHBER=[{"kat":"Uçuş","ad":"Uçak seçimi ve hangar","ne":"On Türk uçağı ve İHA arasından seçim; hangarda 3B inceleme, boya, performans çubukları ve karşılaştırma.","nereden":"Hızlı Oyun → Serbest Uçuş / Sürüş · Kariyer → Hangar","tus":"—","surum":"V1.24"},{"kat":"Uçuş","ad":"Uçuş modeli","ne":"Gaz, art yakıcı, fren, iniş takımı; uçağa göre gerçek hız, tırmanma ve servis tavanı.","nereden":"Her uçuşta","tus":"W/S/A/D · Q/E · R/F · Shift · B · G","surum":"V1.02"},{"kat":"Uçuş","ad":"Taksi ve kalkış","ne":"Hangardan piste taksi, otomatik taksi ve taksiyi atlama; kule izni.","nereden":"Başlangıç yeri: Hangardan","tus":"T otomatik taksi · L taksiyi atla","surum":"V1.00"},{"kat":"Uçuş","ad":"İniş yardımı","ne":"Piste yaklaşırken süzülüş ve merkez hattı göstergesi, istenirse otomatik iniş.","nereden":"Ayarlar → Uçuş → Uçuş yardımı","tus":"—","surum":"V1.96"},{"kat":"Uçuş","ad":"Uçuş konforu","ne":"Otomatik denge, türbülans ayarı, kare süresi yumuşatma.","nereden":"Ayarlar → Uçuş","tus":"—","surum":"V1.84"},{"kat":"Uçuş","ad":"3B kokpit","ne":"Çalışan çok işlevli ekranlar, kafa hareketi.","nereden":"Uçuşta kamera değiştir","tus":"C","surum":"V1.89"},{"kat":"Uçuş","ad":"Akrobasi","ne":"Akrobasi dumanı, figür tanıyıcı ve akrobasi gösterisi görevi.","nereden":"Görevler · uçuşta duman","tus":"F6 duman","surum":"V2.07"},{"kat":"Uçuş","ad":"Hasar, yakıt ve fırlatma koltuğu","ne":"Parça hasarı, yakıt tüketimi, ikmal-onarım, fırlatma koltuğu.","nereden":"Her uçuşta","tus":"J (iki kez) fırlatma","surum":"V1.73"},{"kat":"Uçuş","ad":"Bakım hangarı","ne":"Yerde bakım hangarına girince silah yükleme ve onarım.","nereden":"Üste bakım hangarı","tus":"—","surum":"V1.00"},{"kat":"Uçuş","ad":"İHA uçuş bilgisayarı","ne":"İHA'larda irtifa ve rota tutan uçuş bilgisayarı.","nereden":"İHA ile uçarken","tus":"—","surum":"V1.96"},{"kat":"Silah ve savaş","ad":"Silahlar ve yük ekranı","ne":"Top, 2 bomba ve 3 füze tipi; uçağa göre yük, hazır yük grupları.","nereden":"Hangar → Yük · Bakım hangarı","tus":"Space top · X silah · N sıradaki · 1–5","surum":"V1.02"},{"kat":"Silah ve savaş","ad":"Gerçek Türk mühimmatı","ne":"Model serisinden geçen uçaklar gerçek mühimmat taşır: KAAN'da GÖKDOĞAN, BOZDOĞAN, SOM-J (iç silah yuvasında, kapaklar atışta açılır), HGK-82 ve NEB-84 (kanat altında). TB2 (V2.42) ve TB3'te (V2.43) MAM-L, MAM-C ve MAM-T. Akıncı'da TEBER-82, NEB-84, L-UMTAS, GÖKDOĞAN ve SOM-A (V2.44). Kızılelma'da iç silah yuvasıyla BOZDOĞAN, GÖKDOĞAN, SOM-J; kanat altında TEBER-82 ve NEB-84 (V2.45). ANKA-3'te iç yuvada TEBER-82 ve SOM-J, dış kanatta MAM-L (V2.46). Aksungur'da TEBER-82, MAM-C ve MAM-T (V2.47). Hürjet'te TEBER-82, HGK-82, BOZDOĞAN ve GÖKDOĞAN; Hürkuş'ta MAM-L, MAM-C ve LUMTAS (V2.48). Veriler Defence Turk Sistem Envanteri'nden.","nereden":"Hangar → Yük · Model Kütüphanesi → Mühimmat","tus":"X silah · 1–5 silah seç","surum":"V2.41"},{"kat":"Silah ve savaş","ad":"Hedef kilidi","ne":"Füzeler için hedef kilidi, kilit uyarısı açılıp kapatılabilir.","nereden":"Uçuşta","tus":"K kilit · Tab hedef değiştir","surum":"V1.02"},{"kat":"Silah ve savaş","ad":"Düşman uçakları ve kanat adamı","ne":"Kırmızı Kuvvet savaş uçakları, yapay zekâ kanat adamı (Kılıç 2) ve ona emir verme.","nereden":"Görev ekranı → düşman / kanat adamı","tus":"F8 kanat adamı emirleri","surum":"V1.10"},{"kat":"Silah ve savaş","ad":"Hava savunma ve füzeden kaçış","ne":"SAM bataryaları, füze uyarısı, gerçekçi füze modeli, flare ve kaçış yardımı.","nereden":"Görev ekranı → SAM","tus":"Z flare · F7 kaçış","surum":"V1.51"},{"kat":"Silah ve savaş","ad":"Gece görüş ve termal kamera","ne":"NVG ve FLIR görünümleri.","nereden":"Uçuşta","tus":"` (Backquote)","surum":"V1.74"},{"kat":"Kara ve deniz araçları","ad":"Yürüyüş","ne":"Birinci şahıs yürüme, koşma, zıplama, araçlara ve uçaklara binme.","nereden":"Hızlı Oyun → Üssü Gez","tus":"WASD · Shift · Space · E bin","surum":"V1.34"},{"kat":"Kara ve deniz araçları","ad":"Kara araçları","ne":"Arabalar, tanklar, zırhlılar, itfaiye, uçak çekici; her birinin kendi sürüşü, turbo, park etmiş araçlara binme.","nereden":"Yürürken araca bin · Araç çağır","tus":"W/S/A/D · Shift turbo · T araç değiştir","surum":"V1.54"},{"kat":"Kara ve deniz araçları","ad":"Deniz araçları","ne":"Hücumbot, korvet, TCG Anadolu; makine telgrafı, dümen, gemi topları, helikopter güvertesi, kıyıya yanaşma.","nereden":"Marina ve deniz üssü · Araç çağır","tus":"W/S hız · A/D dümen · Space top","surum":"V1.70"},{"kat":"Kara ve deniz araçları","ad":"Araç çağırma","ne":"Kara, hava ve deniz aracını bulunduğun yere teslim ettirme (lojistik telsizi).","nereden":"Yürürken","tus":"G araç çağır","surum":"V1.71"},{"kat":"Kara ve deniz araçları","ad":"Helikopterler","ne":"T129 ATAK ve T625 Gökbey: askı yükü, asker taşıma, kapı silahı, askı yardımı.","nereden":"Hangar · üslerdeki helikopterler","tus":"R/F kolektif · B kanca · J askı yardımı","surum":"V1.55"},{"kat":"Dünya","ad":"Ada ve üsler","ne":"30 km'lik ada: hava üssü, deniz üssü, kara üssü, İHA adası, marina, köyler, Hilalkent ve Anadolukent, Kızıl Bölge, simge yapılar.","nereden":"Harita","tus":"M harita","surum":"V1.31"},{"kat":"Dünya","ad":"Canlı dünya","ne":"Trafik, yayalar, yer personeli, hava trafiği, martılar, ortam sesleri.","nereden":"Her yerde","tus":"—","surum":"V1.42"},{"kat":"Dünya","ad":"Gün saati ve hava durumu","ne":"Gün/gece, sabah sisi, yağmur, kar, fırtına, rüzgâr ve türbülans.","nereden":"Ayarlar → Dünya · görev ekranı","tus":"—","surum":"V1.46"},{"kat":"Dünya","ad":"Harita ve ışınlanma","ne":"Tam ekran harita, köşe haritası, yerler listesine ışınlanma, haritaya işaret ve işaret çarkı.","nereden":"Uçuşta ve yürürken","tus":"M harita · F4 işaret","surum":"V1.53"},{"kat":"Görevler ve modlar","ad":"Hızlı Oyun","ne":"Kariyerden bağımsız: hemen başla, serbest uçuş/sürüş, hızlı görev, üssü gez. Her şey açık, puan kazandırmaz.","nereden":"Ana menü → Hızlı Oyun","tus":"—","surum":"V1.82"},{"kat":"Görevler ve modlar","ad":"Hızlı Savaş","ne":"Botlara karşı havada başlayan dört mod: İt Dalaşı, Serbest Çatışma, Yer Taarruzu, Hava Hedefleri.","nereden":"Ana menü → Hızlı Oyun → Hızlı Savaş","tus":"—","surum":"V2.29"},{"kat":"Görevler ve modlar","ad":"Görev panosu","ne":"Bütün görevler tek ekranda: uçak, helikopter, kara, deniz, yarış; brifing, hedef takibi, görev günlüğü, görev sonu raporu.","nereden":"Kariyer → Görevler · Hızlı Oyun → Hızlı Görev","tus":"F2 görev günlüğü","surum":"V1.76"},{"kat":"Görevler ve modlar","ad":"Dinamik görevler","ne":"Her seferinde farklı, çok aşamalı görevler ve görev ortası olaylar; günlük ve haftalık görevler.","nereden":"Görev panosu","tus":"—","surum":"V1.77"},{"kat":"Görevler ve modlar","ad":"Harekât: Kızıl Elma","ne":"Sekiz bölümlük hikâyeli harekât; bölümler sırayla açılır, final madalya verir.","nereden":"Kariyer → Harekât","tus":"—","surum":"V1.98"},{"kat":"Görevler ve modlar","ad":"Yarışlar","ne":"Kapılı yarışlar, süre, hayalet ve sıralama tablosu.","nereden":"Görev panosu → Yarışlar","tus":"—","surum":"V1.80"},{"kat":"Görevler ve modlar","ad":"Görev editörü","ne":"Kendi görevini kur: aşamalar, tetikleyiciler, dene, kaydet ve paylaş.","nereden":"Görevler → ＋ Görev editörü","tus":"—","surum":"V1.81"},{"kat":"Görevler ve modlar","ad":"Kara ve deniz görevleri","ne":"Tank, araç ve gemi ile görevler.","nereden":"Görev panosu","tus":"—","surum":"V1.99"},{"kat":"Kariyer ve ilerleme","ad":"Rütbe ve tecrübe puanı","ne":"Er'den Orgeneral'e rütbeler, terfi töreni; rütbeyle açılan uçaklar, araçlar, görevler ve boyalar.","nereden":"Ana menü → Kariyer","tus":"—","surum":"V1.67"},{"kat":"Kariyer ve ilerleme","ad":"Uçuş okulu","ne":"Adım adım dersler: kalkış, iniş, rüzgârlı iniş, helikopter, askı yükü, silah, gemiye iniş.","nereden":"Kariyer → Eğitim","tus":"—","surum":"V1.78"},{"kat":"Kariyer ve ilerleme","ad":"Ehliyet ve sertifikalar","ne":"İHA pilotu, pilot, tank sürücüsü, araç sürücüsü, kaptan belgeleri ve sınavları; belgesiz kullanım engeli.","nereden":"Kariyer → Ehliyet ve Sertifikalar","tus":"—","surum":"V1.92"},{"kat":"Kariyer ve ilerleme","ad":"Başarımlar, madalyalar, istatistikler","ne":"Başarımlar, madalyalar, uçuş istatistikleri, rekorlar.","nereden":"Kariyer · üstteki kupa düğmesi","tus":"—","surum":"V1.79"},{"kat":"Çok oyunculu","ad":"Çevrimiçi oda","ne":"Sunucusuz P2P oda (en çok 4 kişi): işbirliği, takım savaşı, herkes herkese; boş yerleri botlar doldurur.","nereden":"Ana menü → Çok Oyunculu","tus":"—","surum":"V1.24"},{"kat":"Çok oyunculu","ad":"Karma çok oyunculu ve üs ele geçirme","ne":"Uçak, araç ve gemiler aynı maçta; üs ele geçirme modu; kule görevlisi rolü.","nereden":"Çok Oyunculu → mod","tus":"—","surum":"V1.83"},{"kat":"Çok oyunculu","ad":"Sesli ve yazılı sohbet","ne":"Bas-konuş sesli sohbet, yazılı sohbet, oyuncu çıkarma.","nereden":"Çok oyunculu maçta","tus":"I bas-konuş · / sohbet","surum":"V1.62"},{"kat":"Ses ve telsiz","ad":"Müzik","ne":"Oyunun kendi bestesi: menü, sakin uçuş, çatışma, zafer, yenilgi; ara ara çalar.","nereden":"Ayarlar → Ses → Müzik / Müzik sıklığı","tus":"U sesi kapat","surum":"V1.61"},{"kat":"Ses ve telsiz","ad":"Telsiz","ne":"Kule, AWACS (Kartal Gözü), kanat adamı ve eğitmen konuşmaları; hazır mesaj menüsü, altyazı.","nereden":"Uçuşta","tus":"O telsiz menüsü","surum":"V1.62"},{"kat":"Kontroller","ad":"Dokunmatik kontroller","ne":"Serbest çubuk, gaz, ATEŞ, FLARE, TEKER, dümen; düzen düzenleyici ve hazır düzenler (Klasik, Sol el, Eğerek uç).","nereden":"Telefonda kendiliğinden · Ayarlar → Kontroller → Dokunmatik","tus":"—","surum":"V1.52"},{"kat":"Kontroller","ad":"Oyun kolu ve klavye","ne":"Tam oyun kolu desteği, tuş atama, kontrol şemaları; kısayol çakışma denetimi.","nereden":"Ayarlar → Kontroller","tus":"—","surum":"V1.52"},{"kat":"Kontroller","ad":"Titreşim ve eğerek uçuş","ne":"Telefon titreşimi ve telefonu eğerek yönlendirme.","nereden":"Ayarlar → Kontroller","tus":"—","surum":"V1.90"},{"kat":"Fotoğraf ve tekrar","ad":"Tekrar izleme","ne":"Son uçuşu kameralar ve zaman çubuğuyla yeniden izleme.","nereden":"Uçuşta","tus":"F3","surum":"V1.87"},{"kat":"Fotoğraf ve tekrar","ad":"Fotoğraf modu","ne":"Arayüzsüz serbest kamera ile fotoğraf.","nereden":"Uçuşta","tus":"H","surum":"V1.87"},{"kat":"Grafik ve performans","ad":"Grafik ayarları","ne":"Otomatik / hazır ayarlar, ayrıntılı ayarlar, maliyet etiketleri, canlı fark, arama, varsayılana dön.","nereden":"Ayarlar → Grafik","tus":"—","surum":"V1.57"},{"kat":"Grafik ve performans","ad":"Akıllı performans","ne":"Otomatik çözünürlük, kalite basamakları, eşit aralıklı 30 FPS, ısınmaya karşı sabit kalite.","nereden":"Ayarlar → Grafik → Otomatik","tus":"—","surum":"V1.94"},{"kat":"Grafik ve performans","ad":"Performans testi","ne":"2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor.","nereden":"Ayarlar → Grafik → Sorun giderme → Performans testi","tus":"—","surum":"V2.12"},{"kat":"Grafik ve performans","ad":"Görüntü sorunu testi","ne":"Katmanları tek tek kapatıp görüntü hatasının kaynağını bulma.","nereden":"Ayarlar → Grafik → Sorun giderme → Görüntü testi","tus":"—","surum":"V1.97"},{"kat":"Grafik ve performans","ad":"Grafik tanılama","ne":"Cihaz bilgisi, derinlik, efekt durumu gibi tanılama satırları.","nereden":"Ayarlar → Grafik → Sorun giderme → Tanılama","tus":"—","surum":"V1.59"},{"kat":"Grafik ve performans","ad":"Yükleme ekranı","ne":"Dönen 3B ay yıldız, uçak biçimli ilerleme çubuğu, ipucu kartları, oyun dilinde aşama adları, hafif yükleme sesi.","nereden":"Açılışta","tus":"—","surum":"V2.20"},{"kat":"Hesap ve kayıt","ad":"Hesap ve profil","ne":"Misafir ya da bulut hesabı, oyuncu kartı, birden çok profil, bulut eşitleme.","nereden":"Ana menü → sağ üstteki profil","tus":"—","surum":"V1.66"},{"kat":"Hesap ve kayıt","ad":"Kayıt ve yedek","ne":"Bütün ilerleme tek kayıtta, her oturum yedekleniyor; grafik ayarları cihaza özel.","nereden":"Kendiliğinden","tus":"—","surum":"V2.26"},{"kat":"Hesap ve kayıt","ad":"Uygulama olarak yükleme","ne":"Ana ekrana ekleme, kısayollar, Android (Play Store) hazırlığı.","nereden":"Ana menü → Uygulamayı yükle","tus":"—","surum":"V2.01"},{"kat":"Hesap ve kayıt","ad":"Duyurular ve sürüm notları","ne":"Yönetici duyuruları, güncellemeden sonra yenilikler şeridi, Yenilikler ekranı.","nereden":"Ana menü → Yenilikler","tus":"—","surum":"V1.66"},{"kat":"Modeller","ad":"Uçak, helikopter, araç ve gemi modelleri","ne":"Kodla üretilmiş stilize modeller; parça birleştirme ile az çizim.","nereden":"Her yerde","tus":"—","surum":"V1.37"}];
+const REHBER=[{"kat":"Uçuş","ad":"Uçak seçimi ve hangar","ne":"On Türk uçağı ve İHA arasından seçim; hangarda 3B inceleme, boya, performans çubukları ve karşılaştırma.","nereden":"Hızlı Oyun → Serbest Uçuş / Sürüş · Kariyer → Hangar","tus":"—","surum":"V1.24"},{"kat":"Uçuş","ad":"Uçuş modeli","ne":"Gaz, art yakıcı, fren, iniş takımı; uçağa göre gerçek hız, tırmanma ve servis tavanı.","nereden":"Her uçuşta","tus":"W/S/A/D · Q/E · R/F · Shift · B · G","surum":"V1.02"},{"kat":"Uçuş","ad":"Taksi ve kalkış","ne":"Hangardan piste taksi, otomatik taksi ve taksiyi atlama; kule izni.","nereden":"Başlangıç yeri: Hangardan","tus":"T otomatik taksi · L taksiyi atla","surum":"V1.00"},{"kat":"Uçuş","ad":"İniş yardımı","ne":"Piste yaklaşırken süzülüş ve merkez hattı göstergesi, istenirse otomatik iniş.","nereden":"Ayarlar → Uçuş → Uçuş yardımı","tus":"—","surum":"V1.96"},{"kat":"Uçuş","ad":"Uçuş konforu","ne":"Otomatik denge, türbülans ayarı, kare süresi yumuşatma.","nereden":"Ayarlar → Uçuş","tus":"—","surum":"V1.84"},{"kat":"Uçuş","ad":"3B kokpit","ne":"Çalışan çok işlevli ekranlar, kafa hareketi.","nereden":"Uçuşta kamera değiştir","tus":"C","surum":"V1.89"},{"kat":"Uçuş","ad":"Akrobasi","ne":"Akrobasi dumanı, figür tanıyıcı ve akrobasi gösterisi görevi.","nereden":"Görevler · uçuşta duman","tus":"F6 duman","surum":"V2.07"},{"kat":"Uçuş","ad":"Hasar, yakıt ve fırlatma koltuğu","ne":"Parça hasarı, yakıt tüketimi, ikmal-onarım, fırlatma koltuğu.","nereden":"Her uçuşta","tus":"J (iki kez) fırlatma","surum":"V1.73"},{"kat":"Uçuş","ad":"Bakım hangarı","ne":"Yerde bakım hangarına girince silah yükleme ve onarım.","nereden":"Üste bakım hangarı","tus":"—","surum":"V1.00"},{"kat":"Uçuş","ad":"İHA uçuş bilgisayarı","ne":"İHA'larda irtifa ve rota tutan uçuş bilgisayarı.","nereden":"İHA ile uçarken","tus":"—","surum":"V1.96"},{"kat":"Silah ve savaş","ad":"Silahlar ve yük ekranı","ne":"Top, 2 bomba ve 3 füze tipi; uçağa göre yük, hazır yük grupları.","nereden":"Hangar → Yük · Bakım hangarı","tus":"Space top · X silah · N sıradaki · 1–5","surum":"V1.02"},{"kat":"Silah ve savaş","ad":"Gerçek Türk mühimmatı","ne":"Model serisinden geçen uçaklar gerçek mühimmat taşır: KAAN'da GÖKDOĞAN, BOZDOĞAN, SOM-J (iç silah yuvasında, kapaklar atışta açılır), HGK-82 ve NEB-84 (kanat altında). TB2 (V2.42) ve TB3'te (V2.43) MAM-L, MAM-C ve MAM-T. Akıncı'da TEBER-82, NEB-84, L-UMTAS, GÖKDOĞAN ve SOM-A (V2.44). Kızılelma'da iç silah yuvasıyla BOZDOĞAN, GÖKDOĞAN, SOM-J; kanat altında TEBER-82 ve NEB-84 (V2.45). ANKA-3'te iç yuvada TEBER-82 ve SOM-J, dış kanatta MAM-L (V2.46). Aksungur'da TEBER-82, MAM-C ve MAM-T (V2.47). Hürjet'te TEBER-82, HGK-82, BOZDOĞAN ve GÖKDOĞAN; Hürkuş'ta MAM-L, MAM-C ve LUMTAS (V2.48). Veriler Defence Turk Sistem Envanteri'nden.","nereden":"Hangar → Yük · Model Kütüphanesi → Mühimmat","tus":"X silah · 1–5 silah seç","surum":"V2.41"},{"kat":"Modeller","ad":"Ayrıntılı helikopter, kara aracı ve gemi modelleri","ne":"T129 ATAK (CİRİT ve L-UMTAS ile), T625 GÖKBEY, Altay, T-155 Fırtına, Pars III 8×8, Kirpi, Korkut, Hisar-A, Ada sınıfı korvet, İstif fırkateyni, TCG Anadolu ve Tuzla sınıfı hücumbot yenilendi (V2.49): eğik zırh plakaları, yol tekerlekleri ve palet bantları, nişangâhlar, uzaktan kumandalı silah istasyonları, gemilerde küpeşte, 76 mm top, can salları. Kütüphanede eski modelle karşılaştırılabilir.","nereden":"Model Kütüphanesi · Kara üssü · Deniz üssü","tus":"—","surum":"V2.49"},{"kat":"Silah ve savaş","ad":"Hedef kilidi","ne":"Füzeler için hedef kilidi, kilit uyarısı açılıp kapatılabilir.","nereden":"Uçuşta","tus":"K kilit · Tab hedef değiştir","surum":"V1.02"},{"kat":"Silah ve savaş","ad":"Düşman uçakları ve kanat adamı","ne":"Kırmızı Kuvvet savaş uçakları, yapay zekâ kanat adamı (Kılıç 2) ve ona emir verme.","nereden":"Görev ekranı → düşman / kanat adamı","tus":"F8 kanat adamı emirleri","surum":"V1.10"},{"kat":"Silah ve savaş","ad":"Hava savunma ve füzeden kaçış","ne":"SAM bataryaları, füze uyarısı, gerçekçi füze modeli, flare ve kaçış yardımı.","nereden":"Görev ekranı → SAM","tus":"Z flare · F7 kaçış","surum":"V1.51"},{"kat":"Silah ve savaş","ad":"Gece görüş ve termal kamera","ne":"NVG ve FLIR görünümleri.","nereden":"Uçuşta","tus":"` (Backquote)","surum":"V1.74"},{"kat":"Kara ve deniz araçları","ad":"Yürüyüş","ne":"Birinci şahıs yürüme, koşma, zıplama, araçlara ve uçaklara binme.","nereden":"Hızlı Oyun → Üssü Gez","tus":"WASD · Shift · Space · E bin","surum":"V1.34"},{"kat":"Kara ve deniz araçları","ad":"Kara araçları","ne":"Arabalar, tanklar, zırhlılar, itfaiye, uçak çekici; her birinin kendi sürüşü, turbo, park etmiş araçlara binme.","nereden":"Yürürken araca bin · Araç çağır","tus":"W/S/A/D · Shift turbo · T araç değiştir","surum":"V1.54"},{"kat":"Kara ve deniz araçları","ad":"Deniz araçları","ne":"Hücumbot, korvet, TCG Anadolu; makine telgrafı, dümen, gemi topları, helikopter güvertesi, kıyıya yanaşma.","nereden":"Marina ve deniz üssü · Araç çağır","tus":"W/S hız · A/D dümen · Space top","surum":"V1.70"},{"kat":"Kara ve deniz araçları","ad":"Araç çağırma","ne":"Kara, hava ve deniz aracını bulunduğun yere teslim ettirme (lojistik telsizi).","nereden":"Yürürken","tus":"G araç çağır","surum":"V1.71"},{"kat":"Kara ve deniz araçları","ad":"Helikopterler","ne":"T129 ATAK ve T625 Gökbey: askı yükü, asker taşıma, kapı silahı, askı yardımı.","nereden":"Hangar · üslerdeki helikopterler","tus":"R/F kolektif · B kanca · J askı yardımı","surum":"V1.55"},{"kat":"Dünya","ad":"Ada ve üsler","ne":"30 km'lik ada: hava üssü, deniz üssü, kara üssü, İHA adası, marina, köyler, Hilalkent ve Anadolukent, Kızıl Bölge, simge yapılar.","nereden":"Harita","tus":"M harita","surum":"V1.31"},{"kat":"Dünya","ad":"Canlı dünya","ne":"Trafik, yayalar, yer personeli, hava trafiği, martılar, ortam sesleri.","nereden":"Her yerde","tus":"—","surum":"V1.42"},{"kat":"Dünya","ad":"Gün saati ve hava durumu","ne":"Gün/gece, sabah sisi, yağmur, kar, fırtına, rüzgâr ve türbülans.","nereden":"Ayarlar → Dünya · görev ekranı","tus":"—","surum":"V1.46"},{"kat":"Dünya","ad":"Harita ve ışınlanma","ne":"Tam ekran harita, köşe haritası, yerler listesine ışınlanma, haritaya işaret ve işaret çarkı.","nereden":"Uçuşta ve yürürken","tus":"M harita · F4 işaret","surum":"V1.53"},{"kat":"Görevler ve modlar","ad":"Hızlı Oyun","ne":"Kariyerden bağımsız: hemen başla, serbest uçuş/sürüş, hızlı görev, üssü gez. Her şey açık, puan kazandırmaz.","nereden":"Ana menü → Hızlı Oyun","tus":"—","surum":"V1.82"},{"kat":"Görevler ve modlar","ad":"Hızlı Savaş","ne":"Botlara karşı havada başlayan dört mod: İt Dalaşı, Serbest Çatışma, Yer Taarruzu, Hava Hedefleri.","nereden":"Ana menü → Hızlı Oyun → Hızlı Savaş","tus":"—","surum":"V2.29"},{"kat":"Görevler ve modlar","ad":"Görev panosu","ne":"Bütün görevler tek ekranda: uçak, helikopter, kara, deniz, yarış; brifing, hedef takibi, görev günlüğü, görev sonu raporu.","nereden":"Kariyer → Görevler · Hızlı Oyun → Hızlı Görev","tus":"F2 görev günlüğü","surum":"V1.76"},{"kat":"Görevler ve modlar","ad":"Dinamik görevler","ne":"Her seferinde farklı, çok aşamalı görevler ve görev ortası olaylar; günlük ve haftalık görevler.","nereden":"Görev panosu","tus":"—","surum":"V1.77"},{"kat":"Görevler ve modlar","ad":"Harekât: Kızıl Elma","ne":"Sekiz bölümlük hikâyeli harekât; bölümler sırayla açılır, final madalya verir.","nereden":"Kariyer → Harekât","tus":"—","surum":"V1.98"},{"kat":"Görevler ve modlar","ad":"Yarışlar","ne":"Kapılı yarışlar, süre, hayalet ve sıralama tablosu.","nereden":"Görev panosu → Yarışlar","tus":"—","surum":"V1.80"},{"kat":"Görevler ve modlar","ad":"Görev editörü","ne":"Kendi görevini kur: aşamalar, tetikleyiciler, dene, kaydet ve paylaş.","nereden":"Görevler → ＋ Görev editörü","tus":"—","surum":"V1.81"},{"kat":"Görevler ve modlar","ad":"Kara ve deniz görevleri","ne":"Tank, araç ve gemi ile görevler.","nereden":"Görev panosu","tus":"—","surum":"V1.99"},{"kat":"Kariyer ve ilerleme","ad":"Rütbe ve tecrübe puanı","ne":"Er'den Orgeneral'e rütbeler, terfi töreni; rütbeyle açılan uçaklar, araçlar, görevler ve boyalar.","nereden":"Ana menü → Kariyer","tus":"—","surum":"V1.67"},{"kat":"Kariyer ve ilerleme","ad":"Uçuş okulu","ne":"Adım adım dersler: kalkış, iniş, rüzgârlı iniş, helikopter, askı yükü, silah, gemiye iniş.","nereden":"Kariyer → Eğitim","tus":"—","surum":"V1.78"},{"kat":"Kariyer ve ilerleme","ad":"Ehliyet ve sertifikalar","ne":"İHA pilotu, pilot, tank sürücüsü, araç sürücüsü, kaptan belgeleri ve sınavları; belgesiz kullanım engeli.","nereden":"Kariyer → Ehliyet ve Sertifikalar","tus":"—","surum":"V1.92"},{"kat":"Kariyer ve ilerleme","ad":"Başarımlar, madalyalar, istatistikler","ne":"Başarımlar, madalyalar, uçuş istatistikleri, rekorlar.","nereden":"Kariyer · üstteki kupa düğmesi","tus":"—","surum":"V1.79"},{"kat":"Çok oyunculu","ad":"Çevrimiçi oda","ne":"Sunucusuz P2P oda (en çok 4 kişi): işbirliği, takım savaşı, herkes herkese; boş yerleri botlar doldurur.","nereden":"Ana menü → Çok Oyunculu","tus":"—","surum":"V1.24"},{"kat":"Çok oyunculu","ad":"Karma çok oyunculu ve üs ele geçirme","ne":"Uçak, araç ve gemiler aynı maçta; üs ele geçirme modu; kule görevlisi rolü.","nereden":"Çok Oyunculu → mod","tus":"—","surum":"V1.83"},{"kat":"Çok oyunculu","ad":"Sesli ve yazılı sohbet","ne":"Bas-konuş sesli sohbet, yazılı sohbet, oyuncu çıkarma.","nereden":"Çok oyunculu maçta","tus":"I bas-konuş · / sohbet","surum":"V1.62"},{"kat":"Ses ve telsiz","ad":"Müzik","ne":"Oyunun kendi bestesi: menü, sakin uçuş, çatışma, zafer, yenilgi; ara ara çalar.","nereden":"Ayarlar → Ses → Müzik / Müzik sıklığı","tus":"U sesi kapat","surum":"V1.61"},{"kat":"Ses ve telsiz","ad":"Telsiz","ne":"Kule, AWACS (Kartal Gözü), kanat adamı ve eğitmen konuşmaları; hazır mesaj menüsü, altyazı.","nereden":"Uçuşta","tus":"O telsiz menüsü","surum":"V1.62"},{"kat":"Kontroller","ad":"Dokunmatik kontroller","ne":"Serbest çubuk, gaz, ATEŞ, FLARE, TEKER, dümen; düzen düzenleyici ve hazır düzenler (Klasik, Sol el, Eğerek uç).","nereden":"Telefonda kendiliğinden · Ayarlar → Kontroller → Dokunmatik","tus":"—","surum":"V1.52"},{"kat":"Kontroller","ad":"Oyun kolu ve klavye","ne":"Tam oyun kolu desteği, tuş atama, kontrol şemaları; kısayol çakışma denetimi.","nereden":"Ayarlar → Kontroller","tus":"—","surum":"V1.52"},{"kat":"Kontroller","ad":"Titreşim ve eğerek uçuş","ne":"Telefon titreşimi ve telefonu eğerek yönlendirme.","nereden":"Ayarlar → Kontroller","tus":"—","surum":"V1.90"},{"kat":"Fotoğraf ve tekrar","ad":"Tekrar izleme","ne":"Son uçuşu kameralar ve zaman çubuğuyla yeniden izleme.","nereden":"Uçuşta","tus":"F3","surum":"V1.87"},{"kat":"Fotoğraf ve tekrar","ad":"Fotoğraf modu","ne":"Arayüzsüz serbest kamera ile fotoğraf.","nereden":"Uçuşta","tus":"H","surum":"V1.87"},{"kat":"Grafik ve performans","ad":"Grafik ayarları","ne":"Otomatik / hazır ayarlar, ayrıntılı ayarlar, maliyet etiketleri, canlı fark, arama, varsayılana dön.","nereden":"Ayarlar → Grafik","tus":"—","surum":"V1.57"},{"kat":"Grafik ve performans","ad":"Akıllı performans","ne":"Otomatik çözünürlük, kalite basamakları, eşit aralıklı 30 FPS, ısınmaya karşı sabit kalite.","nereden":"Ayarlar → Grafik → Otomatik","tus":"—","surum":"V1.94"},{"kat":"Grafik ve performans","ad":"Performans testi","ne":"2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor.","nereden":"Ayarlar → Grafik → Sorun giderme → Performans testi","tus":"—","surum":"V2.12"},{"kat":"Grafik ve performans","ad":"Görüntü sorunu testi","ne":"Katmanları tek tek kapatıp görüntü hatasının kaynağını bulma.","nereden":"Ayarlar → Grafik → Sorun giderme → Görüntü testi","tus":"—","surum":"V1.97"},{"kat":"Grafik ve performans","ad":"Grafik tanılama","ne":"Cihaz bilgisi, derinlik, efekt durumu gibi tanılama satırları.","nereden":"Ayarlar → Grafik → Sorun giderme → Tanılama","tus":"—","surum":"V1.59"},{"kat":"Grafik ve performans","ad":"Yükleme ekranı","ne":"Dönen 3B ay yıldız, uçak biçimli ilerleme çubuğu, ipucu kartları, oyun dilinde aşama adları, hafif yükleme sesi.","nereden":"Açılışta","tus":"—","surum":"V2.20"},{"kat":"Hesap ve kayıt","ad":"Hesap ve profil","ne":"Misafir ya da bulut hesabı, oyuncu kartı, birden çok profil, bulut eşitleme.","nereden":"Ana menü → sağ üstteki profil","tus":"—","surum":"V1.66"},{"kat":"Hesap ve kayıt","ad":"Kayıt ve yedek","ne":"Bütün ilerleme tek kayıtta, her oturum yedekleniyor; grafik ayarları cihaza özel.","nereden":"Kendiliğinden","tus":"—","surum":"V2.26"},{"kat":"Hesap ve kayıt","ad":"Uygulama olarak yükleme","ne":"Ana ekrana ekleme, kısayollar, Android (Play Store) hazırlığı.","nereden":"Ana menü → Uygulamayı yükle","tus":"—","surum":"V2.01"},{"kat":"Hesap ve kayıt","ad":"Duyurular ve sürüm notları","ne":"Yönetici duyuruları, güncellemeden sonra yenilikler şeridi, Yenilikler ekranı.","nereden":"Ana menü → Yenilikler","tus":"—","surum":"V1.66"},{"kat":"Modeller","ad":"Uçak, helikopter, araç ve gemi modelleri","ne":"Kodla üretilmiş stilize modeller; parça birleştirme ile az çizim.","nereden":"Her yerde","tus":"—","surum":"V1.37"}];
 NAV_IC.guide='<circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 015 .9c0 1.7-2.5 2.2-2.5 3.9M12 17.2v.1"/>';
 NAV_D.guide=['OYNA','Rehber','Oyundaki her özellik tek ekranda: ne yapar, nereden açılır, hangi tuş. Aramayla bul.',[],'Rehberi aç'];
 const REH={q:'', kat:''};

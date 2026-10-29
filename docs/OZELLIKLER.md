@@ -4,7 +4,7 @@
 
 **Durum:** ✅ iyi · 🔧 iyileştirilmeli · 🔀 birleştirilmeli · 🗑 kaldırılmalı · 🧪 denenmeli (gerçek cihazda doğrulanmalı)
 
-**Özet:** 62 özellik · ✅ iyi 56 · 🔧 iyileştirilmeli 3 · 🧪 denenmeli 3 · testi olmayan: 0
+**Özet:** 63 özellik · ✅ iyi 57 · 🔧 iyileştirilmeli 3 · 🧪 denenmeli 3 · testi olmayan: 0
 
 ## Karar listesi
 
@@ -42,6 +42,13 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 | **Düşman uçakları ve kanat adamı** | Kırmızı Kuvvet savaş uçakları, yapay zekâ kanat adamı (Kılıç 2) ve ona emir verme. | Görev ekranı → düşman / kanat adamı | F8 kanat adamı emirleri | V1.10 | ai, wing, enemy | ✅ iyi |
 | **Hava savunma ve füzeden kaçış** | SAM bataryaları, füze uyarısı, gerçekçi füze modeli, flare ve kaçış yardımı. | Görev ekranı → SAM | Z flare · F7 kaçış | V1.51 | evade, enemy | ✅ iyi |
 | **Gece görüş ve termal kamera** | NVG ve FLIR görünümleri. | Uçuşta | ` (Backquote) | V1.74 | weather | ✅ iyi |
+
+## Modeller
+
+| Özellik | Ne yapar | Nereden | Tuş | Sürüm | Test | Durum |
+|---|---|---|---|---|---|---|
+| **Ayrıntılı helikopter, kara aracı ve gemi modelleri** | T129 ATAK (CİRİT ve L-UMTAS ile), T625 GÖKBEY, Altay, T-155 Fırtına, Pars III 8×8, Kirpi, Korkut, Hisar-A, Ada sınıfı korvet, İstif fırkateyni, TCG Anadolu ve Tuzla sınıfı hücumbot yenilendi (V2.49): eğik zırh plakaları, yol tekerlekleri ve palet bantları, nişangâhlar, uzaktan kumandalı silah istasyonları, gemilerde küpeşte, 76 mm top, can salları. Kütüphanede eski modelle karşılaştırılabilir. | Model Kütüphanesi · Kara üssü · Deniz üssü | — | V2.49 | v249 | ✅ iyi |
+| **Uçak, helikopter, araç ve gemi modelleri** | Kodla üretilmiş stilize modeller; parça birleştirme ile az çizim. | Her yerde | — | V1.37 | modelreg, bake | 🔧 iyileştirilmeli |
 
 ## Kara ve deniz araçları
 
@@ -142,9 +149,3 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 | **Model kütüphanesi** | Bütün modelleri 3B inceleme, test, boya, kendi modelini yükleme (.glb .gltf .fbx .obj .stl .dae), ölçü denetimi. | Yönetim paneli → Kütüphaneler | — | V1.37 | library, modelreg | ✅ iyi |
 | **Ses kütüphanesi** | Her sesi dinleme, kendi ses dosyasıyla değiştirme, kanal karışımı. | Yönetim paneli → Kütüphaneler | — | V1.60 | sound | ✅ iyi |
 | **Sistem envanteri** | Gerçek Türk sistemlerinin verileri (Defence Turk kaynaklı, atıflı). | Hangar → Gerçek veriler | — | V1.86 | envanter | ✅ iyi |
-
-## Modeller
-
-| Özellik | Ne yapar | Nereden | Tuş | Sürüm | Test | Durum |
-|---|---|---|---|---|---|---|
-| **Uçak, helikopter, araç ve gemi modelleri** | Kodla üretilmiş stilize modeller; parça birleştirme ile az çizim. | Her yerde | — | V1.37 | modelreg, bake | 🔧 iyileştirilmeli |

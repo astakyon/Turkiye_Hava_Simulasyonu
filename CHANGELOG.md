@@ -1,6 +1,16 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.49 — 2026-10-29 · Helikopter, kara aracı ve gemi modelleri
+- Helikopterler yenilendi: T129 ATAK kanatlarında gerçek mühimmat (içte Roketsan CİRİT lançerleri, dışta dörderli L-UMTAS), motor hava girişleri, tel kesiciler, kanopi çerçevesi, kızılötesi karıştırıcı, kuyrukta bayrak.
+- T625 GÖKBEY: ön cam çerçevesi, sürgülü kabin kapısı rayları, basamaklar, motor hava girişleri, GÖKBEY yazısı ve bayrak.
+- Kara araçları baştan modellendi: eğik zırh plakalı gövdeler, yol tekerlekleri, avare ve tahrik tekerleri, palet bantları, yan zırh panelleri.
+- Altay: kama kuleli, ısı kılıflı 120 mm top, komutan ve nişancı nişangâhları, uzaktan kumandalı silah istasyonu, sis el bombası atarları, kule arkası sepeti.
+- T-155 Fırtına: büyük kule, namlu ağzı freni ve duman tahliyecisiyle 155 mm/52 top, seyir kilidi. Pars III 8×8: V gövde, 30 mm kule. Kirpi: V gövde, yüksek kabin, kalın camlar, çatı silah istasyonu, yedek teker.
+- Korkut: ikiz 35 mm top, arama radarı ve atış kontrol radarı. Hisar-A: paletli şasi, dört füze lançeri ve elektro-optik algılayıcı.
+- Gemiler: Ada korveti ve İstif fırkateyninde yuvarlak kalkanlı 76 mm top, küpeşteler, torpido kovanları, can salları, çapalar. TCG Anadolu: iki uçak asansörü, güverte kenarı emniyet ağları, vinç. Tuzla hücumbotu: iki STAMP silah istasyonu, kıçta bot ve vinci.
+- Model Kütüphanesi: helikopter, kara ve deniz modellerinde de "Eski modelle karşılaştır" çalışıyor.
+
 ## V2.48 — 2026-10-29 · Hürjet ve Hürkuş yeni modelleri
 - TUSAŞ Hürjet yeni modeliyle: boy 13,6 m, kanat açıklığı 9,5 m, tek F404 motoru (Defence Turk).
 - Hürjet: uzun tandem kanopi, gövde yanlarında D biçimli hava girişleri, kanat kökü uzantısı (LERX), kanat uçlarında füze rayları, alçak tam hareketli yatay kuyruk, tek ok açılı dikey kuyruk ve beyaz-kırmızı eğitim boyası.

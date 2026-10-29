@@ -34,9 +34,12 @@ modeller/hurjet-hurkus.js
 modeller/ucak-kaydi.js
 modeller/varliklar.js
 modeller/gemiler.js
+modeller/gemi-ayrintili.js
 modeller/kara-araclari.js
+modeller/kara-ayrintili.js
 modeller/arabalar.js
 modeller/helikopterler.js
+modeller/heli-ayrintili.js
 dunya/hangar-alani.js
 dunya/hangar-ici.js
 dunya/taksi-yolu.js

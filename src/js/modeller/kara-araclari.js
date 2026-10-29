@@ -24,7 +24,7 @@ function trackSet(g,M,xo,len,n,r,tw,y0){
     for(let i=0;i<n;i++){ const z=-len/2+r+0.15+i*(len-2*r-0.3)/(n-1); wheelAt(g,M,x,y0+r,z,r*0.92,tw*0.8); } });
 }
 /* Altay main battle tank */
-function buildAltay(){
+function buildAltayV1(){
   const M=landMats(), g=new THREE.Group();
   trackSet(g,M,1.55,7.0,7,0.36,0.66,0);
   lPart(g,hullBox(3.3,1.15,7.3,0.97,0.9,0.2),M.camo,0,0.55,0);
@@ -42,7 +42,7 @@ function buildAltay(){
   return {group:g, turret:t, len:10.3};
 }
 /* T-155 Fırtına self-propelled howitzer */
-function buildFirtina(){
+function buildFirtinaV1(){
   const M=landMats(), g=new THREE.Group();
   trackSet(g,M,1.45,6.6,6,0.36,0.6,0);
   lPart(g,hullBox(3.0,1.2,6.9,0.97,0.7,0.1),M.camo,0,0.55,0); lPart(g,new THREE.BoxGeometry(3.5,0.08,6.6),M.camo,0,1.32,0);
@@ -53,7 +53,7 @@ function buildFirtina(){
   return {group:g, turret:t, len:11.7};
 }
 /* FNSS Pars 8×8 armoured vehicle with a remote weapon station */
-function buildPars(){
+function buildParsV1(){
   const M=landMats(), g=new THREE.Group();
   [-2.9,-1.65,0.9,2.15].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.18,0.6,z,0.6,0.42); }); });
   lPart(g,hullBox(2.7,1.25,7.6,0.88,1.1,0.25),M.camo,0,0.75,0);
@@ -64,7 +64,7 @@ function buildPars(){
   return {group:g, turret:r, len:7.9};
 }
 /* Otokar/Nurol style 4×4 MRAP (Kirpi-like) */
-function buildKirpi(){
+function buildKirpiV1(){
   const M=landMats(), g=new THREE.Group();
   [-1.95,1.85].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.08,0.58,z,0.58,0.4); }); });
   lPart(g,hullBox(2.2,0.9,6.4,0.9,0.4,0),M.sand,0,0.65,0);
@@ -88,7 +88,7 @@ function buildArmyTruck(){
   return {group:g, len:8.6};
 }
 /* HİSAR-O style air-defence launcher on a 6×6 truck (canister box elevates and slews) */
-function buildHisar(){
+function buildHisarV1(){
   const M=landMats(), g=new THREE.Group();
   [-3.2,1.2,2.6].forEach(function(z){ [-1,1].forEach(function(s){ wheelAt(g,M,s*1.1,0.55,z,0.55,0.4); }); });
   lPart(g,new THREE.BoxGeometry(2.1,0.4,9),M.dark,0,0.75,0); lPart(g,hullBox(2.5,1.7,2.4,0.95,0.2,0),M.camo,0,0.95,-3.4); lPart(g,new THREE.BoxGeometry(2.1,0.6,0.06),M.glass,0,2.2,-4.6);
@@ -98,7 +98,7 @@ function buildHisar(){
   el.rotation.x=0.55; return {group:g, turret:t, elev:el, len:9};
 }
 /* KORKUT self-propelled 35 mm air-defence gun */
-function buildKorkut(){
+function buildKorkutV1(){
   const M=landMats(), g=new THREE.Group();
   trackSet(g,M,1.3,6.2,6,0.33,0.55,0); lPart(g,hullBox(2.8,1.2,6.6,0.94,0.7,0.1),M.camo,0,0.5,0);
   const t=new THREE.Group(); t.position.set(0,1.75,0.6); g.add(t); lPart(t,hullBox(2.2,1.0,2.6,0.85,0.3,0.1),M.camo,0,0,0);

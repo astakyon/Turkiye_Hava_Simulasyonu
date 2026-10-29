@@ -59,7 +59,7 @@ function shipGun(g,M,z,y,big){ const s=big||1; sPart(g,tbox(3.6*s,2.0*s,4.6*s,0.
 function shipCIWS(g,M,x,y,z){ sPart(g,MK.cyl(0.9,0.9,0.6,14),M.supD,x,y+0.3,z).rotation.x=Math.PI/2; const d=new THREE.Mesh(new THREE.SphereGeometry(0.8,14,10),M.white); d.position.set(x,y+1.6,z); d.scale.set(1,1.4,1); g.add(d); }
 function shipRadar(g,M,x,y,z){ const r=new THREE.Group(); r.position.set(x,y,z); sPart(r,new THREE.BoxGeometry(3.6,0.9,0.3),M.dark,0,0.45,0); sPart(r,new THREE.CylinderGeometry(0.12,0.12,0.6,6),M.dark,0,-0.3,0); g.add(r); return r; }
 /* İstif-class frigate (kind 'istif', TCG İstanbul F-515) or Ada-class corvette (kind 'ada', F-511) */
-function buildFrigate(kind,num){
+function buildFrigateV1(kind,num){
   const M=shipMats(), ada=kind==='ada', L=ada?99.5:113, B=ada?14.4:14.4;
   const hull=shipHull({L:L,B:B,T:ada?3.9:4.2,Fb:7.4,Fs:4.8,rake:7,sw:0.78,num:num,numH:3.2,numY:4.5,numAt:0.14,L2:L,seed:num.length});
   const g=new THREE.Group(); g.add(hull); const F=hull.userData.F, Z=function(t){ return -L/2+t*L; }, T=function(z){ return (z+L/2)/L; }, yAt=function(z){ return F(T(z)); };
@@ -93,7 +93,7 @@ function buildFrigate(kind,num){
   return {group:g, radar:radar, L:L, deck:{z:(hz1+L/2)/2, z0:hz1, y:hy, r:7.5}, B:B};
 }
 /* TCG Anadolu (L-400): amphibious assault ship / drone carrier with ski-jump and island on the starboard side */
-function buildAnadolu(){
+function buildAnadoluV1(){
   const M=shipMats(), L=231, B=32, Fd=21;
   const deckF=function(t){ return Fd+(t<0.12?6*Math.pow(1-t/0.12,1.7):0); };
   const hull=shipHull({L:L,B:B,T:6.9,Fb:Fd,Fs:Fd,Fmax:Fd+6,deckF:deckF,rake:4,sw:0.95,ww:0.78,bowFine:0.22,
@@ -136,7 +136,7 @@ function buildSub(){
   return {group:g, L:L};
 }
 /* Tuzla-class patrol boat */
-function buildPatrol(num){
+function buildPatrolV1(num){
   const M=shipMats(), L=56;
   const hull=shipHull({L:L,B:8.9,T:2.4,Fb:4.4,Fs:3,rake:3,sw:0.86,num:num,numH:1.8,numY:2.6,numAt:0.13,seed:5});
   const g=new THREE.Group(); g.add(hull); const F=hull.userData.F;

@@ -35,7 +35,7 @@ function heliRotor(R,n,chord,hubR){
   const cap=new THREE.Mesh(new THREE.SphereGeometry(hubR*0.8,12,8,0,Math.PI*2,0,Math.PI/2),M.dark); cap.position.y=0.17; g.add(cap);
   return g;
 }
-function heliModel(id){
+function heliModelV1(id){
   const D=HELI_DEF[id], M=heliMats(), P=heliPaint(D.paint), g=new THREE.Group(), body=new THREE.Group(); g.add(body);
   if(id==='t129'){
     /* narrow fuselage, tandem stepped canopy (gunner front, pilot behind and higher) */
