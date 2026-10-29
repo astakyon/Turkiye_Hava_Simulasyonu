@@ -29,7 +29,11 @@ jobs:
         run: |
           npm i -g @bubblewrap/cli@1
           mkdir -p ~/.bubblewrap
-          printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$ANDROID_HOME" > ~/.bubblewrap/config.json
+          # Bubblewrap SDK içinde eski "tools/bin/sdkmanager" yolunu arar: hazır SDK'nın bağlantılarından bir kopya klasör kur
+          SDK=$HOME/android-sdk; mkdir -p "$SDK"; for f in "$ANDROID_HOME"/*; do ln -sfn "$f" "$SDK/$(basename "$f")"; done
+          L=$(ls -d "$ANDROID_HOME"/cmdline-tools/latest 2>/dev/null || ls -d "$ANDROID_HOME"/cmdline-tools/* | tail -n 1); rm -rf "$SDK/tools"; ln -sfn "$L" "$SDK/tools"
+          ls -la "$SDK" "$SDK/tools/bin" | head -n 30
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$SDK" > ~/.bubblewrap/config.json
       - name: Sürüm ve imza anahtarı
         env:
           KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
