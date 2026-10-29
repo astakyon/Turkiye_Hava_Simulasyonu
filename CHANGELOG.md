@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.48 — 2026-10-29 · Hürjet ve Hürkuş yeni modelleri
+- TUSAŞ Hürjet yeni modeliyle: boy 13,6 m, kanat açıklığı 9,5 m, tek F404 motoru (Defence Turk).
+- Hürjet: uzun tandem kanopi, gövde yanlarında D biçimli hava girişleri, kanat kökü uzantısı (LERX), kanat uçlarında füze rayları, alçak tam hareketli yatay kuyruk, tek ok açılı dikey kuyruk ve beyaz-kırmızı eğitim boyası.
+- TUSAŞ Hürkuş yeni modeliyle: boy 11,2 m, kanat açıklığı 10 m, 1600 shp turboprop ve beş kanatlı pervane (Defence Turk).
+- Hürkuş: kırmızı motor kaportası ve egzozlar, tandem kanopi, alçak ve sivrilen kanat, klasik kuyruk.
+- Hürjet gerçek mühimmatla: TEBER-82, HGK-82, BOZDOĞAN, GÖKDOĞAN.
+- Hürkuş gerçek mühimmatla: MAM-L, MAM-C, LUMTAS.
+- Eski modeller kütüphanede karşılaştırma için duruyor.
+
 ## V2.47 — 2026-10-29 · TUSAŞ Aksungur
 - TUSAŞ Aksungur yeni modeliyle: boy 11,6 m, kanat açıklığı 24 m, yükseklik 3,1 m (Defence Turk).
 - Kısa ve tombul gövde: burnun üstünde uydu anteni çıkıntısı, altında kamera topu. Çok uzun, düz ve yüksek kanat.

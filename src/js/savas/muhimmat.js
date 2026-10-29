@@ -44,7 +44,7 @@ const MUNI={
     gercek:'boy ~4 m · ~600 kg · ~230 kg harp başlığı · menzil 250+ km · düşük görünürlük · kızılötesi görüntülemeli arayıcı',kg:600,len:4.0,dia:0.46,
     oyun:{name:'SOM-A seyir füzesi',short:'SOM',tip:'Sadece yer · 14 km · alçaktan süzülür · çok yıkıcı',range:14000,speed:300,turn:0.7,dmg:3.2,armorDmg:2.4,r:28,air:false,ground:true}}
 };
-const AC_MUNI={kaan:{gp:'hgk82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, tb2:{gp:'maml',bnk:'mamc',m3:'mamt'}, tb3:{gp:'maml',bnk:'mamc',m3:'mamt'}, akinci:{gp:'teber82',bnk:'neb84',m1:'lumtas',m2:'gokdogan',m3:'soma'}, kizilelma:{gp:'teber82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, anka3:{gp:'teber82',bnk:'maml',m3:'somj'}, aksungur:{gp:'teber82',bnk:'mamc',m3:'mamt'}};
+const AC_MUNI={kaan:{gp:'hgk82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, tb2:{gp:'maml',bnk:'mamc',m3:'mamt'}, tb3:{gp:'maml',bnk:'mamc',m3:'mamt'}, akinci:{gp:'teber82',bnk:'neb84',m1:'lumtas',m2:'gokdogan',m3:'soma'}, kizilelma:{gp:'teber82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, anka3:{gp:'teber82',bnk:'maml',m3:'somj'}, aksungur:{gp:'teber82',bnk:'mamc',m3:'mamt'}, hurjet:{gp:'teber82',bnk:'hgk82',m1:'bozdogan',m2:'gokdogan'}, hurkus:{gp:'maml',bnk:'mamc',m1:'lumtas'}};
 const MUN_BAY={kaan:['m1','m2','m3'], kizilelma:['m1','m2','m3'], anka3:['gp','m3']};
 const MUN_SRC='Defence Turk · Sistem Envanteri (açık kaynak bilgiler); oyundaki menzil ve hızlar adaya göre ölçeklenmiştir.';
 let MUN_BASE=null;

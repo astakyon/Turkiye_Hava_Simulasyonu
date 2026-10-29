@@ -15,12 +15,12 @@ const AIRCRAFT={
     vr:65,landV:110,sinkMax:6,gearV:120,brake:6,rollFric:1.0,airV:175,fireInt:0.12,bulletV:600,blife:2,weapon:'MÜHİMMAT',snd:SND_JET},
   hurjet:{name:'TUSAŞ Hürjet',short:'HÜRJET',kind:'Jet eğitim / hafif muharebe',len:'13,6 m',span:'9,5 m',uav:false,hasAB:true,
     desc:'Tandem koltuklu süpersonik jet eğitim ve hafif muharebe uçağı. Tek motor, tek dikey kuyruk, art yakıcı, çevik.',
-    build:buildHurjet,gearOff:1.95,belly:1.0,cam:[3.6,15],eye:[0,0.8,-3.6],muzzle:[0.6,-0.1,-5],
+    build:function(){return buildHurjetV2();},buildOld:buildHurjet,gearOff:1.95,belly:1.0,cam:[3.6,15],eye:[0,0.8,-3.6],muzzle:[0.6,-0.1,-5],
     idle:0.4,thrust:7.5,abT:11,kD:0.00011,stall:[48,72],authV:100,gLim:11,pitchMax:1.2,roll:3.2,yaw:0.4,stallNose:0.9,minV:55,vTop:260,
     vr:66,landV:130,sinkMax:7.5,gearV:140,brake:8,rollFric:1.1,airV:190,fireInt:0.05,bulletV:850,blife:1.5,weapon:'TOP',snd:SND_JET},
   hurkus:{name:'TUSAŞ Hürkuş',short:'HÜRKUŞ',kind:'Eğitim / hafif taarruz',len:'11,2 m',span:'10 m',uav:false,hasAB:false,
     desc:'Turboprop, tandem koltuklu eğitim ve hafif taarruz uçağı. Pervaneli, çevik ve affedici.',
-    build:buildHurkus,gearOff:1.6,belly:0.8,cam:[3.4,14],eye:[0,0.95,-1.0],muzzle:[0.8,-0.2,-2.0],
+    build:function(){return buildHurkusV2();},buildOld:buildHurkus,gearOff:1.6,belly:0.8,cam:[3.4,14],eye:[0,0.95,-1.0],muzzle:[0.8,-0.2,-2.0],
     idle:0.2,thrust:5.0,abT:0,kD:0.000213,stall:[38,56],authV:70,gLim:7,pitchMax:1.1,roll:2.8,yaw:0.4,stallNose:0.8,minV:45,vTop:160,
     vr:48,landV:90,sinkMax:5,gearV:100,brake:6,rollFric:0.8,airV:100,fireInt:0.08,bulletV:700,blife:1.8,weapon:'TOP',snd:SND_PROP},
   anka:{name:'TUSAŞ ANKA',short:'ANKA',kind:'Keşif / gözetleme İHA',len:'8,6 m',span:'17,5 m',uav:true,hasAB:false,
@@ -58,7 +58,7 @@ const AC_ORDER=['kaan','anka3','hurjet','hurkus','anka','aksungur','kizilelma','
 /* system registry: groups (hava / deniz / kara), classes and makers; new vehicles only need an AIRCRAFT entry + a REG line */
 const GROUPS=[{id:'hava',name:'Hilal Kanatlar',sub:'Hava sistemleri',on:true},{id:'deniz',name:'Mavi Kanatlar',sub:'Deniz · yakında',on:false},{id:'kara',name:'Bozkurtlar',sub:'Kara · yakında',on:false}];
 const CLASSES={savas:'Savaş uçağı',iha:'İHA / SİHA',egitim:'Eğitim / hafif taarruz'};
-const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ',wpn:['gp','bnk','m3']},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},
+const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ',wpn:['gp','bnk','m3']},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ',wpn:['gp','bnk','m1','m2']},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ',wpn:['gp','bnk','m1']},
   anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ',wpn:['gp','bnk','m3']},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},
   tb3:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},akinci:{grp:'hava',cls:'iha',maker:'Baykar'}};
 let pickGrp='hava', pickCls='all';

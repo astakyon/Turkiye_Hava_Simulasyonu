@@ -30,6 +30,7 @@ modeller/akinci.js
 modeller/kizilelma.js
 modeller/anka.js
 modeller/aksungur.js
+modeller/hurjet-hurkus.js
 modeller/ucak-kaydi.js
 modeller/varliklar.js
 modeller/gemiler.js
