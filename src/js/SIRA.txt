@@ -27,6 +27,7 @@ modeller/model-yardimcilari.js
 modeller/ucak-modelleri.js
 modeller/tb2.js
 modeller/akinci.js
+modeller/kizilelma.js
 modeller/ucak-kaydi.js
 modeller/varliklar.js
 modeller/gemiler.js

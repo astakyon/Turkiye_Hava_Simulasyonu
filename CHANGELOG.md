@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.45 — 2026-10-29 · Bayraktar Kızılelma ve iç silah yuvası
+- Bayraktar Kızılelma yeni modeliyle (oyuncunun fotoğraflarına göre): uzun keskin kenarlı burun ve ölçüm çubuğu, köşeli üst gövde, burun yanlarında kanardlar, geriye açılı ana kanat, dışa yatık iki büyük dikey kuyruk, keskin kenarın altında iki yan hava girişi, tek motor ve yuvarlak çıkış ağzı.
+- Ölçüler: boy 14,5 m, yükseklik 3,5 m, kanat açıklığı yaklaşık 10 m. Koyu gri boya, BAYRAKTAR KIZILELMA yazısı, kuyruklarda beyaz çizgiler ve bayrak.
+- İç silah yuvası: füzeler gövdede taşınır, her atışta yuva kapakları açılır.
+- Kızılelma gerçek mühimmatla: BOZDOĞAN, GÖKDOĞAN, SOM-J (iç yuvada), TEBER-82 ve NEB-84 (kanat altında).
+
 ## V2.44 — 2026-10-29 · Bayraktar Akıncı ve gerçek mühimmatı
 - Bayraktar Akıncı yeni modeliyle (oyuncunun fotoğraflarına göre): tek dikey kuyruk, alçak yatay kuyruklar ve altta küçük yüzgeç; yukarı kıvrılan büyük kanatçıklar; kanadın altına sarkan motor gövdeleri ve öndeki beş kanatlı pervaneler.
 - Gerçek ölçüler: boy 12,2 m, kanat açıklığı 20 m, yükseklik 4,1 m. Kamera topu gövdenin arka altında, gövdede BAYRAKTAR AKINCI yazısı.
