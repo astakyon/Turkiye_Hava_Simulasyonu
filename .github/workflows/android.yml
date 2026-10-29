@@ -57,10 +57,9 @@ jobs:
       - name: Android projesini üret ve derle
         working-directory: twa
         run: |
-          set -o pipefail
           note(){ t=$(tail -n 25 "$1" | sed 's/\x1b\[[0-9;]*m//g' | tr -d '\r' | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g'); echo "::error title=$2::$t"; }
-          yes | bubblewrap update --skipVersionUpgrade 2>&1 | tee update.log || { note update.log "bubblewrap update"; exit 1; }
-          yes | bubblewrap build --skipPwaValidation 2>&1 | tee build.log || { note build.log "bubblewrap build"; exit 1; }
+          yes 2>/dev/null | bubblewrap update --skipVersionUpgrade 2>&1 | tee update.log; [ "${PIPESTATUS[1]}" = 0 ] || { note update.log "bubblewrap update"; exit 1; }
+          yes 2>/dev/null | bubblewrap build --skipPwaValidation 2>&1 | tee build.log; [ "${PIPESTATUS[1]}" = 0 ] || { note build.log "bubblewrap build"; exit 1; }
           ls -la
       - name: Digital Asset Links dosyası
         working-directory: twa
