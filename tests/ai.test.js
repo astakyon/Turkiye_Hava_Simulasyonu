@@ -7,7 +7,7 @@ selectedId='kaan'; setAircraft('kaan'); missionId='dogfight'; startGame('air');
 S.pos.set(7000,1500,7000); S.q.setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI*0.75);
 let minD=1e9, hpMin=100, okPos=true, sawMsl=false;
 sim(160,0.05,function(){ ACT.forEach(a=>{ if(a.alive){ minD=Math.min(minD,a.pos.distanceTo(S.pos)); if(!finite(a.pos)) okPos=false; if(a.pos.y<Math.max(0,terrainH(a.pos.x,a.pos.z))) okPos=false; } }); hpMin=Math.min(hpMin,S.hp); if(missiles.some(m=>m.on&&m.by)) sawMsl=true; if(S.crashed){ S.hp=100; } });
-if(!(hpMin<100||sawMsl)) sim(160,0.05,function(){ hpMin=Math.min(hpMin,S.hp); if(missiles.some(m=>m.on&&m.by)) sawMsl=true; if(S.crashed){ S.hp=100; } });   /* AI is random: give it a second engagement window */
+for(let w=0;w<3&&!(hpMin<100||sawMsl);w++) sim(160,0.05,function(){ hpMin=Math.min(hpMin,S.hp); if(missiles.some(m=>m.on&&m.by)) sawMsl=true; if(S.crashed){ S.hp=100; } });   /* AI is random: up to three more engagement windows (V2.40: one window failed under parallel load) */
 T('wave1 spawned',DF.wave>=1,DF.wave); T('enemies approached',minD<6500,minD.toFixed(0));   /* AI paths are random: 5.8 km was seen once in a passing run */ T('ai positions sane',okPos);
 T('player took fire',hpMin<100||sawMsl,'hpMin '+hpMin+' msl '+sawMsl);
 console.log('  dogfight: minD',minD.toFixed(0),'hpMin',hpMin,'sawMsl',sawMsl);

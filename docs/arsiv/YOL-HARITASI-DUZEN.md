@@ -1,3 +1,5 @@
+> **Arşiv.** Bu belge V2.40'ta tek yol haritası [ROADMAP.md](../../ROADMAP.md) ile birleştirildi; burada geçmiş kayıt olarak duruyor.
+
 # Ay Yıldız: Hedef Kızıl Elma — Düzen yol haritası V2.12 → V2.40
 
 Son güncelleme: 14 Ekim 2026 (ilk gerçek cihaz ölçümüyle sıra güncellendi) · Yayındaki sürüm: V2.39

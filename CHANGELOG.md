@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.40 — 2026-10-29 · Belgeler ve sürüm geçmişi
+- Sürüm geçmişi: 120 sürüm 14 döneme ayrıldı, her dönemin kısa özeti var (docs/SURUM-GECMISI.md).
+- Yol haritaları tek belgede: ROADMAP.md; eski planlar docs/arsiv klasöründe.
+- Oyuncu rehberi: ilk adımlar, araç başına tuşlar, dokunmatik notları ve bütün özellikler (docs/OYUNCU-REHBERI.md).
+- README, mimari belgesi ve model ekleme kılavuzu güncellendi.
+- Sürüm geçmişi belgesi her yayında kendiliğinden yenilenir.
+- Yapay zekâ testi daha kararlı: düşmanın ateş açması için daha uzun bekleniyor.
+
 ## V2.39 — 2026-10-29 · Oynanış ve metin tutarlılığı
 - **Görev ödülleri dengelendi:** görevlerin dakika başına verdiği TP 15 ile 43 arasında rastgele dağılıyordu ve zorlukla ilgisi yoktu. Artık her ödül görevin süresi ve zorluğuyla orantılı (Kolay 25, Orta 32, Zor 40 TP/dk; %20 aşağı ya da %25 yukarı esneyebiliyor).
   - Ödülü artanlar: İHA keşfi 220 → 300, TCG Anadolu ile çıkarma 320 → 380, Konvoy savunması 300 → 310, Deniz devriyesi.

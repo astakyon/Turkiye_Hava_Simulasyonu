@@ -131,6 +131,29 @@ Açık teknik borç:
 - **Kare başına çöp (V2.24):** her karede çalışan kodda `new THREE.Vector3()` / `.clone()` / dizi ya da metin üretmeyin; modül düzeyinde bir kez oluşturulan geçici nesneleri kullanın (ör. `GULL_T`, `LMK_T`, `RUR_T`, `TRF_T`, `ACRO_W`, `FR_L`). Füze, mermi, patlama parçacığı, flare ve dumanlar zaten havuzda. three r128'in kendi çizim kodu kare başına ~50–100 KB üretiyor; bu bizim elimizde değil.
 - Başsız testlerde THREE sahte (stub); gerçek grafik davranışı yalnızca tarayıcı denetiminde sınanır.
 
+## V2.28–V2.40 eklemeleri
+
+- **Uçak gölgesi kipi** (`performans/golgeler`):
+  - Yüksekte gölge kutusu yalnız uçağı kapsar ve her karede çizilir.
+  - Gölge geçişi sırasında diğer üst düzey nesneler kapatılır.
+  - Normal kutuda, kutunun dışındaki nesneler sınır küresine göre atlanır (`shBoxPass`).
+- **Zemin yüksekliği** (`dunya/arazi`): `terrainH()` çizilen üçgenin yüksekliğini verir. Formül `terrainHA()` olarak duruyor.
+- **Mühimmat istasyonları** (`savas/yer-hedefleri` `storeLayout`): kanat ve gövde altı ışınla ölçülür, iniş takımından uzak tutulur, sonuç uçak başına önbelleğe alınır.
+- **Doku işi** (`performans/doku-bellegi`): yalnız menü, duraklatma ve haritada çalışır. Performans testi başlamadan önce bitirilir.
+- **Menü** (`ekran/ana-menu-2`, `ekran/menu-duzeltmeleri`):
+  - Ana menü: Hızlı Oyun · Kariyer · Çok Oyunculu.
+  - Hızlı Savaş (`QB_MODES`): yapay zekâ ayarı yalnız o savaş için `aiCfg` kancasıyla değişir.
+- **Rehber ve envanter** (`ekran/rehber`, `veri/rehber-veri`): `tools/ozellikler.py`'den üretilir. `docs/OZELLIKLER.md` ve `docs/OYUNCU-REHBERI.md` de aynı listeden çıkar.
+- **Sorun giderme** (`ekran/sorun-giderme`): Performans testi, Görüntü testi ve Tanılama tek ekranda.
+  - Kapatma kuralı: tam ekranlarda sol üstte "← Geri", açılır kartlarda sağ üstte ✕.
+  - Görev editörü Görevler ekranındaki "＋ Görev editörü" düğmesiyle açılır.
+- **TP dengesi** (`gorev/tp-dengesi`):
+  - Görev ödülleri süre × zorluk oranının %80–125'i içinde tutulur.
+  - Silahsız uçakla silahlı görev başlatılamaz.
+- **Metin denetimi** (`tools/metinler.py`, `tests/terimler.sh`): oyuncunun gördüğü metinler terim sözlüğüne ve sık yazım hatalarına göre taranır; aykırılık yayını durdurur.
+- **Yükleme ekranı 3.0** (`cekirdek/acilis`): `BOOT_TIPS` ipucu kartları, oyun dilinde aşama adları, ilk dokunuşta ses (`bootSndStart`), menü daha erken açılır.
+- **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
+
 ## Android (planlı)
 `index.html` + `vendor/` + `assets/` bir Capacitor (veya TWA) projesine kopyalanır; her şey yerelden yüklendiği için
 internet gerekmez (çevrimiçi oyun hariç). Ekran yatay kilitlenir, dokunmatik düzen hazırdır.

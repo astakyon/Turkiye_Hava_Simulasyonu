@@ -2,7 +2,7 @@
 # Release (V2.31): one documented path from source to a pushed version.
 # Usage: tools/release.sh Vx.yy "short title" changelog_body.md "commit message"
 #   1. bump_version.py: VERSION, version.json, service worker, version label; CHANGELOG gets the body under "## Vx.yy — date · title"
-#   2. tools/relnotes.py + tools/ozellikler.py + tools/build.py: in-game release notes and guide, one-file index.html
+#   2. tools/relnotes.py + ozellikler.py + metinler.py + surumler.py + build.py: in-game release notes and guide, one-file index.html
 #   3. tools/browser-check.js: real browser — vanishing objects, budgets (draw calls, triangles, textures), crowded-battle stress
 #   4. tests/paralel.js: every headless test on all cores
 #   5. commit + push (only if 3 and 4 passed)
@@ -23,6 +23,7 @@ P
 python3 tools/relnotes.py
 python3 tools/ozellikler.py >/dev/null
 python3 tools/metinler.py >/dev/null
+python3 tools/surumler.py >/dev/null
 python3 tools/build.py >/dev/null
 BC=$(timeout 900 node tools/browser-check.js 2>&1 | grep -v agent-proxy | tail -9); echo "$BC"
 if echo "$BC" | grep -q "FAIL"; then echo "TARAYICI DENETİMİ BAŞARISIZ — yayın durduruldu"; exit 1; fi

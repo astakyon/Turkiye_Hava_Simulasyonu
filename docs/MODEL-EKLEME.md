@@ -1,4 +1,4 @@
-# Yeni araç / model ekleme (V2.10)
+# Yeni araç / model ekleme (V2.40 itibarıyla güncel)
 
 Oyuna yeni bir uçak eklemek tek bir çağrıdır. Hangar, model kütüphanesi, görev panosu, yürürken binme, çarpışma kutuları ve envanter kartı bu listelerden okunduğu için başka bir yere dokunmak gerekmez.
 
@@ -25,7 +25,7 @@ defineAircraft('hurjet2', {
 
 ## 2. Ölçü denetimi
 
-**Ayarlar → Grafik → Model ölçü denetimi** her modelin uzunluğunu ve kanat açıklığını ölçer, gerçek değerlerle karşılaştırır. ±%8 dışındakiler ⚠ ile işaretlenir. Yeni bir model eklendikten sonra buradan kontrol et.
+**Ayarlar → Arayüz → Araçlar → Model ölçü denetimi** her modelin uzunluğunu ve kanat açıklığını ölçer, gerçek değerlerle karşılaştırır. ±%8 dışındakiler ⚠ ile işaretlenir. Yeni bir model eklendikten sonra buradan kontrol et.
 
 ## 3. Kod yazmadan model (.glb, .fbx, .obj …)
 
@@ -38,3 +38,13 @@ Model Kütüphanesi → Model → İçe aktar. Dosya otomatik .glb'ye çevrilir 
 3. Kütüphanede iniş takımı, motor, silah ve kumanda yüzeyi testleri çalışıyor mu?
 4. Hangarda doğru grup ve sınıfta mı, kariyer belgesi ve rütbesi doğru mu?
 5. Bir test uçuşu: kalkış, iniş, silah.
+6. Mühimmat: istasyonlar kanat ve gövde altına ışınla otomatik yerleşir (`storeLayout`, V2.30). Kütüphanede silah yükü görünümünde füze ve bombaların yüzeye değdiğini, iniş takımına çarpmadığını kontrol et.
+7. Silahsız bir araçsa (ör. ANKA) silahlı görevler otomatik kapanır (`misArmed`, V2.39); görev listesinde böyle çıktığını kontrol et.
+8. `node tests/paralel.js` ve `python3 tools/metinler.py --check` geçiyor mu? Yeni metinlerde terim sözlüğüne uy (`docs/TERIMLER.md`).
+
+## 5. Model yenileme serisi (V2.41–V2.49)
+
+- Her sürümde bir araç yeniden yapılır ve gerçek Türk mühimmatı o aracın modeliyle aynı sürümde gelir.
+- Her model, yapılmadan önce kullanıcı onayına sunulur.
+- Defence Turk fotoğrafları yalnız görsel kaynak olarak kullanılır; sayısal veriler kaynak belirtilerek alınır.
+- Sıra ve ölçütler: [ROADMAP.md](../ROADMAP.md).
