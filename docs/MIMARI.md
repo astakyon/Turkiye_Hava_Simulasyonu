@@ -165,6 +165,7 @@ Açık teknik borç:
 - **TUSAŞ Hürjet ve Hürkuş** (`modeller/hurjet-hurkus`, V2.48): `buildHurjetV2` (uzun tandem kanopi, D yan hava girişleri, LERX, kanat ucu rayları, alçak tam hareketli yatay kuyruk) ve `buildHurkusV2` (5 kanatlı pervane, alçak sivrilen kanat); eski modeller `buildOld`.
 - **Helikopter, kara aracı ve gemi modelleri** (V2.49): `modeller/kara-ayrintili` (`fHull` yüzeyli zırh gövdesi, `trackRun` palet takımı; Altay, Fırtına, Pars, Kirpi, Korkut, Hisar-A), `modeller/heli-ayrintili` (`heliModel` V1 gövdeye CİRİT/L-UMTAS ve ayrıntı ekler), `modeller/gemi-ayrintili` (`shipRails`, `shipGun76`, `shipStamp`; Ada/İstif, Anadolu, hücumbot). Eski modeller `buildXV1` / `heliModelV1`; kütüphane öğelerinde `buildOld`.
 - **ANKA-3 yeniden** (V2.50): `anka3Camo` (uçuş fotoğrafındaki açık mavi-gri zemin, lacivert köşeli bantlar), nozul yükseltildi ve üstüne kuyruk plakası eklendi; kanat planı ve iç yuva aynı.
+- **Derleme çıktıları** (V2.51): `tools/build.py` üç dosya yazar — `index.html` (sayfa, `oyun.js?v=SÜRÜM` önceden yüklenir), `oyun.js` (oyun kodu, tek IIFE; tarayıcının kod önbelleği ikinci açılışı hızlandırır), `tek-dosya.html` (her şey tek dosyada: claude.ai, indirme, başsız testler ve tarayıcı denetimi bunu okur). `sw.js` çekirdek listesi sürümlü `oyun.js` ile güncellenir.
 - **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
 
 ## Android (planlı)

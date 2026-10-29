@@ -70,6 +70,7 @@ F = [
  ('Fotoğraf ve tekrar','Tekrar izleme','Son uçuşu kameralar ve zaman çubuğuyla yeniden izleme.','Uçuşta','F3','V1.87',T('replay'),'iyi',''),
  ('Fotoğraf ve tekrar','Fotoğraf modu','Arayüzsüz serbest kamera ile fotoğraf.','Uçuşta','H','V1.87',T('replay'),'iyi',''),
  # ---- Grafik ve performans
+ ('Grafik ve performans','Hızlı ikinci açılış','Oyun kodu ayrı bir dosyada (oyun.js): tarayıcı ve çevrimdışı önbellek derlenmiş kodu saklar, ikinci açılış daha hızlı. Her sürüm yeni adla yüklenir, eski kod kalmaz. Her şeyin tek dosyada olduğu tek-dosya.html indirme ve paylaşma için duruyor.','Kendiliğinden','—','V2.51',T('boot'),'iyi','Derleyici index.html + oyun.js + tek-dosya.html yazar; build.py --check üçünü de denetler.'),
  ('Grafik ve performans','Grafik ayarları','Otomatik / hazır ayarlar, ayrıntılı ayarlar, maliyet etiketleri, canlı fark, arama, varsayılana dön.','Ayarlar → Grafik','—','V1.57',T('gfx2','settings2','quality','settings'),'iyi',''),
  ('Grafik ve performans','Akıllı performans','Otomatik çözünürlük, kalite basamakları, eşit aralıklı 30 FPS, ısınmaya karşı sabit kalite.','Ayarlar → Grafik → Otomatik','—','V1.94',T('perf','perf2','quality'),'iyi',''),
  ('Grafik ve performans','Performans testi','2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor.','Ayarlar → Grafik → Sorun giderme → Performans testi','—','V2.12',T('perftest','v234'),'iyi',''),

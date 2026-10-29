@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.51 — 2026-10-29 · Hızlı ikinci açılış
+- Hızlı ikinci açılış: oyun kodu artık ayrı bir dosyada (oyun.js). Tarayıcı derlenmiş kodu önbellekte tuttuğu için oyun ikinci açılışta daha çabuk başlar.
+- Sayfa, oyun kodunu ilk anda indirmeye başlar; çevrimdışı önbellek de oyun kodunu saklar, internetsiz açılış sürüyor.
+- Her sürümde oyun kodu yeni adla yüklenir, güncellemeden sonra eski kod kalmaz.
+- Her şeyin tek dosyada olduğu sürüm (tek-dosya.html) indirme ve paylaşma için korunuyor.
+
 ## V2.50 — 2026-10-29 · ANKA-3 yeniden
 - ANKA-3 senin fotoğraflarınla yeniden ele alındı.
 - Uçuş fotoğrafındaki boya: açık mavi-gri zemin üzerinde lacivert köşeli bantlar (sol kanatta Z deseni, sağ kanatta firar kenarı bandı, nozul çevresi koyu).

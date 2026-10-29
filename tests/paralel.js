@@ -5,7 +5,7 @@
 const fs=require('fs'), path=require('path'), os=require('os'), cp=require('child_process');
 const DIR=__dirname; process.chdir(DIR);
 const ji=process.argv.indexOf('-j'), J=ji>0?Math.max(1,+process.argv[ji+1]||1):Math.max(1,os.cpus().length);
-cp.execSync("node -e \"const h=require('fs').readFileSync('../index.html','utf8');const m=[...h.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];require('fs').writeFileSync('/tmp/sim.js',m[m.length-1][1])\"");
+cp.execSync("node -e \"const h=require('fs').readFileSync('../tek-dosya.html','utf8');const m=[...h.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];require('fs').writeFileSync('/tmp/sim.js',m[m.length-1][1])\"");
 const lines=fs.readFileSync(path.join(DIR,'run.sh'),'utf8').split('\n').map(function(l){ return l.trim(); }).filter(function(l){ return /^(node \S*harness\.js \S+ \S+\.test\.js|sh \S+\.sh)$/.test(l); });
 const seen={}, jobs=lines.filter(function(l){ if(seen[l]) return false; seen[l]=1; return true; });
 const out=new Array(jobs.length), t0=Date.now(); let next=0, done=0, bad=0;

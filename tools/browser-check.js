@@ -11,7 +11,7 @@ let pw; try{ pw=require('playwright'); }catch(e){ try{ pw=require('/home/claude/
 const ROOT=path.join(__dirname,'..');
 /* budgets: [draw calls, k triangles] per view; raise them on purpose, in this file, when a release adds content */
 const BUDGET={'uçuş':[340,700], 'uçuş-2':[340,700], 'şehir':[340,560], 'orman':[430,680], texMB:115, stressHeapMB:40};
-let html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8'); html=html.replace(/<link[^>]*fonts[^>]*>/g,''); const k=html.lastIndexOf('})();'); html=html.slice(0,k)+'window.__E=function(c){return eval(c)};\n'+html.slice(k);
+let html=fs.readFileSync(path.join(ROOT,'tek-dosya.html'),'utf8'); html=html.replace(/<link[^>]*fonts[^>]*>/g,''); const k=html.lastIndexOf('})();'); html=html.slice(0,k)+'window.__E=function(c){return eval(c)};\n'+html.slice(k);
 const srv=http.createServer(function(req,res){ const u=decodeURIComponent(req.url.split('?')[0]); if(u==='/'||u==='/check.html'){ res.writeHead(200,{'content-type':'text/html; charset=utf-8'}); res.end(html); return; }
   const f=path.join(ROOT,u); if(f.indexOf(ROOT)!==0||!fs.existsSync(f)||fs.statSync(f).isDirectory()){ res.writeHead(404); res.end(); return; } res.writeHead(200); fs.createReadStream(f).pipe(res); });
 srv.listen(0,'127.0.0.1',async function(){ const port=srv.address().port; let fails=[];

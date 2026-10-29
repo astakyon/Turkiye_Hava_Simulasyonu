@@ -30,7 +30,7 @@ Eşleştirme ücretsiz PeerJS sunucusuyla yapılır; oyun verisi doğrudan oyunc
 ## Geliştirme
 Kaynak `src/` altında konu klasörlerine bölünmüş: `cekirdek`, `dunya`, `modeller`, `ucus`, `savas`, `gorev`, `ekran`, `kontrol`, `ses`, `yuruyus`, `ag`, `performans`, `veri`. Yükleme sırası `src/js/SIRA.txt` dosyasında; `index.html` bunlardan üretilir.
 ```
-python3 tools/build.py      # src/ → index.html
+python3 tools/build.py      # src/ → index.html + oyun.js + tek-dosya.html (tek dosyalık sürüm)
 node tests/paralel.js       # bütün testler, bütün çekirdeklerde (~2 dk); tek tek: sh tests/run.sh
 node tools/browser-check.js # gerçek tarayıcıda denetim ve bütçe kapısı (Playwright + Chromium)
 tools/release.sh V2.xx "başlık" notlar.md "commit mesajı"   # sürüm, notlar, derleme, denetim, testler, commit, push

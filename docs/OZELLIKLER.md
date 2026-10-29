@@ -4,7 +4,7 @@
 
 **Durum:** ✅ iyi · 🔧 iyileştirilmeli · 🔀 birleştirilmeli · 🗑 kaldırılmalı · 🧪 denenmeli (gerçek cihazda doğrulanmalı)
 
-**Özet:** 63 özellik · ✅ iyi 57 · 🔧 iyileştirilmeli 3 · 🧪 denenmeli 3 · testi olmayan: 0
+**Özet:** 64 özellik · ✅ iyi 58 · 🔧 iyileştirilmeli 3 · 🧪 denenmeli 3 · testi olmayan: 0
 
 ## Karar listesi
 
@@ -125,6 +125,7 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 
 | Özellik | Ne yapar | Nereden | Tuş | Sürüm | Test | Durum |
 |---|---|---|---|---|---|---|
+| **Hızlı ikinci açılış** | Oyun kodu ayrı bir dosyada (oyun.js): tarayıcı ve çevrimdışı önbellek derlenmiş kodu saklar, ikinci açılış daha hızlı. Her sürüm yeni adla yüklenir, eski kod kalmaz. Her şeyin tek dosyada olduğu tek-dosya.html indirme ve paylaşma için duruyor. | Kendiliğinden | — | V2.51 | boot | ✅ iyi |
 | **Grafik ayarları** | Otomatik / hazır ayarlar, ayrıntılı ayarlar, maliyet etiketleri, canlı fark, arama, varsayılana dön. | Ayarlar → Grafik | — | V1.57 | gfx2, settings2, quality, settings | ✅ iyi |
 | **Akıllı performans** | Otomatik çözünürlük, kalite basamakları, eşit aralıklı 30 FPS, ısınmaya karşı sabit kalite. | Ayarlar → Grafik → Otomatik | — | V1.94 | perf, perf2, quality | ✅ iyi |
 | **Performans testi** | 2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor. | Ayarlar → Grafik → Sorun giderme → Performans testi | — | V2.12 | perftest, v234 | ✅ iyi |

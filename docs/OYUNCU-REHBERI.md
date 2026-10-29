@@ -112,6 +112,7 @@ Bu rehber `python3 tools/ozellikler.py` ile oyundaki **Rehber** ekranıyla aynı
 
 ## Grafik ve performans
 
+- **Hızlı ikinci açılış:** Oyun kodu ayrı bir dosyada (oyun.js): tarayıcı ve çevrimdışı önbellek derlenmiş kodu saklar, ikinci açılış daha hızlı. Her sürüm yeni adla yüklenir, eski kod kalmaz. Her şeyin tek dosyada olduğu tek-dosya.html indirme ve paylaşma için duruyor. *Nereden:* Kendiliğinden.
 - **Grafik ayarları:** Otomatik / hazır ayarlar, ayrıntılı ayarlar, maliyet etiketleri, canlı fark, arama, varsayılana dön. *Nereden:* Ayarlar → Grafik.
 - **Akıllı performans:** Otomatik çözünürlük, kalite basamakları, eşit aralıklı 30 FPS, ısınmaya karşı sabit kalite. *Nereden:* Ayarlar → Grafik → Otomatik.
 - **Performans testi:** 2 dakikalık sabit rota, özellik maliyetleri, darboğaz, önerilen ayarlar, anonim rapor. *Nereden:* Ayarlar → Grafik → Sorun giderme → Performans testi.
