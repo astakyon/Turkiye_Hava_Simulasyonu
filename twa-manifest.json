@@ -21,7 +21,7 @@
   ],
   "appVersionName": "2.01",
   "appVersionCode": 201,
-  "minSdkVersion": 21,
+  "minSdkVersion": 24,
   "fallbackType": "customtabs",
   "features": {},
   "isChromeOSOnly": false,
