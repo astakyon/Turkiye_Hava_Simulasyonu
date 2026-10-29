@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.50 — 2026-10-29 · ANKA-3 yeniden
+- ANKA-3 senin fotoğraflarınla yeniden ele alındı.
+- Uçuş fotoğrafındaki boya: açık mavi-gri zemin üzerinde lacivert köşeli bantlar (sol kanatta Z deseni, sağ kanatta firar kenarı bandı, nozul çevresi koyu).
+- Motor nozulu yükseltildi ve üstüne koyu kuyruk plakası eklendi; uçak üstten bakınca fotoğraftaki gibi görünüyor.
+- Senin seçtiğin kanat planı, kambur hava girişi, iç silah yuvası ve mühimmat (TEBER-82, SOM-J, MAM-L) aynen korundu.
+
 ## V2.49 — 2026-10-29 · Helikopter, kara aracı ve gemi modelleri
 - Helikopterler yenilendi: T129 ATAK kanatlarında gerçek mühimmat (içte Roketsan CİRİT lançerleri, dışta dörderli L-UMTAS), motor hava girişleri, tel kesiciler, kanopi çerçevesi, kızılötesi karıştırıcı, kuyrukta bayrak.
 - T625 GÖKBEY: ön cam çerçevesi, sürgülü kabin kapısı rayları, basamaklar, motor hava girişleri, GÖKBEY yazısı ve bayrak.

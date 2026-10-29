@@ -70,9 +70,26 @@ let ANKA_TXT_M=null; function ANKA_TXT(){ return ANKA_TXT_M||(ANKA_TXT_M=ankaTxt
    Front and flight photos: one blended body, thick in the middle (about 1,1 m) and thin outboard;
    the wide arched intake sits at the front of the dome; the thin wing blends into the body at mid height and runs to small upright
    tip tabs; the exhaust opens at the back of the body; the weapons bay is under the body. */
+/* V2.50: ANKA-3 camouflage from the player's flight photo — light blue-grey with dark navy angular bands (asymmetric),
+   a dark band along the right trailing edge and around the nozzle, light nose */
+let ANKA3_CAMO=null;
+function anka3Camo(){ if(ANKA3_CAMO) return ANKA3_CAMO;
+  return ANKA3_CAMO=MK.planarTex(function(x,X,Z,px){
+    x.fillStyle='#c4d0de'; x.fillRect(0,0,16*px,24*px);
+    const P=function(c,a){ x.fillStyle=c; x.beginPath(); x.moveTo(X(a[0]),Z(a[1])); for(let i=2;i<a.length;i+=2) x.lineTo(X(a[i]),Z(a[i+1])); x.closePath(); x.fill(); };
+    const D='#3a4a68', M='#93a4bd';
+    P(M,[-0.9,-2.2, 0.9,-2.2, 1.4,0.2, -1.4,0.2]);
+    /* left wing: two diagonal bands joined at the trailing edge (a Z) */
+    P(D,[-1.6,-1.4, -2.5,-1.6, -4.4,3.2, -3.4,3.0]); P(D,[-3.4,3.0, -4.4,3.2, -5.4,2.0, -4.6,1.6]); P(D,[-4.6,1.6, -5.4,2.0, -6.6,3.9, -5.7,3.8]);
+    /* right wing: dark trailing-edge band, one diagonal band */
+    P(D,[1.3,2.0, 6.6,3.2, 6.6,4.2, 1.0,3.0]); P(D,[2.4,-0.6, 3.2,-0.4, 4.6,2.7, 3.7,2.6]);
+    /* centre: dark around the nozzle, a thin chevron behind the intake */
+    P(D,[-1.2,1.6, 1.2,1.6, 1.0,4.0, -1.0,4.0]); P(D,[-1.5,-1.0, 0,-1.6, 1.5,-1.0, 1.5,-0.7, 0,-1.3, -1.5,-0.7]);
+    x.strokeStyle='rgba(30,40,55,0.35)'; x.lineWidth=2; [[-1.6,-0.4,1.6,-0.4],[-2.6,1.0,-1.8,1.2],[2.6,1.0,1.8,1.2]].forEach(function(l){ x.beginPath(); x.moveTo(X(l[0]),Z(l[1])); x.lineTo(X(l[2]),Z(l[3])); x.stroke(); });
+  },32); }
 function buildAnka3V2(){
   const g=new THREE.Group(), surfaces=[];
-  const skin=phong(0x434d58,0x263039,22,{map:ankaPaint('#ffffff')}), dkg=phong(0x3e4852,0x232b33,20), dark=DARK, edge=phong(0x3c434a,0x22282d,18);
+  const skin=phong(0x8592a3,0x263039,22,{map:anka3Camo()}), dkg=phong(0x2b3a55,0x1a2230,20), dark=DARK, edge=phong(0x3c434a,0x22282d,18);
   /* ---- thin wing: swept leading edge, near-straight trailing edge, elevons outboard */
   /* planform (aerial photo, X-47B-like): a delta with a slight crank at 2,4 m;
      shallow W trailing edge: the centre runs back to the nozzle, a small notch at the crank, back again to broad tips */
@@ -99,14 +116,17 @@ function buildAnka3V2(){
     const mouth=new THREE.Mesh(new THREE.ShapeGeometry(arch(0.68,0.42)),new THREE.MeshPhongMaterial({color:0x07090b,side:THREE.DoubleSide})); mouth.position.set(0,0.46,-2.95); g.add(mouth);
     const lip=new THREE.Mesh(new THREE.ExtrudeGeometry(outer,{depth:0.06,bevelEnabled:false}),dkg); lip.position.set(0,0.46,-3.1); g.add(lip); }
   /* engine nozzle at the back, set low into a rounded fairing under the tail (flight and taxi photos) */
-  { const fr=new THREE.Mesh(new THREE.SphereGeometry(0.5,20,12),skin); fr.scale.set(1.3,0.5,2.6); fr.position.set(0,-0.02,2.5); g.add(fr); MK.at(g,new THREE.Mesh(MK.cyl(0.36,0.32,0.6,24),dkg),0,-0.02,3.4);
-    MK.at(g,new THREE.Mesh(MK.cyl(0.29,0.27,0.3,22,true),dark),0,-0.02,3.7);
-    const d=new THREE.Mesh(new THREE.CircleGeometry(0.3,22),phong(0x241e1a,0x111111,10)); d.position.set(0,-0.02,3.6); d.rotation.y=Math.PI; g.add(d); }
-  const flames=addFlames(g,[[0,-0.02,3.85]],0.5);
+  { const NY=0.14; const fr=new THREE.Mesh(new THREE.SphereGeometry(0.5,20,12),dkg); fr.scale.set(1.35,0.5,2.6); fr.position.set(0,NY-0.04,2.45); g.add(fr); MK.at(g,new THREE.Mesh(MK.cyl(0.38,0.34,0.6,24),dkg),0,NY,3.35);
+    MK.at(g,new THREE.Mesh(MK.cyl(0.31,0.29,0.32,22,true),dark),0,NY,3.66);
+    const d=new THREE.Mesh(new THREE.CircleGeometry(0.31,22),phong(0x241e1a,0x111111,10)); d.position.set(0,NY,3.56); d.rotation.y=Math.PI; g.add(d);
+    /* V2.50: flat tail plate over the nozzle (flight photo), dark like the camouflage band around it */
+    const tp=new THREE.Shape(); tp.moveTo(-0.75,0); tp.lineTo(0.75,0); tp.lineTo(0.5,1.25); tp.lineTo(-0.5,1.25); tp.closePath();
+    const pg=new THREE.ShapeGeometry(tp); pg.rotateX(Math.PI/2); const pl=new THREE.Mesh(pg,new THREE.MeshPhongMaterial({color:0x2b3a55,specular:0x1a2230,shininess:20,side:THREE.DoubleSide})); pl.position.set(0,NY+0.36,2.65); pl.rotation.x=-0.08; g.add(pl); }
+  const flames=addFlames(g,[[0,0.14,3.82]],0.5);
   addPitot(g,-4.5,0.9);
   /* dorsal antennas, a dark panel on top */
   MK.at(g,new THREE.Mesh(new THREE.BoxGeometry(0.03,0.22,0.14),dark),0,0.68,-1.0).rotation.x=-0.35;
-  { const pg=new THREE.PlaneGeometry(1.9,2.6); pg.rotateX(-Math.PI/2); const pn=new THREE.Mesh(pg,phong(0x2a3036,0x1a1e22,30,{polygonOffset:true,polygonOffsetFactor:-2})); pn.position.set(0,0.6,0.3); pn.rotation.x=0.07; g.add(pn); }
+  { const pg=new THREE.PlaneGeometry(1.9,2.6); pg.rotateX(-Math.PI/2); const pn=new THREE.Mesh(pg,phong(0x3a4658,0x1a1e22,30,{polygonOffset:true,polygonOffsetFactor:-2})); pn.position.set(0,0.6,0.3); pn.rotation.x=0.07; pn.visible=false; g.add(pn); }   /* V2.50: hidden, the camouflage carries the top now */
   /* ---- marking */
   [-1,1].forEach(function(s){ const dg=new THREE.PlaneGeometry(1.3,0.24); dg.rotateX(-Math.PI/2); const d=new THREE.Mesh(dg,ANKA3_TXT()); d.position.set(s*3.6,0.06,LE(3.6)+(TE(3.6)-LE(3.6))*0.45); g.add(d); });
   /* ---- lights */

@@ -164,6 +164,7 @@ Açık teknik borç:
 - **TUSAŞ Aksungur** (`modeller/aksungur`, V2.47): `buildAksungurV2` — motor gövdelerinden çıkan kuyruk bomları, H kuyruk, 6 kanat altı istasyon (`stnMinX` motorların dışı); eski model `buildOld`.
 - **TUSAŞ Hürjet ve Hürkuş** (`modeller/hurjet-hurkus`, V2.48): `buildHurjetV2` (uzun tandem kanopi, D yan hava girişleri, LERX, kanat ucu rayları, alçak tam hareketli yatay kuyruk) ve `buildHurkusV2` (5 kanatlı pervane, alçak sivrilen kanat); eski modeller `buildOld`.
 - **Helikopter, kara aracı ve gemi modelleri** (V2.49): `modeller/kara-ayrintili` (`fHull` yüzeyli zırh gövdesi, `trackRun` palet takımı; Altay, Fırtına, Pars, Kirpi, Korkut, Hisar-A), `modeller/heli-ayrintili` (`heliModel` V1 gövdeye CİRİT/L-UMTAS ve ayrıntı ekler), `modeller/gemi-ayrintili` (`shipRails`, `shipGun76`, `shipStamp`; Ada/İstif, Anadolu, hücumbot). Eski modeller `buildXV1` / `heliModelV1`; kütüphane öğelerinde `buildOld`.
+- **ANKA-3 yeniden** (V2.50): `anka3Camo` (uçuş fotoğrafındaki açık mavi-gri zemin, lacivert köşeli bantlar), nozul yükseltildi ve üstüne kuyruk plakası eklendi; kanat planı ve iç yuva aynı.
 - **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
 
 ## Android (planlı)
