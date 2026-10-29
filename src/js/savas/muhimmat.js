@@ -32,8 +32,19 @@ const MUNI={
   mamt:{ad:'MAM-T mini akıllı mühimmat',kisa:'MAM-T',uretici:'ROKETSAN',kind:'missile',
     gercek:'boy 1,4 m · çap 230 mm · 94 kg · parçacık etkili · ANS+KKS+lazer güdüm · İHA\'dan menzil 30+ km',kg:94,len:1.4,dia:0.23,
     oyun:{name:'MAM-T süzülen güdümlü mühimmat',short:'MAM-T',tip:'Sadece yer · 10 km · uzun menzilli süzülme',range:10000,speed:260,turn:0.9,dmg:2.0,armorDmg:1.5,r:18,air:false,ground:true}}
+,
+  /* V2.44 — Bayraktar Akıncı */
+  teber82:{ad:'TEBER-82 lazer güdüm kiti',kisa:'TEBER-82',uretici:'ROKETSAN',kind:'bomb',
+    gercek:'Mk-82 bomba + lazer arayıcı kit · boy 2,65 m · ~270 kg · menzil 2–28 km · CEP 3 m altı · hareketli hedef (40 km/sa altı)',kg:270,len:2.65,dia:0.273,
+    oyun:{name:'TEBER-82 lazer güdümlü bomba',short:'TEBER',tip:'Lazer güdümlü · 500 lb · 26 m patlama',r:26,dmg:1.5,armorDmg:0.8}},
+  lumtas:{ad:'L-UMTAS tanksavar füzesi',kisa:'L-UMTAS',uretici:'ROKETSAN',kind:'missile',
+    gercek:'boy 1800 mm · çap 160 mm · 37,5 kg · lazer arayıcı · reaktif zırha karşı tandem harp başlığı · menzil 0,5–8 km',kg:37.5,len:1.8,dia:0.16,
+    oyun:{name:'L-UMTAS tanksavar füzesi',short:'UMTAS',tip:'Sadece yer · 8 km · zırhlı araçlara çok etkili',range:8000,speed:420,turn:1.2,dmg:1.2,armorDmg:2.2,r:10,air:false,ground:true}},
+  soma:{ad:'SOM-A seyir füzesi',kisa:'SOM-A',uretici:'ROKETSAN',kind:'missile',
+    gercek:'boy ~4 m · ~600 kg · ~230 kg harp başlığı · menzil 250+ km · düşük görünürlük · kızılötesi görüntülemeli arayıcı',kg:600,len:4.0,dia:0.46,
+    oyun:{name:'SOM-A seyir füzesi',short:'SOM',tip:'Sadece yer · 14 km · alçaktan süzülür · çok yıkıcı',range:14000,speed:300,turn:0.7,dmg:3.2,armorDmg:2.4,r:28,air:false,ground:true}}
 };
-const AC_MUNI={kaan:{gp:'hgk82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, tb2:{gp:'maml',bnk:'mamc',m3:'mamt'}, tb3:{gp:'maml',bnk:'mamc',m3:'mamt'}};
+const AC_MUNI={kaan:{gp:'hgk82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, tb2:{gp:'maml',bnk:'mamc',m3:'mamt'}, tb3:{gp:'maml',bnk:'mamc',m3:'mamt'}, akinci:{gp:'teber82',bnk:'neb84',m1:'lumtas',m2:'gokdogan',m3:'soma'}};
 const MUN_BAY={kaan:['m1','m2','m3']};
 const MUN_SRC='Defence Turk · Sistem Envanteri (açık kaynak bilgiler); oyundaki menzil ve hızlar adaya göre ölçeklenmiştir.';
 let MUN_BASE=null;
@@ -112,6 +123,21 @@ const MUN_BUILD={
     const wm=new THREE.BoxGeometry(0.12,0.04,0.26); wm.translate(0,r+0.005,0.02); P.push({g:wm,c:0x9aa0a6});
     munCross([[0,L/2-0.26],[0.17,L/2-0.08],[0.17,L/2],[0,L/2]],0.012,r-0.005,Math.PI/4).forEach(function(g){ P.push({g:g,c:0xb9bdc1}); });
     return P; },
+  teber82:function(){ const L=2.65, r=0.137, z0=-L/2, P=[];
+    P.push({g:munLathe([[z0,0.0],[z0+0.05,0.05],[z0+0.16,0.07]],16),c:0x2a3a44});                                     /* laser seeker */
+    P.push({g:munLathe([[z0+0.16,0.07],[z0+0.32,0.085],[z0+0.75,r],[L/2-0.6,r],[L/2-0.3,0.09],[L/2,0.085]],16),c:0x5d6449});
+    P.push({g:munLathe([[z0+0.7,r+0.003],[z0+0.76,r+0.003]],16),c:0xd8b02a});
+    munCross([[0,z0+0.2],[0.11,z0+0.28],[0.11,z0+0.4],[0,z0+0.42]],0.01,0.08,Math.PI/4).forEach(function(g){ P.push({g:g,c:0x74786c}); });   /* canards */
+    munCross([[0,L/2-0.34],[0.22,L/2-0.1],[0.22,L/2],[0,L/2]],0.012,0.085,Math.PI/4).forEach(function(g){ P.push({g:g,c:0x74786c}); });
+    return P; },
+  lumtas:function(){ const L=1.8, r=0.08, z0=-L/2, P=[];
+    P.push({g:munLathe([[z0,0.0],[z0+0.05,0.05],[z0+0.12,0.07]],14),c:0x2a3a44});
+    P.push({g:munLathe([[z0+0.12,0.07],[z0+0.25,r],[L/2,r]],14),c:0x6a7058});
+    P.push({g:munLathe([[z0+0.3,r+0.002],[z0+0.34,r+0.002]],14),c:0xd8b02a});
+    munCross([[0,z0+0.28],[0.05,z0+0.33],[0.05,z0+0.4],[0,z0+0.42]],0.008,r-0.004,0).forEach(function(g){ P.push({g:g,c:0x585d48}); });
+    munCross([[0,L/2-0.3],[0.13,L/2-0.12],[0.13,L/2-0.02],[0,L/2]],0.01,r-0.004,Math.PI/4).forEach(function(g){ P.push({g:g,c:0x585d48}); });
+    return P; },
+  soma:function(){ const P=MUN_BUILD.somj(); P.forEach(function(p){ p.g=p.g.clone(); p.g.scale(1.1,1.1,4.0/3.9); }); return P; },
   hgk82:function(){ const L=2.45, r=0.137, z0=-L/2, P=[];
     P.push({g:munLathe([[z0,0.02],[z0+0.22,0.08],[z0+0.6,r],[L/2-0.6,r],[L/2-0.3,0.09],[L/2,0.08]],16),c:0x5d6449});
     P.push({g:munLathe([[z0+0.5,r+0.003],[z0+0.56,r+0.003]],16),c:0xd8b02a});                                          /* yellow HE band */

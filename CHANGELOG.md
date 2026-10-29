@@ -1,6 +1,12 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.44 — 2026-10-29 · Bayraktar Akıncı ve gerçek mühimmatı
+- Bayraktar Akıncı yeni modeliyle (oyuncunun fotoğraflarına göre): tek dikey kuyruk, alçak yatay kuyruklar ve altta küçük yüzgeç; yukarı kıvrılan büyük kanatçıklar; kanadın altına sarkan motor gövdeleri ve öndeki beş kanatlı pervaneler.
+- Gerçek ölçüler: boy 12,2 m, kanat açıklığı 20 m, yükseklik 4,1 m. Kamera topu gövdenin arka altında, gövdede BAYRAKTAR AKINCI yazısı.
+- Akıncı gerçek mühimmatla: TEBER-82 (lazer güdümlü bomba), NEB-84 (sığınak delici), L-UMTAS (tanksavar füzesi), GÖKDOĞAN (hava-hava), SOM-A (seyir füzesi). Her kanatta motorun dışında dört istasyon.
+- TB3: kanat katlanma yeri gemi fotoğrafındaki bileziğe taşındı (bomdan yaklaşık 1,3 m dışarıda); menteşede açık gri bilezik, mühimmat yeri genişledi.
+
 ## V2.43 — 2026-10-29 · Bayraktar TB3 ve katlanır kanatlar
 - Bayraktar TB3 yeni modeliyle: boy 8,35 m, kanat açıklığı 14 m, yükseklik 2,6 m (gerçek ölçüler).
 - Katlanır kanatlar: dış kanatlar kökten, kuyruk bomlarının hemen dışından katlanıp gövdenin üstüne yatıyor; kanatçıklar ve uç ışıkları da birlikte gidiyor.

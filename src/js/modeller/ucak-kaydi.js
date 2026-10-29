@@ -50,7 +50,7 @@ const AIRCRAFT={
     vr:32,landV:50,sinkMax:3.5,gearV:60,brake:3.5,rollFric:0.35,airV:55,fireInt:0.35,bulletV:350,blife:3,weapon:'MAM',snd:SND_PROP},
   akinci:{name:'Bayraktar Akıncı',short:'AKINCI',kind:'Taarruz İHA · çift turboprop',len:'12,2 m',span:'20 m',uav:true,hasAB:false,
     desc:'İki turboprop motorlu, ağır yük taşıyan taarruz İHA\'sı. Geniş kanat, güçlü ama hâlâ yavaş.',
-    build:buildAkinci,gearOff:1.55,belly:0.8,cam:[2.7,12],eye:[0,-0.5,-6.2],muzzle:[0,-0.6,-3.6],
+    build:function(){ return buildAkinciV2(); }, buildOld:buildAkinci,gearOff:1.55,belly:0.8,cam:[2.7,12],eye:[0,-0.5,-6.2],muzzle:[0,-0.6,-3.6],
     idle:0.15,thrust:4.5,abT:0,kD:0.00046,stall:[27,40],authV:55,gLim:3.5,pitchMax:0.65,roll:1.4,yaw:0.25,stallNose:0.5,minV:30,vTop:100,
     vr:36,landV:55,sinkMax:3.5,gearV:65,brake:4,rollFric:0.4,airV:60,fireInt:0.3,bulletV:380,blife:3,weapon:'MAM',snd:SND_PROP}
 };

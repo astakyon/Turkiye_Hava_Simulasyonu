@@ -46,14 +46,15 @@ function buildTB2(o){ o=o||{};   /* o (V2.43, TB3): k=[sx,sy,sz] size, blades, f
   [-1,1].forEach(function(s){
     const map=function(sp,z,th){ return [s*sp, WY(sp)+th, z]; };
     /* folding wing (TB3): the outer panel hangs from a hinge group at the fold line */
-    let W=g; if(FS){ const fp=new THREE.Group(); fp.position.set(s*FS,WY(FS)+0.08,0); fp.userData.noBake=true; g.add(fp); const sub=new THREE.Group(); sub.position.set(-s*FS,-WY(FS)-0.08,0); fp.add(sub); W=sub; tips[s]=sub; folds.push({p:fp,a:s*(s>0?2.98:2.86)}); }   /* folded: the outer panels lie over the fuselage, one above the other (photos) */
-    if(FS){ g.add(new THREE.Mesh(MK.outward(MK.foil([wsec(0,0,1),wsec(FS,0,1)],map,12,'b'),new THREE.Vector3(s*FS/2,-1,0)),skin));
-      W.add(new THREE.Mesh(MK.outward(MK.foil([wsec(FS+0.01,0,1),wsec(1.55,0,1),wsec(1.55,0,0.74),wsec(5.98,0,0.74),wsec(6.0,0,1)],map,10,'ab'),new THREE.Vector3(s*4,-1,0)),skin));
-      const hg=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.03,TE(FS)-LE(FS)),dark); hg.position.set(s*FS,WY(FS)+0.07,(LE(FS)+TE(FS))/2); g.add(hg); }   /* hinge line */
+    let W=g; if(FS){ const fp=new THREE.Group(); fp.position.set(s*FS,WY(FS)+0.08,0); fp.userData.noBake=true; g.add(fp); const sub=new THREE.Group(); sub.position.set(-s*FS,-WY(FS)-0.08,0); fp.add(sub); W=sub; tips[s]=sub; folds.push({p:fp,a:s*(s>0?2.98:2.88)}); }   /* folded: the outer panels lie over the fuselage, one above the other (photos) */
+    if(FS){ g.add(new THREE.Mesh(MK.outward(MK.foil(FS>1.55?[wsec(0,0,1),wsec(1.55,0,1),wsec(1.55,0,0.74),wsec(FS,0,0.74),wsec(FS+0.002,0,1)]:[wsec(0,0,1),wsec(FS,0,1)],map,12,'b'),new THREE.Vector3(s*FS/2,-1,0)),skin));
+      W.add(new THREE.Mesh(MK.outward(MK.foil(FS>1.55?[wsec(FS+0.01,0,1),wsec(FS+0.012,0,0.74),wsec(5.98,0,0.74),wsec(6.0,0,1)]:[wsec(FS+0.01,0,1),wsec(1.55,0,1),wsec(1.55,0,0.74),wsec(5.98,0,0.74),wsec(6.0,0,1)],map,10,'ab'),new THREE.Vector3(s*4,-1,0)),skin));
+      const c=TE(FS)-LE(FS), hg=new THREE.Mesh(new THREE.BoxGeometry(0.07,MK.thick(0.3,0.13)*c*2+0.035,c+0.03),edge); hg.position.set(s*FS,WY(FS)+0.005,(LE(FS)+TE(FS))/2); g.add(hg); }   /* fold joint: a collar round the wing (ship photo) */
     else g.add(new THREE.Mesh(MK.outward(MK.foil([wsec(0,0,1),wsec(1.55,0,1),wsec(1.55,0,0.74),wsec(5.98,0,0.74),wsec(6.0,0,1)],map,12,'b'),new THREE.Vector3(s*3,-1,0)),skin));
     const hp=function(sp){ const q=wsec(sp); return [s*sp,WY(sp),q.le+(q.te-q.le)*0.74]; };
-    const FE=4.15, fl=MK.outward(MK.foil([wsec(1.6,0.74,1),wsec(FE,0.74,1)],map,5,'ab'),new THREE.Vector3(s*2.8,0,0.5));
-    const F=MK.hinge(fl,skin,s>0?hp(1.6):hp(FE),s>0?hp(FE):hp(1.6),'x'); W.add(F.outer);   /* flaps stay still (no flap input) */
+    /* flaps 1,6–4,15 m; split at the fold line when the fold is inside that span */
+    (FS>1.6&&FS<4.15?[[1.6,FS-0.04,g],[FS+0.04,4.15,W]]:[[1.6,4.15,W]]).forEach(function(f){ const a=f[0], b=f[1], fl=MK.outward(MK.foil([wsec(a,0.74,1),wsec(b,0.74,1)],map,5,'ab'),new THREE.Vector3(s*(a+b)/2,0,0.5));
+      const F=MK.hinge(fl,skin,s>0?hp(a):hp(b),s>0?hp(b):hp(a),'x'); f[2].add(F.outer); });   /* flaps stay still (no flap input) */
     const al=MK.outward(MK.foil([wsec(4.2,0.74,1),wsec(5.95,0.74,1)],map,5,'ab'),new THREE.Vector3(s*5,0,0.3));
     const A=MK.hinge(al,skin,s>0?hp(4.2):hp(5.95),s>0?hp(5.95):hp(4.2),'x'); W.add(A.outer); surfaces.push({n:A.pivot,axis:'x',input:'roll',max:20*0.01745,sign:s>0?-1:1,base:0});
     /* BAYRAKTAR on the upper side only (a decal, so it does not show mirrored from below) */
@@ -113,6 +114,6 @@ function buildTB2(o){ o=o||{};   /* o (V2.43, TB3): k=[sx,sy,sz] size, blades, f
 /* Bayraktar TB3 (V2.43): TB2's layout at TB3 size — 8,35 m long, 14 m span, 2,6 m tall (Defence Turk / Baykar) — with wings that fold
    at the root, just outboard of the booms, and lie over the fuselage on the ship (photos from the player); fuller nose with the SATCOM inside,
    engine cowling hump, main gear under the booms, turret under the fuselage, stores on the fixed centre wing, three-blade propeller, arresting hook. */
-function buildTB3(){ return buildTB2({k:[14/12, 1.22, 8.35/6.5], blades:3, fold:1.45, hook:true, bigNose:true, cowl:true, boomGear:true, turZ:-1.25, stnX:[0.6,1.36], name:'BAYRAKTAR TB3'}); }
+function buildTB3(){ return buildTB2({k:[14/12, 1.22, 8.35/6.5], blades:3, fold:2.5, hook:true, bigNose:true, cowl:true, boomGear:true, turZ:-1.25, stnX:[0.6,2.25], name:'BAYRAKTAR TB3'}); }
 /* fold or unfold the outer wing panels (0 = flight, 1 = folded) */
 function tbFold(m,f){ if(m&&m.folds) m.folds.forEach(function(d){ d.p.rotation.z=d.a*f; }); }
