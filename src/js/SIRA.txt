@@ -38,6 +38,7 @@ dunya/bakim-hangari.js
 ucus/ucus-durumu.js
 ucus/halkalar.js
 savas/hedefler-mermiler.js
+savas/muhimmat.js
 savas/yer-hedefleri.js
 gorev/gorevler.js
 savas/tehditler.js

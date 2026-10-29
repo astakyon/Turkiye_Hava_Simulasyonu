@@ -12,7 +12,7 @@ function enterHangar(){
 }
 let startPick='hangar'; try{ const sp=stGet('kaan-sim-start'); if(sp==='hangar'||sp==='runway'||sp==='air') startPick=sp; }catch(e){}
 const START_ORDER=['hangar','runway','air','walk'];
-function loadSummary(id){ const n=SLOTS[id]||0; if(n<=0) return 'silah taşımaz'; const l=loadoutOf(id), parts=WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }); return parts.join(' · ')||'boş'; }
+function loadSummary(id){ const n=SLOTS[id]||0; if(n<=0) return 'silah taşımaz'; const l=loadoutOf(id), parts=WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return wOf(id,k).short+'×'+l[k]; }); return parts.join(' · ')||'boş'; }
 let loadFrom='hangar';
 function preFlight(from){            // after picking the aircraft: weapons first (if it carries any), then the start dialog
   if(state!=='menu') return;
@@ -46,7 +46,7 @@ function refreshSetup(){
   $('suName').textContent=a.name; $('suKind').textContent=a.kind;
   $('suSlots').textContent=n>0?('yer '+used+' / '+n+' · flare '+(FLARES[selectedId]||0)):'';
   $('suLoad').innerHTML=n>0?wpnOf(selectedId).map(function(k){
-    const W=WEAPONS[k], c=l[k]||0;
+    const W=wOf(selectedId,k), c=l[k]||0;
     return '<tr><td><b>'+W.name+'</b><small>'+W.tip+'</small></td><td class="cnt"><button type="button" aria-label="'+W.short+' azalt" data-k="'+k+'" data-d="-1"'+(c<=0?' disabled':'')+'>−</button><span>'+c+'</span><button type="button" aria-label="'+W.short+' artır" data-k="'+k+'" data-d="1"'+(used>=n?' disabled':'')+'>+</button></td></tr>';
   }).join(''):'<tr><td>Bu uçak silah taşımıyor.</td></tr>';
   $('suPre').innerHTML=n>0?LPRESETS.filter(function(p){ return p.f(selectedId); }).map(function(p){ return '<button type="button" data-p="'+p.id+'">'+p.n+'</button>'; }).join(''):'';
@@ -56,14 +56,14 @@ function refreshSetup(){
   const sorted=order.slice().sort(function(a,b){ return (a?WORDER.indexOf(a):9)-(b?WORDER.indexOf(b):9); });
   const col={gp:'#7d8a5a',bnk:'#4f6a9a',m1:'#e8e8e8',m2:'#9fd0ff',m3:'#ffc24a'};
   $('suPyl').innerHTML=n>0?'<svg class="ac" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><g transform="rotate(-90 50 20) translate(30 -30) scale(0.4 2.5)"><polygon fill="currentColor" points="'+SIL[SIL_OF[selectedId]||'uav']+'"/></g></svg>'+
-    pos.map(function(x,i){ const k=sorted[i]; return '<span class="pd" style="left:'+x+'%;top:62%;'+(k?'background:'+col[k]+';border-color:#fff;color:#08101c':'')+'" title="'+(k?WEAPONS[k].name:'boş')+'">'+(k?WEAPONS[k].short:'')+'</span>'; }).join(''):'';
-  const kg=WORDER.reduce(function(s,k){ return s+(l[k]||0)*WKG[k]; },0), mxkg=n*560, f=Math.min(1,kg/(mxkg||1));
+    pos.map(function(x,i){ const k=sorted[i]; return '<span class="pd" style="left:'+x+'%;top:62%;'+(k?'background:'+col[k]+';border-color:#fff;color:#08101c':'')+'" title="'+(k?wOf(selectedId,k).name:'boş')+'">'+(k?wOf(selectedId,k).short:'')+'</span>'; }).join(''):'';
+  const kg=WORDER.reduce(function(s,k){ return s+(l[k]||0)*wKg(selectedId,k); },0), mxkg=n*560, f=Math.min(1,kg/(mxkg||1));
   $('suWtBar').style.width=Math.round(f*100)+'%'; $('suWt').textContent=n>0?('Toplam yük '+kg.toLocaleString('tr-TR')+' kg · sürükleme '+(f<0.35?'düşük':f<0.7?'orta':'yüksek')+(f>0.7?' — hız ve manevra azalır':'')):'';
 }
 const WKG={gp:230,bnk:900,m1:90,m2:160,m3:280};
 /* ready-made loads: fill the stations with what the aircraft may carry */
 const LPRESETS=[
-  {id:'aa',n:'Hava-hava',f:function(id){ return wpnOf(id).some(function(k){ return WEAPONS[k].air; }); },mix:function(id,n){ const w=wpnOf(id); return w.indexOf('m2')>=0&&w.indexOf('m1')>=0?{m2:Math.ceil(n/2),m1:Math.floor(n/2)}:{[w.find(function(k){ return WEAPONS[k].air; })]:n}; }},
+  {id:'aa',n:'Hava-hava',f:function(id){ return wpnOf(id).some(function(k){ return wOf(id,k).air; }); },mix:function(id,n){ const w=wpnOf(id); return w.indexOf('m2')>=0&&w.indexOf('m1')>=0?{m2:Math.ceil(n/2),m1:Math.floor(n/2)}:{[w.find(function(k){ return WEAPONS[k].air; })]:n}; }},
   {id:'ag',n:'Kara taarruzu',f:function(){ return true; },mix:function(id,n){ const w=wpnOf(id), o={}; const b=w.indexOf('gp')>=0?'gp':w[0]; o[b]=Math.ceil(n/2); const r=w.indexOf('m3')>=0?'m3':(w.indexOf('bnk')>=0?'bnk':b); o[r]=(o[r]||0)+Math.floor(n/2); return o; }},
   {id:'sead',n:'Sığınak / zırh',f:function(id){ const w=wpnOf(id); return w.indexOf('bnk')>=0||w.indexOf('m3')>=0; },mix:function(id,n){ const w=wpnOf(id), o={}; const a=w.indexOf('bnk')>=0?'bnk':'m3', b=w.indexOf('m3')>=0?'m3':a; o[a]=Math.ceil(n/2); o[b]=(o[b]||0)+Math.floor(n/2); return o; }},
   {id:'rec',n:'Keşif (hafif)',f:function(id){ return wpnOf(id).indexOf('m1')>=0; },mix:function(id,n){ return {m1:Math.min(2,n)}; }},

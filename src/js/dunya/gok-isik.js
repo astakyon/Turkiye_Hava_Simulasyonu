@@ -43,7 +43,7 @@ function stdOf(m){
   if(!m||!m.isMeshPhongMaterial) return m; if(MCONV.has(m)) return MCONV.get(m);
   const sh=m.shininess||30, glass=m.transparent&&m.opacity>0.5&&sh>=100;
   const s=new THREE.MeshStandardMaterial({color:m.color.clone(), map:m.map||null, emissive:m.emissive?m.emissive.clone():undefined, transparent:m.transparent, opacity:m.opacity, side:m.side,
-    depthWrite:m.depthWrite, polygonOffset:m.polygonOffset, polygonOffsetFactor:m.polygonOffsetFactor, polygonOffsetUnits:m.polygonOffsetUnits, flatShading:!!m.flatShading,
+    depthWrite:m.depthWrite, polygonOffset:m.polygonOffset, polygonOffsetFactor:m.polygonOffsetFactor, polygonOffsetUnits:m.polygonOffsetUnits, flatShading:!!m.flatShading, vertexColors:!!m.vertexColors,
     roughness: glass?0.06:Math.min(0.62,Math.max(0.34,1-sh/100)), metalness: glass?0.2:(m.map?0.05:0.32), envMap:ENVMAP, envMapIntensity: glass?1.5:0.9 });
   MCONV.set(m,s); return s;
 }

@@ -1,6 +1,15 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.41 — 2026-10-29 · KAAN ve gerçek mühimmatı
+- KAAN gerçek Türk mühimmatıyla: GÖKDOĞAN (görüş ötesi), BOZDOĞAN (görüş içi), SOM-J (seyir füzesi), HGK-82 (güdüm kitli bomba), NEB-84 (nüfuz edici bomba).
+- Mühimmat modelleri gerçek boyutta; veriler Defence Turk Sistem Envanteri'nden, menzil ve hızlar adaya göre ölçeklendi.
+- KAAN'a iç silah yuvası geldi: füzeler gövdede taşınır, her atışta yuva kapakları açılıp kapanır. Bombalar kanat altında.
+- Füzeler ve bombalar artık uçaktaki yerinden çıkıyor; füzenin parıltısı kuyrukta.
+- Model Kütüphanesi'nde yeni Mühimmat bölümü: her mühimmatın ölçüleri, ağırlığı ve gerçek verileri.
+- Hangar yük ekranı, HUD ve kokpit gerçek mühimmat adlarını gösteriyor; toplam yük gerçek ağırlıklarla hesaplanıyor.
+- Diğer uçaklar model serisinde sırayla gerçek mühimmata geçecek.
+
 ## V2.40 — 2026-10-29 · Belgeler ve sürüm geçmişi
 - Sürüm geçmişi: 120 sürüm 14 döneme ayrıldı, her dönemin kısa özeti var (docs/SURUM-GECMISI.md).
 - Yol haritaları tek belgede: ROADMAP.md; eski planlar docs/arsiv klasöründe.

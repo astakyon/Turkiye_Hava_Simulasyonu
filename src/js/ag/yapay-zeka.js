@@ -155,7 +155,7 @@ function wingGround(a){
   if(!best) return;
   const m=amis.find(function(x){ return !x.on; }); if(!m) return;
   a.msl--; a.mslCd=14;
-  m.on=true; m.w='m1'; m.tgt=best; m.speed=Math.max(a.speed,140); m.life=WEAPONS.m1.range/WEAPONS.m1.speed*1.25+4; m.lost=false; m.trailT=0; m.ghost=false; m.byAct=a;
+  m.on=true; m.w='m1'; m.tgt=best; m.speed=Math.max(a.speed,140); m.life=munBase().m1.range/munBase().m1.speed*1.25+4; misLook(m,null); m.lost=false; m.trailT=0; m.ghost=false; m.byAct=a;
   m.p.copy(a.pos).addScaledVector(UPV,-1.5); m.v.copy(a.fwd).multiplyScalar(m.speed); m.grp.visible=true; m.grp.position.copy(m.p);
   toast('Kılıç 2: '+best.label+' hedefine füze attı','#39e6ff');
 }

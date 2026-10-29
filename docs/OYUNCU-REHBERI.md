@@ -44,6 +44,7 @@ Bu rehber `python3 tools/ozellikler.py` ile oyundaki **Rehber** ekranıyla aynı
 ## Silah ve savaş
 
 - **Silahlar ve yük ekranı:** Top, 2 bomba ve 3 füze tipi; uçağa göre yük, hazır yük grupları. *Nereden:* Hangar → Yük · Bakım hangarı. *Tuş:* Space top · X silah · N sıradaki · 1–5.
+- **Gerçek Türk mühimmatı:** Model serisinden geçen uçaklar gerçek mühimmat taşır: KAAN'da GÖKDOĞAN, BOZDOĞAN, SOM-J (iç silah yuvasında, kapaklar atışta açılır), HGK-82 ve NEB-84 (kanat altında). Veriler Defence Turk Sistem Envanteri'nden. *Nereden:* Hangar → Yük · Model Kütüphanesi → Mühimmat. *Tuş:* X silah · 1–5 silah seç.
 - **Hedef kilidi:** Füzeler için hedef kilidi, kilit uyarısı açılıp kapatılabilir. *Nereden:* Uçuşta. *Tuş:* K kilit · Tab hedef değiştir.
 - **Düşman uçakları ve kanat adamı:** Kırmızı Kuvvet savaş uçakları, yapay zekâ kanat adamı (Kılıç 2) ve ona emir verme. *Nereden:* Görev ekranı → düşman / kanat adamı. *Tuş:* F8 kanat adamı emirleri.
 - **Hava savunma ve füzeden kaçış:** SAM bataryaları, füze uyarısı, gerçekçi füze modeli, flare ve kaçış yardımı. *Nereden:* Görev ekranı → SAM. *Tuş:* Z flare · F7 kaçış.

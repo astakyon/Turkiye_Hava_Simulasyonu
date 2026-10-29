@@ -11,6 +11,8 @@ function libItems(){
   const G=function(f){ return function(){ return f().group; }; };
   GROUPS.forEach(function(g){ head('hava',g.name,g.sub,!g.on); if(!g.on) return;
     AC_ORDER.filter(function(id){ return regOf(id).grp===g.id; }).forEach(function(id){ L.push({cat:'hava', key:'ac:'+id, kind:'ac', id:id, name:AIRCRAFT[id].name, sub:regOf(id).maker+' · '+(CLASSES[regOf(id).cls]||'')}); }); });
+  head('hava','Mühimmat','Gerçek Türk mühimmatı · model serisi');   /* V2.41 */
+  Object.keys(MUNI).forEach(function(mid){ const mu=MUNI[mid]; add('hava','mun:'+mid,'mun',mu.ad,mu.uretici,function(){ const g=new THREE.Group(), ms=munMesh(mid,false); ms.position.y=mu.dia/2+0.25; g.add(ms); return g; },{mid:mid}); });
   head('hava','Ekipman','Hangar');
   [['eq:bomb','Bomba arabası','Mühimmat',function(){ return prCart('bomb'); }],['eq:missile','Füze arabası','Mühimmat',function(){ return prCart('missile'); }],
    ['eq:stand','Bakım merdiveni','Bakım',function(){ return prStand(); }],['eq:bench','İş tezgâhı','Atölye',function(){ return prWorkbench(); }],['eq:chest','Takım dolabı','Atölye',function(){ return prToolChest(); }]]
@@ -117,12 +119,15 @@ function libSrc(){ const it=LIB.item; if(!it||it.kind!=='ac') return {t:'Kod mod
   return {t:sk.spec.local?'GLB · bu cihazda':(sk.spec.preview?'GLB · deneme':'GLB · models.json'), glb:true}; }
 function libRefreshPanel(){
   const it=LIB.item; if(!it) return; const ac=it.kind==='ac', def=ac?AIRCRAFT[it.id]:null, src=libSrc();
-  $('libKind').textContent=ac?(GROUPS.find(function(g){ return g.id===regOf(it.id).grp; }).name.toUpperCase()+' · '+regOf(it.id).maker):({veh:'YER ARACI',eq:'EKİPMAN',heli:'HELİKOPTER',ship:'DENİZ ARACI',land:'KARA ARACI',car:'OTOMOBİL'}[it.kind]||'MODEL');
+  $('libKind').textContent=ac?(GROUPS.find(function(g){ return g.id===regOf(it.id).grp; }).name.toUpperCase()+' · '+regOf(it.id).maker):({mun:'MÜHİMMAT',veh:'YER ARACI',eq:'EKİPMAN',heli:'HELİKOPTER',ship:'DENİZ ARACI',land:'KARA ARACI',car:'OTOMOBİL'}[it.kind]||'MODEL');
   $('libName').textContent=it.name; const sr=$('libSrc'); sr.textContent=src.t; sr.classList.toggle('glb',src.glb);
   const bb=libBox(), sz=bb.getSize(new THREE.Vector3()), st=libStats(), f=function(v){ return v.toFixed(1).replace('.',',')+' m'; };
   const rows=[['Uzunluk',f(sz.z)],[ac?'Kanat açıklığı':'Genişlik',f(sz.x)],['Yükseklik',f(sz.y)],['Üçgen',st.tri.toLocaleString('tr-TR')],['Parça',String(st.meshes)],['Malzeme',String(st.mats)]];
   if(ac) rows.unshift(['Sınıf',CLASSES[regOf(it.id).cls]||'—']), rows.push(['Silah yeri',SLOTS[it.id]>0?String(SLOTS[it.id]):'—'],['Mürettebat',def.uav?'İnsansız':'Pilotlu']);
-  $('libInfo').innerHTML=rows.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('');
+  if(it.kind==='mun'){ const mu=MUNI[it.mid], car=Object.keys(AC_MUNI).filter(function(id){ return Object.keys(AC_MUNI[id]).some(function(k){ return AC_MUNI[id][k]===it.mid; }); }).map(function(id){ return AIRCRAFT[id].short; });
+    rows.length=0; rows.push(['Tür',mu.kind==='bomb'?'Bomba':'Güdümlü füze'],['Üretici',mu.uretici],['Uzunluk',f(mu.len)],['Çap',Math.round(mu.dia*1000)+' mm'],['Ağırlık',mu.kg+' kg'],['Taşıyan',car.join(', ')||'—']); }
+  const mun=ac&&AC_MUNI[it.id]?wpnOf(it.id).map(function(k){ const mu=munOf(it.id,k); return mu?'<dt>'+mu.kisa+'</dt><dd>'+mu.ad+(munInBay(it.id,k)?' · iç silah yuvası':' · kanat altı')+'<small>'+mu.gercek+'</small></dd>':''; }).join(''):'';
+  $('libInfo').innerHTML=rows.map(function(r){ return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'; }).join('')+(mun?'<dt class="lmh">Mühimmat</dt><dd class="lmh">gerçek Türk mühimmatı</dd>'+mun+'<dd class="lmsrc">Kaynak: '+MUN_SRC+'</dd>':'')+(it.kind==='mun'?'<dd class="lmsrc">'+MUNI[it.mid].gercek+'<br>Kaynak: '+MUN_SRC+'</dd>':'');
   ['look','model'].forEach(function(t){ $('libTabs').querySelector('[data-t="'+t+'"]').disabled=!ac; });
   if(!ac&&(LIB.tab==='look'||LIB.tab==='model')) libTab('info'); else libTab(LIB.tab);
   libRefreshTests(); libRefreshLook(); libRefreshModel();
@@ -142,12 +147,11 @@ function libApplyTests(){ const m=LIB.inst; if(!m) return; if(m.gear) m.gear.vis
 function libStores(){
   const m=LIB.inst; if(!m) return;
   if(!m.stores){ m.stores=new THREE.Group(); m.group.add(m.stores); } const g=m.stores; while(g.children.length) g.remove(g.children[0]);
-  if(!LIB.tests.wpn) return;
+  munDoors(m,LIB.tests.wpn?1:0); if(!LIB.tests.wpn) return;
   const id=LIB.item.id; m.group.updateMatrixWorld(true);
   const l=loadoutOf(id), list=[]; WORDER.forEach(function(w){ for(let i=0;i<(l[w]||0);i++) list.push(w); });
   const P=storeLayout(m,id,list,'lib:'+id);   /* V2.30: the same stations as in flight (measured under the wing, clear of the gear) */
-  list.forEach(function(w,i){ const W=WEAPONS[w], p=P[i];
-    const s=new THREE.Mesh(W.kind==='bomb'?bombVisGeo:misVisGeo,stdOf(W.kind==='bomb'?bombMats[w]:misVisMat)); s.position.set(p.x,p.y,p.z); s.scale.setScalar(p.k); g.add(s); });
+  list.forEach(function(w,i){ g.add(storeMesh(id,w,P[i],true)); }); munDoors(m,1);   /* V2.41: real munitions, bay doors open */
 }
 function libWire(on){
   if(!on){ LIB.wireMats.forEach(function(m){ m.wireframe=false; }); LIB.wireMats=[]; LIB.tests.wire=false; return; }

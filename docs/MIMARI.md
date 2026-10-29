@@ -152,6 +152,10 @@ Açık teknik borç:
   - Silahsız uçakla silahlı görev başlatılamaz.
 - **Metin denetimi** (`tools/metinler.py`, `tests/terimler.sh`): oyuncunun gördüğü metinler terim sözlüğüne ve sık yazım hatalarına göre taranır; aykırılık yayını durdurur.
 - **Yükleme ekranı 3.0** (`cekirdek/acilis`): `BOOT_TIPS` ipucu kartları, oyun dilinde aşama adları, ilk dokunuşta ses (`bootSndStart`), menü daha erken açılır.
+- **Gerçek mühimmat** (`savas/muhimmat`, V2.41): beş silah rolü (gp, bnk, m1, m2, m3) her yerde aynı kalır; model serisinden geçen uçakta her rol gerçek bir mühimmata bağlanır (`AC_MUNI`).
+  - `wOf(id,k)` menülerde o uçağın silahını verir; `munApply(id)` uçuşta `WEAPONS`'ı etkin uçağa göre doldurur.
+  - Mühimmat modelleri gerçek boyutta, tek geometri ve köşe renkleriyle yapılır (`munGeo`).
+  - İç silah yuvası: `MUN_BAY[id]`'deki roller yuvada taşınır, atışta kapaklar açılır (`BAY`, `munBayStep`); model `bay` alanını verir.
 - **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
 
 ## Android (planlı)

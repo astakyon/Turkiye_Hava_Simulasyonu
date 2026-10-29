@@ -85,7 +85,7 @@ function defaultLoadout(id){ const n=SLOTS[id]||0, gp=Math.ceil(n/2); return {gp
 function loadoutOf(id){ return LOADOUTS[id]||(LOADOUTS[id]=defaultLoadout(id)); }
 function stockTotal(){ return WORDER.reduce(function(a,k){ return a+INV[k]; },0); }
 function applyLoadout(id){
-  const l=loadoutOf(id); WORDER.forEach(function(k){ INV[k]=l[k]||0; });
+  munApply(id); const l=loadoutOf(id); WORDER.forEach(function(k){ INV[k]=l[k]||0; });
   if(INV[selW]<=0) selW=WORDER.find(function(k){ return INV[k]>0; })||'gp';
   lockTgt=null; lockT=0; refreshStoresVisual();
 }
@@ -122,8 +122,9 @@ function dropBomb(){
   if(!k){ toast((SLOTS[activeId]>0)?'Bomba kalmadı — bakım hangarında yükle':'Bu uçakta bomba yok','#ffc24a'); return false; }
   if(bombCd>0) return false;
   const b=bombPool.find(function(x){ return !x.on; }); if(!b) return false;
-  fwdOf(S.q,vF); INV[k]--; bombCd=0.4; b.w=k; b.m.material=bombMats[k];
-  b.p.set(0,-0.9,0.5).applyQuaternion(S.q).add(S.pos);
+  fwdOf(S.q,vF); const sp=storeWorld(k); INV[k]--; bombCd=0.4; b.w=k; const mu=munOf(activeId,k);
+  if(mu){ b.m.geometry=munGeo(AC_MUNI[activeId][k],false,true); b.m.material=munMat(); } else { b.m.geometry=bombGeo; b.m.material=bombMats[k]; } b.mun=!!mu;
+  if(sp) b.p.copy(sp); else b.p.set(0,-0.9,0.5).applyQuaternion(S.q).add(S.pos);
   b.v.set(vF.x*S.speed,vF.y*S.speed-S.sink-2,vF.z*S.speed); b.on=true; b.m.visible=true; b.m.position.copy(b.p);
   b.tgt=(SETTINGS.bombAssist!=='off'&&lockTgt&&lockTgt.alive&&lockTgt.kind==='ground')?lockTgt:null; b.amax=SETTINGS.bombAssist==='guided'?14:3;
   refreshStoresVisual();
@@ -144,7 +145,7 @@ const amis=[];
   x.fillStyle=gr; x.fillRect(0,0,64,64); const tex=new THREE.CanvasTexture(c);
   const mg=new THREE.CylinderGeometry(0.2,0.2,3.2,8); mg.rotateX(Math.PI/2); const mm=new THREE.MeshPhongMaterial({color:0xf2f2f2});
   for(let i=0;i<8;i++){ const grp=new THREE.Group(); grp.add(new THREE.Mesh(mg,mm));
-    const gl=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})); gl.scale.set(9,9,1); gl.position.z=1.9; grp.add(gl); grp.visible=false; scene.add(grp);
+    const gl=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})); gl.scale.set(9,9,1); gl.position.z=-1.9;   /* V2.41: the glow sits at the tail (lookAt turns +z towards the flight direction) */ grp.add(gl); grp.visible=false; scene.add(grp);
     amis.push({on:false,grp:grp,p:new THREE.Vector3(),v:new THREE.Vector3(),speed:0,life:0,tgt:null,lost:false,w:'m1',trailT:0}); }
 })();
 function launchMissile(){
@@ -156,7 +157,8 @@ function launchMissile(){
   INV[selW]--; bombCd=0.8; fwdOf(S.q,vF);
   m.on=true; m.w=selW; m.tgt=lockTgt; m.speed=Math.max(S.speed,120); m.life=W.range/W.speed*1.25+4; m.lost=false; m.trailT=0; m.byAct=null; m.flareRoll=false;
   m.ghost=!!(lockTgt.isActor&&lockTgt.remote&&lockTgt.human);
-  const side=(INV.m1+INV.m2+INV.m3)%2?1:-1; m.p.set(side*((model.tip?model.tip[0]:6)*0.3),-0.6,0).applyQuaternion(S.q).add(S.pos);
+  const side=(INV.m1+INV.m2+INV.m3)%2?1:-1, sp=storeWorld(selW); if(sp) m.p.copy(sp); else m.p.set(side*((model.tip?model.tip[0]:6)*0.3),-0.6,0).applyQuaternion(S.q).add(S.pos);
+  misLook(m,munOf(activeId,selW)?AC_MUNI[activeId][selW]:null); if(munInBay(activeId,selW)&&model&&model.bay) BAY.t=1.4;
   m.v.set(vF.x*m.speed,vF.y*m.speed-S.sink,vF.z*m.speed); m.grp.visible=true; m.grp.position.copy(m.p);
   if(m.ghost){ fwdOf(S.q,vF); netSendTo(lockTgt.id,{t:'msl',to:lockTgt.id,by:NET.myId,p:v3a(m.p),v:v3a(m.v)}); }
   refreshStoresVisual(); toast(W.short+' atıldı  ('+INV[selW]+' kaldı)','#ffb25a'); rumble(200,0.4,0.6); return true;
@@ -191,7 +193,7 @@ function updateAMissiles(dt){
   }
 }
 function updateBombs(dt){
-  if(bombCd>0) bombCd-=dt;
+  if(bombCd>0) bombCd-=dt; munBayStep(dt);
   updateLock(dt); updateCue(dt);
   for(let i=0;i<bombPool.length;i++){ const b=bombPool[i]; if(!b.on) continue;
     if(b.tgt&&b.tgt.alive) steerBomb(b,dt);
@@ -303,14 +305,16 @@ function stnClearOfGear(T,s,r,len){ const pad=0.12; for(let i=0;i<T.gear.length;
     if(s.x+r+pad>b.min.x&&s.x-r-pad<b.max.x&&s.y+r+pad>b.min.y&&s.y-r-pad<b.max.y&&s.z+len/2+pad>b.min.z&&s.z-len/2-pad<b.max.z) return false; } return true; }
 /* positions for a list of weapon keys, alternating sides (left, right, …) like before */
 function storeLayout(m,id,list,key){ if(!m||!m.group) return []; key=key||id; let T=STN.cache[key]; if(T===undefined||(T&&T.grp!==m.group)){ try{ T=stnTable(m); }catch(e){ T=null; } if(T) T.grp=m.group; STN.cache[key]=T; }
+  const bay=munBaySlots(m,id,list);   /* V2.41: weapons-bay places first, the rest go to the wing */
+  if(bay&&bay.some(Boolean)){ const rest=list.filter(function(w,i){ return !bay[i]; }), P=storeLayout(m,id,rest,key+':w'); let j=0; return list.map(function(w,i){ return bay[i]||P[j++]; }); }
   const out=[]; const k=T?clamp(T.tipX/6,0.6,1.5):1;
   if(!T){ list.forEach(function(w,i){ out.push({x:(i%2?1:-1)*1.2*(1+Math.floor(i/2)),y:PYLON_Y[id]||-0.4,z:0,k:k}); }); return out; }
   let lastX=-1e9; const stations=[];
-  for(let i=0;i<list.length;i+=2){ const W=WEAPONS[list[i]], r=(W.kind==='bomb'?0.2:0.13)*k, len=(W.kind==='bomb'?1.8:2.6)*k, gap=0.12*k; let st=null;
-    for(let c=0;c<T.xs.length&&!st;c++){ const col=T.xs[c]; if(col.x<r+0.15||col.x<lastX+2*r+0.3) continue; const s=stnFit(T,col,r,len,gap); if(s&&stnClearOfGear(T,s,r,len)) st=s; }
+  for(let i=0;i<list.length;i+=2){ const W=WEAPONS[list[i]], mu=munOf(id,list[i]), r=mu?mu.dia/2:(W.kind==='bomb'?0.2:0.13)*k, len=mu?mu.len:(W.kind==='bomb'?1.8:2.6)*k, gap=mu?0.17:0.12*k; let st=null;
+    for(let c=0;c<T.xs.length&&!st;c++){ const col=T.xs[c]; if(col.x<r+0.15||col.x<lastX+2*r+0.3||col.x<(m.bay?2.9:0)) continue;   /* with a weapons bay the fuselage underside stays clear */ const s=stnFit(T,col,r,len,gap); if(s&&stnClearOfGear(T,s,r,len)) st=s; }
     if(!st){ /* out of wing: hang under the last station, one row lower */ const p=stations[stations.length-1]; st=p?{x:p.x,y:p.y-2*r-0.1,z:p.z}:{x:T.tipX*0.3,y:PYLON_Y[id]||-0.4,z:(T.z0+T.z1)/2}; }
     lastX=st.x; stations.push(st); }
-  list.forEach(function(w,i){ const st=stations[Math.floor(i/2)], side=i%2?1:-1; out.push({x:side*st.x, y:st.y, z:st.z, k:k}); });
+  list.forEach(function(w,i){ const st=stations[Math.floor(i/2)], side=i%2?1:-1; out.push({x:side*st.x, y:st.y, z:st.z, k:munOf(id,w)?1:k}); });
   return out; }
 function refreshStoresVisual(){
   if(!model||!model.group) return;
@@ -318,7 +322,15 @@ function refreshStoresVisual(){
   const g=model.stores; while(g.children.length) g.remove(g.children[0]);
   const list=[]; WORDER.forEach(function(w){ for(let i=0;i<INV[w];i++) list.push(w); }); if(!list.length) return;
   const P=storeLayout(model,activeId,list);
-  list.forEach(function(w,i){ const W=WEAPONS[w], p=P[i], m=new THREE.Mesh(W.kind==='bomb'?bombVisGeo:misVisGeo,W.kind==='bomb'?bombMats[w]:misVisMat); m.position.set(p.x,p.y,p.z); m.scale.setScalar(p.k); g.add(m); }); }
+  list.forEach(function(w,i){ g.add(storeMesh(activeId,w,P[i],false)); }); munDoors(model,BAY.open); }
+/* one visible store: the real munition (V2.41) or the old generic shape; bay stores show only while the doors are open */
+function storeMesh(id,w,p,lib){ const W=WEAPONS[w], mu=munOf(id,w); let m;
+  if(mu){ m=new THREE.Mesh(munGeo(AC_MUNI[id][w],!p.bay),stdOf(munMat())); }
+  else { const mt=W.kind==='bomb'?bombMats[w]:misVisMat; m=new THREE.Mesh(W.kind==='bomb'?bombVisGeo:misVisGeo,lib?stdOf(mt):mt); }
+  m.position.set(p.x,p.y,p.z); m.scale.setScalar(p.k); m.userData.bay=!!p.bay; m.userData.w=w; if(p.bay) m.userData.noBake=true; return m; }
+/* world position of the next store of weapon k (the one about to be released), null if none is shown */
+function storeWorld(k){ if(!model||!model.stores) return null; const c=model.stores.children; let s=null; for(let i=c.length-1;i>=0;i--) if(c[i].userData.w===k){ s=c[i]; break; }
+  if(!s) return null; const g=model.group, v=s.position.clone(); try{ if(g.scale) v.multiply(g.scale); }catch(e){} return v.applyQuaternion(S.q).add(S.pos); }   /* model.group is placed at S.pos / S.q */   /* from the flight state: the scene graph may not be updated yet */
 
 
 /* weapon release sounds (Sound Library: missile, bomb) */

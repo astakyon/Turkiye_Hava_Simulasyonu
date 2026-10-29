@@ -95,7 +95,7 @@ refreshSetup=HOOK.wrap('refreshSetup','ekran/menu-duzeltmeleri#_m3Setup',functio
 /* ---------- my quick groups (per aircraft) */
 const LGRP={}; try{ Object.assign(LGRP,JSON.parse(stGet('ayy-lgroups')||'{}')); }catch(e){}
 function lgSave(){ try{ stSet('ayy-lgroups',JSON.stringify(LGRP)); }catch(e){} }
-function lgName(l){ return WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return WEAPONS[k].short+'×'+l[k]; }).join(' ')||'Boş'; }
+function lgName(l){ return WORDER.filter(function(k){ return l[k]>0; }).map(function(k){ return wOf(selectedId,k).short+'×'+l[k]; }).join(' ')||'Boş'; }
 function m3Groups(){ const el=$('suGrp'); if(!el) return; const n=SLOTS[selectedId]||0; el.classList.toggle('hidden',!(n>0)); if(!(n>0)) return; const L=LGRP[selectedId]||[];
   el.innerHTML='<span class="lgk">Gruplarım</span>'+L.map(function(g,i){ return '<span class="lg"><button type="button" data-g="'+i+'" title="'+lgName(g.l)+'">'+String(g.n).replace(/[<>&]/g,'')+'</button><button type="button" class="x" data-gx="'+i+'" aria-label="Sil">×</button></span>'; }).join('')+
     (L.length<6?'<button type="button" class="add" data-gadd="1">+ Bu yükü kaydet</button>':''); }

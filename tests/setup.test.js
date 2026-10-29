@@ -14,7 +14,7 @@ setupAdjust('m2',-1); setupAdjust('m2',-1); setupAdjust('gp',1); setupAdjust('gp
 T('INV applied',INV.gp===2,JSON.stringify(INV));
 T('saved',JSON.parse(stGet('kaan-sim-loadouts')).kaan.gp===2);
 key('Escape'); T('back hangar',menuMode==='hangar');
-refreshTitle(); T('sum updated',/GP×2/.test(els.sbAc.innerHTML),els.sbAc.innerHTML);
+refreshTitle(); T('sum updated',/(GP|HGK)×2/.test(els.sbAc.innerHTML),els.sbAc.innerHTML);
 key('Enter'); T('loadout step',menuMode==='loadout'); T('start options on the loadout screen',/data-s="air"/.test(els.suStart.innerHTML));
 key('Escape'); T('closed',menuMode==='hangar');
 for(let t=0;t<2;t+=0.05) menuCam(0.05);

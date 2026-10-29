@@ -1,6 +1,6 @@
 # Terim sözlüğü ve metin denetimi
 
-Üretildi: `python3 tools/metinler.py` · oyuncunun gördüğü 3823 metin parçası tarandı (envanter verisi hariç). Testler `--check` ile çalıştırır; aykırı metin kalırsa yayın durur.
+Üretildi: `python3 tools/metinler.py` · oyuncunun gördüğü 3868 metin parçası tarandı (envanter verisi hariç). Testler `--check` ile çalıştırır; aykırı metin kalırsa yayın durur.
 
 ## Terim sözlüğü
 

@@ -66,7 +66,7 @@ function renderService(){
   $('svcHpRow').classList.toggle('hidden',svcMode==='loadout'); $('svcTitle').textContent=svcMode==='loadout'?'Silah yükü':'Bakım hangarı'; $('btnSvcOk').textContent=svcMode==='loadout'?'Yükü kaydet':'Bakımı yap ve yükle';
   $('svcHpTxt').textContent='CAN %'+Math.round(S.hp)+' → %100'; $('svcHpBar').style.width=Math.round(S.hp)+'%';
   $('svcBody').innerHTML=n>0?wpnOf(activeId).map(function(k){
-    const W=WEAPONS[k];
+    const W=wOf(activeId,k);
     return '<tr><td><b>'+W.name+'</b><small>'+W.tip+'</small></td><td class="cnt"><button type="button" data-k="'+k+'" data-d="-1"'+(svcTmp[k]<=0?' disabled':'')+'>−</button><span>'+svcTmp[k]+'</span><button type="button" data-k="'+k+'" data-d="1"'+(used>=n?' disabled':'')+'>+</button></td></tr>';
   }).join(''):'<tr><td>Bakım ve flare yenilemesi yapılacak.</td></tr>';
   $('svcSlots').textContent=n>0?('Silah yeri: '+used+' / '+n+' · flare: '+(FLARES[activeId]||0)+' (otomatik yenilenir)'):'';

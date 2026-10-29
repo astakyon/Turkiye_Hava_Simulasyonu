@@ -172,5 +172,12 @@ function buildKaan(){
   [-1,1].forEach(function(s){ const d=new THREE.Mesh(new THREE.BoxGeometry(0.03,0.45,1.2),belly); d.position.set(s*0.33,-1.18,-4.75); d.rotation.z=s*0.18; gear.add(d); });
   const nl=new THREE.Mesh(new THREE.SphereGeometry(0.06,8,6),new THREE.MeshBasicMaterial({color:0xfff6dc})); nl.position.set(0,-1.62,-5.05); nl.material.userData.glow=2.5; gear.add(nl);
   g.add(gear);
-  return {group:g, flames:flames, strobe:strobe, gear:gear, spinners:[], surfaces:surfaces, codeSurfaces:surfaces};
+  /* ---- weapons bays (V2.41): two bays side by side under the fuselage, two doors each; they open for every launch from the bay */
+  const bay={xc:0.54, zc:-0.3, y:-1.0, doors:[], cav:null}, dmat=phong(0x666e77,0x3d4650,22), BL=5.2;
+  const cav=new THREE.Group(); [-1,1].forEach(function(s){ const c=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.02,BL-0.1),phong(0x1c2026,0x111111,8)); c.position.set(s*0.54,-0.995,bay.zc); cav.add(c); });
+  cav.visible=false; cav.userData.noBake=true; g.add(cav); bay.cav=cav;   /* moving / blinking parts stay out of the bake */
+  [-1,1].forEach(function(s){ [[0.95,-1],[0.13,1]].forEach(function(h){ const piv=new THREE.Group(); piv.position.set(s*h[0],-1.02,bay.zc); piv.userData.noBake=true;
+      const d=new THREE.Mesh(new THREE.BoxGeometry(0.405,0.022,BL),dmat); d.position.x=h[1]*s*0.2025; piv.add(d); g.add(piv);
+      bay.doors.push({p:piv, a:-h[1]*s*1.62}); }); });
+  return {group:g, flames:flames, strobe:strobe, gear:gear, spinners:[], surfaces:surfaces, codeSurfaces:surfaces, bay:bay};
 }

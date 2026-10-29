@@ -770,6 +770,7 @@ html.is-admin .mlist .mitem[data-act="library"]{ display:flex!important; }
 #envBack{ display:none; }
 @media (max-width:760px){ .envw{ grid-template-columns:1fr; padding-top:58px; } .envw.det .envl{ display:none; } .envw:not(.det) .envd{ display:none; } #envBack{ display:inline-block; } }
 .linfo .envrow{ grid-column:1/-1; margin-top:8px; }
+.linfo .lmh{ margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.12); color:#ffb25a; font-weight:700; } .linfo dd small{ display:block; font-weight:400; color:var(--dim); font-size:11px; line-height:1.35; margin-top:2px; } .linfo .lmsrc{ grid-column:1/-1; text-align:left; font-weight:400; font-size:10.5px; color:var(--dim); }
 .envhb{ margin:6px 0 4px; font-size:12px; padding:5px 10px; }
 @media (max-width:560px){ #envUI .shdr{ padding-left:84px; text-align:left; letter-spacing:.14em; } }
 
