@@ -21,8 +21,19 @@ const MUNI={
   somj:{ad:'SOM-J seyir füzesi',kisa:'SOM-J',uretici:'ROKETSAN · TÜBİTAK SAGE',kind:'missile',
     gercek:'iç silah yuvasına uygun · zırh delici harp başlığı · KKS/ANS + kızılötesi arayıcı · boy ~3,9 m (kamuya açık yaklaşık değer)',kg:540,len:3.9,dia:0.42,
     oyun:{name:'SOM-J seyir füzesi',short:'SOM',tip:'Sadece yer · 12 km · alçaktan süzülür · yıkıcı',range:12000,speed:300,turn:0.7,dmg:3.0,armorDmg:2.6,r:24,air:false,ground:true}}
+,
+  /* V2.42 — Bayraktar TB2: Roketsan mini smart munitions */
+  maml:{ad:'MAM-L mini akıllı mühimmat',kisa:'MAM-L',uretici:'ROKETSAN',kind:'bomb',
+    gercek:'boy 1000 mm · çap 160 mm · 22 kg · 10 kg parçacık etkili harp başlığı · yarı aktif lazer arayıcı · menzil 8 km (KKS/ANS ile 15 km)',kg:22,len:1.0,dia:0.16,
+    oyun:{name:'MAM-L lazer güdümlü mühimmat',short:'MAM-L',tip:'Lazer güdümlü · hassas · 14 m etki',r:14,dmg:1.4,armorDmg:0.8}},
+  mamc:{ad:'MAM-C mini akıllı mühimmat',kisa:'MAM-C',uretici:'ROKETSAN',kind:'bomb',
+    gercek:'boy ~1 m · 8,5 kg (başka kaynakta 22 kg) · zırha karşı tandem harp başlığı · menzil 8 km · çap ~70 mm (kamuya açık yaklaşık değer)',kg:8.5,len:0.97,dia:0.07,
+    oyun:{name:'MAM-C tanksavar mühimmat',short:'MAM-C',tip:'Tandem başlık · zırhlı araçlara çok etkili · 8 m etki',r:8,dmg:0.9,armorDmg:1.8}},
+  mamt:{ad:'MAM-T mini akıllı mühimmat',kisa:'MAM-T',uretici:'ROKETSAN',kind:'missile',
+    gercek:'boy 1,4 m · çap 230 mm · 94 kg · parçacık etkili · ANS+KKS+lazer güdüm · İHA\'dan menzil 30+ km',kg:94,len:1.4,dia:0.23,
+    oyun:{name:'MAM-T süzülen güdümlü mühimmat',short:'MAM-T',tip:'Sadece yer · 10 km · uzun menzilli süzülme',range:10000,speed:260,turn:0.9,dmg:2.0,armorDmg:1.5,r:18,air:false,ground:true}}
 };
-const AC_MUNI={kaan:{gp:'hgk82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}};
+const AC_MUNI={kaan:{gp:'hgk82',bnk:'neb84',m1:'bozdogan',m2:'gokdogan',m3:'somj'}, tb2:{gp:'maml',bnk:'mamc',m3:'mamt'}};
 const MUN_BAY={kaan:['m1','m2','m3']};
 const MUN_SRC='Defence Turk · Sistem Envanteri (açık kaynak bilgiler); oyundaki menzil ve hızlar adaya göre ölçeklenmiştir.';
 let MUN_BASE=null;
@@ -78,6 +89,28 @@ const MUN_BUILD={
     munCross([[0,L/2-0.42],[0.2,L/2-0.18],[0.2,L/2-0.05],[0,L/2-0.04]],0.014,0.12,Math.PI/4).forEach(function(g){ g.translate(0,-0.03,0); P.push({g:g,c:0x7f867e}); });
     const ex=new THREE.CylinderGeometry(0.07,0.07,0.04,12); ex.rotateX(Math.PI/2); ex.translate(0,-0.04,L/2+0.01); P.push({g:ex,c:0x1c1f22});
     const sk=new THREE.BoxGeometry(0.14,0.06,0.04); sk.translate(0,-0.12,z0+0.37); P.push({g:sk,c:0x223038});           /* IR seeker window */
+    return P; },
+  maml:function(){ const L=1.0, r=0.08, z0=-L/2, P=[];
+    P.push({g:munLathe([[z0,0.0],[z0+0.03,0.035],[z0+0.08,0.06]],14),c:0x2a3a44});                                 /* laser seeker window */
+    P.push({g:munLathe([[z0+0.08,0.06],[z0+0.2,r],[L/2-0.02,r],[L/2,0.06]],14),c:0x3e4334});
+    P.push({g:munLathe([[z0+0.3,r+0.002],[z0+0.33,r+0.002]],14),c:0xd8b02a});
+    munCross([[0,z0+0.2],[0.06,z0+0.25],[0.06,z0+0.31],[0,z0+0.33]],0.008,r-0.004,0).forEach(function(g){ P.push({g:g,c:0x50553f}); });      /* canards */
+    munCross([[0,L/2-0.22],[0.14,L/2-0.08],[0.14,L/2],[0,L/2]],0.01,r-0.004,Math.PI/4).forEach(function(g){ P.push({g:g,c:0x50553f}); });   /* tail fins */
+    return P; },
+  mamc:function(){ const L=0.97, r=0.035, z0=-L/2, P=[];
+    P.push({g:munLathe([[z0,0.0],[z0+0.02,0.02],[z0+0.05,0.03]],12),c:0x2a3a44});
+    P.push({g:munLathe([[z0+0.05,0.03],[z0+0.12,r],[L/2,r]],12),c:0xd3d6d8});
+    P.push({g:munLathe([[z0+0.16,r+0.002],[z0+0.18,r+0.002]],12),c:0xd8b02a});
+    munCross([[0,z0+0.12],[0.035,z0+0.15],[0.035,z0+0.2],[0,z0+0.21]],0.006,r-0.003,0).forEach(function(g){ P.push({g:g,c:0xb9bdc1}); });
+    munCross([[0,L/2-0.16],[0.08,L/2-0.05],[0.08,L/2],[0,L/2]],0.007,r-0.003,Math.PI/4).forEach(function(g){ P.push({g:g,c:0xb9bdc1}); });
+    return P; },
+  mamt:function(){ const L=1.4, r=0.115, z0=-L/2, P=[];
+    P.push({g:munLathe([[z0,0.0],[z0+0.04,0.05],[z0+0.1,0.08]],16),c:0x2a3a44});
+    P.push({g:munLathe([[z0+0.1,0.08],[z0+0.3,r],[L/2-0.05,r],[L/2,0.09]],16),c:0xcfd2d4});
+    P.push({g:munLathe([[z0+0.36,r+0.002],[z0+0.4,r+0.002]],16),c:0xd8b02a});
+    const w=new THREE.BoxGeometry(1.3,0.016,0.2); w.translate(0,r+0.02,0.02); P.push({g:w,c:0xa9aeb3});                       /* deployed glide wing */
+    const wm=new THREE.BoxGeometry(0.12,0.04,0.26); wm.translate(0,r+0.005,0.02); P.push({g:wm,c:0x9aa0a6});
+    munCross([[0,L/2-0.26],[0.17,L/2-0.08],[0.17,L/2],[0,L/2]],0.012,r-0.005,Math.PI/4).forEach(function(g){ P.push({g:g,c:0xb9bdc1}); });
     return P; },
   hgk82:function(){ const L=2.45, r=0.137, z0=-L/2, P=[];
     P.push({g:munLathe([[z0,0.02],[z0+0.22,0.08],[z0+0.6,r],[L/2-0.6,r],[L/2-0.3,0.09],[L/2,0.08]],16),c:0x5d6449});

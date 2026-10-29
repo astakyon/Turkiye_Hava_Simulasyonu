@@ -156,6 +156,7 @@ Açık teknik borç:
   - `wOf(id,k)` menülerde o uçağın silahını verir; `munApply(id)` uçuşta `WEAPONS`'ı etkin uçağa göre doldurur.
   - Mühimmat modelleri gerçek boyutta, tek geometri ve köşe renkleriyle yapılır (`munGeo`).
   - İç silah yuvası: `MUN_BAY[id]`'deki roller yuvada taşınır, atışta kapaklar açılır (`BAY`, `munBayStep`); model `bay` alanını verir.
+- **Bayraktar TB2 modeli** (`modeller/tb2`, V2.42): ayrı yapıcı `buildTB2`; eski ortak TB2/TB3 modeli `buildOld` olarak kütüphane karşılaştırmasında. `stnMinX` kanat istasyonlarını bomların dışına alır; `REG.tb2.wpn` silah rollerini sınırlar (hava-hava yok), `defaultLoadout` ve `applyLoadout` buna uyar.
 - **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
 
 ## Android (planlı)

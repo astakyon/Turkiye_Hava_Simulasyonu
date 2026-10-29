@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.42 — 2026-10-29 · Bayraktar TB2 ve gerçek mühimmatı
+- Bayraktar TB2 yeni modeliyle: düz kanat (eskisi geriye açılıydı), kanattan çıkan iki kuyruk bomu, tepede birleşen ters V kuyruk, burun altında kamera topu, arkada iki kanatlı itici pervane.
+- Gerçek ölçüler: boy 6,5 m, kanat açıklığı 12 m. Açık gri boya, kanat üstünde BAYRAKTAR, bomlarda BAYRAKTAR TB2 yazısı ve kırmızı çizgiler.
+- TB2 gerçek Roketsan mühimmatıyla: MAM-L (lazer güdümlü), MAM-C (tanksavar), MAM-T (süzülen güdümlü). Veriler Defence Turk Sistem Envanteri'nden.
+- Dört silah istasyonu kanat altında, kuyruk bomlarının dışında.
+- TB2 artık hava-hava füzesi taşımıyor; eski kayıtlı yükteki füzeler kendiliğinden çıkarılır.
+- Model Kütüphanesi'nde "Eski modelle karşılaştır" ile önceki TB2'ye bakılabilir.
+
 ## V2.41 — 2026-10-29 · KAAN ve gerçek mühimmatı
 - KAAN gerçek Türk mühimmatıyla: GÖKDOĞAN (görüş ötesi), BOZDOĞAN (görüş içi), SOM-J (seyir füzesi), HGK-82 (güdüm kitli bomba), NEB-84 (nüfuz edici bomba).
 - Mühimmat modelleri gerçek boyutta; veriler Defence Turk Sistem Envanteri'nden, menzil ve hızlar adaya göre ölçeklendi.

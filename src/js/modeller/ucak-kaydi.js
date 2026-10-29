@@ -40,7 +40,7 @@ const AIRCRAFT={
     vr:70,landV:120,sinkMax:7,gearV:130,brake:7,rollFric:1.0,airV:190,fireInt:0.06,bulletV:800,blife:1.5,weapon:'TOP',snd:SND_JET},
   tb2:{name:'Bayraktar TB2',short:'TB2',kind:'Silahlı İHA',len:'6,5 m',span:'12 m',uav:true,hasAB:false,
     desc:'Çift bomlu, ters V (Λ) kuyruklu, arkada itici pervaneli taktik silahlı İHA. Yavaş, sabırlı ve dengeli.',
-    build:function(){ return buildBayraktar(1,2,false); },gearOff:1.0,belly:0.5,cam:[1.7,7.2],eye:[0,-0.2,-3.4],muzzle:[0,-0.45,-2.4],
+    build:function(){ return buildTB2(); }, buildOld:function(){ return buildBayraktar(1,2,false); },gearOff:1.0,belly:0.5,cam:[1.7,7.2],eye:[0,-0.2,-3.4],muzzle:[0,-0.45,-2.4],
     idle:0.1,thrust:2.1,abT:0,kD:0.00057,stall:[20,32],authV:40,gLim:3,pitchMax:0.6,roll:1.2,yaw:0.25,stallNose:0.5,minV:25,vTop:62,
     vr:28,landV:42,sinkMax:3.5,gearV:50,brake:3,rollFric:0.35,airV:48,fireInt:0.4,bulletV:300,blife:3,weapon:'MAM',snd:SND_PROP},
   tb3:{name:'Bayraktar TB3',short:'TB3',kind:'Silahlı İHA · gemi uyumlu',len:'8,35 m',span:'14 m',uav:true,hasAB:false,
@@ -59,7 +59,7 @@ const AC_ORDER=['kaan','anka3','hurjet','hurkus','anka','aksungur','kizilelma','
 const GROUPS=[{id:'hava',name:'Hilal Kanatlar',sub:'Hava sistemleri',on:true},{id:'deniz',name:'Mavi Kanatlar',sub:'Deniz · yakında',on:false},{id:'kara',name:'Bozkurtlar',sub:'Kara · yakında',on:false}];
 const CLASSES={savas:'Savaş uçağı',iha:'İHA / SİHA',egitim:'Eğitim / hafif taarruz'};
 const REG={kaan:{grp:'hava',cls:'savas',maker:'TUSAŞ'},anka3:{grp:'hava',cls:'iha',maker:'TUSAŞ'},hurjet:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},hurkus:{grp:'hava',cls:'egitim',maker:'TUSAŞ'},
-  anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ'},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar'},
+  anka:{grp:'hava',cls:'iha',maker:'TUSAŞ'},aksungur:{grp:'hava',cls:'iha',maker:'TUSAŞ'},kizilelma:{grp:'hava',cls:'iha',maker:'Baykar'},tb2:{grp:'hava',cls:'iha',maker:'Baykar',wpn:['gp','bnk','m3']},
   tb3:{grp:'hava',cls:'iha',maker:'Baykar'},akinci:{grp:'hava',cls:'iha',maker:'Baykar'}};
 let pickGrp='hava', pickCls='all';
 function regOf(id){ return REG[id]||{grp:'hava',cls:'iha',maker:''}; }

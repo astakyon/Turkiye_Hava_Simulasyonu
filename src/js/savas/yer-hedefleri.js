@@ -81,11 +81,14 @@ const SLOTS={kaan:8,anka3:4,hurjet:6,hurkus:6,anka:0,aksungur:6,kizilelma:8,tb2:
 const PYLON_Y={kaan:-0.6,anka3:-0.2,hurjet:-0.4,hurkus:-0.8,anka:-0.3,aksungur:0.25,kizilelma:-0.45,tb2:-0.05,tb3:-0.05,akinci:-0.05};
 const INV={gp:0,bnk:0,m1:0,m2:0,m3:0}; let selW='gp'; const LOADOUTS={};
 function wpnOf(id){ const r=regOf(id); return r.wpn?WORDER.filter(function(k){ return r.wpn.indexOf(k)>=0; }):WORDER; }
-function defaultLoadout(id){ const n=SLOTS[id]||0, gp=Math.ceil(n/2); return {gp:gp,bnk:0,m1:n-gp,m2:0,m3:0}; }
+const MUN_BASE_KIND={gp:'bomb',bnk:'bomb',m1:'missile',m2:'missile',m3:'missile'};
+function defaultLoadout(id){ const n=SLOTS[id]||0, gp=Math.ceil(n/2), w=wpnOf(id), l={gp:0,bnk:0,m1:0,m2:0,m3:0};
+  const b=w.indexOf('gp')>=0?'gp':(w.find(function(k){ return WEAPONS[k].kind==='bomb'; })||w[0]), m=w.indexOf('m1')>=0?'m1':(w.find(function(k){ return k!==b&&MUN_BASE_KIND[k]==='missile'; })||b);
+  if(b) l[b]+=gp; if(m) l[m]+=n-gp; return l; }   /* V2.42: only weapons this aircraft carries (TB2: no air-to-air missiles) */
 function loadoutOf(id){ return LOADOUTS[id]||(LOADOUTS[id]=defaultLoadout(id)); }
 function stockTotal(){ return WORDER.reduce(function(a,k){ return a+INV[k]; },0); }
 function applyLoadout(id){
-  munApply(id); const l=loadoutOf(id); WORDER.forEach(function(k){ INV[k]=l[k]||0; });
+  munApply(id); const l=loadoutOf(id), ok=wpnOf(id); WORDER.forEach(function(k){ INV[k]=ok.indexOf(k)>=0?(l[k]||0):0; });   /* an old saved loadout may hold a weapon the aircraft no longer carries */
   if(INV[selW]<=0) selW=WORDER.find(function(k){ return INV[k]>0; })||'gp';
   lockTgt=null; lockT=0; refreshStoresVisual();
 }
@@ -311,7 +314,7 @@ function storeLayout(m,id,list,key){ if(!m||!m.group) return []; key=key||id; le
   if(!T){ list.forEach(function(w,i){ out.push({x:(i%2?1:-1)*1.2*(1+Math.floor(i/2)),y:PYLON_Y[id]||-0.4,z:0,k:k}); }); return out; }
   let lastX=-1e9; const stations=[];
   for(let i=0;i<list.length;i+=2){ const W=WEAPONS[list[i]], mu=munOf(id,list[i]), r=mu?mu.dia/2:(W.kind==='bomb'?0.2:0.13)*k, len=mu?mu.len:(W.kind==='bomb'?1.8:2.6)*k, gap=mu?0.17:0.12*k; let st=null;
-    for(let c=0;c<T.xs.length&&!st;c++){ const col=T.xs[c]; if(col.x<r+0.15||col.x<lastX+2*r+0.3||col.x<(m.bay?2.9:0)) continue;   /* with a weapons bay the fuselage underside stays clear */ const s=stnFit(T,col,r,len,gap); if(s&&stnClearOfGear(T,s,r,len)) st=s; }
+    for(let c=0;c<T.xs.length&&!st;c++){ const col=T.xs[c]; if(col.x<r+0.15||col.x<lastX+2*r+0.3||col.x<(m.bay?2.9:(m.stnMinX||0))) continue;   /* with a weapons bay the fuselage underside stays clear */ const s=stnFit(T,col,r,len,gap); if(s&&stnClearOfGear(T,s,r,len)) st=s; }
     if(!st){ /* out of wing: hang under the last station, one row lower */ const p=stations[stations.length-1]; st=p?{x:p.x,y:p.y-2*r-0.1,z:p.z}:{x:T.tipX*0.3,y:PYLON_Y[id]||-0.4,z:(T.z0+T.z1)/2}; }
     lastX=st.x; stations.push(st); }
   list.forEach(function(w,i){ const st=stations[Math.floor(i/2)], side=i%2?1:-1; out.push({x:side*st.x, y:st.y, z:st.z, k:munOf(id,w)?1:k}); });
