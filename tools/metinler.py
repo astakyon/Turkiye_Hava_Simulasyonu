@@ -7,7 +7,7 @@ hatalarına göre tarar. docs/TERIMLER.md'yi yazar.  Kullanım:
 """
 import os, re, sys, html as H
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-SKIP = {'veri/envanter-veri.js', 'veri/surum-notlari-veri.js', 'veri/rehber-veri.js'}   # dış kaynaklı veri; sürüm notları geçmişi olduğu gibi anlatır; rehber tools/ozellikler.py'den üretilir
+SKIP = {'veri/envanter-veri.js', 'veri/surum-notlari-veri.js'}   # dış kaynaklı veri; sürüm notları geçmişi olduğu gibi anlatır
 TR = re.compile(r'[çğıöşüÇĞİÖŞÜ]')
 # --- terim sözlüğü: (yanlış/eş anlamlı biçim, doğru biçim, açıklama). Desenler kelime sınırıyla aranır.
 SOZLUK = [
