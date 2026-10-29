@@ -12,14 +12,19 @@ permissions:
   contents: read
 jobs:
   aab:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # Android SDK hazır kurulu
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with: { distribution: temurin, java-version: '17' }
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - uses: android-actions/setup-android@v3
+      - uses: actions/setup-node@v5
+        with: { node-version: '22' }
+      - name: Android SDK lisansları
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"; ls "$ANDROID_HOME" || true
+          SM=$(ls "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager | head -n 1); echo "sdkmanager: $SM"
+          yes | "$SM" --licenses > /dev/null || true
+          "$SM" "build-tools;34.0.0" "platforms;android-35" > /dev/null || true
       - name: Bubblewrap kur
         run: |
           npm i -g @bubblewrap/cli@1
