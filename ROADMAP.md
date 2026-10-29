@@ -27,7 +27,7 @@ Bu belge şunları bir arada tutar: şu anki durum, sıradaki sürümler, kurall
 | V2.49 | Model: helikopterler (T129 ATAK, T625 Gökbey), kara araçları (Altay, Fırtına, Pars, Kirpi, Korkut, Hisar) ve gemiler (TCG Anadolu, Ada korveti, hücumbot) | ✅ |
 | V2.50 | ANKA-3 yeniden: model serisi bitince oyuncunun fotoğraflarıyla baştan ele alınacak (oyuncu kararı, 29 Ekim) | ✅ |
 | V2.51 | Hızlı ikinci açılış: oyun kodu ayrı dosyada (tarayıcının kod önbelleği); tek dosyalık sürüm indirme için korunur | ✅ |
-| V2.52 | Play Store yayını (Android) | |
+| V2.52 | Play Store hazırlığı: Android paketi (GitHub Actions), oyun içi hesap silme, mağaza metinleri ve görselleri, yükleme rehberi (Play Console adımları oyuncuda) | |
 
 **Model serisinin kuralları:**
 - Her model, Defence Turk sayfasındaki fotoğraflara bakılarak ve gerçek ölçülerle yeniden yapılır. Fotoğraflar oyuna konmaz, yalnız görsel kaynak olarak kullanılır; sayısal veriler atıfla kullanılır.

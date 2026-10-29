@@ -91,6 +91,7 @@ yuruyus/hava-deniz-cagirma.js
 dunya/canli-us.js
 ag/hesap-ayari.js
 ag/hesap.js
+ag/hesap-silme.js
 ag/kariyer.js
 ag/yonetici.js
 gorev/gorev-panosu.js

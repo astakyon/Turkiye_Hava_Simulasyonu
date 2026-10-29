@@ -1,4 +1,6 @@
-# Android paketi (hazırlık)
+# Android paketi
+
+> **V2.52:** Google Play'e yükleme için adım adım rehber, mağaza metinleri ve görseller: [PLAY-STORE.md](PLAY-STORE.md). İmzalı paket artık GitHub Actions'ta **Android paketi (Play Store)** iş akışıyla üretiliyor; bilgisayara Android araçları kurmak gerekmiyor.
 
 Oyun zaten bir **PWA** (çevrimdışı çalışan web uygulaması): `manifest.webmanifest` + `sw.js`. Telefonda Chrome ile
 GitHub Pages adresini açıp **⋮ → Ana ekrana ekle** dersen tam ekran, yatay ve çevrimdışı çalışır. Google Play için iki yol var:

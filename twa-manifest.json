@@ -19,8 +19,8 @@
     { "name": "Harekât", "shortName": "Harekât", "url": "/Turkiye_Hava_Simulasyonu/?act=q_camp", "chosenIconUrl": "https://astakyon.github.io/Turkiye_Hava_Simulasyonu/icons/icon-96.png" },
     { "name": "Görevler", "shortName": "Görevler", "url": "/Turkiye_Hava_Simulasyonu/?act=q_mis", "chosenIconUrl": "https://astakyon.github.io/Turkiye_Hava_Simulasyonu/icons/icon-96.png" }
   ],
-  "appVersionName": "2.01",
-  "appVersionCode": 201,
+  "appVersionName": "2.52",
+  "appVersionCode": 252,
   "minSdkVersion": 24,
   "fallbackType": "customtabs",
   "features": {},

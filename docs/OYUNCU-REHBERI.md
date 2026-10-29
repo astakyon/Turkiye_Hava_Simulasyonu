@@ -122,6 +122,8 @@ Bu rehber `python3 tools/ozellikler.py` ile oyundaki **Rehber** ekranıyla aynı
 
 ## Hesap ve kayıt
 
+- **Hesabımı sil:** Giriş yapmış oyuncu hesabını, profilini ve bulut kaydını oyunun içinden kalıcı olarak siler (iki kez basılır). Google Play şartı; web sayfası: gizlilik → Hesap silme. *Nereden:* Profil → Hesap.
+- **Google Play paketi:** Android uygulaması (TWA) GitHub Actions'ta imzalı .aab ve .apk olarak üretilir; mağaza metinleri, görseller ve adım adım yükleme rehberi docs/PLAY-STORE.md'de. *Nereden:* GitHub → Actions → Android paketi.
 - **Hesap ve profil:** Misafir ya da bulut hesabı, oyuncu kartı, birden çok profil, bulut eşitleme. *Nereden:* Ana menü → sağ üstteki profil.
 - **Kayıt ve yedek:** Bütün ilerleme tek kayıtta, her oturum yedekleniyor; grafik ayarları cihaza özel. *Nereden:* Kendiliğinden.
 - **Uygulama olarak yükleme:** Ana ekrana ekleme, kısayollar, Android (Play Store) hazırlığı. *Nereden:* Ana menü → Uygulamayı yükle.

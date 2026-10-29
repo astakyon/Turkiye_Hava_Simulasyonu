@@ -47,3 +47,12 @@ Oyundaki **Ayarlar → Grafik → Performans testi** sonucunda oyuncular "Raporu
 2. `supabase/perf_reports.sql` dosyasının tamamını yapıştır → **Run**.
 
 Raporlar anonimdir (cihaz, ekran kartı, grafik ayarları, ölçümler). Oyuncular yalnız ekleyebilir; okuma ve silme yalnız yöneticilere açıktır. Raporlar oyunda **Yönetim → Performans** sekmesinde listelenir. Tablo kurulmadan önce de test çalışır: sonuç cihazda saklanır ve "Kopyala" ile paylaşılabilir.
+
+## 6. Hesap silme (V2.52, Google Play şartı)
+
+Google Play, hesap açılan uygulamalarda oyuncunun hesabını **uygulamanın içinden** silebilmesini ister. Oyundaki **Profil → Hesap → Hesabımı sil** düğmesinin çalışması için:
+
+1. Supabase → **SQL Editor** → **New query**.
+2. `supabase/hesap_silme.sql` dosyasının tamamını yapıştır → **Run**.
+
+İşlev yalnız giriş yapmış oyuncunun **kendi** hesabını siler; profil ve bulut kaydı birlikte silinir. İşlev kurulmadan önce düğme, oyuncuyu gizlilik sayfasındaki *Hesap silme* bölümüne yönlendirir.

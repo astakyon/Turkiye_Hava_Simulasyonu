@@ -4,7 +4,7 @@
 
 **Durum:** ✅ iyi · 🔧 iyileştirilmeli · 🔀 birleştirilmeli · 🗑 kaldırılmalı · 🧪 denenmeli (gerçek cihazda doğrulanmalı)
 
-**Özet:** 64 özellik · ✅ iyi 58 · 🔧 iyileştirilmeli 3 · 🧪 denenmeli 3 · testi olmayan: 0
+**Özet:** 66 özellik · ✅ iyi 59 · 🔧 iyileştirilmeli 4 · 🧪 denenmeli 3 · testi olmayan: 0
 
 ## Karar listesi
 
@@ -14,8 +14,9 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 2. **Çevrimiçi oda** (🧪 denenmeli) — 29 Ekim denemesi: aynı bilgisayarda iki ayrı oyun sayfası (telefon boyutu) oda kurdu, katıldı, maç başladı, konumlar eşleşti (fark < 5 m), yazılı sohbet iki yönde çalıştı, hata yok. Bağlantı katmanı burada taklit edildi (PeerJS sunucusuna bu ortamdan erişilemiyor); internet üzerinden iki gerçek cihaz hâlâ denenmeli.
 3. **Karma çok oyunculu ve üs ele geçirme** (🧪 denenmeli) — Oda ve sohbet katmanı 29 Ekim'de iki sayfayla doğrulandı; karma mod ve üs ele geçirme iki gerçek cihazla denenmeli.
 4. **Sesli ve yazılı sohbet** (🧪 denenmeli) — Yazılı sohbet 29 Ekim'de doğrulandı. Sesli sohbet mikrofon ve gerçek bağlantı istiyor; yalnız iki gerçek cihazla denenebilir.
-5. **Uygulama olarak yükleme** (🔧 iyileştirilmeli) — KARAR (29 Ekim): Play Store yayını model serisinden sonra (docs/ANDROID.md).
-6. **Uçak, helikopter, araç ve gemi modelleri** (🔧 iyileştirilmeli) — Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. KARAR: model serisi V2.41'den itibaren, her model onaya sunulur.
+5. **Google Play paketi** (🔧 iyileştirilmeli) — Play Console hesabı, kapalı test (12 kişi, 14 gün) ve Digital Asset Links adımları oyuncuya kalıyor.
+6. **Uygulama olarak yükleme** (🔧 iyileştirilmeli) — KARAR (29 Ekim): Play Store yayını model serisinden sonra (docs/ANDROID.md).
+7. **Uçak, helikopter, araç ve gemi modelleri** (🔧 iyileştirilmeli) — Gerçeğe benzerlik zayıf; ANKA-3 +%37, Kızılelma +%18, Hürjet +%17 ölçü sapması. KARAR: model serisi V2.41'den itibaren, her model onaya sunulur.
 
 ## Uçuş
 
@@ -137,6 +138,8 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 
 | Özellik | Ne yapar | Nereden | Tuş | Sürüm | Test | Durum |
 |---|---|---|---|---|---|---|
+| **Hesabımı sil** | Giriş yapmış oyuncu hesabını, profilini ve bulut kaydını oyunun içinden kalıcı olarak siler (iki kez basılır). Google Play şartı; web sayfası: gizlilik → Hesap silme. | Profil → Hesap | — | V2.52 | v252 | ✅ iyi |
+| **Google Play paketi** | Android uygulaması (TWA) GitHub Actions'ta imzalı .aab ve .apk olarak üretilir; mağaza metinleri, görseller ve adım adım yükleme rehberi docs/PLAY-STORE.md'de. | GitHub → Actions → Android paketi | — | V2.52 | setup | 🔧 iyileştirilmeli |
 | **Hesap ve profil** | Misafir ya da bulut hesabı, oyuncu kartı, birden çok profil, bulut eşitleme. | Ana menü → sağ üstteki profil | — | V1.66 | account, pcard | ✅ iyi |
 | **Kayıt ve yedek** | Bütün ilerleme tek kayıtta, her oturum yedekleniyor; grafik ayarları cihaza özel. | Kendiliğinden | — | V2.26 | depo | ✅ iyi |
 | **Uygulama olarak yükleme** | Ana ekrana ekleme, kısayollar, Android (Play Store) hazırlığı. | Ana menü → Uygulamayı yükle | — | V2.01 | install | 🔧 iyileştirilmeli |

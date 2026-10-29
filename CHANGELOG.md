@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.52 — 2026-10-29 · Google Play hazırlığı
+- Google Play hazırlığı tamam: Android uygulaması GitHub Actions'ta tek tuşla üretiliyor (Actions → Android paketi (Play Store)); Play'e yüklenecek .aab ve telefonda denemek için .apk çıkıyor.
+- Uygulama sürümü oyun sürümünden otomatik alınıyor (V2.52 → 2.52); imza anahtarı GitHub Secrets'ta duruyor, depoya girmiyor.
+- Android en az sürümü 7.0 (API 24) oldu; Google'ın güncel tarayıcı kütüphanesi bunu istiyor.
+- Hesabımı sil: Profil → Hesap'ta, giriş yapmış oyuncu hesabını, profilini ve bulut kaydını oyunun içinden silebiliyor (iki kez basılır). Google Play'in şartı.
+- Gizlilik politikası güncellendi: Hesap silme ve anonim performans raporu bölümleri eklendi.
+- Mağaza için öne çıkan görsel, 5 ekran görüntüsü, kısa ve uzun açıklama, veri güvenliği ve içerik derecelendirmesi cevapları ile adım adım yükleme rehberi hazır (docs/PLAY-STORE.md).
+
 ## V2.51 — 2026-10-29 · Hızlı ikinci açılış
 - Hızlı ikinci açılış: oyun kodu artık ayrı bir dosyada (oyun.js). Tarayıcı derlenmiş kodu önbellekte tuttuğu için oyun ikinci açılışta daha çabuk başlar.
 - Sayfa, oyun kodunu ilk anda indirmeye başlar; çevrimdışı önbellek de oyun kodunu saklar, internetsiz açılış sürüyor.

@@ -166,6 +166,7 @@ Açık teknik borç:
 - **Helikopter, kara aracı ve gemi modelleri** (V2.49): `modeller/kara-ayrintili` (`fHull` yüzeyli zırh gövdesi, `trackRun` palet takımı; Altay, Fırtına, Pars, Kirpi, Korkut, Hisar-A), `modeller/heli-ayrintili` (`heliModel` V1 gövdeye CİRİT/L-UMTAS ve ayrıntı ekler), `modeller/gemi-ayrintili` (`shipRails`, `shipGun76`, `shipStamp`; Ada/İstif, Anadolu, hücumbot). Eski modeller `buildXV1` / `heliModelV1`; kütüphane öğelerinde `buildOld`.
 - **ANKA-3 yeniden** (V2.50): `anka3Camo` (uçuş fotoğrafındaki açık mavi-gri zemin, lacivert köşeli bantlar), nozul yükseltildi ve üstüne kuyruk plakası eklendi; kanat planı ve iç yuva aynı.
 - **Derleme çıktıları** (V2.51): `tools/build.py` üç dosya yazar — `index.html` (sayfa, `oyun.js?v=SÜRÜM` önceden yüklenir), `oyun.js` (oyun kodu, tek IIFE; tarayıcının kod önbelleği ikinci açılışı hızlandırır), `tek-dosya.html` (her şey tek dosyada: claude.ai, indirme, başsız testler ve tarayıcı denetimi bunu okur). `sw.js` çekirdek listesi sürümlü `oyun.js` ile güncellenir.
+- **Google Play** (V2.52): `.github/workflows/android.yml` (Bubblewrap ile TWA; sürüm `VERSION`'dan, imza GitHub Secrets'tan, yoksa deneme anahtarı), `twa-manifest.json` (minSdk 24), `docs/PLAY-STORE.md` ve `docs/play-store/` görselleri; `ag/hesap-silme` (oyun içi hesap silme, `supabase/hesap_silme.sql` → `delete_my_account()`).
 - **Belgeler:** tek yol haritası `ROADMAP.md` (eski planlar `docs/arsiv/`). Sürüm geçmişi `tools/surumler.py` → `docs/SURUM-GECMISI.md`.
 
 ## Android (planlı)
