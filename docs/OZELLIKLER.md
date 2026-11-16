@@ -4,7 +4,7 @@
 
 **Durum:** ✅ iyi · 🔧 iyileştirilmeli · 🔀 birleştirilmeli · 🗑 kaldırılmalı · 🧪 denenmeli (gerçek cihazda doğrulanmalı)
 
-**Özet:** 66 özellik · ✅ iyi 59 · 🔧 iyileştirilmeli 4 · 🧪 denenmeli 3 · testi olmayan: 0
+**Özet:** 67 özellik · ✅ iyi 60 · 🔧 iyileştirilmeli 4 · 🧪 denenmeli 3 · testi olmayan: 0
 
 ## Karar listesi
 
@@ -138,6 +138,7 @@ Aşağıdakiler senin kararını bekliyor. "iyi" durumundaki özellikler olduğu
 
 | Özellik | Ne yapar | Nereden | Tuş | Sürüm | Test | Durum |
 |---|---|---|---|---|---|---|
+| **Model bulut yedeği** | Model Kütüphanesi'nde içe aktarılan modeller giriş yapan oyuncu için buluta da yedeklenir; tarayıcı verisi silinse ya da başka cihazdan girilse bile girişten sonra kendiliğinden geri gelir. Yalnız cihazda olan modeller ilk girişte buluta çıkar. | Model Kütüphanesi · giriş | — | V2.53 | v253 | ✅ iyi |
 | **Hesabımı sil** | Giriş yapmış oyuncu hesabını, profilini ve bulut kaydını oyunun içinden kalıcı olarak siler (iki kez basılır). Google Play şartı; web sayfası: gizlilik → Hesap silme. | Profil → Hesap | — | V2.52 | v252 | ✅ iyi |
 | **Google Play paketi** | Android uygulaması (TWA) GitHub Actions'ta imzalı .aab ve .apk olarak üretilir; mağaza metinleri, görseller ve adım adım yükleme rehberi docs/PLAY-STORE.md'de. | GitHub → Actions → Android paketi | — | V2.52 | setup | 🔧 iyileştirilmeli |
 | **Hesap ve profil** | Misafir ya da bulut hesabı, oyuncu kartı, birden çok profil, bulut eşitleme. | Ana menü → sağ üstteki profil | — | V1.66 | account, pcard | ✅ iyi |

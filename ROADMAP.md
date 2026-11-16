@@ -28,6 +28,7 @@ Bu belge şunları bir arada tutar: şu anki durum, sıradaki sürümler, kurall
 | V2.50 | ANKA-3 yeniden: model serisi bitince oyuncunun fotoğraflarıyla baştan ele alınacak (oyuncu kararı, 29 Ekim) | ✅ |
 | V2.51 | Hızlı ikinci açılış: oyun kodu ayrı dosyada (tarayıcının kod önbelleği); tek dosyalık sürüm indirme için korunur | ✅ |
 | V2.52 | Play Store hazırlığı: Android paketi (GitHub Actions), oyun içi hesap silme, mağaza metinleri ve görselleri, yükleme rehberi (Play Console adımları oyuncuda) | ✅ |
+| V2.53 | İçe aktarılan modellerin bulut yedeği ve bulut sunucusunun uyumaması (oyuncu isteği: tarayıcı verisi silinince modeller ve giriş kayboldu) | |
 
 **Model serisinin kuralları:**
 - Her model, Defence Turk sayfasındaki fotoğraflara bakılarak ve gerçek ölçülerle yeniden yapılır. Fotoğraflar oyuna konmaz, yalnız görsel kaynak olarak kullanılır; sayısal veriler atıfla kullanılır.

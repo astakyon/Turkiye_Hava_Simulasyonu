@@ -122,6 +122,7 @@ Bu rehber `python3 tools/ozellikler.py` ile oyundaki **Rehber** ekranıyla aynı
 
 ## Hesap ve kayıt
 
+- **Model bulut yedeği:** Model Kütüphanesi'nde içe aktarılan modeller giriş yapan oyuncu için buluta da yedeklenir; tarayıcı verisi silinse ya da başka cihazdan girilse bile girişten sonra kendiliğinden geri gelir. Yalnız cihazda olan modeller ilk girişte buluta çıkar. *Nereden:* Model Kütüphanesi · giriş.
 - **Hesabımı sil:** Giriş yapmış oyuncu hesabını, profilini ve bulut kaydını oyunun içinden kalıcı olarak siler (iki kez basılır). Google Play şartı; web sayfası: gizlilik → Hesap silme. *Nereden:* Profil → Hesap.
 - **Google Play paketi:** Android uygulaması (TWA) GitHub Actions'ta imzalı .aab ve .apk olarak üretilir; mağaza metinleri, görseller ve adım adım yükleme rehberi docs/PLAY-STORE.md'de. *Nereden:* GitHub → Actions → Android paketi.
 - **Hesap ve profil:** Misafir ya da bulut hesabı, oyuncu kartı, birden çok profil, bulut eşitleme. *Nereden:* Ana menü → sağ üstteki profil.

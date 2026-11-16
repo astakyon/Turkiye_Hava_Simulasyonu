@@ -136,6 +136,7 @@ Play Console → **Politika → Uygulama içeriği**:
   - **Kişisel bilgiler → E-posta adresi:** toplanır, isteğe bağlı. Amaç: hesap yönetimi.
   - **Kişisel bilgiler → Kullanıcı kimlikleri** (çağrı adı): toplanır, isteğe bağlı. Amaç: hesap yönetimi, uygulama işlevleri.
   - **Uygulama etkinliği → Oyun içi ilerleme** (rütbe, istatistik, kayıt): toplanır, isteğe bağlı. Amaç: uygulama işlevleri.
+  - **Dosyalar ve belgeler** (oyuncunun içe aktardığı 3B model dosyaları, V2.53): toplanır, isteğe bağlı. Amaç: uygulama işlevleri (yedek).
   - **Uygulama bilgileri ve performansı → Teşhis** (performans raporu): toplanır, isteğe bağlı, anonim. Amaç: analiz.
   - **Ses** (sesli sohbet): yalnız bas-konuş sırasında diğer oyunculara anlık iletilir, kaydedilmez. Formda
     *geçici olarak işleniyor* seçeneğini işaretle.

@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------ account deletion (V2.52, Google Play requirement)
    Profil → Hesap: "Hesabımı sil" (shown while signed in). The first press arms the button for 6 s ("Emin misin? Tekrar bas"),
    the second calls the Supabase function delete_my_account() (supabase/hesap_silme.sql), which removes the sign-in and, by
-   cascade, the profile and the cloud save. The local guest profiles on this device stay. If the function is not installed yet,
+   cascade, the profile and the cloud save; V2.53: the player's cloud model files are removed first. The local guest profiles on this device stay. If the function is not installed yet,
    the player is pointed to the web page (privacy.html#hesap-silme) that explains how to ask for deletion. No browser dialogs. */
 const ACCDEL={armT:0, busy:false};
 function accDelMsg(t,err){ const el=$('pcMsg'); if(!el) return; el.textContent=t||''; el.classList.toggle('err',!!err); }
@@ -10,7 +10,10 @@ function accDelPress(){ const b=$('accDel'); if(!b||!ACC.user||!ACC.sb||ACCDEL.b
   const now=Date.now(); if(now>ACCDEL.armT){ ACCDEL.armT=now+6000; b.textContent='Emin misin? Hesabın, profilin ve bulut kaydın silinir — tekrar bas'; b.classList.add('danger');
     setTimeout(function(){ if(Date.now()>=ACCDEL.armT&&!ACCDEL.busy){ b.textContent='Hesabımı sil'; b.classList.remove('danger'); } },6100); return; }
   ACCDEL.busy=true; ACCDEL.armT=0; b.textContent='Siliniyor…';
-  ACC.sb.rpc('delete_my_account').then(function(r){
+  /* V2.53: the cloud copies of imported models go first (storage files are not removed by the account cascade) */
+  const uid=ACC.user.id, B=ACC.sb.storage.from('models');
+  B.list(uid,{limit:200}).then(function(l){ const files=((l&&l.data)||[]).map(function(f){ return uid+'/'+f.name; }); return files.length?B.remove(files):null; }).catch(function(){})
+  .then(function(){ return ACC.sb.rpc('delete_my_account'); }).then(function(r){
     if(r&&r.error) throw r.error;
     return ACC.sb.auth.signOut().catch(function(){}).then(function(){ ACC.user=null; ACC.prof=null; ACC.role='player'; ACC.status='guest'; accChip(); accRoleApply(); accRender();
       toast('Hesabın ve bulut kayıtların silindi — misafir profiline geçildi','#b8ecff'); accDelMsg('Hesap silindi. Bu cihazdaki misafir profilleri duruyor.'); });

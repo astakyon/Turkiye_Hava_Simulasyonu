@@ -56,3 +56,14 @@ Google Play, hesap açılan uygulamalarda oyuncunun hesabını **uygulamanın i�
 2. `supabase/hesap_silme.sql` dosyasının tamamını yapıştır → **Run**.
 
 İşlev yalnız giriş yapmış oyuncunun **kendi** hesabını siler; profil ve bulut kaydı birlikte silinir. İşlev kurulmadan önce düğme, oyuncuyu gizlilik sayfasındaki *Hesap silme* bölümüne yönlendirir.
+
+## 7. Model yedeği ve sunucunun uyumaması (V2.53)
+
+**Model yedeği:** Model Kütüphanesi'nde içe aktarılan modeller giriş yapan oyuncu için buluta da yedeklenir; tarayıcı verisi silinse bile yeniden giriş yapınca geri gelir.
+
+1. Supabase → **SQL Editor** → **New query**.
+2. `supabase/model_yedek.sql` dosyasının tamamını yapıştır → **Run**.
+
+Her oyuncu yalnız kendi klasörünü görür. Bir model en çok 45 MB olabilir; daha büyükler yalnız cihazda kalır. Ücretsiz planda toplam depolama 1 GB'tır.
+
+**Sunucunun uyumaması:** Ücretsiz Supabase projeleri bir hafta kullanılmayınca duraklatılır (oyunda giriş yaparken "Failed to fetch"). Depodaki **Bulut sunucusunu uyanık tut** iş akışı üç günde bir sunucudan tek satır okur. Kurulum gerekmez. Sunucu yanıt vermezse iş kırmızı olur ve GitHub sana e-posta gönderir; o zaman supabase.com → proje → **Restore project**. GitHub, depoda 60 gün hiç değişiklik olmazsa zamanlanmış işleri durdurur; Actions sekmesinden yeniden açılır.

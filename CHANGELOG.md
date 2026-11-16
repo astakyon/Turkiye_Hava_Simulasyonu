@@ -1,6 +1,14 @@
 # Değişiklik Günlüğü — Ay Yıldız: Hedef Kızıl Elma
 Biçim: `## Vx.xx — tarih`. Her güncellemede sürüm numarası artırılır (`bump_version.py`).
 
+## V2.53 — 2026-11-16 · Model bulut yedeği
+- Model bulut yedeği: Model Kütüphanesi'nde içe aktardığın modeller, giriş yaptıysan buluta da yedekleniyor. Tarayıcı verisi silinse ya da başka cihazdan girsen bile, girişten birkaç saniye sonra modellerin kendiliğinden geri geliyor.
+- İlk girişte yalnız o cihazda olan modeller buluta çıkıyor (telefonunda duran modeller böylece bilgisayara da geçer).
+- Modeli kod modeline döndürünce buluttaki kopyası da siliniyor; "Hesabımı sil" bulut modellerini de siliyor.
+- Her oyuncu yalnız kendi model klasörünü görebiliyor; model başına en çok 45 MB.
+- Bulut sunucusunun uyumaması: ücretsiz sunucu bir hafta kullanılmayınca duruyordu ve girişte "Failed to fetch" hatası çıkıyordu. GitHub'da üç günde bir sunucuyu yoklayan iş kuruldu; sunucu yanıt vermezse iş kırmızı olup e-posta gönderiyor.
+- Gizlilik politikası ve Play Store veri güvenliği notları güncellendi.
+
 ## V2.52 — 2026-10-29 · Google Play hazırlığı
 - Google Play hazırlığı tamam: Android uygulaması GitHub Actions'ta tek tuşla üretiliyor (Actions → Android paketi (Play Store)); Play'e yüklenecek .aab ve telefonda denemek için .apk çıkıyor.
 - Uygulama sürümü oyun sürümünden otomatik alınıyor (V2.52 → 2.52); imza anahtarı GitHub Secrets'ta duruyor, depoya girmiyor.

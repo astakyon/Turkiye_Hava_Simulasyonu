@@ -1,0 +1,25 @@
+name: Bulut sunucusunu uyanık tut
+# V2.53: ücretsiz Supabase projeleri bir hafta hiç kullanılmayınca kendiliğinden duraklatılır; oyuncular giriş yapamaz
+# ("Failed to fetch"). Bu iş üç günde bir herkese açık profil tablosundan tek satır okur, böylece proje hiç uyumaz.
+# Yalnız oyunda zaten herkese açık olan anon anahtarı kullanır (src/js/ag/hesap-ayari.js); gizli anahtar gerekmez.
+# Not: GitHub, depoda 60 gün hiç değişiklik olmazsa zamanlanmış işleri durdurur; Actions sekmesinden yeniden açılır.
+on:
+  schedule:
+    - cron: '17 4 */3 * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ping:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with: { sparse-checkout: src/js/ag/hesap-ayari.js, sparse-checkout-cone-mode: false }
+      - name: Profil tablosundan bir satır oku
+        run: |
+          F=src/js/ag/hesap-ayari.js
+          URL=$(grep -o "url:'[^']*'" "$F" | cut -d"'" -f2); KEY=$(grep -o "key:'[^']*'" "$F" | cut -d"'" -f2)
+          [ -n "$URL" ] && [ -n "$KEY" ] || { echo "::warning::Bulut ayarı boş, atlandı"; exit 0; }
+          CODE=$(curl -s -o /tmp/out -w '%{http_code}' --max-time 30 "$URL/rest/v1/profiles?select=id&limit=1" -H "apikey: $KEY" -H "Authorization: Bearer $KEY")
+          echo "HTTP $CODE"
+          if [ "$CODE" != "200" ]; then echo "::error title=Supabase yanıt vermedi::HTTP $CODE — proje duraklatılmış olabilir: supabase.com → proje → Restore project"; exit 1; fi
