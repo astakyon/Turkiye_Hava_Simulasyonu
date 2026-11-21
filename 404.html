@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ay Yıldız taşındı</title><meta name="robots" content="noindex">
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0a1220;color:#e8eef6;font:16px system-ui,sans-serif;text-align:center;padding:24px}a{color:#7dc8ff}</style>
+</head><body><main><h1>Ay Yıldız: Hedef Kızıl Elma taşındı</h1><p>Yeni adres: <a id="git" href="https://ayyildiz-kizilelma-game.github.io/">ayyildiz-kizilelma-game.github.io</a></p><p id="durum">Yönlendiriliyorsun…</p></main>
+<script>
+/* V2.55: the game's old address (astakyon.github.io/Turkiye_Hava_Simulasyonu). Sends the player to the new address with the
+   same page and query, takes this device's save along in the link (#tasi=…; the game takes it only when it has no save there),
+   and removes the old offline cache so this address stops serving the old game. Nothing leaves the player's device. */
+(function(){
+  var NEW='https://ayyildiz-kizilelma-game.github.io', BASE='/Turkiye_Hava_Simulasyonu';
+  var p=location.pathname; if(p.indexOf(BASE)===0) p=p.slice(BASE.length); if(!p) p='/';
+  var url=NEW+p+location.search, h=(location.hash||'').replace(/^#/,'');
+  var save=null; try{ save=localStorage.getItem('ayy-kayit'); }catch(e){}
+  if(save&&(p==='/'||p==='/index.html')){ try{ var b=btoa(unescape(encodeURIComponent(save))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); if(b.length<1500000) h=(h?h+'&':'')+'tasi='+b; }catch(e){} }
+  if(h) url+='#'+h; document.getElementById('git').href=url;
+  var go=function(){ location.replace(url); };
+  try{ var jobs=[]; if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){ return Promise.all(rs.filter(function(r){ return r.scope.indexOf(BASE)>=0; }).map(function(r){ return r.unregister(); })); }));
+    if(window.caches&&caches.keys) jobs.push(caches.keys().then(function(ks){ return Promise.all(ks.filter(function(k){ return /^(ayyildiz|kaan)/i.test(k); }).map(function(k){ return caches.delete(k); })); }));
+    Promise.all(jobs).then(go,go); setTimeout(go,2500); }catch(e){ go(); }
+})();
+</script></body></html>
