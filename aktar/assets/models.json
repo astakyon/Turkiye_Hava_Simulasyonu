@@ -1,0 +1,18 @@
+{
+  "_bilgi": "3B model listesi. Bir uçak için .glb dosyası eklediğinde buraya yaz; dosya yoksa oyun kodla çizilen modeli kullanır. Ayrıntı: docs/MODELLER.md",
+  "models": {
+    "_ornek_kaan": {
+      "file": "assets/models/kaan.glb",
+      "rotation": [0, 0, 0],
+      "length": 21,
+      "gearNodes": ["gear_main_L", "gear_main_R", "gear_nose"],
+      "propNodes": [],
+      "surfaces": [
+        {"node": "elevator_L", "axis": "x", "input": "pitch", "max": 20},
+        {"node": "aileron_L",  "axis": "x", "input": "roll",  "max": 18, "sign": -1},
+        {"node": "rudder_L",   "axis": "y", "input": "yaw",   "max": 22}
+      ],
+      "flames": [[-0.8, 0.1, 8.6], [0.8, 0.1, 8.6]]
+    }
+  }
+}
